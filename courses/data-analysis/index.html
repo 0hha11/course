@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据分析技术 - TT的个人学习页面</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 导航栏 -->
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="text-2xl font-bold text-blue-600">TT的学习空间</div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="../../index.html" class="text-gray-700 hover:text-blue-600 font-medium">首页</a>
+                    <a href="../../about.html" class="text-gray-700 hover:text-blue-600 font-medium">关于我</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="menu-toggle" class="text-gray-700 focus:outline-none">
+                        <i class="fa fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- 移动端菜单 -->
+            <div id="mobile-menu" class="md:hidden hidden mt-4 pb-2">
+                <a href="../../index.html" class="block py-2 text-gray-700 hover:text-blue-600">首页</a>
+                <a href="../../about.html" class="block py-2 text-gray-700 hover:text-blue-600">关于我</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 课程详情 -->
+    <section class="bg-white py-16">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row">
+                <!-- 左侧导航 -->
+                <div class="md:w-1/4 mb-8 md:mb-0">
+                    <div class="bg-gray-50 p-6 rounded-lg sticky top-4">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">课程导航</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#overview" class="text-gray-600 hover:text-blue-600">课程概述</a></li>
+                            <li><a href="#objectives" class="text-gray-600 hover:text-blue-600">学习目标</a></li>
+                            <li><a href="#content" class="text-gray-600 hover:text-blue-600">课程内容</a></li>
+                            <li><a href="#resources" class="text-gray-600 hover:text-blue-600">相关资源</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 右侧内容 -->
+                <div class="md:w-3/4 md:pl-8">
+                    <div class="mb-8">
+                        <h1 class="text-3xl font-bold text-gray-800 mb-4">数据分析技术</h1>
+                        <div class="flex items-center text-gray-600 mb-6">
+                            <i class="fa fa-clock-o mr-2"></i>
+                            <span>课程时长: 16周</span>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-lg mb-8">
+                            <h2 id="overview" class="text-xl font-bold text-gray-800 mb-2">课程概述</h2>
+                            <p class="text-gray-600">
+                                数据分析技术课程是商务数据分析与应用专业的核心课程之一，旨在帮助学生掌握数据分析的基本方法和工具，
+                                培养学生从数据中提取有价值信息的能力，为企业决策提供支持。
+                            </p>
+                        </div>
+
+                        <div class="mb-8">
+                            <h2 id="objectives" class="text-2xl font-bold text-gray-800 mb-4">学习目标</h2>
+                            <ul class="list-disc list-inside text-gray-600 space-y-2">
+                                <li>掌握数据分析的基本概念和方法</li>
+                                <li>学习数据清洗和数据预处理技术</li>
+                                <li>掌握数据可视化工具和技术</li>
+                                <li>学习统计分析方法和应用</li>
+                                <li>能够使用数据分析工具解决实际业务问题</li>
+                            </ul>
+                        </div>
+
+                        <div class="mb-8">
+                            <h2 id="content" class="text-2xl font-bold text-gray-800 mb-4">课程内容</h2>
+                            <div class="space-y-4">
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h3 class="font-bold text-gray-800 mb-2">第1章：数据分析概述</h3>
+                                    <p class="text-gray-600">数据分析的概念、流程和应用领域，数据分析的重要性和价值。</p>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h3 class="font-bold text-gray-800 mb-2">第2章：数据清洗与预处理</h3>
+                                    <p class="text-gray-600">数据质量评估，缺失值处理，异常值检测，数据标准化和归一化。</p>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h3 class="font-bold text-gray-800 mb-2">第3章：数据可视化</h3>
+                                    <p class="text-gray-600">数据可视化的原则和方法，使用Python库（如Matplotlib、Seaborn）进行数据可视化。</p>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h3 class="font-bold text-gray-800 mb-2">第4章：描述性统计分析</h3>
+                                    <p class="text-gray-600">集中趋势分析，离散程度分析，分布特征分析，相关性分析。</p>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h3 class="font-bold text-gray-800 mb-2">第5章：推断统计分析</h3>
+                                    <p class="text-gray-600">参数估计，假设检验，方差分析，回归分析。</p>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h3 class="font-bold text-gray-800 mb-2">第6章：机器学习基础</h3>
+                                    <p class="text-gray-600">机器学习的基本概念，监督学习和无监督学习，常见算法介绍。</p>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h3 class="font-bold text-gray-800 mb-2">第7章：数据分析工具</h3>
+                                    <p class="text-gray-600">Excel、Python、R等数据分析工具的使用，数据分析报告的撰写。</p>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h3 class="font-bold text-gray-800 mb-2">第8章：案例分析</h3>
+                                    <p class="text-gray-600">实际业务场景的数据分析案例，从问题定义到解决方案的完整流程。</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h2 id="resources" class="text-2xl font-bold text-gray-800 mb-4">相关资源</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h3 class="font-bold text-gray-800 mb-2">教材</h3>
+                                    <p class="text-gray-600 mb-2">《数据分析实战》</p>
+                                    <a href="#" class="text-blue-600 hover:text-blue-800">查看详情</a>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h3 class="font-bold text-gray-800 mb-2">在线教程</h3>
+                                    <p class="text-gray-600 mb-2">Kaggle数据分析教程</p>
+                                    <a href="https://www.kaggle.com/learn" class="text-blue-600 hover:text-blue-800" target="_blank">访问链接</a>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h3 class="font-bold text-gray-800 mb-2">练习数据</h3>
+                                    <p class="text-gray-600 mb-2">课程示例数据和练习题</p>
+                                    <a href="#" class="text-blue-600 hover:text-blue-800">下载数据</a>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h3 class="font-bold text-gray-800 mb-2">视频教程</h3>
+                                    <p class="text-gray-600 mb-2">数据分析入门视频</p>
+                                    <a href="#" class="text-blue-600 hover:text-blue-800">观看视频</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系方式 -->
+    <footer class="bg-white py-8 border-t border-gray-200">
+        <div class="container mx-auto px-4">
+            <div class="text-center">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">联系方式</h3>
+                <div class="flex justify-center space-x-6 mb-4">
+                    <a href="mailto:example@example.com" class="text-gray-600 hover:text-blue-600">
+                        <i class="fa fa-envelope text-xl"></i>
+                    </a>
+                    <a href="https://github.com" class="text-gray-600 hover:text-blue-600">
+                        <i class="fa fa-github text-xl"></i>
+                    </a>
+                    <a href="https://linkedin.com" class="text-gray-600 hover:text-blue-600">
+                        <i class="fa fa-linkedin text-xl"></i>
+                    </a>
+                </div>
+                <p class="text-gray-600">© 2026 TT的个人学习页面</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 移动端菜单切换
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>
