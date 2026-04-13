@@ -393,32 +393,67 @@
         // 提交测试
         submitTest.addEventListener('click', function() {
             let score = 0;
+            const results = [];
             
             currentQuestions.forEach(question => {
                 const selectedOption = document.querySelector(`input[name="question-${question.id}"]:checked`);
-                if (selectedOption && selectedOption.value === question.answer) {
+                const selectedValue = selectedOption ? selectedOption.value : '未作答';
+                const isCorrect = selectedValue === question.answer;
+                
+                if (isCorrect) {
                     score++;
                 }
+                
+                results.push({
+                    question: question.question,
+                    selected: selectedValue,
+                    correct: question.answer,
+                    isCorrect: isCorrect,
+                    explanation: getExplanation(question)
+                });
             });
             
             const totalQuestions = currentQuestions.length;
             const percentage = Math.round((score / totalQuestions) * 100);
             
+            // 生成详细结果
+            let detailedResults = '';
+            results.forEach((result, index) => {
+                detailedResults += `
+                <div class="mb-4 p-4 rounded-lg ${result.isCorrect ? 'bg-green-50' : 'bg-red-50'}">
+                    <h4 class="font-bold mb-2 ${result.isCorrect ? 'text-green-700' : 'text-red-700'}">第${index + 1}题: ${result.isCorrect ? '正确' : '错误'}</h4>
+                    <p class="mb-2">${result.question}</p>
+                    <div class="flex flex-col space-y-1">
+                        <p><span class="font-semibold">你的选择:</span> ${result.selected}</p>
+                        <p><span class="font-semibold">正确答案:</span> ${result.correct}</p>
+                        ${result.explanation ? `<p><span class="font-semibold">解释:</span> ${result.explanation}</p>` : ''}
+                    </div>
+                </div>
+                `;
+            });
+            
             // 显示结果
             testContent.innerHTML = `
-                <div class="text-center py-8">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-4">测试结果</h3>
-                    <p class="text-xl mb-2">你的得分: ${score}/${totalQuestions}</p>
-                    <p class="text-xl mb-6">正确率: ${percentage}%</p>
-                    <div class="w-full bg-gray-200 rounded-full h-4 mb-8">
-                        <div class="bg-green-600 h-4 rounded-full" style="width: ${percentage}%"></div>
+                <div class="py-4">
+                    <div class="text-center mb-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">测试结果</h3>
+                        <p class="text-xl mb-2">你的得分: ${score}/${totalQuestions}</p>
+                        <p class="text-xl mb-6">正确率: ${percentage}%</p>
+                        <div class="w-full bg-gray-200 rounded-full h-4 mb-8">
+                            <div class="bg-green-600 h-4 rounded-full" style="width: ${percentage}%"></div>
+                        </div>
+                        <p class="text-gray-600 mb-6">
+                            ${percentage >= 80 ? '优秀！你对该课程的知识掌握得非常好。' : 
+                              percentage >= 60 ? '良好！你对该课程的知识有一定掌握，但还需要加强。' : 
+                              '需要努力！建议你重新学习该课程的内容。'}
+                        </p>
+                        <p class="text-gray-500 mb-8">本次测试从${questionBank[currentCourse].questions.length}道题库中随机抽取</p>
                     </div>
-                    <p class="text-gray-600">
-                        ${percentage >= 80 ? '优秀！你对该课程的知识掌握得非常好。' : 
-                          percentage >= 60 ? '良好！你对该课程的知识有一定掌握，但还需要加强。' : 
-                          '需要努力！建议你重新学习该课程的内容。'}
-                    </p>
-                    <p class="text-gray-500 mt-4">本次测试从${questionBank[currentCourse].questions.length}道题库中随机抽取</p>
+                    
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">详细分析</h3>
+                    <div class="space-y-4">
+                        ${detailedResults}
+                    </div>
                 </div>
             `;
             
@@ -428,6 +463,45 @@
                 modal.classList.add('hidden');
             }, { once: true });
         });
+        
+        // 获取题目解释
+        function getExplanation(question) {
+            // 这里可以根据题目ID返回对应的解释
+            // 由于题库较大，这里只提供一些示例解释
+            const explanations = {
+                // Python基础
+                1: 'def是Python的关键字，用于定义函数。print是内置函数，不是关键字。',
+                2: '元组是不可变的数据类型，列表、字典和集合都是可变的。',
+                3: 'Python是一种解释型语言，不需要编译成机器码就可以执行。',
+                4: '栈不是Python的内置数据结构，需要通过列表或其他方式实现。',
+                5: 'Python中的缩进是强制的，用于表示代码块的层次结构。',
+                // 数据分析技术
+                101: '数据可视化是数据分析的结果展示，不是预处理步骤。',
+                102: 'Matplotlib是Python中最常用的数据可视化库。',
+                103: '描述性统计分析主要用于描述数据的基本特征，推断统计分析用于推断总体特征。',
+                104: 'p值是假设检验中的概念，不是描述性统计指标。',
+                105: '数据清洗是数据分析的第一步，直接影响后续分析结果的准确性。',
+                // 数据采集与处理
+                201: 'Requests用于发送HTTP请求，BeautifulSoup用于解析HTML，Scrapy是一个完整的爬虫框架。',
+                202: '分析目标网站的结构和反爬机制是数据采集的第一步。',
+                203: '网络爬虫需要遵守robots.txt规则，不能无限制爬取。',
+                204: 'HTML是网页结构，不是数据存储格式。',
+                205: '数据预处理包括数据清洗、转换、集成等多个步骤。',
+                // 供应链数据分析
+                301: '供应链管理的核心目标是在降低成本的同时提高效率和服务水平。',
+                302: '员工流失率是人力资源指标，不是供应链绩效指标。',
+                303: '供应链数据分析可以通过历史数据预测未来需求。',
+                304: '风险矩阵是评估供应链风险的常用方法。',
+                305: '供应链优化的目标是综合考虑成本、效率和服务水平。',
+                // 数据库原理与应用
+                401: 'MongoDB是NoSQL数据库，其他选项都是关系型数据库。',
+                402: 'SELECT语句用于从数据库中查询数据。',
+                403: '主键必须唯一，不能重复。',
+                404: '数据库设计的范式包括第一、第二、第三范式等，没有第四范式。',
+                405: 'SQL是Structured Query Language的缩写，即结构化查询语言。'
+            };
+            return explanations[question.id] || '';
+        }
     </script>
 </body>
 </html>
