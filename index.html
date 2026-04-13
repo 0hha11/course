@@ -6,6 +6,12 @@
     <title>TT的个人学习页面</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- 题库文件 -->
+    <script src="js/data/python-basic-questions.js"></script>
+    <script src="js/data/data-analysis-questions.js"></script>
+    <script src="js/data/data-collection-questions.js"></script>
+    <script src="js/data/supply-chain-questions.js"></script>
+    <script src="js/data/database-questions.js"></script>
     <style>
         body {
             font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
@@ -276,209 +282,39 @@
             mobileMenu.classList.toggle('hidden');
         });
 
-        // 测试数据
-        const testData = {
+        // 题库映射
+        const questionBank = {
             'python-basic': {
                 title: 'Python基础测试',
-                questions: [
-                    {
-                        id: 1,
-                        type: 'multiple-choice',
-                        question: '下列哪个是Python的关键字？',
-                        options: ['print', 'def', 'function', 'var'],
-                        answer: 'def'
-                    },
-                    {
-                        id: 2,
-                        type: 'multiple-choice',
-                        question: 'Python中，以下哪种数据类型是不可变的？',
-                        options: ['列表', '字典', '元组', '集合'],
-                        answer: '元组'
-                    },
-                    {
-                        id: 3,
-                        type: 'true-false',
-                        question: 'Python是一种解释型语言。',
-                        options: ['True', 'False'],
-                        answer: 'True'
-                    },
-                    {
-                        id: 4,
-                        type: 'multiple-choice',
-                        question: '以下哪个不是Python的内置数据结构？',
-                        options: ['列表', '字典', '栈', '集合'],
-                        answer: '栈'
-                    },
-                    {
-                        id: 5,
-                        type: 'true-false',
-                        question: 'Python中的缩进是可选的，不影响代码执行。',
-                        options: ['True', 'False'],
-                        answer: 'False'
-                    }
-                ]
+                questions: typeof pythonBasicQuestions !== 'undefined' ? pythonBasicQuestions : []
             },
             'data-analysis': {
                 title: '数据分析技术测试',
-                questions: [
-                    {
-                        id: 1,
-                        type: 'multiple-choice',
-                        question: '以下哪个不是数据预处理的步骤？',
-                        options: ['数据清洗', '数据集成', '数据可视化', '数据转换'],
-                        answer: '数据可视化'
-                    },
-                    {
-                        id: 2,
-                        type: 'multiple-choice',
-                        question: 'Python中用于数据可视化的库是？',
-                        options: ['NumPy', 'Pandas', 'Matplotlib', 'Scikit-learn'],
-                        answer: 'Matplotlib'
-                    },
-                    {
-                        id: 3,
-                        type: 'true-false',
-                        question: '描述性统计分析主要用于推断总体特征。',
-                        options: ['True', 'False'],
-                        answer: 'False'
-                    },
-                    {
-                        id: 4,
-                        type: 'multiple-choice',
-                        question: '以下哪个不是统计描述的指标？',
-                        options: ['均值', '中位数', '标准差', 'p值'],
-                        answer: 'p值'
-                    },
-                    {
-                        id: 5,
-                        type: 'true-false',
-                        question: '数据清洗是数据分析的第一步，也是最关键的一步。',
-                        options: ['True', 'False'],
-                        answer: 'True'
-                    }
-                ]
+                questions: typeof dataAnalysisQuestions !== 'undefined' ? dataAnalysisQuestions : []
             },
             'data-collection': {
                 title: '数据采集与处理测试',
-                questions: [
-                    {
-                        id: 1,
-                        type: 'multiple-choice',
-                        question: '以下哪个Python库用于网络爬虫？',
-                        options: ['Requests', 'BeautifulSoup', 'Scrapy', '以上都是'],
-                        answer: '以上都是'
-                    },
-                    {
-                        id: 2,
-                        type: 'multiple-choice',
-                        question: '数据采集的第一步是？',
-                        options: ['编写爬虫代码', '分析目标网站', '设置代理', '存储数据'],
-                        answer: '分析目标网站'
-                    },
-                    {
-                        id: 3,
-                        type: 'true-false',
-                        question: '网络爬虫可以无限制地爬取任何网站的数据。',
-                        options: ['True', 'False'],
-                        answer: 'False'
-                    },
-                    {
-                        id: 4,
-                        type: 'multiple-choice',
-                        question: '以下哪种不是数据存储格式？',
-                        options: ['CSV', 'JSON', 'XML', 'HTML'],
-                        answer: 'HTML'
-                    },
-                    {
-                        id: 5,
-                        type: 'true-false',
-                        question: '数据预处理包括数据清洗、数据转换和数据集成等步骤。',
-                        options: ['True', 'False'],
-                        answer: 'True'
-                    }
-                ]
+                questions: typeof dataCollectionQuestions !== 'undefined' ? dataCollectionQuestions : []
             },
             'supply-chain': {
                 title: '供应链数据分析测试',
-                questions: [
-                    {
-                        id: 1,
-                        type: 'multiple-choice',
-                        question: '供应链管理的核心目标是？',
-                        options: ['降低成本', '提高效率', '优化服务水平', '以上都是'],
-                        answer: '以上都是'
-                    },
-                    {
-                        id: 2,
-                        type: 'multiple-choice',
-                        question: '以下哪个不是供应链绩效指标？',
-                        options: ['库存周转率', '订单 fulfillment 率', '客户满意度', '员工流失率'],
-                        answer: '员工流失率'
-                    },
-                    {
-                        id: 3,
-                        type: 'true-false',
-                        question: '供应链数据分析可以帮助企业预测需求。',
-                        options: ['True', 'False'],
-                        answer: 'True'
-                    },
-                    {
-                        id: 4,
-                        type: 'multiple-choice',
-                        question: '以下哪种分析方法用于供应链风险评估？',
-                        options: ['回归分析', '风险矩阵', '聚类分析', '时间序列分析'],
-                        answer: '风险矩阵'
-                    },
-                    {
-                        id: 5,
-                        type: 'true-false',
-                        question: '供应链优化的主要目标是最小化库存水平。',
-                        options: ['True', 'False'],
-                        answer: 'False'
-                    }
-                ]
+                questions: typeof supplyChainQuestions !== 'undefined' ? supplyChainQuestions : []
             },
             'database': {
                 title: '数据库原理与应用测试',
-                questions: [
-                    {
-                        id: 1,
-                        type: 'multiple-choice',
-                        question: '以下哪个不是关系型数据库？',
-                        options: ['MySQL', 'PostgreSQL', 'MongoDB', 'SQLite'],
-                        answer: 'MongoDB'
-                    },
-                    {
-                        id: 2,
-                        type: 'multiple-choice',
-                        question: 'SQL中用于查询数据的语句是？',
-                        options: ['INSERT', 'UPDATE', 'SELECT', 'DELETE'],
-                        answer: 'SELECT'
-                    },
-                    {
-                        id: 3,
-                        type: 'true-false',
-                        question: '主键可以重复。',
-                        options: ['True', 'False'],
-                        answer: 'False'
-                    },
-                    {
-                        id: 4,
-                        type: 'multiple-choice',
-                        question: '以下哪个不是数据库设计的范式？',
-                        options: ['第一范式', '第二范式', '第三范式', '第四范式'],
-                        answer: '第四范式'
-                    },
-                    {
-                        id: 5,
-                        type: 'true-false',
-                        question: 'SQL是结构化查询语言的缩写。',
-                        options: ['True', 'False'],
-                        answer: 'True'
-                    }
-                ]
+                questions: typeof databaseQuestions !== 'undefined' ? databaseQuestions : []
             }
         };
+
+        // 从数组中随机抽取n个元素
+        function getRandomQuestions(questionsArray, count = 10) {
+            const shuffled = [...questionsArray];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled.slice(0, Math.min(count, shuffled.length));
+        }
 
         // 模态框操作
         const modal = document.getElementById('test-modal');
@@ -487,17 +323,21 @@
         const closeModal = document.getElementById('close-modal');
         const submitTest = document.getElementById('submit-test');
         let currentCourse = '';
+        let currentQuestions = [];
 
         // 打开模态框
         document.querySelectorAll('.test-btn').forEach(button => {
             button.addEventListener('click', function() {
                 currentCourse = this.dataset.course;
-                const courseData = testData[currentCourse];
-                modalTitle.textContent = courseData.title;
+                const courseData = questionBank[currentCourse];
+                modalTitle.textContent = courseData.title + '（从' + courseData.questions.length + '道题中随机抽取10道）';
+                
+                // 随机抽取10道题目
+                currentQuestions = getRandomQuestions(courseData.questions, 10);
                 
                 // 生成测试内容
                 testContent.innerHTML = '';
-                courseData.questions.forEach((question, index) => {
+                currentQuestions.forEach((question, index) => {
                     const questionDiv = document.createElement('div');
                     questionDiv.className = 'question';
                     questionDiv.dataset.questionId = question.id;
@@ -533,6 +373,7 @@
                     testContent.appendChild(questionDiv);
                 });
                 
+                submitTest.textContent = '提交答案';
                 modal.classList.remove('hidden');
             });
         });
@@ -551,17 +392,16 @@
 
         // 提交测试
         submitTest.addEventListener('click', function() {
-            const courseData = testData[currentCourse];
             let score = 0;
             
-            courseData.questions.forEach(question => {
+            currentQuestions.forEach(question => {
                 const selectedOption = document.querySelector(`input[name="question-${question.id}"]:checked`);
                 if (selectedOption && selectedOption.value === question.answer) {
                     score++;
                 }
             });
             
-            const totalQuestions = courseData.questions.length;
+            const totalQuestions = currentQuestions.length;
             const percentage = Math.round((score / totalQuestions) * 100);
             
             // 显示结果
@@ -578,6 +418,7 @@
                           percentage >= 60 ? '良好！你对该课程的知识有一定掌握，但还需要加强。' : 
                           '需要努力！建议你重新学习该课程的内容。'}
                     </p>
+                    <p class="text-gray-500 mt-4">本次测试从${questionBank[currentCourse].questions.length}道题库中随机抽取</p>
                 </div>
             `;
             
@@ -585,7 +426,6 @@
             submitTest.textContent = '返回';
             submitTest.addEventListener('click', function() {
                 modal.classList.add('hidden');
-                submitTest.textContent = '提交答案';
             }, { once: true });
         });
     </script>
