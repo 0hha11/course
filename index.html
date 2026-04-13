@@ -28,6 +28,7 @@
                 <div class="hidden md:flex space-x-6">
                     <a href="index.html" class="text-gray-700 hover:text-blue-600 font-medium">首页</a>
                     <a href="about.html" class="text-gray-700 hover:text-blue-600 font-medium">关于我</a>
+                    <a href="#tests" class="text-gray-700 hover:text-blue-600 font-medium">学习测试</a>
                 </div>
                 <div class="md:hidden">
                     <button id="menu-toggle" class="text-gray-700 focus:outline-none">
@@ -39,6 +40,7 @@
             <div id="mobile-menu" class="md:hidden hidden mt-4 pb-2">
                 <a href="index.html" class="block py-2 text-gray-700 hover:text-blue-600">首页</a>
                 <a href="about.html" class="block py-2 text-gray-700 hover:text-blue-600">关于我</a>
+                <a href="#tests" class="block py-2 text-gray-700 hover:text-blue-600">学习测试</a>
             </div>
         </div>
     </nav>
@@ -144,6 +146,108 @@
         </div>
     </section>
 
+    <!-- 学习测试 -->
+    <section id="tests" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">学习测试</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Python基础测试 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="h-48 bg-blue-100 flex items-center justify-center">
+                        <i class="fa fa-python text-6xl text-blue-600"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Python基础测试</h3>
+                        <p class="text-gray-600 mb-4">测试你对Python基础语法、数据类型、控制结构和函数的掌握程度。</p>
+                        <button class="test-btn w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300" data-course="python-basic">
+                            开始测试
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 数据分析技术测试 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="h-48 bg-green-100 flex items-center justify-center">
+                        <i class="fa fa-bar-chart text-6xl text-green-600"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">数据分析技术测试</h3>
+                        <p class="text-gray-600 mb-4">测试你对数据清洗、数据可视化和统计分析方法的理解。</p>
+                        <button class="test-btn w-full bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition duration-300" data-course="data-analysis">
+                            开始测试
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 数据采集与处理测试 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="h-48 bg-purple-100 flex items-center justify-center">
+                        <i class="fa fa-database text-6xl text-purple-600"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">数据采集与处理测试</h3>
+                        <p class="text-gray-600 mb-4">测试你对网络爬虫技术和数据预处理技巧的掌握程度。</p>
+                        <button class="test-btn w-full bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition duration-300" data-course="data-collection">
+                            开始测试
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 供应链数据分析测试 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="h-48 bg-orange-100 flex items-center justify-center">
+                        <i class="fa fa-truck text-6xl text-orange-600"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">供应链数据分析测试</h3>
+                        <p class="text-gray-600 mb-4">测试你对供应链管理和供应链数据分析方法的理解。</p>
+                        <button class="test-btn w-full bg-orange-600 text-white px-6 py-3 rounded-lg hover:bg-orange-700 transition duration-300" data-course="supply-chain">
+                            开始测试
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 数据库原理与应用测试 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="h-48 bg-red-100 flex items-center justify-center">
+                        <i class="fa fa-server text-6xl text-red-600"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">数据库原理与应用测试</h3>
+                        <p class="text-gray-600 mb-4">测试你对数据库基本原理、SQL语言和数据库设计的掌握程度。</p>
+                        <button class="test-btn w-full bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition duration-300" data-course="database">
+                            开始测试
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 测试模态框 -->
+    <div id="test-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div class="p-6 border-b">
+                <div class="flex justify-between items-center">
+                    <h3 id="modal-title" class="text-2xl font-bold text-gray-800">测试标题</h3>
+                    <button id="close-modal" class="text-gray-500 hover:text-gray-700 focus:outline-none">
+                        <i class="fa fa-times text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="p-6">
+                <div id="test-content" class="space-y-6">
+                    <!-- 测试内容将通过JavaScript动态添加 -->
+                </div>
+            </div>
+            <div class="p-6 border-t flex justify-end space-x-4">
+                <button id="submit-test" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-300">
+                    提交答案
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- 联系方式 -->
     <footer class="bg-white py-8 border-t border-gray-200">
         <div class="container mx-auto px-4">
@@ -170,6 +274,319 @@
         document.getElementById('menu-toggle').addEventListener('click', function() {
             const mobileMenu = document.getElementById('mobile-menu');
             mobileMenu.classList.toggle('hidden');
+        });
+
+        // 测试数据
+        const testData = {
+            'python-basic': {
+                title: 'Python基础测试',
+                questions: [
+                    {
+                        id: 1,
+                        type: 'multiple-choice',
+                        question: '下列哪个是Python的关键字？',
+                        options: ['print', 'def', 'function', 'var'],
+                        answer: 'def'
+                    },
+                    {
+                        id: 2,
+                        type: 'multiple-choice',
+                        question: 'Python中，以下哪种数据类型是不可变的？',
+                        options: ['列表', '字典', '元组', '集合'],
+                        answer: '元组'
+                    },
+                    {
+                        id: 3,
+                        type: 'true-false',
+                        question: 'Python是一种解释型语言。',
+                        options: ['True', 'False'],
+                        answer: 'True'
+                    },
+                    {
+                        id: 4,
+                        type: 'multiple-choice',
+                        question: '以下哪个不是Python的内置数据结构？',
+                        options: ['列表', '字典', '栈', '集合'],
+                        answer: '栈'
+                    },
+                    {
+                        id: 5,
+                        type: 'true-false',
+                        question: 'Python中的缩进是可选的，不影响代码执行。',
+                        options: ['True', 'False'],
+                        answer: 'False'
+                    }
+                ]
+            },
+            'data-analysis': {
+                title: '数据分析技术测试',
+                questions: [
+                    {
+                        id: 1,
+                        type: 'multiple-choice',
+                        question: '以下哪个不是数据预处理的步骤？',
+                        options: ['数据清洗', '数据集成', '数据可视化', '数据转换'],
+                        answer: '数据可视化'
+                    },
+                    {
+                        id: 2,
+                        type: 'multiple-choice',
+                        question: 'Python中用于数据可视化的库是？',
+                        options: ['NumPy', 'Pandas', 'Matplotlib', 'Scikit-learn'],
+                        answer: 'Matplotlib'
+                    },
+                    {
+                        id: 3,
+                        type: 'true-false',
+                        question: '描述性统计分析主要用于推断总体特征。',
+                        options: ['True', 'False'],
+                        answer: 'False'
+                    },
+                    {
+                        id: 4,
+                        type: 'multiple-choice',
+                        question: '以下哪个不是统计描述的指标？',
+                        options: ['均值', '中位数', '标准差', 'p值'],
+                        answer: 'p值'
+                    },
+                    {
+                        id: 5,
+                        type: 'true-false',
+                        question: '数据清洗是数据分析的第一步，也是最关键的一步。',
+                        options: ['True', 'False'],
+                        answer: 'True'
+                    }
+                ]
+            },
+            'data-collection': {
+                title: '数据采集与处理测试',
+                questions: [
+                    {
+                        id: 1,
+                        type: 'multiple-choice',
+                        question: '以下哪个Python库用于网络爬虫？',
+                        options: ['Requests', 'BeautifulSoup', 'Scrapy', '以上都是'],
+                        answer: '以上都是'
+                    },
+                    {
+                        id: 2,
+                        type: 'multiple-choice',
+                        question: '数据采集的第一步是？',
+                        options: ['编写爬虫代码', '分析目标网站', '设置代理', '存储数据'],
+                        answer: '分析目标网站'
+                    },
+                    {
+                        id: 3,
+                        type: 'true-false',
+                        question: '网络爬虫可以无限制地爬取任何网站的数据。',
+                        options: ['True', 'False'],
+                        answer: 'False'
+                    },
+                    {
+                        id: 4,
+                        type: 'multiple-choice',
+                        question: '以下哪种不是数据存储格式？',
+                        options: ['CSV', 'JSON', 'XML', 'HTML'],
+                        answer: 'HTML'
+                    },
+                    {
+                        id: 5,
+                        type: 'true-false',
+                        question: '数据预处理包括数据清洗、数据转换和数据集成等步骤。',
+                        options: ['True', 'False'],
+                        answer: 'True'
+                    }
+                ]
+            },
+            'supply-chain': {
+                title: '供应链数据分析测试',
+                questions: [
+                    {
+                        id: 1,
+                        type: 'multiple-choice',
+                        question: '供应链管理的核心目标是？',
+                        options: ['降低成本', '提高效率', '优化服务水平', '以上都是'],
+                        answer: '以上都是'
+                    },
+                    {
+                        id: 2,
+                        type: 'multiple-choice',
+                        question: '以下哪个不是供应链绩效指标？',
+                        options: ['库存周转率', '订单 fulfillment 率', '客户满意度', '员工流失率'],
+                        answer: '员工流失率'
+                    },
+                    {
+                        id: 3,
+                        type: 'true-false',
+                        question: '供应链数据分析可以帮助企业预测需求。',
+                        options: ['True', 'False'],
+                        answer: 'True'
+                    },
+                    {
+                        id: 4,
+                        type: 'multiple-choice',
+                        question: '以下哪种分析方法用于供应链风险评估？',
+                        options: ['回归分析', '风险矩阵', '聚类分析', '时间序列分析'],
+                        answer: '风险矩阵'
+                    },
+                    {
+                        id: 5,
+                        type: 'true-false',
+                        question: '供应链优化的主要目标是最小化库存水平。',
+                        options: ['True', 'False'],
+                        answer: 'False'
+                    }
+                ]
+            },
+            'database': {
+                title: '数据库原理与应用测试',
+                questions: [
+                    {
+                        id: 1,
+                        type: 'multiple-choice',
+                        question: '以下哪个不是关系型数据库？',
+                        options: ['MySQL', 'PostgreSQL', 'MongoDB', 'SQLite'],
+                        answer: 'MongoDB'
+                    },
+                    {
+                        id: 2,
+                        type: 'multiple-choice',
+                        question: 'SQL中用于查询数据的语句是？',
+                        options: ['INSERT', 'UPDATE', 'SELECT', 'DELETE'],
+                        answer: 'SELECT'
+                    },
+                    {
+                        id: 3,
+                        type: 'true-false',
+                        question: '主键可以重复。',
+                        options: ['True', 'False'],
+                        answer: 'False'
+                    },
+                    {
+                        id: 4,
+                        type: 'multiple-choice',
+                        question: '以下哪个不是数据库设计的范式？',
+                        options: ['第一范式', '第二范式', '第三范式', '第四范式'],
+                        answer: '第四范式'
+                    },
+                    {
+                        id: 5,
+                        type: 'true-false',
+                        question: 'SQL是结构化查询语言的缩写。',
+                        options: ['True', 'False'],
+                        answer: 'True'
+                    }
+                ]
+            }
+        };
+
+        // 模态框操作
+        const modal = document.getElementById('test-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const testContent = document.getElementById('test-content');
+        const closeModal = document.getElementById('close-modal');
+        const submitTest = document.getElementById('submit-test');
+        let currentCourse = '';
+
+        // 打开模态框
+        document.querySelectorAll('.test-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                currentCourse = this.dataset.course;
+                const courseData = testData[currentCourse];
+                modalTitle.textContent = courseData.title;
+                
+                // 生成测试内容
+                testContent.innerHTML = '';
+                courseData.questions.forEach((question, index) => {
+                    const questionDiv = document.createElement('div');
+                    questionDiv.className = 'question';
+                    questionDiv.dataset.questionId = question.id;
+                    
+                    const questionTitle = document.createElement('h4');
+                    questionTitle.className = 'font-bold text-gray-800 mb-3';
+                    questionTitle.textContent = `${index + 1}. ${question.question}`;
+                    questionDiv.appendChild(questionTitle);
+                    
+                    const optionsDiv = document.createElement('div');
+                    optionsDiv.className = 'space-y-2';
+                    
+                    question.options.forEach(option => {
+                        const optionDiv = document.createElement('div');
+                        optionDiv.className = 'flex items-center';
+                        
+                        const input = document.createElement('input');
+                        input.type = question.type === 'multiple-choice' ? 'radio' : 'radio';
+                        input.name = `question-${question.id}`;
+                        input.value = option;
+                        input.className = 'mr-2';
+                        
+                        const label = document.createElement('label');
+                        label.className = 'cursor-pointer';
+                        label.textContent = option;
+                        
+                        optionDiv.appendChild(input);
+                        optionDiv.appendChild(label);
+                        optionsDiv.appendChild(optionDiv);
+                    });
+                    
+                    questionDiv.appendChild(optionsDiv);
+                    testContent.appendChild(questionDiv);
+                });
+                
+                modal.classList.remove('hidden');
+            });
+        });
+
+        // 关闭模态框
+        closeModal.addEventListener('click', function() {
+            modal.classList.add('hidden');
+        });
+
+        // 点击模态框外部关闭
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.classList.add('hidden');
+            }
+        });
+
+        // 提交测试
+        submitTest.addEventListener('click', function() {
+            const courseData = testData[currentCourse];
+            let score = 0;
+            
+            courseData.questions.forEach(question => {
+                const selectedOption = document.querySelector(`input[name="question-${question.id}"]:checked`);
+                if (selectedOption && selectedOption.value === question.answer) {
+                    score++;
+                }
+            });
+            
+            const totalQuestions = courseData.questions.length;
+            const percentage = Math.round((score / totalQuestions) * 100);
+            
+            // 显示结果
+            testContent.innerHTML = `
+                <div class="text-center py-8">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">测试结果</h3>
+                    <p class="text-xl mb-2">你的得分: ${score}/${totalQuestions}</p>
+                    <p class="text-xl mb-6">正确率: ${percentage}%</p>
+                    <div class="w-full bg-gray-200 rounded-full h-4 mb-8">
+                        <div class="bg-green-600 h-4 rounded-full" style="width: ${percentage}%"></div>
+                    </div>
+                    <p class="text-gray-600">
+                        ${percentage >= 80 ? '优秀！你对该课程的知识掌握得非常好。' : 
+                          percentage >= 60 ? '良好！你对该课程的知识有一定掌握，但还需要加强。' : 
+                          '需要努力！建议你重新学习该课程的内容。'}
+                    </p>
+                </div>
+            `;
+            
+            // 更改按钮文本
+            submitTest.textContent = '返回';
+            submitTest.addEventListener('click', function() {
+                modal.classList.add('hidden');
+                submitTest.textContent = '提交答案';
+            }, { once: true });
         });
     </script>
 </body>
