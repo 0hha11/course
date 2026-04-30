@@ -7,113 +7,347 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
             font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: #0a0a1a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
         }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(0, 245, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
+                linear-gradient(rgba(10, 10, 26, 0.95), rgba(10, 10, 26, 0.95)),
+                repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(0, 245, 255, 0.03) 50px, rgba(0, 245, 255, 0.03) 51px),
+                repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(0, 245, 255, 0.03) 50px, rgba(0, 245, 255, 0.03) 51px);
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.5), transparent);
+            animation: scanline 4s linear infinite;
+            pointer-events: none;
+            z-index: 9999;
+        }
+        
+        @keyframes scanline {
+            0% { top: 0; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+        
+        .glass-panel {
+            background: rgba(20, 20, 40, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 245, 255, 0.2);
+            box-shadow: 0 0 20px rgba(0, 245, 255, 0.1), inset 0 0 20px rgba(0, 245, 255, 0.05);
+        }
+        
+        .neon-border {
+            border: 1px solid rgba(0, 245, 255, 0.5);
+            box-shadow: 0 0 10px rgba(0, 245, 255, 0.3), inset 0 0 10px rgba(0, 245, 255, 0.1);
+        }
+        
+        .neon-text {
+            background: linear-gradient(135deg, #00f5ff, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(0, 245, 255, 0.5);
+        }
+        
+        .neon-button {
+            background: linear-gradient(135deg, rgba(0, 245, 255, 0.2), rgba(139, 92, 246, 0.2));
+            border: 1px solid rgba(0, 245, 255, 0.5);
+            color: #00f5ff;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .neon-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .neon-button:hover::before {
+            left: 100%;
+        }
+        
+        .neon-button:hover {
+            box-shadow: 0 0 20px rgba(0, 245, 255, 0.5), 0 0 40px rgba(0, 245, 255, 0.3);
+            border-color: #00f5ff;
+        }
+        
+        .run-button {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 136, 0.1));
+            border: 1px solid rgba(0, 255, 136, 0.5);
+            color: #00ff88;
+        }
+        
+        .run-button:hover {
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5), 0 0 40px rgba(0, 255, 136, 0.3);
+            border-color: #00ff88;
+        }
+        
+        .test-button {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(139, 92, 246, 0.1));
+            border: 1px solid rgba(139, 92, 246, 0.5);
+            color: #8b5cf6;
+        }
+        
+        .test-button:hover {
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.5), 0 0 40px rgba(139, 92, 246, 0.3);
+            border-color: #8b5cf6;
+        }
+        
         .nav-tab {
             transition: all 0.3s ease;
+            position: relative;
         }
-        .nav-tab:hover {
-            background-color: rgba(59, 130, 246, 0.1);
+        
+        .nav-tab::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #00f5ff, #8b5cf6);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
         }
+        
+        .nav-tab:hover::after,
+        .nav-tab.active::after {
+            width: 80%;
+        }
+        
+        .nav-tab.active {
+            color: #00f5ff;
+            text-shadow: 0 0 10px rgba(0, 245, 255, 0.5);
+        }
+        
         .code-block {
-            background-color: #1e293b;
-            color: #e2e8f0;
+            background: rgba(10, 10, 26, 0.9);
+            border: 1px solid rgba(0, 245, 255, 0.3);
+            color: #00ff88;
             padding: 1rem;
             border-radius: 0.5rem;
             overflow-x: auto;
             margin: 0.5rem 0;
+            font-family: 'Courier New', monospace;
+            box-shadow: 0 0 15px rgba(0, 245, 255, 0.1), inset 0 0 15px rgba(0, 245, 255, 0.05);
         }
-        .exercise-question {
-            background-color: #f8fafc;
-            border-left: 4px solid #3b82f6;
-            padding: 1rem;
-            margin-bottom: 1rem;
+        
+        .practice-nav-btn {
+            background: rgba(20, 20, 40, 0.6);
+            border: 1px solid rgba(0, 245, 255, 0.2);
+            color: #e0e0e0;
+            transition: all 0.3s ease;
         }
-        .answer-input {
-            width: 100%;
-            padding: 0.5rem;
-            border: 1px solid #e2e8f0;
-            border-radius: 0.375rem;
+        
+        .practice-nav-btn:hover {
+            background: rgba(0, 245, 255, 0.1);
+            border-color: rgba(0, 245, 255, 0.5);
         }
-        .result-correct {
-            background-color: #dcfce7;
-            border-color: #22c55e;
+        
+        .practice-nav-btn.active {
+            background: rgba(0, 245, 255, 0.15);
+            border-color: #00f5ff;
+            color: #00f5ff;
+            box-shadow: 0 0 15px rgba(0, 245, 255, 0.3);
         }
-        .result-wrong {
-            background-color: #fee2e2;
-            border-color: #ef4444;
+        
+        .detail-card {
+            background: rgba(20, 20, 40, 0.8);
+            border: 1px solid rgba(255, 165, 0, 0.3);
+            box-shadow: 0 0 15px rgba(255, 165, 0, 0.1);
+        }
+        
+        .code-card {
+            background: rgba(10, 10, 26, 0.95);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.1);
+        }
+        
+        .tip-card {
+            background: rgba(20, 20, 40, 0.8);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.1);
+        }
+        
+        .code-editor {
+            background: rgba(5, 5, 15, 0.95);
+            color: #00ff88;
+            font-family: 'Courier New', monospace;
+            border: none;
+            resize: none;
+            outline: none;
+        }
+        
+        .code-editor::placeholder {
+            color: rgba(0, 255, 136, 0.3);
+        }
+        
+        .terminal-output {
+            background: rgba(5, 5, 15, 0.95);
+            color: #00ff88;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .file-tab {
+            background: rgba(30, 30, 50, 0.8);
+            border-bottom: 1px solid rgba(0, 245, 255, 0.2);
+        }
+        
+        .toolbar {
+            background: rgba(20, 20, 40, 0.9);
+            border: 1px solid rgba(0, 245, 255, 0.2);
+            border-bottom: none;
+        }
+        
+        .learning-card {
+            background: rgba(20, 20, 40, 0.8);
+            border: 1px solid rgba(0, 245, 255, 0.2);
+            box-shadow: 0 0 20px rgba(0, 245, 255, 0.1);
+        }
+        
+        .exam-card {
+            background: rgba(20, 20, 40, 0.8);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.1);
+        }
+        
+        input[type="radio"] {
+            accent-color: #00f5ff;
+        }
+        
+        .score-circle {
+            background: rgba(20, 20, 40, 0.8);
+            border: 2px solid rgba(0, 245, 255, 0.5);
+            box-shadow: 0 0 30px rgba(0, 245, 255, 0.3);
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(10, 10, 26, 0.5);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #00f5ff, #8b5cf6);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #00f5ff, #ff00ff);
+        }
+        
+        .glow-text {
+            text-shadow: 0 0 10px currentColor;
         }
     </style>
 </head>
-<body class="bg-gray-50">
-    <!-- 导航栏 -->
-    <nav class="bg-white shadow-md fixed w-full top-0 z-50">
+<body>
+    <div class="scanline"></div>
+    
+    <nav class="glass-panel fixed w-full top-0 z-50">
         <div class="container mx-auto px-4 py-3">
             <div class="flex justify-between items-center">
-                <div class="text-xl font-bold text-blue-600">
+                <div class="text-xl font-bold neon-text" style="font-family: 'Orbitron', sans-serif;">
                     <a href="../../index.html">Python训练营</a>
                 </div>
                 <div class="hidden md:flex space-x-6">
-                    <a href="../../index.html#home" class="text-gray-700 hover:text-blue-600 font-medium">首页</a>
-                    <a href="../../index.html#projects" class="text-gray-700 hover:text-blue-600 font-medium">学习项目</a>
-                    <a href="../../index.html#my-progress" class="text-gray-700 hover:text-blue-600 font-medium">学习进度</a>
+                    <a href="../../index.html#home" class="text-gray-300 hover:text-cyan-400 font-medium transition-colors">首页</a>
+                    <a href="../../index.html#projects" class="text-gray-300 hover:text-cyan-400 font-medium transition-colors">学习项目</a>
+                    <a href="../../index.html#my-progress" class="text-gray-300 hover:text-cyan-400 font-medium transition-colors">学习进度</a>
                 </div>
                 <div class="md:hidden">
-                    <button id="menu-toggle" class="text-gray-700 focus:outline-none">
+                    <button id="menu-toggle" class="text-cyan-400 focus:outline-none">
                         <i class="fa fa-bars text-xl"></i>
                     </button>
                 </div>
             </div>
-            <!-- 移动端菜单 -->
             <div id="mobile-menu" class="md:hidden hidden mt-4 pb-2">
-                <a href="../../index.html#home" class="block py-2 text-gray-700 hover:text-blue-600">首页</a>
-                <a href="../../index.html#projects" class="block py-2 text-gray-700 hover:text-blue-600">学习项目</a>
-                <a href="../../index.html#my-progress" class="block py-2 text-gray-700 hover:text-blue-600">学习进度</a>
+                <a href="../../index.html#home" class="block py-2 text-gray-300 hover:text-cyan-400">首页</a>
+                <a href="../../index.html#projects" class="block py-2 text-gray-300 hover:text-cyan-400">学习项目</a>
+                <a href="../../index.html#my-progress" class="block py-2 text-gray-300 hover:text-cyan-400">学习进度</a>
             </div>
         </div>
     </nav>
 
-    <!-- 项目标题 -->
-    <section class="pt-20 pb-8 bg-gradient-to-r from-blue-600 to-blue-800">
-        <div class="container mx-auto px-4">
+    <section class="pt-20 pb-8 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-900/30 to-purple-900/30"></div>
+        <div class="absolute inset-0" style="background: radial-gradient(circle at 30% 50%, rgba(0, 245, 255, 0.1) 0%, transparent 50%), radial-gradient(circle at 70% 50%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);"></div>
+        <div class="container mx-auto px-4 relative z-10">
             <div class="flex items-center">
-                <span class="bg-white/20 text-white px-3 py-1 rounded-full text-sm font-medium mr-4">项目01</span>
-                <h1 class="text-2xl md:text-3xl font-bold text-white">电商订单数据清洗</h1>
+                <span class="glass-panel text-cyan-400 px-4 py-1 rounded-full text-sm font-medium mr-4 neon-border" style="font-family: 'Orbitron', sans-serif;">PROJECT 01</span>
+                <h1 class="text-2xl md:text-3xl font-bold neon-text">电商订单数据清洗</h1>
             </div>
-            <p class="text-blue-100 mt-4">处理缺失值、异常值，格式化时间列，计算总价</p>
-            <div class="flex items-center mt-4 text-blue-100">
-                <i class="fa fa-file-csv mr-2"></i>
-                <span>数据文件: retail_orders.csv</span>
+            <p class="text-gray-400 mt-4">处理缺失值、异常值，格式化时间列，计算总价</p>
+            <div class="flex items-center mt-4 text-gray-500">
+                <i class="fa fa-file-csv mr-2 text-cyan-400"></i>
+                <span>数据文件: <span class="text-cyan-400">retail_orders.csv</span></span>
             </div>
         </div>
     </section>
 
-    <!-- 项目标签页导航 -->
-    <section class="bg-white border-b">
+    <section class="glass-panel border-b border-cyan-500/20">
         <div class="container mx-auto px-4">
             <div class="flex overflow-x-auto">
-                <button id="tab-learn" class="nav-tab flex-shrink-0 px-6 py-4 text-blue-600 border-b-2 border-blue-600 font-medium">
+                <button id="tab-learn" class="nav-tab active flex-shrink-0 px-6 py-4 text-cyan-400 font-medium">
                     <i class="fa fa-book mr-2"></i>学习
                 </button>
-                <button id="tab-practice" class="nav-tab flex-shrink-0 px-6 py-4 text-gray-600 hover:text-blue-600 font-medium">
+                <button id="tab-practice" class="nav-tab flex-shrink-0 px-6 py-4 text-gray-400 hover:text-cyan-400 font-medium">
                     <i class="fa fa-code mr-2"></i>练习
                 </button>
-                <button id="tab-test" class="nav-tab flex-shrink-0 px-6 py-4 text-gray-600 hover:text-blue-600 font-medium">
+                <button id="tab-test" class="nav-tab flex-shrink-0 px-6 py-4 text-gray-400 hover:text-cyan-400 font-medium">
                     <i class="fa fa-file-text mr-2"></i>考试
                 </button>
             </div>
         </div>
     </section>
 
-    <!-- 学习内容 -->
     <section id="content-learn" class="py-8">
         <div class="container mx-auto px-4">
             <div class="max-w-4xl mx-auto">
-                <!-- 学习目标 -->
-                <div class="bg-blue-50 rounded-xl p-6 mb-8">
-                    <h2 class="text-xl font-bold text-gray-800 mb-4">学习目标</h2>
-                    <ul class="list-disc list-inside text-gray-600 space-y-2">
+                <div class="learning-card rounded-xl p-6 mb-8 neon-border">
+                    <h2 class="text-xl font-bold neon-text mb-4">学习目标</h2>
+                    <ul class="list-disc list-inside text-gray-400 space-y-2">
                         <li>了解数据清洗的基本概念和重要性</li>
                         <li>掌握处理缺失值的常用方法</li>
                         <li>学会识别和处理异常值</li>
@@ -122,81 +356,71 @@
                     </ul>
                 </div>
 
-                <!-- 知识点1：数据清洗概述 -->
-                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4">1. 数据清洗概述</h3>
-                    <p class="text-gray-600 mb-4">
+                <div class="learning-card rounded-xl p-6 mb-6">
+                    <h3 class="text-lg font-bold text-cyan-400 mb-4">1. 数据清洗概述</h3>
+                    <p class="text-gray-400 mb-4">
                         数据清洗是数据分析的第一步，也是最重要的一步。它指的是对原始数据进行检查、清理和转换，以确保数据的质量和可用性。
                     </p>
-                    <p class="text-gray-600 mb-4">
+                    <p class="text-gray-400 mb-4">
                         数据清洗的主要任务包括：
                     </p>
-                    <ul class="list-disc list-inside text-gray-600 space-y-2 mb-4">
+                    <ul class="list-disc list-inside text-gray-400 space-y-2 mb-4">
                         <li>处理缺失值（Missing Values）</li>
                         <li>处理异常值（Outliers）</li>
                         <li>数据格式转换</li>
                         <li>数据类型转换</li>
                         <li>重复数据处理</li>
                     </ul>
-                    <div class="bg-yellow-50 p-4 rounded-lg">
-                        <p class="text-yellow-800 text-sm"><i class="fa fa-lightbulb-o mr-2"></i>
+                    <div class="tip-card rounded-lg p-4">
+                        <p class="text-yellow-400 text-sm"><i class="fa fa-lightbulb-o mr-2"></i>
                         <strong>小贴士：</strong>高质量的数据是高质量分析的基础。花时间做好数据清洗工作，可以避免后续分析中出现各种问题。
                         </p>
                     </div>
                 </div>
 
-                <!-- 知识点2：处理缺失值 -->
-                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4">2. 处理缺失值</h3>
-                    <p class="text-gray-600 mb-4">
+                <div class="learning-card rounded-xl p-6 mb-6">
+                    <h3 class="text-lg font-bold text-cyan-400 mb-4">2. 处理缺失值</h3>
+                    <p class="text-gray-400 mb-4">
                         缺失值是数据分析中常见的问题。常见的处理方法包括：
                     </p>
-                    <ul class="list-disc list-inside text-gray-600 space-y-2 mb-4">
-                        <li><strong>删除法</strong>：删除包含缺失值的行或列</li>
-                        <li><strong>填充法</strong>：用均值、中位数、众数等填充</li>
-                        <li><strong>插值法</strong>：使用线性插值等方法估计缺失值</li>
+                    <ul class="list-disc list-inside text-gray-400 space-y-2 mb-4">
+                        <li><strong class="text-cyan-400">删除法</strong>：删除包含缺失值的行或列</li>
+                        <li><strong class="text-cyan-400">填充法</strong>：用均值、中位数、众数等填充</li>
+                        <li><strong class="text-cyan-400">插值法</strong>：使用线性插值等方法估计缺失值</li>
                     </ul>
-                    <h4 class="font-bold text-gray-700 mb-2">代码示例：</h4>
+                    <h4 class="font-bold text-gray-300 mb-2">代码示例：</h4>
                     <div class="code-block">
                         <pre><code>import pandas as pd
 import numpy as np
 
-# 读取数据
 df = pd.read_csv('retail_orders.csv')
 
-# 查看缺失值情况
 print(df.isnull().sum())
 
-# 方法1：删除包含缺失值的行
 df_clean = df.dropna()
 
-# 方法2：用均值填充数值型列
 df['age'].fillna(df['age'].mean(), inplace=True)
 
-# 方法3：用中位数填充
 df['income'].fillna(df['income'].median(), inplace=True)
 
-# 方法4：用特定值填充
 df['gender'].fillna('Unknown', inplace=True)</code></pre>
                     </div>
                 </div>
 
-                <!-- 知识点3：处理异常值 -->
-                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4">3. 处理异常值</h3>
-                    <p class="text-gray-600 mb-4">
+                <div class="learning-card rounded-xl p-6 mb-6">
+                    <h3 class="text-lg font-bold text-cyan-400 mb-4">3. 处理异常值</h3>
+                    <p class="text-gray-400 mb-4">
                         异常值是指与其他数据点显著不同的值。常见的检测方法包括：
                     </p>
-                    <ul class="list-disc list-inside text-gray-600 space-y-2 mb-4">
-                        <li><strong>统计方法</strong>：使用3σ原则或IQR方法</li>
-                        <li><strong>可视化方法</strong>：使用箱线图、散点图等</li>
+                    <ul class="list-disc list-inside text-gray-400 space-y-2 mb-4">
+                        <li><strong class="text-cyan-400">统计方法</strong>：使用3σ原则或IQR方法</li>
+                        <li><strong class="text-cyan-400">可视化方法</strong>：使用箱线图、散点图等</li>
                     </ul>
-                    <h4 class="font-bold text-gray-700 mb-2">代码示例：</h4>
+                    <h4 class="font-bold text-gray-300 mb-2">代码示例：</h4>
                     <div class="code-block">
                         <pre><code>import pandas as pd
 import numpy as np
 
-# 使用IQR方法检测异常值
 def detect_outliers(df, column):
     Q1 = df[column].quantile(0.25)
     Q3 = df[column].quantile(0.75)
@@ -206,135 +430,107 @@ def detect_outliers(df, column):
     outliers = df[(df[column] < lower_bound) | (df[column] > upper_bound)]
     return outliers
 
-# 检测销售额异常值
 outliers = detect_outliers(df, 'amount')
 print(f"检测到{len(outliers)}个异常值")
 
-# 处理异常值：用中位数替换
 median_amount = df['amount'].median()
 df.loc[(df['amount'] < lower_bound) | (df['amount'] > upper_bound), 'amount'] = median_amount</code></pre>
                     </div>
                 </div>
 
-                <!-- 知识点4：时间列格式化 -->
-                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4">4. 时间列格式化</h3>
-                    <p class="text-gray-600 mb-4">
+                <div class="learning-card rounded-xl p-6 mb-6">
+                    <h3 class="text-lg font-bold text-cyan-400 mb-4">4. 时间列格式化</h3>
+                    <p class="text-gray-400 mb-4">
                         时间数据通常需要转换为datetime格式才能进行时间相关的分析。
                     </p>
-                    <h4 class="font-bold text-gray-700 mb-2">代码示例：</h4>
+                    <h4 class="font-bold text-gray-300 mb-2">代码示例：</h4>
                     <div class="code-block">
                         <pre><code>import pandas as pd
 
-# 读取数据
 df = pd.read_csv('retail_orders.csv')
 
-# 查看时间列的数据类型
 print(df['order_date'].dtype)
 
-# 将字符串转换为datetime格式
 df['order_date'] = pd.to_datetime(df['order_date'])
 
-# 提取日期中的年、月、日
 df['year'] = df['order_date'].dt.year
 df['month'] = df['order_date'].dt.month
 df['day'] = df['order_date'].dt.day
 
-# 计算星期几（0=星期一，6=星期日）
 df['weekday'] = df['order_date'].dt.weekday
 
-# 格式化输出
 df['date_str'] = df['order_date'].dt.strftime('%Y-%m-%d')
 
 print(df[['order_date', 'year', 'month', 'day', 'weekday']].head())</code></pre>
                     </div>
                 </div>
 
-                <!-- 知识点5：计算总价 -->
-                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4">5. 计算总价</h3>
-                    <p class="text-gray-600 mb-4">
+                <div class="learning-card rounded-xl p-6 mb-6">
+                    <h3 class="text-lg font-bold text-cyan-400 mb-4">5. 计算总价</h3>
+                    <p class="text-gray-400 mb-4">
                         在订单数据中，通常需要计算每个订单的总价（单价 × 数量）。
                     </p>
-                    <h4 class="font-bold text-gray-700 mb-2">代码示例：</h4>
+                    <h4 class="font-bold text-gray-300 mb-2">代码示例：</h4>
                     <div class="code-block">
                         <pre><code>import pandas as pd
 
-# 读取数据
 df = pd.read_csv('retail_orders.csv')
 
-# 查看数据结构
 print(df.columns)
 
-# 计算总价
 df['total_amount'] = df['price'] * df['quantity']
 
-# 查看结果
 print(df[['price', 'quantity', 'total_amount']].head())
 
-# 计算总销售额
 total_sales = df['total_amount'].sum()
 print(f"总销售额: {total_sales:.2f}")
 
-# 计算平均订单金额
 avg_order_amount = df['total_amount'].mean()
 print(f"平均订单金额: {avg_order_amount:.2f}")
 
-# 计算最大订单金额
 max_order_amount = df['total_amount'].max()
 print(f"最大订单金额: {max_order_amount:.2f}")</code></pre>
                     </div>
                 </div>
 
-                <!-- 完整实战代码 -->
-                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4">6. 完整实战代码</h3>
-                    <p class="text-gray-600 mb-4">
+                <div class="learning-card rounded-xl p-6 mb-6">
+                    <h3 class="text-lg font-bold text-cyan-400 mb-4">6. 完整实战代码</h3>
+                    <p class="text-gray-400 mb-4">
                         下面是一个完整的数据清洗实战代码，包含上述所有步骤：
                     </p>
                     <div class="code-block">
                         <pre><code>import pandas as pd
 import numpy as np
 
-# 1. 读取数据
 df = pd.read_csv('retail_orders.csv')
 print("原始数据形状:", df.shape)
 print("原始数据前5行:")
 print(df.head())
 
-# 2. 查看数据信息
 print("\n数据信息:")
 print(df.info())
 
-# 3. 处理缺失值
 print("\n缺失值情况:")
 print(df.isnull().sum())
 
-# 填充缺失值
 df['customer_name'].fillna('Unknown', inplace=True)
 df['quantity'].fillna(1, inplace=True)
 
-# 4. 处理异常值
-# 使用IQR方法处理amount列的异常值
 Q1 = df['amount'].quantile(0.25)
 Q3 = df['amount'].quantile(0.75)
 IQR = Q3 - Q1
 lower_bound = Q1 - 1.5 * IQR
 upper_bound = Q3 + 1.5 * IQR
 
-# 用中位数替换异常值
 median_amount = df['amount'].median()
 df.loc[(df['amount'] < lower_bound) | (df['amount'] > upper_bound), 'amount'] = median_amount
 
-# 5. 时间列格式化
 df['order_date'] = pd.to_datetime(df['order_date'])
 df['year'] = df['order_date'].dt.year
 df['month'] = df['order_date'].dt.month
 
-# 6. 计算总价
 df['total_amount'] = df['price'] * df['quantity']
 
-# 7. 保存清洗后的数据
 df.to_csv('cleaned_retail_orders.csv', index=False)
 
 print("\n清洗完成！")
@@ -344,9 +540,8 @@ print(df.head())</code></pre>
                     </div>
                 </div>
 
-                <!-- 完成学习按钮 -->
                 <div class="text-center">
-                    <button id="complete-learn" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                    <button id="complete-learn" class="neon-button px-8 py-3 rounded-lg font-medium">
                         <i class="fa fa-check-circle mr-2"></i>标记为已学习
                     </button>
                 </div>
@@ -354,57 +549,51 @@ print(df.head())</code></pre>
         </div>
     </section>
 
-    <!-- 练习内容 -->
     <section id="content-practice" class="py-8 hidden">
         <div class="container mx-auto px-4 h-[calc(100vh-180px)]">
             <div class="flex flex-col lg:flex-row h-full">
-                <!-- 左侧面板 -->
-                <div class="lg:w-80 lg:h-full bg-white rounded-xl shadow-md overflow-hidden flex-shrink-0">
-                    <!-- 练习导航 -->
-                    <div class="bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-3 text-white">
-                        <h2 class="font-bold">练习导航</h2>
+                <div class="lg:w-80 lg:h-full glass-panel rounded-xl overflow-hidden flex-shrink-0">
+                    <div class="px-4 py-3 border-b border-cyan-500/30">
+                        <h2 class="font-bold neon-text">练习导航</h2>
                     </div>
                     <div class="p-2 space-y-1">
-                        <button id="practice-nav-1" class="w-full text-left px-4 py-3 rounded-lg bg-blue-50 text-blue-600 font-medium hover:bg-blue-100 transition-colors">
+                        <button id="practice-nav-1" class="practice-nav-btn active w-full text-left px-4 py-3 rounded-lg font-medium">
                             <i class="fa fa-code mr-2"></i>练习1：处理缺失值
                         </button>
-                        <button id="practice-nav-2" class="w-full text-left px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
+                        <button id="practice-nav-2" class="practice-nav-btn w-full text-left px-4 py-3 rounded-lg font-medium">
                             <i class="fa fa-code mr-2"></i>练习2：计算总价
                         </button>
-                        <button id="practice-nav-3" class="w-full text-left px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
+                        <button id="practice-nav-3" class="practice-nav-btn w-full text-left px-4 py-3 rounded-lg font-medium">
                             <i class="fa fa-code mr-2"></i>练习3：时间格式化
                         </button>
                     </div>
                     
-                    <!-- 详细说明 -->
-                    <div class="border-t border-gray-200">
+                    <div class="border-t border-cyan-500/20">
                         <div id="practice-detail-1" class="p-4">
-                            <div class="bg-orange-50 rounded-lg p-3 mb-4">
-                                <h3 class="font-bold text-orange-800 mb-2 flex items-center">
+                            <div class="detail-card rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-orange-400 mb-2 flex items-center">
                                     <i class="fa fa-info-circle mr-2"></i>详细说明
                                 </h3>
-                                <p class="text-sm text-gray-600">
+                                <p class="text-sm text-gray-400">
                                     数据清洗中处理缺失值是非常重要的一步。常见的方法包括删除法、填充法和插值法。
                                     在这个练习中，你需要使用填充法：用均值填充数值型列的缺失值，用指定值填充类别型列的缺失值。
                                 </p>
                             </div>
                             
-                            <div class="bg-gray-900 rounded-lg p-3 mb-4">
+                            <div class="code-card rounded-lg p-3 mb-4">
                                 <h3 class="font-bold text-green-400 mb-2 flex items-center">
                                     <i class="fa fa-code mr-2"></i>代码示例
                                 </h3>
-                                <pre class="text-xs text-gray-300 overflow-x-auto"><code># 用均值填充
-df['age'].fillna(df['age'].mean(), inplace=True)
+                                <pre class="text-xs text-green-400 overflow-x-auto"><code>df['age'].fillna(df['age'].mean(), inplace=True)
 
-# 用指定值填充
 df['gender'].fillna('Unknown', inplace=True)</code></pre>
                             </div>
                             
-                            <div class="bg-yellow-50 rounded-lg p-3">
-                                <h3 class="font-bold text-yellow-800 mb-2 flex items-center">
+                            <div class="tip-card rounded-lg p-3">
+                                <h3 class="font-bold text-yellow-400 mb-2 flex items-center">
                                     <i class="fa fa-lightbulb-o mr-2"></i>小贴士
                                 </h3>
-                                <p class="text-sm text-gray-600">
+                                <p class="text-sm text-gray-400">
                                     fillna()方法是处理缺失值的常用方法。对于数值型数据，常用均值或中位数填充；
                                     对于类别型数据，常用众数或'Unknown'填充。
                                 </p>
@@ -412,65 +601,61 @@ df['gender'].fillna('Unknown', inplace=True)</code></pre>
                         </div>
                         
                         <div id="practice-detail-2" class="p-4 hidden">
-                            <div class="bg-orange-50 rounded-lg p-3 mb-4">
-                                <h3 class="font-bold text-orange-800 mb-2 flex items-center">
+                            <div class="detail-card rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-orange-400 mb-2 flex items-center">
                                     <i class="fa fa-info-circle mr-2"></i>详细说明
                                 </h3>
-                                <p class="text-sm text-gray-600">
+                                <p class="text-sm text-gray-400">
                                     在订单数据分析中，计算总价是一项基本操作。总价 = 单价 × 数量。
                                     这有助于我们了解每个订单的价值，进行销售分析。
                                 </p>
                             </div>
                             
-                            <div class="bg-gray-900 rounded-lg p-3 mb-4">
+                            <div class="code-card rounded-lg p-3 mb-4">
                                 <h3 class="font-bold text-green-400 mb-2 flex items-center">
                                     <i class="fa fa-code mr-2"></i>代码示例
                                 </h3>
-                                <pre class="text-xs text-gray-300 overflow-x-auto"><code># 计算总价
-df['total_amount'] = df['price'] * df['quantity']
+                                <pre class="text-xs text-green-400 overflow-x-auto"><code>df['total_amount'] = df['price'] * df['quantity']
 
-# 查看结果
 print(df[['price', 'quantity', 'total_amount']])</code></pre>
                             </div>
                             
-                            <div class="bg-yellow-50 rounded-lg p-3">
-                                <h3 class="font-bold text-yellow-800 mb-2 flex items-center">
+                            <div class="tip-card rounded-lg p-3">
+                                <h3 class="font-bold text-yellow-400 mb-2 flex items-center">
                                     <i class="fa fa-lightbulb-o mr-2"></i>小贴士
                                 </h3>
-                                <p class="text-sm text-gray-600">
+                                <p class="text-sm text-gray-400">
                                     Pandas支持向量化运算，可以直接对整列进行数学运算，无需使用循环。
                                 </p>
                             </div>
                         </div>
                         
                         <div id="practice-detail-3" class="p-4 hidden">
-                            <div class="bg-orange-50 rounded-lg p-3 mb-4">
-                                <h3 class="font-bold text-orange-800 mb-2 flex items-center">
+                            <div class="detail-card rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-orange-400 mb-2 flex items-center">
                                     <i class="fa fa-info-circle mr-2"></i>详细说明
                                 </h3>
-                                <p class="text-sm text-gray-600">
+                                <p class="text-sm text-gray-400">
                                     时间数据的处理是数据分析中的常见任务。将字符串转换为datetime格式后，
                                     可以方便地提取年、月、日等信息，进行时间序列分析。
                                 </p>
                             </div>
                             
-                            <div class="bg-gray-900 rounded-lg p-3 mb-4">
+                            <div class="code-card rounded-lg p-3 mb-4">
                                 <h3 class="font-bold text-green-400 mb-2 flex items-center">
                                     <i class="fa fa-code mr-2"></i>代码示例
                                 </h3>
-                                <pre class="text-xs text-gray-300 overflow-x-auto"><code># 转换为datetime格式
-df['order_date'] = pd.to_datetime(df['order_date'])
+                                <pre class="text-xs text-green-400 overflow-x-auto"><code>df['order_date'] = pd.to_datetime(df['order_date'])
 
-# 提取年份和月份
 df['year'] = df['order_date'].dt.year
 df['month'] = df['order_date'].dt.month</code></pre>
                             </div>
                             
-                            <div class="bg-yellow-50 rounded-lg p-3">
-                                <h3 class="font-bold text-yellow-800 mb-2 flex items-center">
+                            <div class="tip-card rounded-lg p-3">
+                                <h3 class="font-bold text-yellow-400 mb-2 flex items-center">
                                     <i class="fa fa-lightbulb-o mr-2"></i>小贴士
                                 </h3>
-                                <p class="text-sm text-gray-600">
+                                <p class="text-sm text-gray-400">
                                     使用dt属性可以访问datetime对象的各种属性，如year、month、day、weekday等。
                                 </p>
                             </div>
@@ -478,38 +663,35 @@ df['month'] = df['order_date'].dt.month</code></pre>
                     </div>
                 </div>
                 
-                <!-- 右侧代码编辑区域 -->
                 <div class="flex-1 flex flex-col ml-4 min-w-0">
-                    <!-- 工具栏 -->
-                    <div class="bg-white rounded-t-xl shadow-md px-4 py-3 flex items-center justify-between">
+                    <div class="toolbar rounded-t-xl px-4 py-3 flex items-center justify-between">
                         <div class="flex items-center space-x-2">
-                            <button id="run-code" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center">
+                            <button id="run-code" class="run-button px-4 py-2 rounded-lg text-sm font-medium flex items-center">
                                 <i class="fa fa-play mr-2"></i>运行代码
                             </button>
-                            <button id="reset-code" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors flex items-center">
+                            <button id="reset-code" class="neon-button px-4 py-2 rounded-lg text-sm font-medium flex items-center">
                                 <i class="fa fa-refresh mr-2"></i>重置代码
                             </button>
-                            <button id="show-answer" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors flex items-center">
+                            <button id="show-answer" class="neon-button px-4 py-2 rounded-lg text-sm font-medium flex items-center">
                                 <i class="fa fa-eye mr-2"></i>显示参考答案
                             </button>
                         </div>
                         <div class="flex items-center space-x-2">
-                            <button id="start-test" class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors flex items-center">
+                            <button id="start-test" class="test-button px-4 py-2 rounded-lg text-sm font-medium flex items-center">
                                 <i class="fa fa-file-text mr-2"></i>开始测试
                             </button>
-                            <button id="auto-save" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors flex items-center">
+                            <button id="auto-save" class="neon-button px-4 py-2 rounded-lg text-sm font-medium flex items-center">
                                 <i class="fa fa-save mr-2"></i>自动保存
                             </button>
                         </div>
                     </div>
                     
-                    <!-- 代码编辑器 -->
-                    <div class="flex-1 bg-gray-900 rounded-b-xl shadow-md overflow-hidden">
-                        <div class="flex items-center px-4 py-2 bg-gray-800 text-gray-400 text-sm">
-                            <i class="fa fa-file-code-o mr-2"></i>
-                            <span>project1/main.py</span>
+                    <div class="flex-1 glass-panel rounded-b-xl overflow-hidden">
+                        <div class="file-tab flex items-center px-4 py-2 text-gray-400 text-sm">
+                            <i class="fa fa-file-code-o mr-2 text-cyan-400"></i>
+                            <span class="text-cyan-400">project1/main.py</span>
                         </div>
-                        <textarea id="code-editor" class="w-full h-[calc(50%-40px)] bg-gray-900 text-green-400 p-4 font-mono text-sm resize-none outline-none" placeholder="在这里输入你的代码...">import pandas as pd
+                        <textarea id="code-editor" class="code-editor w-full h-[calc(50%-40px)] p-4 text-sm" placeholder="在这里输入你的代码...">import pandas as pd
 import numpy as np
 
 data = {
@@ -519,20 +701,15 @@ data = {
 }
 df = pd.DataFrame(data)
 
-# 在这里输入你的代码
-# 将age列的缺失值用均值填充
-# 将gender列的缺失值用'Unknown'填充
-
 print(df)</textarea>
                         
-                        <!-- 执行结果 -->
-                        <div class="h-[50%] border-t border-gray-700">
-                            <div class="flex items-center px-4 py-2 bg-gray-800 text-gray-400 text-sm">
-                                <i class="fa fa-terminal mr-2"></i>
-                                <span>执行结果</span>
+                        <div class="h-[50%] border-t border-cyan-500/20">
+                            <div class="file-tab flex items-center px-4 py-2 text-gray-400 text-sm">
+                                <i class="fa fa-terminal mr-2 text-green-400"></i>
+                                <span class="text-green-400">执行结果</span>
                             </div>
-                            <div id="code-output" class="h-[calc(100%-40px)] p-4 overflow-auto bg-gray-950 text-green-400 font-mono text-sm">
-> 执行结果将显示在这里...
+                            <div id="code-output" class="terminal-output h-[calc(100%-40px)] p-4 overflow-auto text-sm">
+<span class="text-cyan-400">&gt; 执行结果将显示在这里...</span>
                             </div>
                         </div>
                     </div>
@@ -541,133 +718,126 @@ print(df)</textarea>
         </div>
     </section>
 
-    <!-- 考试内容 -->
     <section id="content-test" class="py-8 hidden">
         <div class="container mx-auto px-4">
             <div class="max-w-4xl mx-auto">
-                <div class="bg-blue-50 rounded-xl p-6 mb-6">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-2">项目考试</h2>
-                    <p class="text-gray-600">共5道题目，每题20分，满分100分</p>
-                    <div class="flex items-center mt-4">
-                        <i class="fa fa-clock-o mr-2 text-gray-600"></i>
-                        <span class="text-gray-600">考试时间：30分钟</span>
+                <div class="exam-card rounded-xl p-6 mb-6">
+                    <h2 class="text-2xl font-bold neon-text mb-2">项目考试</h2>
+                    <p class="text-gray-400">共5道题目，每题20分，满分100分</p>
+                    <div class="flex items-center mt-4 text-gray-500">
+                        <i class="fa fa-clock-o mr-2 text-purple-400"></i>
+                        <span>考试时间：<span class="text-purple-400">30分钟</span></span>
                     </div>
                 </div>
 
-                <!-- 考试题目 -->
                 <div id="exam-questions">
-                    <!-- 题目1 -->
-                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                        <h3 class="font-bold text-gray-800 mb-4">1. 以下哪种方法不是处理缺失值的常用方法？</h3>
+                    <div class="exam-card rounded-xl p-6 mb-6">
+                        <h3 class="font-bold text-gray-200 mb-4">1. 以下哪种方法不是处理缺失值的常用方法？</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center">
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer">
                                 <input type="radio" name="q1" value="A" class="mr-2">
                                 <span>A) 删除法</span>
                             </label>
-                            <label class="flex items-center">
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer">
                                 <input type="radio" name="q1" value="B" class="mr-2">
                                 <span>B) 填充法</span>
                             </label>
-                            <label class="flex items-center">
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer">
                                 <input type="radio" name="q1" value="C" class="mr-2">
                                 <span>C) 排序法</span>
                             </label>
-                            <label class="flex items-center">
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer">
                                 <input type="radio" name="q1" value="D" class="mr-2">
                                 <span>D) 插值法</span>
                             </label>
                         </div>
                     </div>
 
-                    <!-- 题目2 -->
-                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                        <h3 class="font-bold text-gray-800 mb-4">2. 在Pandas中，将字符串转换为datetime格式的正确方法是？</h3>
+                    <div class="exam-card rounded-xl p-6 mb-6">
+                        <h3 class="font-bold text-gray-200 mb-4">2. 在Pandas中，将字符串转换为datetime格式的正确方法是？</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center">
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer">
                                 <input type="radio" name="q2" value="A" class="mr-2">
                                 <span>A) df['date'] = datetime(df['date'])</span>
                             </label>
-                            <label class="flex items-center">
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer">
                                 <input type="radio" name="q2" value="B" class="mr-2">
                                 <span>B) df['date'] = pd.to_datetime(df['date'])</span>
                             </label>
-                            <label class="flex items-center">
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer">
                                 <input type="radio" name="q2" value="C" class="mr-2">
                                 <span>C) df['date'] = df['date'].to_datetime()</span>
                             </label>
-                            <label class="flex items-center">
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer">
                                 <input type="radio" name="q2" value="D" class="mr-2">
                                 <span>D) df['date'] = convert_to_date(df['date'])</span>
                             </label>
                         </div>
                     </div>
 
-                    <!-- 题目3 -->
-                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                        <h3 class="font-bold text-gray-800 mb-4">3. 以下代码的作用是什么？</h3>
+                    <div class="exam-card rounded-xl p-6 mb-6">
+                        <h3 class="font-bold text-gray-200 mb-4">3. 以下代码的作用是什么？</h3>
                         <div class="code-block mb-4">
                             <pre><code>df['total'] = df['price'] * df['quantity']</code></pre>
                         </div>
                         <div class="space-y-2">
-                            <label class="flex items-center">
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer">
                                 <input type="radio" name="q3" value="A" class="mr-2">
                                 <span>A) 计算总价</span>
                             </label>
-                            <label class="flex items-center">
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer">
                                 <input type="radio" name="q3" value="B" class="mr-2">
                                 <span>B) 计算平均值</span>
                             </label>
-                            <label class="flex items-center">
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer">
                                 <input type="radio" name="q3" value="C" class="mr-2">
                                 <span>C) 计算总和</span>
                             </label>
-                            <label class="flex items-center">
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer">
                                 <input type="radio" name="q3" value="D" class="mr-2">
                                 <span>D) 计算中位数</span>
                             </label>
                         </div>
                     </div>
 
-                    <!-- 题目4 -->
-                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                        <h3 class="font-bold text-gray-800 mb-4">4. 使用IQR方法检测异常值时，通常使用多少倍的IQR作为边界？</h3>
+                    <div class="exam-card rounded-xl p-6 mb-6">
+                        <h3 class="font-bold text-gray-200 mb-4">4. 使用IQR方法检测异常值时，通常使用多少倍的IQR作为边界？</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center">
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer">
                                 <input type="radio" name="q4" value="A" class="mr-2">
                                 <span>A) 1倍</span>
                             </label>
-                            <label class="flex items-center">
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer">
                                 <input type="radio" name="q4" value="B" class="mr-2">
                                 <span>B) 1.5倍</span>
                             </label>
-                            <label class="flex items-center">
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer">
                                 <input type="radio" name="q4" value="C" class="mr-2">
                                 <span>C) 2倍</span>
                             </label>
-                            <label class="flex items-center">
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer">
                                 <input type="radio" name="q4" value="D" class="mr-2">
                                 <span>D) 2.5倍</span>
                             </label>
                         </div>
                     </div>
 
-                    <!-- 题目5 -->
-                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                        <h3 class="font-bold text-gray-800 mb-4">5. 以下哪个方法可以删除DataFrame中包含缺失值的行？</h3>
+                    <div class="exam-card rounded-xl p-6 mb-6">
+                        <h3 class="font-bold text-gray-200 mb-4">5. 以下哪个方法可以删除DataFrame中包含缺失值的行？</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center">
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer">
                                 <input type="radio" name="q5" value="A" class="mr-2">
                                 <span>A) df.fillna()</span>
                             </label>
-                            <label class="flex items-center">
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer">
                                 <input type="radio" name="q5" value="B" class="mr-2">
                                 <span>B) df.dropna()</span>
                             </label>
-                            <label class="flex items-center">
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer">
                                 <input type="radio" name="q5" value="C" class="mr-2">
                                 <span>C) df.remove()</span>
                             </label>
-                            <label class="flex items-center">
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer">
                                 <input type="radio" name="q5" value="D" class="mr-2">
                                 <span>D) df.delete()</span>
                             </label>
@@ -675,20 +845,18 @@ print(df)</textarea>
                     </div>
                 </div>
 
-                <!-- 提交考试按钮 -->
                 <div class="text-center">
-                    <button id="submit-exam" class="bg-purple-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors">
+                    <button id="submit-exam" class="test-button px-8 py-3 rounded-lg font-medium">
                         <i class="fa fa-paper-plane mr-2"></i>提交考试
                     </button>
                 </div>
 
-                <!-- 考试结果 -->
                 <div id="exam-result" class="mt-8 hidden">
-                    <div class="bg-white rounded-xl p-6 shadow-md">
+                    <div class="exam-card rounded-xl p-6">
                         <div class="text-center">
-                            <div id="score-circle" class="w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4"></div>
-                            <h3 id="score-text" class="text-2xl font-bold text-gray-800 mb-2"></h3>
-                            <p id="result-text" class="text-gray-600"></p>
+                            <div id="score-circle" class="score-circle w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4"></div>
+                            <h3 id="score-text" class="text-2xl font-bold neon-text mb-2"></h3>
+                            <p id="result-text" class="text-gray-400"></p>
                         </div>
                         <div id="answer-details" class="mt-6"></div>
                     </div>
@@ -697,46 +865,36 @@ print(df)</textarea>
         </div>
     </section>
 
-    <!-- 页脚 -->
-    <footer class="bg-white py-8 border-t border-gray-200 mt-8">
+    <footer class="glass-panel py-8 border-t border-cyan-500/20 mt-8">
         <div class="container mx-auto px-4">
             <div class="text-center">
-                <p class="text-gray-600">© 2026 Python数据分析实战训练营</p>
+                <p class="text-gray-500">© 2026 Python数据分析实战训练营</p>
             </div>
         </div>
     </footer>
 
     <script>
-        // 移动端菜单切换
         document.getElementById('menu-toggle').addEventListener('click', function() {
-            const mobileMenu = document.getElementById('mobile-menu');
-            mobileMenu.classList.toggle('hidden');
+            document.getElementById('mobile-menu').classList.toggle('hidden');
         });
 
-        // 标签页切换
         const tabs = ['learn', 'practice', 'test'];
         tabs.forEach(tab => {
             document.getElementById(`tab-${tab}`).addEventListener('click', function() {
-                // 隐藏所有内容
                 tabs.forEach(t => {
                     document.getElementById(`content-${t}`).classList.add('hidden');
-                    document.getElementById(`tab-${t}`).classList.remove('border-b-2', 'border-blue-600', 'text-blue-600');
-                    document.getElementById(`tab-${t}`).classList.add('text-gray-600');
+                    document.getElementById(`tab-${t}`).classList.remove('active');
                 });
-                // 显示当前内容
                 document.getElementById(`content-${tab}`).classList.remove('hidden');
-                document.getElementById(`tab-${tab}`).classList.add('border-b-2', 'border-blue-600', 'text-blue-600');
-                document.getElementById(`tab-${tab}`).classList.remove('text-gray-600');
+                document.getElementById(`tab-${tab}`).classList.add('active');
             });
         });
 
-        // 学习完成
         document.getElementById('complete-learn').addEventListener('click', function() {
             saveProgress('project1', 'learned');
             alert('已标记为已学习！');
         });
 
-        // 保存进度
         function saveProgress(projectId, type) {
             const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
             if (!progress[projectId]) {
@@ -746,27 +904,22 @@ print(df)</textarea>
             localStorage.setItem('learningProgress', JSON.stringify(progress));
         }
 
-        // 练习导航切换
         const practiceNavButtons = ['practice-nav-1', 'practice-nav-2', 'practice-nav-3'];
         const practiceDetails = ['practice-detail-1', 'practice-detail-2', 'practice-detail-3'];
         
         practiceNavButtons.forEach((btn, index) => {
             document.getElementById(btn).addEventListener('click', function() {
                 practiceNavButtons.forEach((b, i) => {
-                    document.getElementById(b).classList.remove('bg-blue-50', 'text-blue-600');
-                    document.getElementById(b).classList.add('text-gray-600');
+                    document.getElementById(b).classList.remove('active');
                     document.getElementById(practiceDetails[i]).classList.add('hidden');
                 });
-                this.classList.add('bg-blue-50', 'text-blue-600');
-                this.classList.remove('text-gray-600');
+                this.classList.add('active');
                 document.getElementById(practiceDetails[index]).classList.remove('hidden');
                 
-                // 更新代码编辑器内容
                 updateCodeEditor(index + 1);
             });
         });
         
-        // 代码模板
         const codeTemplates = {
             1: `import pandas as pd
 import numpy as np
@@ -778,10 +931,6 @@ data = {
 }
 df = pd.DataFrame(data)
 
-# 在这里输入你的代码
-# 将age列的缺失值用均值填充
-# 将gender列的缺失值用'Unknown'填充
-
 print(df)`,
             2: `import pandas as pd
 
@@ -792,9 +941,6 @@ data = {
 }
 df = pd.DataFrame(data)
 
-# 在这里输入你的代码
-# 计算每个订单的总价
-
 print(df)`,
             3: `import pandas as pd
 
@@ -804,36 +950,27 @@ data = {
 }
 df = pd.DataFrame(data)
 
-# 在这里输入你的代码
-# 将order_date转换为datetime格式
-# 提取年份和月份
-
 print(df)`
         };
         
-        // 更新代码编辑器
         function updateCodeEditor(practiceNum) {
             const editor = document.getElementById('code-editor');
             editor.value = codeTemplates[practiceNum];
-            document.getElementById('code-output').textContent = '> 执行结果将显示在这里...';
+            document.getElementById('code-output').innerHTML = '<span class="text-cyan-400">&gt; 执行结果将显示在这里...</span>';
         }
         
-        // 运行代码
         document.getElementById('run-code').addEventListener('click', function() {
             const code = document.getElementById('code-editor').value;
             const output = document.getElementById('code-output');
             
-            try {
-                output.textContent = '> 正在执行...\n\n';
-                
+            output.innerHTML = '<span class="text-cyan-400">&gt; 正在执行...</span>\n\n';
+            
+            setTimeout(() => {
                 const mockResult = simulatePythonExecution(code);
-                output.textContent = '> ' + mockResult;
-            } catch (error) {
-                output.textContent = '> 执行错误: ' + error.message;
-            }
+                output.innerHTML = '<span class="text-cyan-400">&gt; 执行完成</span>\n\n<span class="text-green-400">' + mockResult + '</span>';
+            }, 500);
         });
         
-        // 模拟Python代码执行
         function simulatePythonExecution(code) {
             if (code.includes('fillna') && code.includes('mean') && code.includes('Unknown')) {
                 return `   name   age  gender
@@ -860,16 +997,14 @@ print(df)`
             }
         }
         
-        // 重置代码
         document.getElementById('reset-code').addEventListener('click', function() {
-            const activeNav = document.querySelector('.bg-blue-50');
+            const activeNav = document.querySelector('.practice-nav-btn.active');
             const practiceNum = practiceNavButtons.indexOf(activeNav.id) + 1;
             updateCodeEditor(practiceNum);
         });
         
-        // 显示参考答案
         document.getElementById('show-answer').addEventListener('click', function() {
-            const activeNav = document.querySelector('.bg-blue-50');
+            const activeNav = document.querySelector('.practice-nav-btn.active');
             const practiceNum = practiceNavButtons.indexOf(activeNav.id) + 1;
             
             const answers = {
@@ -883,10 +1018,8 @@ data = {
 }
 df = pd.DataFrame(data)
 
-# 将age列的缺失值用均值填充
 df['age'].fillna(df['age'].mean(), inplace=True)
 
-# 将gender列的缺失值用'Unknown'填充
 df['gender'].fillna('Unknown', inplace=True)
 
 print(df)`,
@@ -899,7 +1032,6 @@ data = {
 }
 df = pd.DataFrame(data)
 
-# 计算每个订单的总价
 df['total_amount'] = df['price'] * df['quantity']
 
 print(df)`,
@@ -911,10 +1043,8 @@ data = {
 }
 df = pd.DataFrame(data)
 
-# 将order_date转换为datetime格式
 df['order_date'] = pd.to_datetime(df['order_date'])
 
-# 提取年份和月份
 df['year'] = df['order_date'].dt.year
 df['month'] = df['order_date'].dt.month
 
@@ -924,24 +1054,19 @@ print(df)`
             document.getElementById('code-editor').value = answers[practiceNum];
         });
         
-        // 开始测试
         document.getElementById('start-test').addEventListener('click', function() {
             document.getElementById('content-practice').classList.add('hidden');
             document.getElementById('content-test').classList.remove('hidden');
-            document.getElementById('tab-practice').classList.remove('border-b-2', 'border-blue-600', 'text-blue-600');
-            document.getElementById('tab-practice').classList.add('text-gray-600');
-            document.getElementById('tab-test').classList.add('border-b-2', 'border-blue-600', 'text-blue-600');
-            document.getElementById('tab-test').classList.remove('text-gray-600');
+            document.getElementById('tab-practice').classList.remove('active');
+            document.getElementById('tab-test').classList.add('active');
         });
         
-        // 自动保存
         document.getElementById('auto-save').addEventListener('click', function() {
             const code = document.getElementById('code-editor').value;
             localStorage.setItem('project1-practice-code', code);
             alert('代码已自动保存！');
         });
 
-        // 考试答案
         const correctAnswers = {
             q1: 'C',
             q2: 'B',
@@ -950,7 +1075,6 @@ print(df)`
             q5: 'B'
         };
 
-        // 提交考试
         document.getElementById('submit-exam').addEventListener('click', function() {
             let score = 0;
             const answers = {};
@@ -963,12 +1087,10 @@ print(df)`
                 }
             });
 
-            // 显示结果
             document.getElementById('exam-questions').classList.add('hidden');
             document.getElementById('submit-exam').classList.add('hidden');
             document.getElementById('exam-result').classList.remove('hidden');
 
-            // 更新分数显示
             const scoreCircle = document.getElementById('score-circle');
             const scoreText = document.getElementById('score-text');
             const resultText = document.getElementById('result-text');
@@ -977,25 +1099,24 @@ print(df)`
             scoreText.textContent = `得分：${score}/100`;
             
             if (score >= 80) {
-                scoreCircle.className = 'w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 bg-green-100';
-                scoreCircle.innerHTML = '<span class="text-3xl">🎉</span>';
+                scoreCircle.innerHTML = '<span class="text-4xl">🎉</span>';
                 resultText.textContent = '优秀！你已经掌握了数据清洗的基本知识。';
+                resultText.className = 'text-green-400';
                 saveProgress('project1', 'tested');
             } else if (score >= 60) {
-                scoreCircle.className = 'w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 bg-yellow-100';
-                scoreCircle.innerHTML = '<span class="text-3xl">👍</span>';
+                scoreCircle.innerHTML = '<span class="text-4xl">👍</span>';
                 resultText.textContent = '良好！继续努力，争取更高分数。';
+                resultText.className = 'text-yellow-400';
             } else {
-                scoreCircle.className = 'w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 bg-red-100';
-                scoreCircle.innerHTML = '<span class="text-3xl">📚</span>';
+                scoreCircle.innerHTML = '<span class="text-4xl">📚</span>';
                 resultText.textContent = '需要复习一下相关知识，加油！';
+                resultText.className = 'text-orange-400';
             }
 
-            // 显示答案详情
-            let details = '<h4 class="font-bold text-gray-800 mb-4">答案详情</h4><div class="space-y-2">';
+            let details = '<h4 class="font-bold text-gray-300 mb-4">答案详情</h4><div class="space-y-2">';
             Object.keys(correctAnswers).forEach((q, i) => {
                 const isCorrect = answers[q] === correctAnswers[q];
-                details += `<p class="${isCorrect ? 'text-green-600' : 'text-red-600'}">
+                details += `<p class="${isCorrect ? 'text-green-400' : 'text-red-400'}">
                     ${i+1}. 你的答案: ${answers[q] || '未作答'} | 正确答案: ${correctAnswers[q]} ${isCorrect ? '✓' : '✗'}
                 </p>`;
             });

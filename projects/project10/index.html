@@ -3,66 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>项目10：多数据集合并 - Python训练营</title>
+    <title>项目10：综合案例二 - Python训练营</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <style>
-        body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; }
-        .nav-tab { transition: all 0.3s ease; }
-        .nav-tab:hover { background-color: rgba(139, 92, 246, 0.1); }
-        .code-block { background-color: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin: 0.5rem 0; }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #0a0a1a; color: #e0e0e0; min-height: 100vh; position: relative; overflow-x: hidden; }
+        body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.08) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.05) 0%, transparent 50%), linear-gradient(rgba(10, 10, 26, 0.95), rgba(10, 10, 26, 0.95)), repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(139, 92, 246, 0.02) 50px, rgba(139, 92, 246, 0.02) 51px), repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(139, 92, 246, 0.02) 50px, rgba(139, 92, 246, 0.02) 51px); pointer-events: none; z-index: -1; }
+        .scanline { position: fixed; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.5), transparent); animation: scanline 4s linear infinite; pointer-events: none; z-index: 9999; }
+        @keyframes scanline { 0% { top: 0; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+        .glass-panel { background: rgba(20, 20, 40, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(139, 92, 246, 0.2); box-shadow: 0 0 20px rgba(139, 92, 246, 0.1), inset 0 0 20px rgba(139, 92, 246, 0.05); }
+        .neon-border { border: 1px solid rgba(139, 92, 246, 0.5); box-shadow: 0 0 10px rgba(139, 92, 246, 0.3), inset 0 0 10px rgba(139, 92, 246, 0.1); }
+        .neon-text { background: linear-gradient(135deg, #8b5cf6, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-shadow: 0 0 30px rgba(139, 92, 246, 0.5); }
+        .neon-button { background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.1)); border: 1px solid rgba(139, 92, 246, 0.5); color: #8b5cf6; transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .neon-button::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.3), transparent); transition: left 0.5s ease; }
+        .neon-button:hover::before { left: 100%; }
+        .neon-button:hover { box-shadow: 0 0 20px rgba(139, 92, 246, 0.5), 0 0 40px rgba(139, 92, 246, 0.3); border-color: #8b5cf6; }
+        .run-button { background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 136, 0.1)); border: 1px solid rgba(0, 255, 136, 0.5); color: #00ff88; }
+        .run-button:hover { box-shadow: 0 0 20px rgba(0, 255, 136, 0.5), 0 0 40px rgba(0, 255, 136, 0.3); border-color: #00ff88; }
+        .test-button { background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(139, 92, 246, 0.1)); border: 1px solid rgba(139, 92, 246, 0.5); color: #8b5cf6; }
+        .test-button:hover { box-shadow: 0 0 20px rgba(139, 92, 246, 0.5), 0 0 40px rgba(139, 92, 246, 0.3); border-color: #8b5cf6; }
+        .nav-tab { transition: all 0.3s ease; position: relative; }
+        .nav-tab::after { content: ''; position: absolute; bottom: 0; left: 50%; width: 0; height: 2px; background: linear-gradient(90deg, #8b5cf6, #ec4899); transition: all 0.3s ease; transform: translateX(-50%); }
+        .nav-tab:hover::after, .nav-tab.active::after { width: 80%; }
+        .nav-tab.active { color: #8b5cf6; text-shadow: 0 0 10px rgba(139, 92, 246, 0.5); }
+        .code-block { background: rgba(10, 10, 26, 0.9); border: 1px solid rgba(139, 92, 246, 0.3); color: #00ff88; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin: 0.5rem 0; font-family: 'Courier New', monospace; }
+        .practice-nav-btn { background: rgba(20, 20, 40, 0.6); border: 1px solid rgba(139, 92, 246, 0.2); color: #e0e0e0; transition: all 0.3s ease; }
+        .practice-nav-btn:hover { background: rgba(139, 92, 246, 0.1); border-color: rgba(139, 92, 246, 0.5); }
+        .practice-nav-btn.active { background: rgba(139, 92, 246, 0.15); border-color: #8b5cf6; color: #8b5cf6; box-shadow: 0 0 15px rgba(139, 92, 246, 0.3); }
+        .detail-card { background: rgba(20, 20, 40, 0.8); border: 1px solid rgba(255, 165, 0, 0.3); box-shadow: 0 0 15px rgba(255, 165, 0, 0.1); }
+        .code-card { background: rgba(10, 10, 26, 0.95); border: 1px solid rgba(0, 255, 136, 0.3); box-shadow: 0 0 15px rgba(0, 255, 136, 0.1); }
+        .tip-card { background: rgba(20, 20, 40, 0.8); border: 1px solid rgba(255, 215, 0, 0.3); box-shadow: 0 0 15px rgba(255, 215, 0, 0.1); }
+        .code-editor { background: rgba(5, 5, 15, 0.95); color: #00ff88; font-family: 'Courier New', monospace; border: none; resize: none; outline: none; }
+        .terminal-output { background: rgba(5, 5, 15, 0.95); color: #00ff88; font-family: 'Courier New', monospace; }
+        .file-tab { background: rgba(30, 30, 50, 0.8); border-bottom: 1px solid rgba(139, 92, 246, 0.2); }
+        .toolbar { background: rgba(20, 20, 40, 0.9); border: 1px solid rgba(139, 92, 246, 0.2); border-bottom: none; }
+        .learning-card { background: rgba(20, 20, 40, 0.8); border: 1px solid rgba(139, 92, 246, 0.2); box-shadow: 0 0 20px rgba(139, 92, 246, 0.1); }
+        .exam-card { background: rgba(20, 20, 40, 0.8); border: 1px solid rgba(139, 92, 246, 0.3); box-shadow: 0 0 20px rgba(139, 92, 246, 0.1); }
+        input[type="radio"] { accent-color: #8b5cf6; }
+        .score-circle { background: rgba(20, 20, 40, 0.8); border: 2px solid rgba(139, 92, 246, 0.5); box-shadow: 0 0 30px rgba(139, 92, 246, 0.3); }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(10, 10, 26, 0.5); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #8b5cf6, #ec4899); border-radius: 4px; }
     </style>
 </head>
-<body class="bg-gray-50">
-    <nav class="bg-white shadow-md fixed w-full top-0 z-50">
+<body>
+    <div class="scanline"></div>
+    <nav class="glass-panel fixed w-full top-0 z-50">
         <div class="container mx-auto px-4 py-3">
             <div class="flex justify-between items-center">
-                <div class="text-xl font-bold text-violet-600">
-                    <a href="../../index.html">Python训练营</a>
-                </div>
+                <div class="text-xl font-bold neon-text" style="font-family: 'Orbitron', sans-serif;"><a href="../../index.html">Python训练营</a></div>
                 <div class="hidden md:flex space-x-6">
-                    <a href="../../index.html#home" class="text-gray-700 hover:text-violet-600 font-medium">首页</a>
-                    <a href="../../index.html#projects" class="text-gray-700 hover:text-violet-600 font-medium">学习项目</a>
-                    <a href="../../index.html#my-progress" class="text-gray-700 hover:text-violet-600 font-medium">学习进度</a>
+                    <a href="../../index.html#home" class="text-gray-300 hover:text-purple-400 font-medium transition-colors">首页</a>
+                    <a href="../../index.html#projects" class="text-gray-300 hover:text-purple-400 font-medium transition-colors">学习项目</a>
+                    <a href="../../index.html#my-progress" class="text-gray-300 hover:text-purple-400 font-medium transition-colors">学习进度</a>
                 </div>
-                <div class="md:hidden">
-                    <button id="menu-toggle" class="text-gray-700 focus:outline-none"><i class="fa fa-bars text-xl"></i></button>
-                </div>
+                <div class="md:hidden"><button id="menu-toggle" class="text-purple-400 focus:outline-none"><i class="fa fa-bars text-xl"></i></button></div>
             </div>
             <div id="mobile-menu" class="md:hidden hidden mt-4 pb-2">
-                <a href="../../index.html#home" class="block py-2 text-gray-700">首页</a>
-                <a href="../../index.html#projects" class="block py-2 text-gray-700">学习项目</a>
-                <a href="../../index.html#my-progress" class="block py-2 text-gray-700">学习进度</a>
+                <a href="../../index.html#home" class="block py-2 text-gray-300 hover:text-purple-400">首页</a>
+                <a href="../../index.html#projects" class="block py-2 text-gray-300 hover:text-purple-400">学习项目</a>
+                <a href="../../index.html#my-progress" class="block py-2 text-gray-300 hover:text-purple-400">学习进度</a>
             </div>
         </div>
     </nav>
 
-    <section class="pt-20 pb-8 bg-gradient-to-r from-violet-600 to-violet-800">
-        <div class="container mx-auto px-4">
+    <section class="pt-20 pb-8 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-purple-900/30 to-pink-900/30"></div>
+        <div class="absolute inset-0" style="background: radial-gradient(circle at 30% 50%, rgba(139, 92, 246, 0.1) 0%, transparent 50%), radial-gradient(circle at 70% 50%, rgba(236, 72, 153, 0.1) 0%, transparent 50%);"></div>
+        <div class="container mx-auto px-4 relative z-10">
             <div class="flex items-center">
-                <span class="bg-white/20 text-white px-3 py-1 rounded-full text-sm font-medium mr-4">项目10</span>
-                <h1 class="text-2xl md:text-3xl font-bold text-white">多数据集合并</h1>
+                <span class="glass-panel text-purple-400 px-4 py-1 rounded-full text-sm font-medium mr-4 neon-border" style="font-family: 'Orbitron', sans-serif;">PROJECT 10</span>
+                <h1 class="text-2xl md:text-3xl font-bold neon-text">综合案例二：客户价值分析</h1>
             </div>
-            <p class="text-violet-100 mt-4">使用merge和concat合并数据集</p>
-            <div class="flex items-center mt-4 text-violet-100">
-                <i class="fa fa-file-csv mr-2"></i>
-                <span>数据文件: orders.csv, customers.csv</span>
+            <p class="text-gray-400 mt-4">RFM模型分析，客户分群与价值评估</p>
+            <div class="flex items-center mt-4 text-gray-500">
+                <i class="fa fa-file-csv mr-2 text-purple-400"></i>
+                <span>数据文件: <span class="text-purple-400">retail_orders.csv</span></span>
             </div>
         </div>
     </section>
 
-    <section class="bg-white border-b">
+    <section class="glass-panel border-b border-purple-500/20">
         <div class="container mx-auto px-4">
             <div class="flex overflow-x-auto">
-                <button id="tab-learn" class="nav-tab flex-shrink-0 px-6 py-4 text-violet-600 border-b-2 border-violet-600 font-medium">
-                    <i class="fa fa-book mr-2"></i>学习
-                </button>
-                <button id="tab-practice" class="nav-tab flex-shrink-0 px-6 py-4 text-gray-600 hover:text-violet-600 font-medium">
-                    <i class="fa fa-code mr-2"></i>练习
-                </button>
-                <button id="tab-test" class="nav-tab flex-shrink-0 px-6 py-4 text-gray-600 hover:text-violet-600 font-medium">
-                    <i class="fa fa-file-text mr-2"></i>考试
-                </button>
+                <button id="tab-learn" class="nav-tab active flex-shrink-0 px-6 py-4 text-purple-400 font-medium"><i class="fa fa-book mr-2"></i>学习</button>
+                <button id="tab-practice" class="nav-tab flex-shrink-0 px-6 py-4 text-gray-400 hover:text-purple-400 font-medium"><i class="fa fa-code mr-2"></i>练习</button>
+                <button id="tab-test" class="nav-tab flex-shrink-0 px-6 py-4 text-gray-400 hover:text-purple-400 font-medium"><i class="fa fa-file-text mr-2"></i>考试</button>
             </div>
         </div>
     </section>
@@ -70,47 +98,129 @@
     <section id="content-learn" class="py-8">
         <div class="container mx-auto px-4">
             <div class="max-w-4xl mx-auto">
-                <div class="bg-violet-50 rounded-xl p-6 mb-8">
-                    <h2 class="text-xl font-bold text-gray-800 mb-4">学习目标</h2>
-                    <ul class="list-disc list-inside text-gray-600 space-y-2">
-                        <li>理解数据合并的概念和应用场景</li>
-                        <li>掌握merge方法进行表连接</li>
-                        <li>学会使用concat进行表拼接</li>
-                        <li>理解不同连接类型的区别</li>
-                        <li>能够处理合并过程中的数据问题</li>
+                <div class="learning-card rounded-xl p-6 mb-8 neon-border">
+                    <h2 class="text-xl font-bold neon-text mb-4">项目目标</h2>
+                    <ul class="list-disc list-inside text-gray-400 space-y-2">
+                        <li>理解RFM模型的概念和应用</li>
+                        <li>学会计算客户的R、F、M指标</li>
+                        <li>掌握客户分群的方法</li>
+                        <li>能够进行客户价值评估和分析</li>
+                        <li>生成客户分析报告</li>
                     </ul>
                 </div>
 
-                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4">1. merge方法</h3>
-                    <p class="text-gray-600 mb-4">merge类似于SQL中的JOIN，用于横向合并两个数据集。</p>
-                    <div class="code-block">
-                        <pre><code># 内连接
-result = pd.merge(df1, df2, on='key', how='inner')
-
-# 左连接
-result = pd.merge(df1, df2, on='key', how='left')
-
-# 外连接
-result = pd.merge(df1, df2, on='key', how='outer')</code></pre>
+                <div class="learning-card rounded-xl p-6 mb-6">
+                    <h3 class="text-lg font-bold text-purple-400 mb-4">RFM模型概述</h3>
+                    <p class="text-gray-400 mb-4">RFM模型是客户价值分析的经典方法，通过三个维度评估客户价值：</p>
+                    <div class="space-y-3">
+                        <div class="detail-card rounded-lg p-3">
+                            <h4 class="font-bold text-cyan-400">R (Recency) - 最近一次消费时间</h4>
+                            <p class="text-sm text-gray-400">距离上次消费的天数，越小越好</p>
+                        </div>
+                        <div class="detail-card rounded-lg p-3">
+                            <h4 class="font-bold text-green-400">F (Frequency) - 消费频率</h4>
+                            <p class="text-sm text-gray-400">一段时间内的消费次数，越多越好</p>
+                        </div>
+                        <div class="detail-card rounded-lg p-3">
+                            <h4 class="font-bold text-orange-400">M (Monetary) - 消费金额</h4>
+                            <p class="text-sm text-gray-400">一段时间内的消费总额，越高越好</p>
+                        </div>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4">2. concat方法</h3>
-                    <div class="code-block">
-                        <pre><code># 纵向拼接
-result = pd.concat([df1, df2])
+                <div class="learning-card rounded-xl p-6 mb-6">
+                    <h3 class="text-lg font-bold text-purple-400 mb-4">计算RFM指标</h3>
+                    <div class="code-block"><pre><code>import pandas as pd
+from datetime import datetime
 
-# 横向拼接
-result = pd.concat([df1, df2], axis=1)</code></pre>
-                    </div>
+df = pd.read_csv('retail_orders.csv')
+df['order_date'] = pd.to_datetime(df['order_date'])
+
+reference_date = df['order_date'].max() + pd.Timedelta(days=1)
+
+rfm = df.groupby('customer_id').agg({
+    'order_date': lambda x: (reference_date - x.max()).days,
+    'order_id': 'count',
+    'total_amount': 'sum'
+})
+
+rfm.columns = ['R', 'F', 'M']
+
+print(rfm.head())</code></pre></div>
+                </div>
+
+                <div class="learning-card rounded-xl p-6 mb-6">
+                    <h3 class="text-lg font-bold text-purple-400 mb-4">客户分群</h3>
+                    <p class="text-gray-400 mb-4">根据RFM得分将客户分为不同群体。</p>
+                    <div class="code-block"><pre><code>r_labels = range(4, 0, -1)
+f_labels = range(1, 5)
+m_labels = range(1, 5)
+
+rfm['R_score'] = pd.qcut(rfm['R'], q=4, labels=r_labels)
+rfm['F_score'] = pd.qcut(rfm['F'], q=4, labels=f_labels)
+rfm['M_score'] = pd.qcut(rfm['M'], q=4, labels=m_labels)
+
+rfm['RFM_score'] = rfm['R_score'].astype(str) + rfm['F_score'].astype(str) + rfm['M_score'].astype(str)
+
+def segment_customer(df):
+    if df['RFM_score'] == '444':
+        return '重要价值客户'
+    elif df['R_score'] == '4':
+        return '重要发展客户'
+    elif df['F_score'] == '4':
+        return '重要保持客户'
+    elif df['M_score'] == '4':
+        return '重要挽留客户'
+    else:
+        return '一般客户'
+
+rfm['Segment'] = rfm.apply(segment_customer, axis=1)
+
+print(rfm['Segment'].value_counts())</code></pre></div>
+                </div>
+
+                <div class="learning-card rounded-xl p-6 mb-6">
+                    <h3 class="text-lg font-bold text-purple-400 mb-4">完整实战代码</h3>
+                    <div class="code-block"><pre><code>import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv('retail_orders.csv')
+df['order_date'] = pd.to_datetime(df['order_date'])
+df['total_amount'] = df['price'] * df['quantity']
+
+reference_date = df['order_date'].max() + pd.Timedelta(days=1)
+
+rfm = df.groupby('customer_id').agg({
+    'order_date': lambda x: (reference_date - x.max()).days,
+    'order_id': 'count',
+    'total_amount': 'sum'
+})
+rfm.columns = ['R', 'F', 'M']
+
+rfm['R_score'] = pd.qcut(rfm['R'], q=4, labels=range(4, 0, -1))
+rfm['F_score'] = pd.qcut(rfm['F'], q=4, labels=range(1, 5), duplicates='drop')
+rfm['M_score'] = pd.qcut(rfm['M'], q=4, labels=range(1, 5), duplicates='drop')
+
+rfm['RFM_total'] = rfm['R_score'].astype(int) + rfm['F_score'].astype(int) + rfm['M_score'].astype(int)
+
+def segment(score):
+    if score >= 10: return '高价值客户'
+    elif score >= 7: return '中价值客户'
+    elif score >= 4: return '低价值客户'
+    else: return '流失风险客户'
+
+rfm['Segment'] = rfm['RFM_total'].apply(segment)
+
+segment_counts = rfm['Segment'].value_counts()
+print("客户分群结果:")
+print(segment_counts)
+
+rfm.to_csv('customer_segmentation.csv')
+print("\n分析结果已保存！")</code></pre></div>
                 </div>
 
                 <div class="text-center">
-                    <button id="complete-learn" class="bg-violet-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-violet-700 transition-colors">
-                        <i class="fa fa-check-circle mr-2"></i>标记为已学习
-                    </button>
+                    <button id="complete-learn" class="neon-button px-8 py-3 rounded-lg font-medium"><i class="fa fa-check-circle mr-2"></i>标记为已学习</button>
                 </div>
             </div>
         </div>
@@ -119,140 +229,74 @@ result = pd.concat([df1, df2], axis=1)</code></pre>
     <section id="content-practice" class="py-8 hidden">
         <div class="container mx-auto px-4 h-[calc(100vh-180px)]">
             <div class="flex flex-col lg:flex-row h-full">
-                <div class="lg:w-80 lg:h-full bg-white rounded-xl shadow-md overflow-hidden flex-shrink-0">
-                    <div class="bg-gradient-to-r from-violet-600 to-violet-800 px-4 py-3 text-white">
-                        <h2 class="font-bold">练习导航</h2>
-                    </div>
+                <div class="lg:w-80 lg:h-full glass-panel rounded-xl overflow-hidden flex-shrink-0">
+                    <div class="px-4 py-3 border-b border-purple-500/30"><h2 class="font-bold neon-text">练习导航</h2></div>
                     <div class="p-2 space-y-1">
-                        <button id="practice-nav-1" class="w-full text-left px-4 py-3 rounded-lg bg-violet-50 text-violet-600 font-medium hover:bg-violet-100 transition-colors">
-                            <i class="fa fa-code mr-2"></i>练习1：内连接merge
-                        </button>
-                        <button id="practice-nav-2" class="w-full text-left px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
-                            <i class="fa fa-code mr-2"></i>练习2：外连接merge
-                        </button>
-                        <button id="practice-nav-3" class="w-full text-left px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
-                            <i class="fa fa-code mr-2"></i>练习3：concat拼接
-                        </button>
+                        <button id="practice-nav-1" class="practice-nav-btn active w-full text-left px-4 py-3 rounded-lg font-medium"><i class="fa fa-code mr-2"></i>练习1：计算RFM</button>
+                        <button id="practice-nav-2" class="practice-nav-btn w-full text-left px-4 py-3 rounded-lg font-medium"><i class="fa fa-code mr-2"></i>练习2：RFM评分</button>
+                        <button id="practice-nav-3" class="practice-nav-btn w-full text-left px-4 py-3 rounded-lg font-medium"><i class="fa fa-code mr-2"></i>练习3：客户分群</button>
                     </div>
-                    
-                    <div class="border-t border-gray-200">
+                    <div class="border-t border-purple-500/20">
                         <div id="practice-detail-1" class="p-4">
-                            <div class="bg-orange-50 rounded-lg p-3 mb-4">
-                                <h3 class="font-bold text-orange-800 mb-2 flex items-center">
-                                    <i class="fa fa-info-circle mr-2"></i>详细说明
-                                </h3>
-                                <p class="text-sm text-gray-600">内连接(inner join)只保留两个表中key值都存在的记录。</p>
+                            <div class="detail-card rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-orange-400 mb-2 flex items-center"><i class="fa fa-info-circle mr-2"></i>详细说明</h3>
+                                <p class="text-sm text-gray-400">使用groupby计算每个客户的R(最近消费天数)、F(消费次数)、M(消费金额)。</p>
                             </div>
-                            <div class="bg-gray-900 rounded-lg p-3 mb-4">
-                                <h3 class="font-bold text-green-400 mb-2 flex items-center">
-                                    <i class="fa fa-code mr-2"></i>代码示例
-                                </h3>
-                                <pre class="text-xs text-gray-300"><code>pd.merge(df1, df2, on='key', how='inner')</code></pre>
-                            </div>
-                            <div class="bg-yellow-50 rounded-lg p-3">
-                                <h3 class="font-bold text-yellow-800 mb-2 flex items-center">
-                                    <i class="fa fa-lightbulb-o mr-2"></i>小贴士
-                                </h3>
-                                <p class="text-sm text-gray-600">内连接会丢失只在一边存在的记录。</p>
+                            <div class="tip-card rounded-lg p-3">
+                                <h3 class="font-bold text-yellow-400 mb-2 flex items-center"><i class="fa fa-lightbulb-o mr-2"></i>小贴士</h3>
+                                <p class="text-sm text-gray-400">R值越小越好，F和M值越大越好。</p>
                             </div>
                         </div>
                         <div id="practice-detail-2" class="p-4 hidden">
-                            <div class="bg-orange-50 rounded-lg p-3 mb-4">
-                                <h3 class="font-bold text-orange-800 mb-2 flex items-center">
-                                    <i class="fa fa-info-circle mr-2"></i>详细说明
-                                </h3>
-                                <p class="text-sm text-gray-600">外连接(outer join)保留两个表中所有的记录，不存在的用NaN填充。</p>
+                            <div class="detail-card rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-orange-400 mb-2 flex items-center"><i class="fa fa-info-circle mr-2"></i>详细说明</h3>
+                                <p class="text-sm text-gray-400">使用pd.qcut()将RFM值分为4个等级，得到1-4的评分。</p>
                             </div>
-                            <div class="bg-gray-900 rounded-lg p-3 mb-4">
-                                <h3 class="font-bold text-green-400 mb-2 flex items-center">
-                                    <i class="fa fa-code mr-2"></i>代码示例
-                                </h3>
-                                <pre class="text-xs text-gray-300"><code>pd.merge(df1, df2, on='key', how='outer')</code></pre>
-                            </div>
-                            <div class="bg-yellow-50 rounded-lg p-3">
-                                <h3 class="font-bold text-yellow-800 mb-2 flex items-center">
-                                    <i class="fa fa-lightbulb-o mr-2"></i>小贴士
-                                </h3>
-                                <p class="text-sm text-gray-600">外连接不会丢失任何数据。</p>
+                            <div class="tip-card rounded-lg p-3">
+                                <h3 class="font-bold text-yellow-400 mb-2 flex items-center"><i class="fa fa-lightbulb-o mr-2"></i>小贴士</h3>
+                                <p class="text-sm text-gray-400">R评分要反转，因为R值越小越好。</p>
                             </div>
                         </div>
                         <div id="practice-detail-3" class="p-4 hidden">
-                            <div class="bg-orange-50 rounded-lg p-3 mb-4">
-                                <h3 class="font-bold text-orange-800 mb-2 flex items-center">
-                                    <i class="fa fa-info-circle mr-2"></i>详细说明
-                                </h3>
-                                <p class="text-sm text-gray-600">concat用于沿轴方向拼接DataFrame，axis=0纵向拼接，axis=1横向拼接。</p>
+                            <div class="detail-card rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-orange-400 mb-2 flex items-center"><i class="fa fa-info-circle mr-2"></i>详细说明</h3>
+                                <p class="text-sm text-gray-400">根据RFM评分总和将客户分为不同价值群体。</p>
                             </div>
-                            <div class="bg-gray-900 rounded-lg p-3 mb-4">
-                                <h3 class="font-bold text-green-400 mb-2 flex items-center">
-                                    <i class="fa fa-code mr-2"></i>代码示例
-                                </h3>
-                                <pre class="text-xs text-gray-300"><code>pd.concat([df1, df2], axis=0)</code></pre>
-                            </div>
-                            <div class="bg-yellow-50 rounded-lg p-3">
-                                <h3 class="font-bold text-yellow-800 mb-2 flex items-center">
-                                    <i class="fa fa-lightbulb-o mr-2"></i>小贴士
-                                </h3>
-                                <p class="text-sm text-gray-600">concat不要求列名一致，可以处理不同的列。</p>
+                            <div class="tip-card rounded-lg p-3">
+                                <h3 class="font-bold text-yellow-400 mb-2 flex items-center"><i class="fa fa-lightbulb-o mr-2"></i>小贴士</h3>
+                                <p class="text-sm text-gray-400">可以根据业务需求调整分群标准。</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                
                 <div class="flex-1 flex flex-col ml-4 min-w-0">
-                    <div class="bg-white rounded-t-xl shadow-md px-4 py-3 flex items-center justify-between">
+                    <div class="toolbar rounded-t-xl px-4 py-3 flex items-center justify-between">
                         <div class="flex items-center space-x-2">
-                            <button id="run-code" class="bg-violet-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-violet-700 flex items-center">
-                                <i class="fa fa-play mr-2"></i>运行代码
-                            </button>
-                            <button id="reset-code" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 flex items-center">
-                                <i class="fa fa-refresh mr-2"></i>重置代码
-                            </button>
-                            <button id="show-answer" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 flex items-center">
-                                <i class="fa fa-eye mr-2"></i>显示参考答案
-                            </button>
+                            <button id="run-code" class="run-button px-4 py-2 rounded-lg text-sm font-medium flex items-center"><i class="fa fa-play mr-2"></i>运行代码</button>
+                            <button id="reset-code" class="neon-button px-4 py-2 rounded-lg text-sm font-medium flex items-center"><i class="fa fa-refresh mr-2"></i>重置代码</button>
+                            <button id="show-answer" class="neon-button px-4 py-2 rounded-lg text-sm font-medium flex items-center"><i class="fa fa-eye mr-2"></i>显示参考答案</button>
                         </div>
                         <div class="flex items-center space-x-2">
-                            <button id="start-test" class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 flex items-center">
-                                <i class="fa fa-file-text mr-2"></i>开始测试
-                            </button>
-                            <button id="auto-save" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 flex items-center">
-                                <i class="fa fa-save mr-2"></i>自动保存
-                            </button>
+                            <button id="start-test" class="test-button px-4 py-2 rounded-lg text-sm font-medium flex items-center"><i class="fa fa-file-text mr-2"></i>开始测试</button>
+                            <button id="auto-save" class="neon-button px-4 py-2 rounded-lg text-sm font-medium flex items-center"><i class="fa fa-save mr-2"></i>自动保存</button>
                         </div>
                     </div>
-                    
-                    <div class="flex-1 bg-gray-900 rounded-b-xl shadow-md overflow-hidden">
-                        <div class="flex items-center px-4 py-2 bg-gray-800 text-gray-400 text-sm">
-                            <i class="fa fa-file-code-o mr-2"></i>
-                            <span>project10/main.py</span>
-                        </div>
-                        <textarea id="code-editor" class="w-full h-[calc(50%-40px)] bg-gray-900 text-green-400 p-4 font-mono text-sm resize-none outline-none">import pandas as pd
+                    <div class="flex-1 glass-panel rounded-b-xl overflow-hidden">
+                        <div class="file-tab flex items-center px-4 py-2 text-gray-400 text-sm"><i class="fa fa-file-code-o mr-2 text-purple-400"></i><span class="text-purple-400">project10/main.py</span></div>
+                        <textarea id="code-editor" class="code-editor w-full h-[calc(50%-40px)] p-4 text-sm" placeholder="在这里输入你的代码...">import pandas as pd
 
-orders = pd.DataFrame({
-    'order_id': [1, 2, 3],
-    'customer_id': [101, 102, 103],
-    'amount': [500, 300, 800]
-})
+data = {
+    'customer_id': ['C001', 'C001', 'C002', 'C003', 'C002'],
+    'order_date': ['2023-01-15', '2023-02-20', '2023-03-10', '2023-01-25', '2023-02-15'],
+    'amount': [100, 200, 150, 300, 250]
+}
+df = pd.DataFrame(data)
+df['order_date'] = pd.to_datetime(df['order_date'])
 
-customers = pd.DataFrame({
-    'customer_id': [101, 102, 104],
-    'name': ['张三', '李四', '王五']
-})
-
-# 在这里输入你的代码
-# 使用内连接合并两个表
-
-print(orders)
-print(customers)</textarea>
-                        <div class="h-[50%] border-t border-gray-700">
-                            <div class="flex items-center px-4 py-2 bg-gray-800 text-gray-400 text-sm">
-                                <i class="fa fa-terminal mr-2"></i>
-                                <span>执行结果</span>
-                            </div>
-                            <div id="code-output" class="h-[calc(100%-40px)] p-4 overflow-auto bg-gray-950 text-green-400 font-mono text-sm">
-> 执行结果将显示在这里...
-                            </div>
+# 请计算每个客户的消费次数(F)和消费总额(M)</textarea>
+                        <div class="h-[50%] border-t border-purple-500/20">
+                            <div class="file-tab flex items-center px-4 py-2 text-gray-400 text-sm"><i class="fa fa-terminal mr-2 text-green-400"></i><span class="text-green-400">执行结果</span></div>
+                            <div id="code-output" class="terminal-output h-[calc(100%-40px)] p-4 overflow-auto text-sm"><span class="text-purple-400">&gt; 执行结果将显示在这里...</span></div>
                         </div>
                     </div>
                 </div>
@@ -263,177 +307,95 @@ print(customers)</textarea>
     <section id="content-test" class="py-8 hidden">
         <div class="container mx-auto px-4">
             <div class="max-w-4xl mx-auto">
-                <div class="bg-violet-50 rounded-xl p-6 mb-6">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-2">项目考试</h2>
-                    <p class="text-gray-600">共5道题目，每题20分，满分100分</p>
+                <div class="exam-card rounded-xl p-6 mb-6">
+                    <h2 class="text-2xl font-bold neon-text mb-2">项目考试</h2>
+                    <p class="text-gray-400">共5道题目，每题20分，满分100分</p>
                 </div>
                 <div id="exam-questions">
-                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                        <h3 class="font-bold text-gray-800 mb-4">1. merge方法类似于SQL中的什么操作？</h3>
+                    <div class="exam-card rounded-xl p-6 mb-6">
+                        <h3 class="font-bold text-gray-200 mb-4">1. RFM模型中R代表什么？</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center"><input type="radio" name="q1" value="A" class="mr-2"><span>A) SELECT</span></label>
-                            <label class="flex items-center"><input type="radio" name="q1" value="B" class="mr-2"><span>B) JOIN</span></label>
-                            <label class="flex items-center"><input type="radio" name="q1" value="C" class="mr-2"><span>C) UNION</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-purple-400 cursor-pointer"><input type="radio" name="q1" value="A" class="mr-2"><span>A) 消费频率</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-purple-400 cursor-pointer"><input type="radio" name="q1" value="B" class="mr-2"><span>B) 最近一次消费时间</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-purple-400 cursor-pointer"><input type="radio" name="q1" value="C" class="mr-2"><span>C) 消费金额</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-purple-400 cursor-pointer"><input type="radio" name="q1" value="D" class="mr-2"><span>D) 消费次数</span></label>
                         </div>
                     </div>
-                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                        <h3 class="font-bold text-gray-800 mb-4">2. 内连接(inner join)的特点是？</h3>
+                    <div class="exam-card rounded-xl p-6 mb-6">
+                        <h3 class="font-bold text-gray-200 mb-4">2. RFM模型中M代表什么？</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center"><input type="radio" name="q2" value="A" class="mr-2"><span>A) 保留所有记录</span></label>
-                            <label class="flex items-center"><input type="radio" name="q2" value="B" class="mr-2"><span>B) 只保留两边都有的记录</span></label>
-                            <label class="flex items-center"><input type="radio" name="q2" value="C" class="mr-2"><span>C) 只保留左边的记录</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-purple-400 cursor-pointer"><input type="radio" name="q2" value="A" class="mr-2"><span>A) 消费频率</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-purple-400 cursor-pointer"><input type="radio" name="q2" value="B" class="mr-2"><span>B) 最近一次消费时间</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-purple-400 cursor-pointer"><input type="radio" name="q2" value="C" class="mr-2"><span>C) 消费金额</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-purple-400 cursor-pointer"><input type="radio" name="q2" value="D" class="mr-2"><span>D) 消费次数</span></label>
                         </div>
                     </div>
-                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                        <h3 class="font-bold text-gray-800 mb-4">3. concat的axis=0表示？</h3>
+                    <div class="exam-card rounded-xl p-6 mb-6">
+                        <h3 class="font-bold text-gray-200 mb-4">3. R值越小表示？</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center"><input type="radio" name="q3" value="A" class="mr-2"><span>A) 横向拼接</span></label>
-                            <label class="flex items-center"><input type="radio" name="q3" value="B" class="mr-2"><span>B) 纵向拼接</span></label>
-                            <label class="flex items-center"><input type="radio" name="q3" value="C" class="mr-2"><span>C) 对角拼接</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-purple-400 cursor-pointer"><input type="radio" name="q3" value="A" class="mr-2"><span>A) 客户越不活跃</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-purple-400 cursor-pointer"><input type="radio" name="q3" value="B" class="mr-2"><span>B) 客户越活跃</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-purple-400 cursor-pointer"><input type="radio" name="q3" value="C" class="mr-2"><span>C) 消费金额越高</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-purple-400 cursor-pointer"><input type="radio" name="q3" value="D" class="mr-2"><span>D) 消费次数越少</span></label>
                         </div>
                     </div>
-                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                        <h3 class="font-bold text-gray-800 mb-4">4. 左连接(left join)的特点是？</h3>
+                    <div class="exam-card rounded-xl p-6 mb-6">
+                        <h3 class="font-bold text-gray-200 mb-4">4. RFM评分444的客户属于？</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center"><input type="radio" name="q4" value="A" class="mr-2"><span>A) 保留所有记录</span></label>
-                            <label class="flex items-center"><input type="radio" name="q4" value="B" class="mr-2"><span>B) 保留左边所有记录</span></label>
-                            <label class="flex items-center"><input type="radio" name="q4" value="C" class="mr-2"><span>C) 保留右边所有记录</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-purple-400 cursor-pointer"><input type="radio" name="q4" value="A" class="mr-2"><span>A) 流失客户</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-purple-400 cursor-pointer"><input type="radio" name="q4" value="B" class="mr-2"><span>B) 一般客户</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-purple-400 cursor-pointer"><input type="radio" name="q4" value="C" class="mr-2"><span>C) 重要价值客户</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-purple-400 cursor-pointer"><input type="radio" name="q4" value="D" class="mr-2"><span>D) 新客户</span></label>
                         </div>
                     </div>
-                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                        <h3 class="font-bold text-gray-800 mb-4">5. merge和concat的主要区别是？</h3>
+                    <div class="exam-card rounded-xl p-6 mb-6">
+                        <h3 class="font-bold text-gray-200 mb-4">5. pd.qcut()函数的作用是？</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center"><input type="radio" name="q5" value="A" class="mr-2"><span>A) merge基于key合并，concat简单拼接</span></label>
-                            <label class="flex items-center"><input type="radio" name="q5" value="B" class="mr-2"><span>B) 没有区别</span></label>
-                            <label class="flex items-center"><input type="radio" name="q5" value="C" class="mr-2"><span>C) concat基于key合并</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-purple-400 cursor-pointer"><input type="radio" name="q5" value="A" class="mr-2"><span>A) 删除数据</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-purple-400 cursor-pointer"><input type="radio" name="q5" value="B" class="mr-2"><span>B) 按分位数分组</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-purple-400 cursor-pointer"><input type="radio" name="q5" value="C" class="mr-2"><span>C) 排序数据</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-purple-400 cursor-pointer"><input type="radio" name="q5" value="D" class="mr-2"><span>D) 合并数据</span></label>
                         </div>
                     </div>
                 </div>
-                <div class="text-center">
-                    <button id="submit-exam" class="bg-purple-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-purple-700">
-                        <i class="fa fa-paper-plane mr-2"></i>提交考试
-                    </button>
-                </div>
+                <div class="text-center"><button id="submit-exam" class="test-button px-8 py-3 rounded-lg font-medium"><i class="fa fa-paper-plane mr-2"></i>提交考试</button></div>
                 <div id="exam-result" class="mt-8 hidden">
-                    <div class="bg-white rounded-xl p-6 shadow-md text-center">
-                        <div id="score-circle" class="w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 bg-violet-100"></div>
-                        <h3 id="score-text" class="text-2xl font-bold text-gray-800 mb-2"></h3>
-                        <p id="result-text" class="text-gray-600"></p>
+                    <div class="exam-card rounded-xl p-6">
+                        <div class="text-center">
+                            <div id="score-circle" class="score-circle w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4"></div>
+                            <h3 id="score-text" class="text-2xl font-bold neon-text mb-2"></h3>
+                            <p id="result-text" class="text-gray-400"></p>
+                        </div>
+                        <div id="answer-details" class="mt-6"></div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="bg-white py-8 border-t border-gray-200 mt-8">
-        <div class="container mx-auto px-4 text-center">
-            <p class="text-gray-600">© 2026 Python数据分析实战训练营</p>
-        </div>
+    <footer class="glass-panel py-8 border-t border-purple-500/20 mt-8">
+        <div class="container mx-auto px-4 text-center"><p class="text-gray-500">© 2026 Python数据分析实战训练营</p></div>
     </footer>
 
     <script>
         document.getElementById('menu-toggle').addEventListener('click', function() { document.getElementById('mobile-menu').classList.toggle('hidden'); });
         const tabs = ['learn', 'practice', 'test'];
-        tabs.forEach(tab => {
-            document.getElementById(`tab-${tab}`).addEventListener('click', function() {
-                tabs.forEach(t => {
-                    document.getElementById(`content-${t}`).classList.add('hidden');
-                    document.getElementById(`tab-${t}`).classList.remove('border-b-2', 'border-violet-600', 'text-violet-600');
-                    document.getElementById(`tab-${t}`).classList.add('text-gray-600');
-                });
-                document.getElementById(`content-${tab}`).classList.remove('hidden');
-                document.getElementById(`tab-${tab}`).classList.add('border-b-2', 'border-violet-600', 'text-violet-600');
-                document.getElementById(`tab-${tab}`).classList.remove('text-gray-600');
-            });
-        });
-        document.getElementById('complete-learn').addEventListener('click', function() { alert('已标记为已学习！'); });
+        tabs.forEach(tab => { document.getElementById(`tab-${tab}`).addEventListener('click', function() { tabs.forEach(t => { document.getElementById(`content-${t}`).classList.add('hidden'); document.getElementById(`tab-${t}`).classList.remove('active'); }); document.getElementById(`content-${tab}`).classList.remove('hidden'); document.getElementById(`tab-${tab}`).classList.add('active'); }); });
+        document.getElementById('complete-learn').addEventListener('click', function() { saveProgress('project10', 'learned'); alert('已标记为已学习！'); });
+        function saveProgress(projectId, type) { const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}'); if (!progress[projectId]) progress[projectId] = { learned: false, practiced: false, tested: false }; progress[projectId][type] = true; localStorage.setItem('learningProgress', JSON.stringify(progress)); }
         const practiceNavButtons = ['practice-nav-1', 'practice-nav-2', 'practice-nav-3'];
         const practiceDetails = ['practice-detail-1', 'practice-detail-2', 'practice-detail-3'];
-        const codeTemplates = {
-            1: `import pandas as pd
-
-orders = pd.DataFrame({
-    'order_id': [1, 2, 3],
-    'customer_id': [101, 102, 103],
-    'amount': [500, 300, 800]
-})
-
-customers = pd.DataFrame({
-    'customer_id': [101, 102, 104],
-    'name': ['张三', '李四', '王五']
-})
-
-# 内连接
-result = pd.merge(orders, customers, on='customer_id', how='inner')
-print(result)`,
-            2: `import pandas as pd
-
-orders = pd.DataFrame({
-    'order_id': [1, 2, 3],
-    'customer_id': [101, 102, 103],
-    'amount': [500, 300, 800]
-})
-
-customers = pd.DataFrame({
-    'customer_id': [101, 102, 104],
-    'name': ['张三', '李四', '王五']
-})
-
-# 外连接
-result = pd.merge(orders, customers, on='customer_id', how='outer')
-print(result)`,
-            3: `import pandas as pd
-
-df1 = pd.DataFrame({'A': [1, 2], 'B': [3, 4]})
-df2 = pd.DataFrame({'A': [5, 6], 'B': [7, 8]})
-
-# 纵向拼接
-result = pd.concat([df1, df2], axis=0)
-print(result)`
-        };
-        practiceNavButtons.forEach((btn, index) => {
-            document.getElementById(btn).addEventListener('click', function() {
-                practiceNavButtons.forEach((b, i) => {
-                    document.getElementById(b).classList.remove('bg-violet-50', 'text-violet-600');
-                    document.getElementById(b).classList.add('text-gray-600');
-                    document.getElementById(practiceDetails[i]).classList.add('hidden');
-                });
-                this.classList.add('bg-violet-50', 'text-violet-600');
-                this.classList.remove('text-gray-600');
-                document.getElementById(practiceDetails[index]).classList.remove('hidden');
-                document.getElementById('code-editor').value = codeTemplates[index + 1];
-            });
-        });
-        document.getElementById('run-code').addEventListener('click', function() {
-            document.getElementById('code-output').textContent = '> 正在执行...\n\n> 数据合并完成！';
-        });
-        document.getElementById('reset-code').addEventListener('click', function() {
-            const idx = parseInt(document.querySelector('.bg-violet-50').id.slice(-1));
-            document.getElementById('code-editor').value = codeTemplates[idx];
-        });
-        document.getElementById('show-answer').addEventListener('click', function() {
-            const idx = parseInt(document.querySelector('.bg-violet-50').id.slice(-1));
-            document.getElementById('code-editor').value = codeTemplates[idx];
-        });
-        document.getElementById('start-test').addEventListener('click', function() {
-            document.getElementById('content-practice').classList.add('hidden');
-            document.getElementById('content-test').classList.remove('hidden');
-        });
-        document.getElementById('auto-save').addEventListener('click', function() { alert('代码已保存！'); });
-        const correctAnswers = { q1: 'B', q2: 'B', q3: 'B', q4: 'B', q5: 'A' };
-        document.getElementById('submit-exam').addEventListener('click', function() {
-            let score = 0;
-            Object.keys(correctAnswers).forEach(q => {
-                const selected = document.querySelector(`input[name="${q}"]:checked`);
-                if (selected && selected.value === correctAnswers[q]) score += 20;
-            });
-            document.getElementById('exam-questions').classList.add('hidden');
-            document.getElementById('submit-exam').classList.add('hidden');
-            document.getElementById('exam-result').classList.remove('hidden');
-            document.getElementById('score-text').textContent = `得分：${score}/100`;
-            document.getElementById('score-circle').innerHTML = score >= 80 ? '<span class="text-3xl">🎉</span>' : '<span class="text-3xl">👍</span>';
-            document.getElementById('result-text').textContent = score >= 80 ? '优秀！' : '继续努力！';
-        });
+        practiceNavButtons.forEach((btn, index) => { document.getElementById(btn).addEventListener('click', function() { practiceNavButtons.forEach((b, i) => { document.getElementById(b).classList.remove('active'); document.getElementById(practiceDetails[i]).classList.add('hidden'); }); this.classList.add('active'); document.getElementById(practiceDetails[index]).classList.remove('hidden'); updateCodeEditor(index + 1); }); });
+        const codeTemplates = { 1: `import pandas as pd\n\ndata = {\n    'customer_id': ['C001', 'C001', 'C002', 'C003', 'C002'],\n    'order_date': ['2023-01-15', '2023-02-20', '2023-03-10', '2023-01-25', '2023-02-15'],\n    'amount': [100, 200, 150, 300, 250]\n}\ndf = pd.DataFrame(data)\ndf['order_date'] = pd.to_datetime(df['order_date'])\n\n# 请计算每个客户的消费次数(F)和消费总额(M)`, 2: `import pandas as pd\n\nrfm = pd.DataFrame({\n    'customer_id': ['C001', 'C002', 'C003'],\n    'R': [10, 20, 30],\n    'F': [5, 3, 1],\n    'M': [1000, 500, 100]\n})\n\n# 请使用qcut将R分为4个等级(标签4,3,2,1)`, 3: `import pandas as pd\n\nrfm = pd.DataFrame({\n    'customer_id': ['C001', 'C002', 'C003'],\n    'RFM_total': [10, 7, 4]\n})\n\n# 请根据RFM_total将客户分为：高价值(>=10)、中价值(>=7)、低价值(>=4)、流失风险(<4)` };
+        function updateCodeEditor(practiceNum) { document.getElementById('code-editor').value = codeTemplates[practiceNum]; document.getElementById('code-output').innerHTML = '<span class="text-purple-400">&gt; 执行结果将显示在这里...</span>'; }
+        document.getElementById('run-code').addEventListener('click', function() { const code = document.getElementById('code-editor').value; const output = document.getElementById('code-output'); output.innerHTML = '<span class="text-purple-400">&gt; 正在执行...</span>\n\n'; setTimeout(() => { output.innerHTML = '<span class="text-purple-400">&gt; 执行完成</span>\n\n<span class="text-green-400">' + simulatePythonExecution(code) + '</span>'; }, 500); });
+        function simulatePythonExecution(code) { if (code.includes('groupby') && (code.includes('count') || code.includes('sum'))) return `            F     M\ncustomer_id        \nC001        2   300\nC002        2   400\nC003        1   300`; else if (code.includes('qcut')) return `  customer_id   R  F     M R_score\n0        C001  10  5  1000        4\n1        C002  20  3   500        3\n2        C003  30  1   100        2`; else if (code.includes('RFM_total') || code.includes('高价值')) return `  customer_id  RFM_total  Segment\n0        C001         10    高价值客户\n1        C002          7    中价值客户\n2        C003          4    低价值客户`; else return '代码执行成功，但未检测到预期的操作。'; }
+        document.getElementById('reset-code').addEventListener('click', function() { const activeNav = document.querySelector('.practice-nav-btn.active'); const practiceNum = practiceNavButtons.indexOf(activeNav.id) + 1; updateCodeEditor(practiceNum); });
+        document.getElementById('show-answer').addEventListener('click', function() { const activeNav = document.querySelector('.practice-nav-btn.active'); const practiceNum = practiceNavButtons.indexOf(activeNav.id) + 1; const answers = { 1: `import pandas as pd\n\ndata = {\n    'customer_id': ['C001', 'C001', 'C002', 'C003', 'C002'],\n    'order_date': ['2023-01-15', '2023-02-20', '2023-03-10', '2023-01-25', '2023-02-15'],\n    'amount': [100, 200, 150, 300, 250]\n}\ndf = pd.DataFrame(data)\ndf['order_date'] = pd.to_datetime(df['order_date'])\n\nrfm = df.groupby('customer_id').agg({\n    'order_id': 'count',\n    'amount': 'sum'\n})\nrfm.columns = ['F', 'M']\nprint(rfm)`, 2: `import pandas as pd\n\nrfm = pd.DataFrame({\n    'customer_id': ['C001', 'C002', 'C003'],\n    'R': [10, 20, 30],\n    'F': [5, 3, 1],\n    'M': [1000, 500, 100]\n})\n\nrfm['R_score'] = pd.qcut(rfm['R'], q=4, labels=[4, 3, 2, 1], duplicates='drop')\nprint(rfm)`, 3: `import pandas as pd\n\nrfm = pd.DataFrame({\n    'customer_id': ['C001', 'C002', 'C003'],\n    'RFM_total': [10, 7, 4]\n})\n\ndef segment(score):\n    if score >= 10: return '高价值客户'\n    elif score >= 7: return '中价值客户'\n    elif score >= 4: return '低价值客户'\n    else: return '流失风险客户'\n\nrfm['Segment'] = rfm['RFM_total'].apply(segment)\nprint(rfm)` }; document.getElementById('code-editor').value = answers[practiceNum]; });
+        document.getElementById('start-test').addEventListener('click', function() { document.getElementById('content-practice').classList.add('hidden'); document.getElementById('content-test').classList.remove('hidden'); document.getElementById('tab-practice').classList.remove('active'); document.getElementById('tab-test').classList.add('active'); });
+        document.getElementById('auto-save').addEventListener('click', function() { localStorage.setItem('project10-practice-code', document.getElementById('code-editor').value); alert('代码已自动保存！'); });
+        const correctAnswers = { q1: 'B', q2: 'C', q3: 'B', q4: 'C', q5: 'B' };
+        document.getElementById('submit-exam').addEventListener('click', function() { let score = 0; const answers = {}; Object.keys(correctAnswers).forEach(q => { const selected = document.querySelector(`input[name="${q}"]:checked`); answers[q] = selected ? selected.value : null; if (answers[q] === correctAnswers[q]) score += 20; }); document.getElementById('exam-questions').classList.add('hidden'); document.getElementById('submit-exam').classList.add('hidden'); document.getElementById('exam-result').classList.remove('hidden'); const scoreCircle = document.getElementById('score-circle'); const scoreText = document.getElementById('score-text'); const resultText = document.getElementById('result-text'); const answerDetails = document.getElementById('answer-details'); scoreText.textContent = `得分：${score}/100`; if (score >= 80) { scoreCircle.innerHTML = '<span class="text-4xl">🎉</span>'; resultText.textContent = '优秀！你已经掌握了RFM分析的方法。'; resultText.className = 'text-green-400'; saveProgress('project10', 'tested'); } else if (score >= 60) { scoreCircle.innerHTML = '<span class="text-4xl">👍</span>'; resultText.textContent = '良好！继续努力，争取更高分数。'; resultText.className = 'text-yellow-400'; } else { scoreCircle.innerHTML = '<span class="text-4xl">📚</span>'; resultText.textContent = '需要复习一下相关知识，加油！'; resultText.className = 'text-orange-400'; } let details = '<h4 class="font-bold text-gray-300 mb-4">答案详情</h4><div class="space-y-2">'; Object.keys(correctAnswers).forEach((q, i) => { const isCorrect = answers[q] === correctAnswers[q]; details += `<p class="${isCorrect ? 'text-green-400' : 'text-red-400'}">${i+1}. 你的答案: ${answers[q] || '未作答'} | 正确答案: ${correctAnswers[q]} ${isCorrect ? '✓' : '✗'}</p>`; }); details += '</div>'; answerDetails.innerHTML = details; });
     </script>
 </body>
 </html>

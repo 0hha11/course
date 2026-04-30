@@ -3,66 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>项目06：A/B测试分析 - Python训练营</title>
+    <title>项目06：文本数据处理 - Python训练营</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <style>
-        body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; }
-        .nav-tab { transition: all 0.3s ease; }
-        .nav-tab:hover { background-color: rgba(236, 72, 153, 0.1); }
-        .code-block { background-color: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin: 0.5rem 0; }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #0a0a1a; color: #e0e0e0; min-height: 100vh; position: relative; overflow-x: hidden; }
+        body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 20% 20%, rgba(236, 72, 153, 0.08) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(249, 115, 22, 0.05) 0%, transparent 50%), linear-gradient(rgba(10, 10, 26, 0.95), rgba(10, 10, 26, 0.95)), repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(236, 72, 153, 0.02) 50px, rgba(236, 72, 153, 0.02) 51px), repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(236, 72, 153, 0.02) 50px, rgba(236, 72, 153, 0.02) 51px); pointer-events: none; z-index: -1; }
+        .scanline { position: fixed; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, rgba(236, 72, 153, 0.5), transparent); animation: scanline 4s linear infinite; pointer-events: none; z-index: 9999; }
+        @keyframes scanline { 0% { top: 0; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+        .glass-panel { background: rgba(20, 20, 40, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(236, 72, 153, 0.2); box-shadow: 0 0 20px rgba(236, 72, 153, 0.1), inset 0 0 20px rgba(236, 72, 153, 0.05); }
+        .neon-border { border: 1px solid rgba(236, 72, 153, 0.5); box-shadow: 0 0 10px rgba(236, 72, 153, 0.3), inset 0 0 10px rgba(236, 72, 153, 0.1); }
+        .neon-text { background: linear-gradient(135deg, #ec4899, #f97316); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-shadow: 0 0 30px rgba(236, 72, 153, 0.5); }
+        .neon-button { background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(249, 115, 22, 0.1)); border: 1px solid rgba(236, 72, 153, 0.5); color: #ec4899; transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .neon-button::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(236, 72, 153, 0.3), transparent); transition: left 0.5s ease; }
+        .neon-button:hover::before { left: 100%; }
+        .neon-button:hover { box-shadow: 0 0 20px rgba(236, 72, 153, 0.5), 0 0 40px rgba(236, 72, 153, 0.3); border-color: #ec4899; }
+        .run-button { background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 136, 0.1)); border: 1px solid rgba(0, 255, 136, 0.5); color: #00ff88; }
+        .run-button:hover { box-shadow: 0 0 20px rgba(0, 255, 136, 0.5), 0 0 40px rgba(0, 255, 136, 0.3); border-color: #00ff88; }
+        .test-button { background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(139, 92, 246, 0.1)); border: 1px solid rgba(139, 92, 246, 0.5); color: #8b5cf6; }
+        .test-button:hover { box-shadow: 0 0 20px rgba(139, 92, 246, 0.5), 0 0 40px rgba(139, 92, 246, 0.3); border-color: #8b5cf6; }
+        .nav-tab { transition: all 0.3s ease; position: relative; }
+        .nav-tab::after { content: ''; position: absolute; bottom: 0; left: 50%; width: 0; height: 2px; background: linear-gradient(90deg, #ec4899, #f97316); transition: all 0.3s ease; transform: translateX(-50%); }
+        .nav-tab:hover::after, .nav-tab.active::after { width: 80%; }
+        .nav-tab.active { color: #ec4899; text-shadow: 0 0 10px rgba(236, 72, 153, 0.5); }
+        .code-block { background: rgba(10, 10, 26, 0.9); border: 1px solid rgba(236, 72, 153, 0.3); color: #00ff88; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin: 0.5rem 0; font-family: 'Courier New', monospace; }
+        .practice-nav-btn { background: rgba(20, 20, 40, 0.6); border: 1px solid rgba(236, 72, 153, 0.2); color: #e0e0e0; transition: all 0.3s ease; }
+        .practice-nav-btn:hover { background: rgba(236, 72, 153, 0.1); border-color: rgba(236, 72, 153, 0.5); }
+        .practice-nav-btn.active { background: rgba(236, 72, 153, 0.15); border-color: #ec4899; color: #ec4899; box-shadow: 0 0 15px rgba(236, 72, 153, 0.3); }
+        .detail-card { background: rgba(20, 20, 40, 0.8); border: 1px solid rgba(255, 165, 0, 0.3); box-shadow: 0 0 15px rgba(255, 165, 0, 0.1); }
+        .code-card { background: rgba(10, 10, 26, 0.95); border: 1px solid rgba(0, 255, 136, 0.3); box-shadow: 0 0 15px rgba(0, 255, 136, 0.1); }
+        .tip-card { background: rgba(20, 20, 40, 0.8); border: 1px solid rgba(255, 215, 0, 0.3); box-shadow: 0 0 15px rgba(255, 215, 0, 0.1); }
+        .code-editor { background: rgba(5, 5, 15, 0.95); color: #00ff88; font-family: 'Courier New', monospace; border: none; resize: none; outline: none; }
+        .terminal-output { background: rgba(5, 5, 15, 0.95); color: #00ff88; font-family: 'Courier New', monospace; }
+        .file-tab { background: rgba(30, 30, 50, 0.8); border-bottom: 1px solid rgba(236, 72, 153, 0.2); }
+        .toolbar { background: rgba(20, 20, 40, 0.9); border: 1px solid rgba(236, 72, 153, 0.2); border-bottom: none; }
+        .learning-card { background: rgba(20, 20, 40, 0.8); border: 1px solid rgba(236, 72, 153, 0.2); box-shadow: 0 0 20px rgba(236, 72, 153, 0.1); }
+        .exam-card { background: rgba(20, 20, 40, 0.8); border: 1px solid rgba(139, 92, 246, 0.3); box-shadow: 0 0 20px rgba(139, 92, 246, 0.1); }
+        input[type="radio"] { accent-color: #ec4899; }
+        .score-circle { background: rgba(20, 20, 40, 0.8); border: 2px solid rgba(236, 72, 153, 0.5); box-shadow: 0 0 30px rgba(236, 72, 153, 0.3); }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(10, 10, 26, 0.5); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #ec4899, #f97316); border-radius: 4px; }
     </style>
 </head>
-<body class="bg-gray-50">
-    <nav class="bg-white shadow-md fixed w-full top-0 z-50">
+<body>
+    <div class="scanline"></div>
+    <nav class="glass-panel fixed w-full top-0 z-50">
         <div class="container mx-auto px-4 py-3">
             <div class="flex justify-between items-center">
-                <div class="text-xl font-bold text-pink-600">
-                    <a href="../../index.html">Python训练营</a>
-                </div>
+                <div class="text-xl font-bold neon-text" style="font-family: 'Orbitron', sans-serif;"><a href="../../index.html">Python训练营</a></div>
                 <div class="hidden md:flex space-x-6">
-                    <a href="../../index.html#home" class="text-gray-700 hover:text-pink-600 font-medium">首页</a>
-                    <a href="../../index.html#projects" class="text-gray-700 hover:text-pink-600 font-medium">学习项目</a>
-                    <a href="../../index.html#my-progress" class="text-gray-700 hover:text-pink-600 font-medium">学习进度</a>
+                    <a href="../../index.html#home" class="text-gray-300 hover:text-pink-400 font-medium transition-colors">首页</a>
+                    <a href="../../index.html#projects" class="text-gray-300 hover:text-pink-400 font-medium transition-colors">学习项目</a>
+                    <a href="../../index.html#my-progress" class="text-gray-300 hover:text-pink-400 font-medium transition-colors">学习进度</a>
                 </div>
-                <div class="md:hidden">
-                    <button id="menu-toggle" class="text-gray-700 focus:outline-none"><i class="fa fa-bars text-xl"></i></button>
-                </div>
+                <div class="md:hidden"><button id="menu-toggle" class="text-pink-400 focus:outline-none"><i class="fa fa-bars text-xl"></i></button></div>
             </div>
             <div id="mobile-menu" class="md:hidden hidden mt-4 pb-2">
-                <a href="../../index.html#home" class="block py-2 text-gray-700">首页</a>
-                <a href="../../index.html#projects" class="block py-2 text-gray-700">学习项目</a>
-                <a href="../../index.html#my-progress" class="block py-2 text-gray-700">学习进度</a>
+                <a href="../../index.html#home" class="block py-2 text-gray-300 hover:text-pink-400">首页</a>
+                <a href="../../index.html#projects" class="block py-2 text-gray-300 hover:text-pink-400">学习项目</a>
+                <a href="../../index.html#my-progress" class="block py-2 text-gray-300 hover:text-pink-400">学习进度</a>
             </div>
         </div>
     </nav>
 
-    <section class="pt-20 pb-8 bg-gradient-to-r from-pink-600 to-pink-800">
-        <div class="container mx-auto px-4">
+    <section class="pt-20 pb-8 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-pink-900/30 to-orange-900/30"></div>
+        <div class="absolute inset-0" style="background: radial-gradient(circle at 30% 50%, rgba(236, 72, 153, 0.1) 0%, transparent 50%), radial-gradient(circle at 70% 50%, rgba(249, 115, 22, 0.1) 0%, transparent 50%);"></div>
+        <div class="container mx-auto px-4 relative z-10">
             <div class="flex items-center">
-                <span class="bg-white/20 text-white px-3 py-1 rounded-full text-sm font-medium mr-4">项目06</span>
-                <h1 class="text-2xl md:text-3xl font-bold text-white">A/B测试分析</h1>
+                <span class="glass-panel text-pink-400 px-4 py-1 rounded-full text-sm font-medium mr-4 neon-border" style="font-family: 'Orbitron', sans-serif;">PROJECT 06</span>
+                <h1 class="text-2xl md:text-3xl font-bold neon-text">文本数据处理</h1>
             </div>
-            <p class="text-pink-100 mt-4">使用统计方法验证实验结果显著性</p>
-            <div class="flex items-center mt-4 text-pink-100">
-                <i class="fa fa-file-csv mr-2"></i>
-                <span>数据文件: ab_test_data.csv</span>
+            <p class="text-gray-400 mt-4">字符串操作、正则表达式、文本分析</p>
+            <div class="flex items-center mt-4 text-gray-500">
+                <i class="fa fa-file-csv mr-2 text-pink-400"></i>
+                <span>数据文件: <span class="text-pink-400">customer_reviews.csv</span></span>
             </div>
         </div>
     </section>
 
-    <section class="bg-white border-b">
+    <section class="glass-panel border-b border-pink-500/20">
         <div class="container mx-auto px-4">
             <div class="flex overflow-x-auto">
-                <button id="tab-learn" class="nav-tab flex-shrink-0 px-6 py-4 text-pink-600 border-b-2 border-pink-600 font-medium">
-                    <i class="fa fa-book mr-2"></i>学习
-                </button>
-                <button id="tab-practice" class="nav-tab flex-shrink-0 px-6 py-4 text-gray-600 hover:text-pink-600 font-medium">
-                    <i class="fa fa-code mr-2"></i>练习
-                </button>
-                <button id="tab-test" class="nav-tab flex-shrink-0 px-6 py-4 text-gray-600 hover:text-pink-600 font-medium">
-                    <i class="fa fa-file-text mr-2"></i>考试
-                </button>
+                <button id="tab-learn" class="nav-tab active flex-shrink-0 px-6 py-4 text-pink-400 font-medium"><i class="fa fa-book mr-2"></i>学习</button>
+                <button id="tab-practice" class="nav-tab flex-shrink-0 px-6 py-4 text-gray-400 hover:text-pink-400 font-medium"><i class="fa fa-code mr-2"></i>练习</button>
+                <button id="tab-test" class="nav-tab flex-shrink-0 px-6 py-4 text-gray-400 hover:text-pink-400 font-medium"><i class="fa fa-file-text mr-2"></i>考试</button>
             </div>
         </div>
     </section>
@@ -70,54 +98,104 @@
     <section id="content-learn" class="py-8">
         <div class="container mx-auto px-4">
             <div class="max-w-4xl mx-auto">
-                <div class="bg-pink-50 rounded-xl p-6 mb-8">
-                    <h2 class="text-xl font-bold text-gray-800 mb-4">学习目标</h2>
-                    <ul class="list-disc list-inside text-gray-600 space-y-2">
-                        <li>理解A/B测试的概念和应用场景</li>
-                        <li>掌握统计假设检验的基本原理</li>
-                        <li>学会计算转化率和置信区间</li>
-                        <li>使用T检验判断两组差异显著性</li>
-                        <li>能够解读A/B测试结果并给出建议</li>
+                <div class="learning-card rounded-xl p-6 mb-8 neon-border">
+                    <h2 class="text-xl font-bold neon-text mb-4">学习目标</h2>
+                    <ul class="list-disc list-inside text-gray-400 space-y-2">
+                        <li>掌握Pandas字符串操作方法</li>
+                        <li>学会使用正则表达式处理文本</li>
+                        <li>能够进行文本清洗和标准化</li>
+                        <li>掌握文本提取和替换技巧</li>
+                        <li>能够进行简单的文本分析</li>
                     </ul>
                 </div>
 
-                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4">1. A/B测试概述</h3>
-                    <p class="text-gray-600 mb-4">A/B测试是一种对照实验方法，通过将用户随机分成两组，对照组(A)和实验组(B)，来比较不同策略的效果。</p>
-                    <div class="code-block">
-                        <pre><code>import pandas as pd
-import numpy as np
+                <div class="learning-card rounded-xl p-6 mb-6">
+                    <h3 class="text-lg font-bold text-pink-400 mb-4">1. 字符串基础操作</h3>
+                    <p class="text-gray-400 mb-4">Pandas提供了丰富的字符串操作方法，通过.str访问器使用。</p>
+                    <div class="code-block"><pre><code>import pandas as pd
 
-df = pd.read_csv('ab_test_data.csv')
-print(df.head())</code></pre>
-                    </div>
+df = pd.DataFrame({'text': ['Hello World', 'Python Programming', 'Data Science']})
+
+df['upper'] = df['text'].str.upper()
+df['lower'] = df['text'].str.lower()
+df['len'] = df['text'].str.len()
+
+df['contains'] = df['text'].str.contains('Python')
+df['startswith'] = df['text'].str.startswith('Hello')
+
+print(df)</code></pre></div>
                 </div>
 
-                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4">2. 统计检验</h3>
-                    <div class="code-block">
-                        <pre><code>from scipy import stats
+                <div class="learning-card rounded-xl p-6 mb-6">
+                    <h3 class="text-lg font-bold text-pink-400 mb-4">2. 字符串分割与提取</h3>
+                    <p class="text-gray-400 mb-4">可以分割字符串或提取特定部分。</p>
+                    <div class="code-block"><pre><code>df['split'] = df['text'].str.split()
+df['first_word'] = df['text'].str.split().str[0]
 
-# 计算转化率
-control_rate = df[df['group'] == 'A']['converted'].mean()
-treatment_rate = df[df['group'] == 'B']['converted'].mean()
+df['slice'] = df['text'].str[:5]
 
-# T检验
-t_stat, p_value = stats.ttest_ind(
-    df[df['group'] == 'A']['converted'],
-    df[df['group'] == 'B']['converted']
-)
+df['extract'] = df['text'].str.extract(r'(\w+)')
 
-print(f"对照组转化率: {control_rate:.4f}")
-print(f"实验组转化率: {treatment_rate:.4f}")
-print(f"P值: {p_value:.4f}")</code></pre>
-                    </div>
+print(df[['text', 'first_word', 'slice']])</code></pre></div>
+                </div>
+
+                <div class="learning-card rounded-xl p-6 mb-6">
+                    <h3 class="text-lg font-bold text-pink-400 mb-4">3. 正则表达式</h3>
+                    <p class="text-gray-400 mb-4">正则表达式用于复杂的模式匹配和提取。</p>
+                    <div class="code-block"><pre><code>import pandas as pd
+import re
+
+text = "联系电话：13812345678，邮箱：test@example.com"
+
+phones = re.findall(r'1[3-9]\d{9}', text)
+emails = re.findall(r'\w+@\w+\.\w+', text)
+
+print(f"电话: {phones}")
+print(f"邮箱: {emails}")
+
+df['digits'] = df['text'].str.replace(r'[^\d]', '', regex=True)</code></pre></div>
+                </div>
+
+                <div class="learning-card rounded-xl p-6 mb-6">
+                    <h3 class="text-lg font-bold text-pink-400 mb-4">4. 文本清洗</h3>
+                    <p class="text-gray-400 mb-4">文本清洗是文本分析的重要步骤。</p>
+                    <div class="code-block"><pre><code>df['cleaned'] = df['text'].str.strip()
+df['cleaned'] = df['cleaned'].str.lower()
+df['cleaned'] = df['cleaned'].str.replace(r'[^\w\s]', '', regex=True)
+df['cleaned'] = df['cleaned'].str.replace(r'\s+', ' ', regex=True)
+
+print(df[['text', 'cleaned']])</code></pre></div>
+                </div>
+
+                <div class="learning-card rounded-xl p-6 mb-6">
+                    <h3 class="text-lg font-bold text-pink-400 mb-4">5. 完整实战代码</h3>
+                    <div class="code-block"><pre><code>import pandas as pd
+import re
+
+df = pd.read_csv('customer_reviews.csv')
+
+df['review_cleaned'] = df['review'].str.lower()
+df['review_cleaned'] = df['review_cleaned'].str.replace(r'[^\w\s]', '', regex=True)
+df['review_cleaned'] = df['review_cleaned'].str.strip()
+
+df['word_count'] = df['review'].str.split().str.len()
+
+df['has_positive'] = df['review'].str.contains('好|优秀|满意|推荐', regex=True)
+df['has_negative'] = df['review'].str.contains('差|不好|失望|退货', regex=True)
+
+def extract_rating(text):
+    match = re.search(r'(\d)星|(\d)分', text)
+    if match:
+        return match.group(1) or match.group(2)
+    return None
+
+df['rating'] = df['review'].apply(extract_rating)
+
+print(df[['review', 'word_count', 'has_positive', 'has_negative']].head())</code></pre></div>
                 </div>
 
                 <div class="text-center">
-                    <button id="complete-learn" class="bg-pink-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-pink-700 transition-colors">
-                        <i class="fa fa-check-circle mr-2"></i>标记为已学习
-                    </button>
+                    <button id="complete-learn" class="neon-button px-8 py-3 rounded-lg font-medium"><i class="fa fa-check-circle mr-2"></i>标记为已学习</button>
                 </div>
             </div>
         </div>
@@ -126,138 +204,87 @@ print(f"P值: {p_value:.4f}")</code></pre>
     <section id="content-practice" class="py-8 hidden">
         <div class="container mx-auto px-4 h-[calc(100vh-180px)]">
             <div class="flex flex-col lg:flex-row h-full">
-                <div class="lg:w-80 lg:h-full bg-white rounded-xl shadow-md overflow-hidden flex-shrink-0">
-                    <div class="bg-gradient-to-r from-pink-600 to-pink-800 px-4 py-3 text-white">
-                        <h2 class="font-bold">练习导航</h2>
-                    </div>
+                <div class="lg:w-80 lg:h-full glass-panel rounded-xl overflow-hidden flex-shrink-0">
+                    <div class="px-4 py-3 border-b border-pink-500/30"><h2 class="font-bold neon-text">练习导航</h2></div>
                     <div class="p-2 space-y-1">
-                        <button id="practice-nav-1" class="w-full text-left px-4 py-3 rounded-lg bg-pink-50 text-pink-600 font-medium hover:bg-pink-100 transition-colors">
-                            <i class="fa fa-code mr-2"></i>练习1：计算转化率
-                        </button>
-                        <button id="practice-nav-2" class="w-full text-left px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
-                            <i class="fa fa-code mr-2"></i>练习2：T检验
-                        </button>
-                        <button id="practice-nav-3" class="w-full text-left px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
-                            <i class="fa fa-code mr-2"></i>练习3：置信区间
-                        </button>
+                        <button id="practice-nav-1" class="practice-nav-btn active w-full text-left px-4 py-3 rounded-lg font-medium"><i class="fa fa-code mr-2"></i>练习1：字符串操作</button>
+                        <button id="practice-nav-2" class="practice-nav-btn w-full text-left px-4 py-3 rounded-lg font-medium"><i class="fa fa-code mr-2"></i>练习2：正则表达式</button>
+                        <button id="practice-nav-3" class="practice-nav-btn w-full text-left px-4 py-3 rounded-lg font-medium"><i class="fa fa-code mr-2"></i>练习3：文本清洗</button>
                     </div>
-                    
-                    <div class="border-t border-gray-200">
+                    <div class="border-t border-pink-500/20">
                         <div id="practice-detail-1" class="p-4">
-                            <div class="bg-orange-50 rounded-lg p-3 mb-4">
-                                <h3 class="font-bold text-orange-800 mb-2 flex items-center">
-                                    <i class="fa fa-info-circle mr-2"></i>详细说明
-                                </h3>
-                                <p class="text-sm text-gray-600">转化率是完成目标行为的用户占总用户的比例。计算公式：转化率 = 转化用户数 / 总用户数</p>
+                            <div class="detail-card rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-orange-400 mb-2 flex items-center"><i class="fa fa-info-circle mr-2"></i>详细说明</h3>
+                                <p class="text-sm text-gray-400">使用.str访问器进行字符串操作，如大小写转换、查找、分割等。</p>
                             </div>
-                            <div class="bg-gray-900 rounded-lg p-3 mb-4">
-                                <h3 class="font-bold text-green-400 mb-2 flex items-center">
-                                    <i class="fa fa-code mr-2"></i>代码示例
-                                </h3>
-                                <pre class="text-xs text-gray-300"><code>rate = df['converted'].mean()</code></pre>
+                            <div class="code-card rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-green-400 mb-2 flex items-center"><i class="fa fa-code mr-2"></i>代码示例</h3>
+                                <pre class="text-xs text-green-400 overflow-x-auto"><code>df['text'].str.upper()
+df['text'].str.contains('word')
+df['text'].str.split()</code></pre>
                             </div>
-                            <div class="bg-yellow-50 rounded-lg p-3">
-                                <h3 class="font-bold text-yellow-800 mb-2 flex items-center">
-                                    <i class="fa fa-lightbulb-o mr-2"></i>小贴士
-                                </h3>
-                                <p class="text-sm text-gray-600">使用groupby可以分别计算两组的转化率。</p>
+                            <div class="tip-card rounded-lg p-3">
+                                <h3 class="font-bold text-yellow-400 mb-2 flex items-center"><i class="fa fa-lightbulb-o mr-2"></i>小贴士</h3>
+                                <p class="text-sm text-gray-400">.str访问器支持链式操作，可以连续调用多个方法。</p>
                             </div>
                         </div>
                         <div id="practice-detail-2" class="p-4 hidden">
-                            <div class="bg-orange-50 rounded-lg p-3 mb-4">
-                                <h3 class="font-bold text-orange-800 mb-2 flex items-center">
-                                    <i class="fa fa-info-circle mr-2"></i>详细说明
-                                </h3>
-                                <p class="text-sm text-gray-600">T检验用于判断两组数据的均值是否存在显著差异。P值小于0.05通常被认为差异显著。</p>
+                            <div class="detail-card rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-orange-400 mb-2 flex items-center"><i class="fa fa-info-circle mr-2"></i>详细说明</h3>
+                                <p class="text-sm text-gray-400">正则表达式用于复杂的模式匹配，使用contains()、extract()、replace()等方法。</p>
                             </div>
-                            <div class="bg-gray-900 rounded-lg p-3 mb-4">
-                                <h3 class="font-bold text-green-400 mb-2 flex items-center">
-                                    <i class="fa fa-code mr-2"></i>代码示例
-                                </h3>
-                                <pre class="text-xs text-gray-300"><code>from scipy import stats
-t_stat, p_value = stats.ttest_ind(a, b)</code></pre>
+                            <div class="code-card rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-green-400 mb-2 flex items-center"><i class="fa fa-code mr-2"></i>代码示例</h3>
+                                <pre class="text-xs text-green-400 overflow-x-auto"><code>df['text'].str.contains(r'\d+', regex=True)
+df['text'].str.extract(r'(\d+)')
+df['text'].str.replace(r'\d+', '', regex=True)</code></pre>
                             </div>
-                            <div class="bg-yellow-50 rounded-lg p-3">
-                                <h3 class="font-bold text-yellow-800 mb-2 flex items-center">
-                                    <i class="fa fa-lightbulb-o mr-2"></i>小贴士
-                                </h3>
-                                <p class="text-sm text-gray-600">P值越小，说明差异越显著。</p>
+                            <div class="tip-card rounded-lg p-3">
+                                <h3 class="font-bold text-yellow-400 mb-2 flex items-center"><i class="fa fa-lightbulb-o mr-2"></i>小贴士</h3>
+                                <p class="text-sm text-gray-400">使用regex=True参数启用正则表达式模式。</p>
                             </div>
                         </div>
                         <div id="practice-detail-3" class="p-4 hidden">
-                            <div class="bg-orange-50 rounded-lg p-3 mb-4">
-                                <h3 class="font-bold text-orange-800 mb-2 flex items-center">
-                                    <i class="fa fa-info-circle mr-2"></i>详细说明
-                                </h3>
-                                <p class="text-sm text-gray-600">置信区间表示真实值可能存在的范围。95%置信区间意味着有95%的把握认为真实值在这个范围内。</p>
+                            <div class="detail-card rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-orange-400 mb-2 flex items-center"><i class="fa fa-info-circle mr-2"></i>详细说明</h3>
+                                <p class="text-sm text-gray-400">文本清洗包括去除空白、标点、统一大小写等操作。</p>
                             </div>
-                            <div class="bg-gray-900 rounded-lg p-3 mb-4">
-                                <h3 class="font-bold text-green-400 mb-2 flex items-center">
-                                    <i class="fa fa-code mr-2"></i>代码示例
-                                </h3>
-                                <pre class="text-xs text-gray-300"><code>import statsmodels.api as sm
-sm.stats.DescrStatsW(data).tconfint_mean()</code></pre>
+                            <div class="code-card rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-green-400 mb-2 flex items-center"><i class="fa fa-code mr-2"></i>代码示例</h3>
+                                <pre class="text-xs text-green-400 overflow-x-auto"><code>df['text'].str.strip()
+df['text'].str.lower()
+df['text'].str.replace(r'[^\w\s]', '', regex=True)</code></pre>
                             </div>
-                            <div class="bg-yellow-50 rounded-lg p-3">
-                                <h3 class="font-bold text-yellow-800 mb-2 flex items-center">
-                                    <i class="fa fa-lightbulb-o mr-2"></i>小贴士
-                                </h3>
-                                <p class="text-sm text-gray-600">置信区间越窄，说明估计越精确。</p>
+                            <div class="tip-card rounded-lg p-3">
+                                <h3 class="font-bold text-yellow-400 mb-2 flex items-center"><i class="fa fa-lightbulb-o mr-2"></i>小贴士</h3>
+                                <p class="text-sm text-gray-400">清洗后的文本更适合进行分析和建模。</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                
                 <div class="flex-1 flex flex-col ml-4 min-w-0">
-                    <div class="bg-white rounded-t-xl shadow-md px-4 py-3 flex items-center justify-between">
+                    <div class="toolbar rounded-t-xl px-4 py-3 flex items-center justify-between">
                         <div class="flex items-center space-x-2">
-                            <button id="run-code" class="bg-pink-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-pink-700 flex items-center">
-                                <i class="fa fa-play mr-2"></i>运行代码
-                            </button>
-                            <button id="reset-code" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 flex items-center">
-                                <i class="fa fa-refresh mr-2"></i>重置代码
-                            </button>
-                            <button id="show-answer" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 flex items-center">
-                                <i class="fa fa-eye mr-2"></i>显示参考答案
-                            </button>
+                            <button id="run-code" class="run-button px-4 py-2 rounded-lg text-sm font-medium flex items-center"><i class="fa fa-play mr-2"></i>运行代码</button>
+                            <button id="reset-code" class="neon-button px-4 py-2 rounded-lg text-sm font-medium flex items-center"><i class="fa fa-refresh mr-2"></i>重置代码</button>
+                            <button id="show-answer" class="neon-button px-4 py-2 rounded-lg text-sm font-medium flex items-center"><i class="fa fa-eye mr-2"></i>显示参考答案</button>
                         </div>
                         <div class="flex items-center space-x-2">
-                            <button id="start-test" class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 flex items-center">
-                                <i class="fa fa-file-text mr-2"></i>开始测试
-                            </button>
-                            <button id="auto-save" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 flex items-center">
-                                <i class="fa fa-save mr-2"></i>自动保存
-                            </button>
+                            <button id="start-test" class="test-button px-4 py-2 rounded-lg text-sm font-medium flex items-center"><i class="fa fa-file-text mr-2"></i>开始测试</button>
+                            <button id="auto-save" class="neon-button px-4 py-2 rounded-lg text-sm font-medium flex items-center"><i class="fa fa-save mr-2"></i>自动保存</button>
                         </div>
                     </div>
-                    
-                    <div class="flex-1 bg-gray-900 rounded-b-xl shadow-md overflow-hidden">
-                        <div class="flex items-center px-4 py-2 bg-gray-800 text-gray-400 text-sm">
-                            <i class="fa fa-file-code-o mr-2"></i>
-                            <span>project6/main.py</span>
-                        </div>
-                        <textarea id="code-editor" class="w-full h-[calc(50%-40px)] bg-gray-900 text-green-400 p-4 font-mono text-sm resize-none outline-none">import pandas as pd
-import numpy as np
+                    <div class="flex-1 glass-panel rounded-b-xl overflow-hidden">
+                        <div class="file-tab flex items-center px-4 py-2 text-gray-400 text-sm"><i class="fa fa-file-code-o mr-2 text-pink-400"></i><span class="text-pink-400">project6/main.py</span></div>
+                        <textarea id="code-editor" class="code-editor w-full h-[calc(50%-40px)] p-4 text-sm" placeholder="在这里输入你的代码...">import pandas as pd
 
-data = {
-    'group': ['A'] * 500 + ['B'] * 500,
-    'converted': [1 if np.random.random() < 0.12 else 0 for _ in range(500)] + 
-                 [1 if np.random.random() < 0.15 else 0 for _ in range(500)]
-}
-df = pd.DataFrame(data)
+texts = ['Hello World', 'Python Programming', 'Data Science']
+df = pd.DataFrame({'text': texts})
 
-# 在这里输入你的代码
-# 计算A组和B组的转化率
-
-print(df)</textarea>
-                        <div class="h-[50%] border-t border-gray-700">
-                            <div class="flex items-center px-4 py-2 bg-gray-800 text-gray-400 text-sm">
-                                <i class="fa fa-terminal mr-2"></i>
-                                <span>执行结果</span>
-                            </div>
-                            <div id="code-output" class="h-[calc(100%-40px)] p-4 overflow-auto bg-gray-950 text-green-400 font-mono text-sm">
-> 执行结果将显示在这里...
-                            </div>
+# 请将text列转换为大写并检查是否包含'PYTHON'</textarea>
+                        <div class="h-[50%] border-t border-pink-500/20">
+                            <div class="file-tab flex items-center px-4 py-2 text-gray-400 text-sm"><i class="fa fa-terminal mr-2 text-green-400"></i><span class="text-green-400">执行结果</span></div>
+                            <div id="code-output" class="terminal-output h-[calc(100%-40px)] p-4 overflow-auto text-sm"><span class="text-pink-400">&gt; 执行结果将显示在这里...</span></div>
                         </div>
                     </div>
                 </div>
@@ -268,172 +295,95 @@ print(df)</textarea>
     <section id="content-test" class="py-8 hidden">
         <div class="container mx-auto px-4">
             <div class="max-w-4xl mx-auto">
-                <div class="bg-pink-50 rounded-xl p-6 mb-6">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-2">项目考试</h2>
-                    <p class="text-gray-600">共5道题目，每题20分，满分100分</p>
+                <div class="exam-card rounded-xl p-6 mb-6">
+                    <h2 class="text-2xl font-bold neon-text mb-2">项目考试</h2>
+                    <p class="text-gray-400">共5道题目，每题20分，满分100分</p>
                 </div>
                 <div id="exam-questions">
-                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                        <h3 class="font-bold text-gray-800 mb-4">1. A/B测试的目的是？</h3>
+                    <div class="exam-card rounded-xl p-6 mb-6">
+                        <h3 class="font-bold text-gray-200 mb-4">1. Pandas中访问字符串方法的访问器是？</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center"><input type="radio" name="q1" value="A" class="mr-2"><span>A) 比较不同策略的效果</span></label>
-                            <label class="flex items-center"><input type="radio" name="q1" value="B" class="mr-2"><span>B) 预测未来趋势</span></label>
-                            <label class="flex items-center"><input type="radio" name="q1" value="C" class="mr-2"><span>C) 分类用户</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-pink-400 cursor-pointer"><input type="radio" name="q1" value="A" class="mr-2"><span>A) .string</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-pink-400 cursor-pointer"><input type="radio" name="q1" value="B" class="mr-2"><span>B) .str</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-pink-400 cursor-pointer"><input type="radio" name="q1" value="C" class="mr-2"><span>C) .text</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-pink-400 cursor-pointer"><input type="radio" name="q1" value="D" class="mr-2"><span>D) .char</span></label>
                         </div>
                     </div>
-                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                        <h3 class="font-bold text-gray-800 mb-4">2. P值小于多少通常认为差异显著？</h3>
+                    <div class="exam-card rounded-xl p-6 mb-6">
+                        <h3 class="font-bold text-gray-200 mb-4">2. 正则表达式中\d表示什么？</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center"><input type="radio" name="q2" value="A" class="mr-2"><span>A) 0.01</span></label>
-                            <label class="flex items-center"><input type="radio" name="q2" value="B" class="mr-2"><span>B) 0.05</span></label>
-                            <label class="flex items-center"><input type="radio" name="q2" value="C" class="mr-2"><span>C) 0.10</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-pink-400 cursor-pointer"><input type="radio" name="q2" value="A" class="mr-2"><span>A) 字母</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-pink-400 cursor-pointer"><input type="radio" name="q2" value="B" class="mr-2"><span>B) 数字</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-pink-400 cursor-pointer"><input type="radio" name="q2" value="C" class="mr-2"><span>C) 空格</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-pink-400 cursor-pointer"><input type="radio" name="q2" value="D" class="mr-2"><span>D) 任意字符</span></label>
                         </div>
                     </div>
-                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                        <h3 class="font-bold text-gray-800 mb-4">3. 95%置信区间的含义是？</h3>
+                    <div class="exam-card rounded-xl p-6 mb-6">
+                        <h3 class="font-bold text-gray-200 mb-4">3. 去除字符串首尾空白的方法是？</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center"><input type="radio" name="q3" value="A" class="mr-2"><span>A) 有95%的数据在这个范围内</span></label>
-                            <label class="flex items-center"><input type="radio" name="q3" value="B" class="mr-2"><span>B) 真实值有95%的可能在其中</span></label>
-                            <label class="flex items-center"><input type="radio" name="q3" value="C" class="mr-2"><span>C) 95%的用户在这个范围内</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-pink-400 cursor-pointer"><input type="radio" name="q3" value="A" class="mr-2"><span>A) .str.remove()</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-pink-400 cursor-pointer"><input type="radio" name="q3" value="B" class="mr-2"><span>B) .str.strip()</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-pink-400 cursor-pointer"><input type="radio" name="q3" value="C" class="mr-2"><span>C) .str.trim()</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-pink-400 cursor-pointer"><input type="radio" name="q3" value="D" class="mr-2"><span>D) .str.clean()</span></label>
                         </div>
                     </div>
-                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                        <h3 class="font-bold text-gray-800 mb-4">4. 转化率的计算公式是？</h3>
+                    <div class="exam-card rounded-xl p-6 mb-6">
+                        <h3 class="font-bold text-gray-200 mb-4">4. 检查字符串是否包含某模式的方法是？</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center"><input type="radio" name="q4" value="A" class="mr-2"><span>A) 转化数/总用户数</span></label>
-                            <label class="flex items-center"><input type="radio" name="q4" value="B" class="mr-2"><span>B) 总用户数/转化数</span></label>
-                            <label class="flex items-center"><input type="radio" name="q4" value="C" class="mr-2"><span>C) 转化数-总用户数</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-pink-400 cursor-pointer"><input type="radio" name="q4" value="A" class="mr-2"><span>A) .str.find()</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-pink-400 cursor-pointer"><input type="radio" name="q4" value="B" class="mr-2"><span>B) .str.search()</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-pink-400 cursor-pointer"><input type="radio" name="q4" value="C" class="mr-2"><span>C) .str.contains()</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-pink-400 cursor-pointer"><input type="radio" name="q4" value="D" class="mr-2"><span>D) .str.match()</span></label>
                         </div>
                     </div>
-                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                        <h3 class="font-bold text-gray-800 mb-4">5. T检验用于？</h3>
+                    <div class="exam-card rounded-xl p-6 mb-6">
+                        <h3 class="font-bold text-gray-200 mb-4">5. 正则表达式中\w表示什么？</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center"><input type="radio" name="q5" value="A" class="mr-2"><span>A) 比较两组均值差异</span></label>
-                            <label class="flex items-center"><input type="radio" name="q5" value="B" class="mr-2"><span>B) 计算平均值</span></label>
-                            <label class="flex items-center"><input type="radio" name="q5" value="C" class="mr-2"><span>C) 排序数据</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-pink-400 cursor-pointer"><input type="radio" name="q5" value="A" class="mr-2"><span>A) 数字</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-pink-400 cursor-pointer"><input type="radio" name="q5" value="B" class="mr-2"><span>B) 字母数字下划线</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-pink-400 cursor-pointer"><input type="radio" name="q5" value="C" class="mr-2"><span>C) 空格</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-pink-400 cursor-pointer"><input type="radio" name="q5" value="D" class="mr-2"><span>D) 标点符号</span></label>
                         </div>
                     </div>
                 </div>
-                <div class="text-center">
-                    <button id="submit-exam" class="bg-purple-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-purple-700">
-                        <i class="fa fa-paper-plane mr-2"></i>提交考试
-                    </button>
-                </div>
+                <div class="text-center"><button id="submit-exam" class="test-button px-8 py-3 rounded-lg font-medium"><i class="fa fa-paper-plane mr-2"></i>提交考试</button></div>
                 <div id="exam-result" class="mt-8 hidden">
-                    <div class="bg-white rounded-xl p-6 shadow-md text-center">
-                        <div id="score-circle" class="w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 bg-pink-100"></div>
-                        <h3 id="score-text" class="text-2xl font-bold text-gray-800 mb-2"></h3>
-                        <p id="result-text" class="text-gray-600"></p>
+                    <div class="exam-card rounded-xl p-6">
+                        <div class="text-center">
+                            <div id="score-circle" class="score-circle w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4"></div>
+                            <h3 id="score-text" class="text-2xl font-bold neon-text mb-2"></h3>
+                            <p id="result-text" class="text-gray-400"></p>
+                        </div>
+                        <div id="answer-details" class="mt-6"></div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="bg-white py-8 border-t border-gray-200 mt-8">
-        <div class="container mx-auto px-4 text-center">
-            <p class="text-gray-600">© 2026 Python数据分析实战训练营</p>
-        </div>
+    <footer class="glass-panel py-8 border-t border-pink-500/20 mt-8">
+        <div class="container mx-auto px-4 text-center"><p class="text-gray-500">© 2026 Python数据分析实战训练营</p></div>
     </footer>
 
     <script>
         document.getElementById('menu-toggle').addEventListener('click', function() { document.getElementById('mobile-menu').classList.toggle('hidden'); });
         const tabs = ['learn', 'practice', 'test'];
-        tabs.forEach(tab => {
-            document.getElementById(`tab-${tab}`).addEventListener('click', function() {
-                tabs.forEach(t => {
-                    document.getElementById(`content-${t}`).classList.add('hidden');
-                    document.getElementById(`tab-${t}`).classList.remove('border-b-2', 'border-pink-600', 'text-pink-600');
-                    document.getElementById(`tab-${t}`).classList.add('text-gray-600');
-                });
-                document.getElementById(`content-${tab}`).classList.remove('hidden');
-                document.getElementById(`tab-${tab}`).classList.add('border-b-2', 'border-pink-600', 'text-pink-600');
-                document.getElementById(`tab-${tab}`).classList.remove('text-gray-600');
-            });
-        });
-        document.getElementById('complete-learn').addEventListener('click', function() { alert('已标记为已学习！'); localStorage.setItem('project6-learned', 'true'); });
+        tabs.forEach(tab => { document.getElementById(`tab-${tab}`).addEventListener('click', function() { tabs.forEach(t => { document.getElementById(`content-${t}`).classList.add('hidden'); document.getElementById(`tab-${t}`).classList.remove('active'); }); document.getElementById(`content-${tab}`).classList.remove('hidden'); document.getElementById(`tab-${tab}`).classList.add('active'); }); });
+        document.getElementById('complete-learn').addEventListener('click', function() { saveProgress('project6', 'learned'); alert('已标记为已学习！'); });
+        function saveProgress(projectId, type) { const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}'); if (!progress[projectId]) progress[projectId] = { learned: false, practiced: false, tested: false }; progress[projectId][type] = true; localStorage.setItem('learningProgress', JSON.stringify(progress)); }
         const practiceNavButtons = ['practice-nav-1', 'practice-nav-2', 'practice-nav-3'];
         const practiceDetails = ['practice-detail-1', 'practice-detail-2', 'practice-detail-3'];
-        practiceNavButtons.forEach((btn, index) => {
-            document.getElementById(btn).addEventListener('click', function() {
-                practiceNavButtons.forEach((b, i) => {
-                    document.getElementById(b).classList.remove('bg-pink-50', 'text-pink-600');
-                    document.getElementById(b).classList.add('text-gray-600');
-                    document.getElementById(practiceDetails[i]).classList.add('hidden');
-                });
-                this.classList.add('bg-pink-50', 'text-pink-600');
-                this.classList.remove('text-gray-600');
-                document.getElementById(practiceDetails[index]).classList.remove('hidden');
-                document.getElementById('code-editor').value = codeTemplates[index + 1];
-            });
-        });
-        const codeTemplates = {
-            1: `import pandas as pd
-
-data = {'group': ['A'] * 500 + ['B'] * 500, 'converted': [1]*60 + [0]*440 + [1]*75 + [0]*425}
-df = pd.DataFrame(data)
-
-# 计算A组和B组的转化率
-rate_a = df[df['group'] == 'A']['converted'].mean()
-rate_b = df[df['group'] == 'B']['converted'].mean()
-print(f"A组转化率: {rate_a:.4f}")
-print(f"B组转化率: {rate_b:.4f}")`,
-            2: `from scipy import stats
-import pandas as pd
-
-data = {'group': ['A'] * 500 + ['B'] * 500, 'converted': [1]*60 + [0]*440 + [1]*75 + [0]*425}
-df = pd.DataFrame(data)
-
-# T检验
-a_converted = df[df['group'] == 'A']['converted']
-b_converted = df[df['group'] == 'B']['converted']
-t_stat, p_value = stats.ttest_ind(a_converted, b_converted)
-print(f"t统计量: {t_stat:.4f}")
-print(f"P值: {p_value:.4f}")`,
-            3: `import pandas as pd
-import numpy as np
-
-data = {'converted': [1]*60 + [0]*440}
-df = pd.DataFrame(data)
-
-# 计算95%置信区间
-n = len(df)
-mean = df['converted'].mean()
-se = np.sqrt(mean * (1 - mean) / n)
-ci_lower = mean - 1.96 * se
-ci_upper = mean + 1.96 * se
-print(f"95%置信区间: [{ci_lower:.4f}, {ci_upper:.4f}]")`
-        };
-        document.getElementById('run-code').addEventListener('click', function() {
-            document.getElementById('code-output').textContent = '> 正在执行...\n\n> 统计检验完成！\n> P值: 0.0234 (< 0.05，差异显著)';
-        });
-        document.getElementById('reset-code').addEventListener('click', function() {
-            const idx = document.querySelector('.bg-pink-50').id.slice(-1) - 1;
-            document.getElementById('code-editor').value = codeTemplates[idx + 1];
-        });
-        document.getElementById('show-answer').addEventListener('click', function() {
-            const idx = document.querySelector('.bg-pink-50').id.slice(-1);
-            document.getElementById('code-editor').value = codeTemplates[parseInt(idx)];
-        });
-        document.getElementById('start-test').addEventListener('click', function() {
-            document.getElementById('content-practice').classList.add('hidden');
-            document.getElementById('content-test').classList.remove('hidden');
-        });
-        document.getElementById('auto-save').addEventListener('click', function() { alert('代码已保存！'); localStorage.setItem('project6-code', document.getElementById('code-editor').value); });
-        const correctAnswers = { q1: 'A', q2: 'B', q3: 'B', q4: 'A', q5: 'A' };
-        document.getElementById('submit-exam').addEventListener('click', function() {
-            let score = 0;
-            Object.keys(correctAnswers).forEach(q => {
-                const selected = document.querySelector(`input[name="${q}"]:checked`);
-                if (selected && selected.value === correctAnswers[q]) score += 20;
-            });
-            document.getElementById('exam-questions').classList.add('hidden');
-            document.getElementById('submit-exam').classList.add('hidden');
-            document.getElementById('exam-result').classList.remove('hidden');
-            document.getElementById('score-text').textContent = `得分：${score}/100`;
-            document.getElementById('score-circle').innerHTML = score >= 80 ? '<span class="text-3xl">🎉</span>' : '<span class="text-3xl">👍</span>';
-            document.getElementById('result-text').textContent = score >= 80 ? '优秀！' : '继续努力！';
-        });
+        practiceNavButtons.forEach((btn, index) => { document.getElementById(btn).addEventListener('click', function() { practiceNavButtons.forEach((b, i) => { document.getElementById(b).classList.remove('active'); document.getElementById(practiceDetails[i]).classList.add('hidden'); }); this.classList.add('active'); document.getElementById(practiceDetails[index]).classList.remove('hidden'); updateCodeEditor(index + 1); }); });
+        const codeTemplates = { 1: `import pandas as pd\n\ntexts = ['Hello World', 'Python Programming', 'Data Science']\ndf = pd.DataFrame({'text': texts})\n\n# 请将text列转换为大写并检查是否包含'PYTHON'`, 2: `import pandas as pd\n\ntexts = ['电话:13812345678', '手机:13987654321', '无电话']\ndf = pd.DataFrame({'text': texts})\n\n# 请使用正则表达式提取手机号码`, 3: `import pandas as pd\n\ntexts = ['  Hello World!  ', 'Python  Programming  ', '  Data Science  ']\ndf = pd.DataFrame({'text': texts})\n\n# 请清洗文本：去除首尾空白、转换为小写、去除标点` };
+        function updateCodeEditor(practiceNum) { document.getElementById('code-editor').value = codeTemplates[practiceNum]; document.getElementById('code-output').innerHTML = '<span class="text-pink-400">&gt; 执行结果将显示在这里...</span>'; }
+        document.getElementById('run-code').addEventListener('click', function() { const code = document.getElementById('code-editor').value; const output = document.getElementById('code-output'); output.innerHTML = '<span class="text-pink-400">&gt; 正在执行...</span>\n\n'; setTimeout(() => { output.innerHTML = '<span class="text-pink-400">&gt; 执行完成</span>\n\n<span class="text-green-400">' + simulatePythonExecution(code) + '</span>'; }, 500); });
+        function simulatePythonExecution(code) { if (code.includes('upper') && code.includes('contains')) return `                text  upper  contains_python\n0      Hello World  HELLO WORLD            False\n1  Python Programming  PYTHON PROGRAMMING             True\n2      Data Science  DATA SCIENCE            False`; else if (code.includes('extract')) return `                text       phone\n0  电话:13812345678  13812345678\n1  手机:13987654321  13987654321\n2            无电话          NaN`; else if (code.includes('strip') && code.includes('lower')) return `                text        cleaned\n0    Hello World!      hello world\n1  Python  Programming  python programming\n2    Data Science      data science`; else return '代码执行成功，但未检测到预期的操作。'; }
+        document.getElementById('reset-code').addEventListener('click', function() { const activeNav = document.querySelector('.practice-nav-btn.active'); const practiceNum = practiceNavButtons.indexOf(activeNav.id) + 1; updateCodeEditor(practiceNum); });
+        document.getElementById('show-answer').addEventListener('click', function() { const activeNav = document.querySelector('.practice-nav-btn.active'); const practiceNum = practiceNavButtons.indexOf(activeNav.id) + 1; const answers = { 1: `import pandas as pd\n\ntexts = ['Hello World', 'Python Programming', 'Data Science']\ndf = pd.DataFrame({'text': texts})\n\ndf['upper'] = df['text'].str.upper()\ndf['contains_python'] = df['text'].str.contains('PYTHON')\nprint(df)`, 2: `import pandas as pd\n\ntexts = ['电话:13812345678', '手机:13987654321', '无电话']\ndf = pd.DataFrame({'text': texts})\n\ndf['phone'] = df['text'].str.extract(r'(1[3-9]\\d{9})')\nprint(df)`, 3: `import pandas as pd\n\ntexts = ['  Hello World!  ', 'Python  Programming  ', '  Data Science  ']\ndf = pd.DataFrame({'text': texts})\n\ndf['cleaned'] = df['text'].str.strip().str.lower().str.replace(r'[^\\w\\s]', '', regex=True)\nprint(df)` }; document.getElementById('code-editor').value = answers[practiceNum]; });
+        document.getElementById('start-test').addEventListener('click', function() { document.getElementById('content-practice').classList.add('hidden'); document.getElementById('content-test').classList.remove('hidden'); document.getElementById('tab-practice').classList.remove('active'); document.getElementById('tab-test').classList.add('active'); });
+        document.getElementById('auto-save').addEventListener('click', function() { localStorage.setItem('project6-practice-code', document.getElementById('code-editor').value); alert('代码已自动保存！'); });
+        const correctAnswers = { q1: 'B', q2: 'B', q3: 'B', q4: 'C', q5: 'B' };
+        document.getElementById('submit-exam').addEventListener('click', function() { let score = 0; const answers = {}; Object.keys(correctAnswers).forEach(q => { const selected = document.querySelector(`input[name="${q}"]:checked`); answers[q] = selected ? selected.value : null; if (answers[q] === correctAnswers[q]) score += 20; }); document.getElementById('exam-questions').classList.add('hidden'); document.getElementById('submit-exam').classList.add('hidden'); document.getElementById('exam-result').classList.remove('hidden'); const scoreCircle = document.getElementById('score-circle'); const scoreText = document.getElementById('score-text'); const resultText = document.getElementById('result-text'); const answerDetails = document.getElementById('answer-details'); scoreText.textContent = `得分：${score}/100`; if (score >= 80) { scoreCircle.innerHTML = '<span class="text-4xl">🎉</span>'; resultText.textContent = '优秀！你已经掌握了文本处理的基本知识。'; resultText.className = 'text-green-400'; saveProgress('project6', 'tested'); } else if (score >= 60) { scoreCircle.innerHTML = '<span class="text-4xl">👍</span>'; resultText.textContent = '良好！继续努力，争取更高分数。'; resultText.className = 'text-yellow-400'; } else { scoreCircle.innerHTML = '<span class="text-4xl">📚</span>'; resultText.textContent = '需要复习一下相关知识，加油！'; resultText.className = 'text-orange-400'; } let details = '<h4 class="font-bold text-gray-300 mb-4">答案详情</h4><div class="space-y-2">'; Object.keys(correctAnswers).forEach((q, i) => { const isCorrect = answers[q] === correctAnswers[q]; details += `<p class="${isCorrect ? 'text-green-400' : 'text-red-400'}">${i+1}. 你的答案: ${answers[q] || '未作答'} | 正确答案: ${correctAnswers[q]} ${isCorrect ? '✓' : '✗'}</p>`; }); details += '</div>'; answerDetails.innerHTML = details; });
     </script>
 </body>
 </html>

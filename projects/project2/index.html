@@ -7,66 +7,283 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <style>
-        body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; }
-        .nav-tab { transition: all 0.3s ease; }
-        .nav-tab:hover { background-color: rgba(34, 197, 94, 0.1); }
-        .code-block { background-color: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin: 0.5rem 0; }
-        .exercise-question { background-color: #f8fafc; border-left: 4px solid #22c55e; padding: 1rem; margin-bottom: 1rem; }
-        .answer-input { width: 100%; padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 0.375rem; }
-        .result-correct { background-color: #dcfce7; border-color: #22c55e; }
-        .result-wrong { background-color: #fee2e2; border-color: #ef4444; }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: #0a0a1a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(34, 197, 94, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 245, 255, 0.05) 0%, transparent 50%),
+                linear-gradient(rgba(10, 10, 26, 0.95), rgba(10, 10, 26, 0.95)),
+                repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(34, 197, 94, 0.02) 50px, rgba(34, 197, 94, 0.02) 51px),
+                repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(34, 197, 94, 0.02) 50px, rgba(34, 197, 94, 0.02) 51px);
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .scanline {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.5), transparent);
+            animation: scanline 4s linear infinite;
+            pointer-events: none;
+            z-index: 9999;
+        }
+        
+        @keyframes scanline {
+            0% { top: 0; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+        
+        .glass-panel {
+            background: rgba(20, 20, 40, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.1), inset 0 0 20px rgba(34, 197, 94, 0.05);
+        }
+        
+        .neon-border {
+            border: 1px solid rgba(34, 197, 94, 0.5);
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.3), inset 0 0 10px rgba(34, 197, 94, 0.1);
+        }
+        
+        .neon-text {
+            background: linear-gradient(135deg, #22c55e, #00f5ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(34, 197, 94, 0.5);
+        }
+        
+        .neon-button {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(0, 245, 255, 0.1));
+            border: 1px solid rgba(34, 197, 94, 0.5);
+            color: #22c55e;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .neon-button::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .neon-button:hover::before { left: 100%; }
+        
+        .neon-button:hover {
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.5), 0 0 40px rgba(34, 197, 94, 0.3);
+            border-color: #22c55e;
+        }
+        
+        .run-button {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 136, 0.1));
+            border: 1px solid rgba(0, 255, 136, 0.5);
+            color: #00ff88;
+        }
+        
+        .run-button:hover {
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5), 0 0 40px rgba(0, 255, 136, 0.3);
+            border-color: #00ff88;
+        }
+        
+        .test-button {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(139, 92, 246, 0.1));
+            border: 1px solid rgba(139, 92, 246, 0.5);
+            color: #8b5cf6;
+        }
+        
+        .test-button:hover {
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.5), 0 0 40px rgba(139, 92, 246, 0.3);
+            border-color: #8b5cf6;
+        }
+        
+        .nav-tab { transition: all 0.3s ease; position: relative; }
+        
+        .nav-tab::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 50%;
+            width: 0; height: 2px;
+            background: linear-gradient(90deg, #22c55e, #00f5ff);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .nav-tab:hover::after, .nav-tab.active::after { width: 80%; }
+        .nav-tab.active { color: #22c55e; text-shadow: 0 0 10px rgba(34, 197, 94, 0.5); }
+        
+        .code-block {
+            background: rgba(10, 10, 26, 0.9);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #00ff88;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin: 0.5rem 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .practice-nav-btn {
+            background: rgba(20, 20, 40, 0.6);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            color: #e0e0e0;
+            transition: all 0.3s ease;
+        }
+        
+        .practice-nav-btn:hover {
+            background: rgba(34, 197, 94, 0.1);
+            border-color: rgba(34, 197, 94, 0.5);
+        }
+        
+        .practice-nav-btn.active {
+            background: rgba(34, 197, 94, 0.15);
+            border-color: #22c55e;
+            color: #22c55e;
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.3);
+        }
+        
+        .detail-card {
+            background: rgba(20, 20, 40, 0.8);
+            border: 1px solid rgba(255, 165, 0, 0.3);
+            box-shadow: 0 0 15px rgba(255, 165, 0, 0.1);
+        }
+        
+        .code-card {
+            background: rgba(10, 10, 26, 0.95);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.1);
+        }
+        
+        .tip-card {
+            background: rgba(20, 20, 40, 0.8);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.1);
+        }
+        
+        .code-editor {
+            background: rgba(5, 5, 15, 0.95);
+            color: #00ff88;
+            font-family: 'Courier New', monospace;
+            border: none;
+            resize: none;
+            outline: none;
+        }
+        
+        .terminal-output {
+            background: rgba(5, 5, 15, 0.95);
+            color: #00ff88;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .file-tab {
+            background: rgba(30, 30, 50, 0.8);
+            border-bottom: 1px solid rgba(34, 197, 94, 0.2);
+        }
+        
+        .toolbar {
+            background: rgba(20, 20, 40, 0.9);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-bottom: none;
+        }
+        
+        .learning-card {
+            background: rgba(20, 20, 40, 0.8);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.1);
+        }
+        
+        .exam-card {
+            background: rgba(20, 20, 40, 0.8);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.1);
+        }
+        
+        input[type="radio"] { accent-color: #22c55e; }
+        
+        .score-circle {
+            background: rgba(20, 20, 40, 0.8);
+            border: 2px solid rgba(34, 197, 94, 0.5);
+            box-shadow: 0 0 30px rgba(34, 197, 94, 0.3);
+        }
+        
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(10, 10, 26, 0.5); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #22c55e, #00f5ff); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #22c55e, #00ff88); }
     </style>
 </head>
-<body class="bg-gray-50">
-    <nav class="bg-white shadow-md fixed w-full top-0 z-50">
+<body>
+    <div class="scanline"></div>
+    
+    <nav class="glass-panel fixed w-full top-0 z-50">
         <div class="container mx-auto px-4 py-3">
             <div class="flex justify-between items-center">
-                <div class="text-xl font-bold text-green-600">
+                <div class="text-xl font-bold neon-text" style="font-family: 'Orbitron', sans-serif;">
                     <a href="../../index.html">Python训练营</a>
                 </div>
                 <div class="hidden md:flex space-x-6">
-                    <a href="../../index.html#home" class="text-gray-700 hover:text-green-600 font-medium">首页</a>
-                    <a href="../../index.html#projects" class="text-gray-700 hover:text-green-600 font-medium">学习项目</a>
-                    <a href="../../index.html#my-progress" class="text-gray-700 hover:text-green-600 font-medium">学习进度</a>
+                    <a href="../../index.html#home" class="text-gray-300 hover:text-green-400 font-medium transition-colors">首页</a>
+                    <a href="../../index.html#projects" class="text-gray-300 hover:text-green-400 font-medium transition-colors">学习项目</a>
+                    <a href="../../index.html#my-progress" class="text-gray-300 hover:text-green-400 font-medium transition-colors">学习进度</a>
                 </div>
                 <div class="md:hidden">
-                    <button id="menu-toggle" class="text-gray-700 focus:outline-none">
-                        <i class="fa fa-bars text-xl"></i>
-                    </button>
+                    <button id="menu-toggle" class="text-green-400 focus:outline-none"><i class="fa fa-bars text-xl"></i></button>
                 </div>
             </div>
             <div id="mobile-menu" class="md:hidden hidden mt-4 pb-2">
-                <a href="../../index.html#home" class="block py-2 text-gray-700 hover:text-green-600">首页</a>
-                <a href="../../index.html#projects" class="block py-2 text-gray-700 hover:text-green-600">学习项目</a>
-                <a href="../../index.html#my-progress" class="block py-2 text-gray-700 hover:text-green-600">学习进度</a>
+                <a href="../../index.html#home" class="block py-2 text-gray-300 hover:text-green-400">首页</a>
+                <a href="../../index.html#projects" class="block py-2 text-gray-300 hover:text-green-400">学习项目</a>
+                <a href="../../index.html#my-progress" class="block py-2 text-gray-300 hover:text-green-400">学习进度</a>
             </div>
         </div>
     </nav>
 
-    <section class="pt-20 pb-8 bg-gradient-to-r from-green-600 to-green-800">
-        <div class="container mx-auto px-4">
+    <section class="pt-20 pb-8 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-green-900/30 to-cyan-900/30"></div>
+        <div class="absolute inset-0" style="background: radial-gradient(circle at 30% 50%, rgba(34, 197, 94, 0.1) 0%, transparent 50%), radial-gradient(circle at 70% 50%, rgba(0, 245, 255, 0.1) 0%, transparent 50%);"></div>
+        <div class="container mx-auto px-4 relative z-10">
             <div class="flex items-center">
-                <span class="bg-white/20 text-white px-3 py-1 rounded-full text-sm font-medium mr-4">项目02</span>
-                <h1 class="text-2xl md:text-3xl font-bold text-white">销售数据分组聚合</h1>
+                <span class="glass-panel text-green-400 px-4 py-1 rounded-full text-sm font-medium mr-4 neon-border" style="font-family: 'Orbitron', sans-serif;">PROJECT 02</span>
+                <h1 class="text-2xl md:text-3xl font-bold neon-text">销售数据分组聚合</h1>
             </div>
-            <p class="text-green-100 mt-4">按产品、地区、时间进行分组，计算销售统计指标</p>
-            <div class="flex items-center mt-4 text-green-100">
-                <i class="fa fa-file-csv mr-2"></i>
-                <span>数据文件: retail_orders.csv</span>
+            <p class="text-gray-400 mt-4">按产品、地区、时间进行分组，计算销售统计指标</p>
+            <div class="flex items-center mt-4 text-gray-500">
+                <i class="fa fa-file-csv mr-2 text-green-400"></i>
+                <span>数据文件: <span class="text-green-400">retail_orders.csv</span></span>
             </div>
         </div>
     </section>
 
-    <section class="bg-white border-b">
+    <section class="glass-panel border-b border-green-500/20">
         <div class="container mx-auto px-4">
             <div class="flex overflow-x-auto">
-                <button id="tab-learn" class="nav-tab flex-shrink-0 px-6 py-4 text-green-600 border-b-2 border-green-600 font-medium">
+                <button id="tab-learn" class="nav-tab active flex-shrink-0 px-6 py-4 text-green-400 font-medium">
                     <i class="fa fa-book mr-2"></i>学习
                 </button>
-                <button id="tab-practice" class="nav-tab flex-shrink-0 px-6 py-4 text-gray-600 hover:text-green-600 font-medium">
+                <button id="tab-practice" class="nav-tab flex-shrink-0 px-6 py-4 text-gray-400 hover:text-green-400 font-medium">
                     <i class="fa fa-code mr-2"></i>练习
                 </button>
-                <button id="tab-test" class="nav-tab flex-shrink-0 px-6 py-4 text-gray-600 hover:text-green-600 font-medium">
+                <button id="tab-test" class="nav-tab flex-shrink-0 px-6 py-4 text-gray-400 hover:text-green-400 font-medium">
                     <i class="fa fa-file-text mr-2"></i>考试
                 </button>
             </div>
@@ -76,9 +293,9 @@
     <section id="content-learn" class="py-8">
         <div class="container mx-auto px-4">
             <div class="max-w-4xl mx-auto">
-                <div class="bg-green-50 rounded-xl p-6 mb-8">
-                    <h2 class="text-xl font-bold text-gray-800 mb-4">学习目标</h2>
-                    <ul class="list-disc list-inside text-gray-600 space-y-2">
+                <div class="learning-card rounded-xl p-6 mb-8 neon-border">
+                    <h2 class="text-xl font-bold neon-text mb-4">学习目标</h2>
+                    <ul class="list-disc list-inside text-gray-400 space-y-2">
                         <li>理解分组聚合的概念和用途</li>
                         <li>掌握groupby方法的基本用法</li>
                         <li>学会计算常用统计指标（求和、均值、计数等）</li>
@@ -87,66 +304,57 @@
                     </ul>
                 </div>
 
-                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4">1. 分组聚合概述</h3>
-                    <p class="text-gray-600 mb-4">分组聚合是数据分析中常用的操作，它将数据按照某个或某些列进行分组，然后对每个组进行聚合计算。</p>
+                <div class="learning-card rounded-xl p-6 mb-6">
+                    <h3 class="text-lg font-bold text-green-400 mb-4">1. 分组聚合概述</h3>
+                    <p class="text-gray-400 mb-4">分组聚合是数据分析中常用的操作，它将数据按照某个或某些列进行分组，然后对每个组进行聚合计算。</p>
                     <div class="code-block">
                         <pre><code>import pandas as pd
 
 df = pd.read_csv('retail_orders.csv')
 
-# 查看数据
 print(df.head())</code></pre>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4">2. 基本分组聚合</h3>
-                    <p class="text-gray-600 mb-4">使用groupby方法进行分组，然后使用聚合函数计算统计指标。</p>
+                <div class="learning-card rounded-xl p-6 mb-6">
+                    <h3 class="text-lg font-bold text-green-400 mb-4">2. 基本分组聚合</h3>
+                    <p class="text-gray-400 mb-4">使用groupby方法进行分组，然后使用聚合函数计算统计指标。</p>
                     <div class="code-block">
-                        <pre><code># 按产品类别分组，计算总销售额
-category_sales = df.groupby('category')['total_amount'].sum()
+                        <pre><code>category_sales = df.groupby('category')['total_amount'].sum()
 print(category_sales)
 
-# 按地区分组，计算平均订单金额
 region_avg = df.groupby('region')['total_amount'].mean()
 print(region_avg)
 
-# 按产品类别分组，计算订单数量
 category_count = df.groupby('category')['order_id'].count()
 print(category_count)</code></pre>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4">3. 多维度分组</h3>
-                    <p class="text-gray-600 mb-4">可以按照多个列进行分组，实现更细粒度的分析。</p>
+                <div class="learning-card rounded-xl p-6 mb-6">
+                    <h3 class="text-lg font-bold text-green-400 mb-4">3. 多维度分组</h3>
+                    <p class="text-gray-400 mb-4">可以按照多个列进行分组，实现更细粒度的分析。</p>
                     <div class="code-block">
-                        <pre><code># 按地区和产品类别分组
-region_category = df.groupby(['region', 'category'])['total_amount'].sum()
+                        <pre><code>region_category = df.groupby(['region', 'category'])['total_amount'].sum()
 print(region_category)
 
-# 按年份和月份分组
 time_group = df.groupby(['year', 'month'])['total_amount'].sum()
 print(time_group)
 
-# 重置索引，将多级索引转换为列
 result = region_category.reset_index()
 print(result)</code></pre>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4">4. 多个聚合函数</h3>
-                    <p class="text-gray-600 mb-4">使用agg方法可以同时计算多个统计指标。</p>
+                <div class="learning-card rounded-xl p-6 mb-6">
+                    <h3 class="text-lg font-bold text-green-400 mb-4">4. 多个聚合函数</h3>
+                    <p class="text-gray-400 mb-4">使用agg方法可以同时计算多个统计指标。</p>
                     <div class="code-block">
-                        <pre><code># 计算多个统计指标
-stats = df.groupby('category')['total_amount'].agg([
+                        <pre><code>stats = df.groupby('category')['total_amount'].agg([
     'sum', 'mean', 'max', 'min', 'count'
 ])
 print(stats)
 
-# 为聚合结果命名
 stats_named = df.groupby('category')['total_amount'].agg(
     总销售额='sum',
     平均金额='mean',
@@ -157,18 +365,15 @@ print(stats_named)</code></pre>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4">5. 完整实战代码</h3>
+                <div class="learning-card rounded-xl p-6 mb-6">
+                    <h3 class="text-lg font-bold text-green-400 mb-4">5. 完整实战代码</h3>
                     <div class="code-block">
                         <pre><code>import pandas as pd
 
-# 读取数据
 df = pd.read_csv('retail_orders.csv')
 
-# 计算总价
 df['total_amount'] = df['price'] * df['quantity']
 
-# 1. 按产品类别分析
 category_analysis = df.groupby('category')['total_amount'].agg(
     总销售额='sum',
     平均金额='mean',
@@ -177,7 +382,6 @@ category_analysis = df.groupby('category')['total_amount'].agg(
 print("按产品类别分析:")
 print(category_analysis)
 
-# 2. 按地区分析
 region_analysis = df.groupby('region')['total_amount'].agg(
     总销售额='sum',
     平均金额='mean'
@@ -185,12 +389,10 @@ region_analysis = df.groupby('region')['total_amount'].agg(
 print("\n按地区分析:")
 print(region_analysis)
 
-# 3. 多维度分析
 multi_analysis = df.groupby(['region', 'category'])['total_amount'].sum()
 print("\n按地区和类别分析:")
 print(multi_analysis)
 
-# 4. 按时间分析
 df['order_date'] = pd.to_datetime(df['order_date'])
 df['month'] = df['order_date'].dt.month
 monthly_sales = df.groupby('month')['total_amount'].sum()
@@ -200,7 +402,7 @@ print(monthly_sales)</code></pre>
                 </div>
 
                 <div class="text-center">
-                    <button id="complete-learn" class="bg-green-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors">
+                    <button id="complete-learn" class="neon-button px-8 py-3 rounded-lg font-medium">
                         <i class="fa fa-check-circle mr-2"></i>标记为已学习
                     </button>
                 </div>
@@ -211,157 +413,127 @@ print(monthly_sales)</code></pre>
     <section id="content-practice" class="py-8 hidden">
         <div class="container mx-auto px-4 h-[calc(100vh-180px)]">
             <div class="flex flex-col lg:flex-row h-full">
-                <div class="lg:w-80 lg:h-full bg-white rounded-xl shadow-md overflow-hidden flex-shrink-0">
-                    <div class="bg-gradient-to-r from-green-600 to-green-800 px-4 py-3 text-white">
-                        <h2 class="font-bold">练习导航</h2>
+                <div class="lg:w-80 lg:h-full glass-panel rounded-xl overflow-hidden flex-shrink-0">
+                    <div class="px-4 py-3 border-b border-green-500/30">
+                        <h2 class="font-bold neon-text">练习导航</h2>
                     </div>
                     <div class="p-2 space-y-1">
-                        <button id="practice-nav-1" class="w-full text-left px-4 py-3 rounded-lg bg-green-50 text-green-600 font-medium hover:bg-green-100 transition-colors">
+                        <button id="practice-nav-1" class="practice-nav-btn active w-full text-left px-4 py-3 rounded-lg font-medium">
                             <i class="fa fa-code mr-2"></i>练习1：groupby基础
                         </button>
-                        <button id="practice-nav-2" class="w-full text-left px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
+                        <button id="practice-nav-2" class="practice-nav-btn w-full text-left px-4 py-3 rounded-lg font-medium">
                             <i class="fa fa-code mr-2"></i>练习2：多维度分组
                         </button>
-                        <button id="practice-nav-3" class="w-full text-left px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
+                        <button id="practice-nav-3" class="practice-nav-btn w-full text-left px-4 py-3 rounded-lg font-medium">
                             <i class="fa fa-code mr-2"></i>练习3：agg自定义聚合
                         </button>
                     </div>
                     
-                    <div class="border-t border-gray-200">
+                    <div class="border-t border-green-500/20">
                         <div id="practice-detail-1" class="p-4">
-                            <div class="bg-orange-50 rounded-lg p-3 mb-4">
-                                <h3 class="font-bold text-orange-800 mb-2 flex items-center">
+                            <div class="detail-card rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-orange-400 mb-2 flex items-center">
                                     <i class="fa fa-info-circle mr-2"></i>详细说明
                                 </h3>
-                                <p class="text-sm text-gray-600">
-                                    分组聚合是数据分析中最常用的操作之一。groupby()方法可以将数据按照某一列或多列进行分组，
-                                    然后对每个组应用聚合函数，如sum()、mean()、count()等。
-                                </p>
+                                <p class="text-sm text-gray-400">分组聚合是数据分析中最常用的操作之一。groupby()方法可以将数据按照某一列或多列进行分组，然后对每个组应用聚合函数。</p>
                             </div>
-                            
-                            <div class="bg-gray-900 rounded-lg p-3 mb-4">
+                            <div class="code-card rounded-lg p-3 mb-4">
                                 <h3 class="font-bold text-green-400 mb-2 flex items-center">
                                     <i class="fa fa-code mr-2"></i>代码示例
                                 </h3>
-                                <pre class="text-xs text-gray-300 overflow-x-auto"><code># 按类别分组求和
-df.groupby('category')['amount'].sum()
+                                <pre class="text-xs text-green-400 overflow-x-auto"><code>df.groupby('category')['amount'].sum()
 
-# 按地区分组求均值
 df.groupby('region')['amount'].mean()</code></pre>
                             </div>
-                            
-                            <div class="bg-yellow-50 rounded-lg p-3">
-                                <h3 class="font-bold text-yellow-800 mb-2 flex items-center">
+                            <div class="tip-card rounded-lg p-3">
+                                <h3 class="font-bold text-yellow-400 mb-2 flex items-center">
                                     <i class="fa fa-lightbulb-o mr-2"></i>小贴士
                                 </h3>
-                                <p class="text-sm text-gray-600">
-                                    groupby()返回的是一个GroupBy对象，需要再调用聚合函数才能得到结果。
-                                    可以链式调用多个聚合函数。
-                                </p>
+                                <p class="text-sm text-gray-400">groupby()返回的是一个GroupBy对象，需要再调用聚合函数才能得到结果。</p>
                             </div>
                         </div>
                         
                         <div id="practice-detail-2" class="p-4 hidden">
-                            <div class="bg-orange-50 rounded-lg p-3 mb-4">
-                                <h3 class="font-bold text-orange-800 mb-2 flex items-center">
+                            <div class="detail-card rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-orange-400 mb-2 flex items-center">
                                     <i class="fa fa-info-circle mr-2"></i>详细说明
                                 </h3>
-                                <p class="text-sm text-gray-600">
-                                    多维度分组允许同时按多个列进行分组分析。通过传递一个列名列表给groupby()方法，
-                                    可以实现更细粒度的数据分析。
-                                </p>
+                                <p class="text-sm text-gray-400">多维度分组允许同时按多个列进行分组分析。通过传递一个列名列表给groupby()方法，可以实现更细粒度的数据分析。</p>
                             </div>
-                            
-                            <div class="bg-gray-900 rounded-lg p-3 mb-4">
+                            <div class="code-card rounded-lg p-3 mb-4">
                                 <h3 class="font-bold text-green-400 mb-2 flex items-center">
                                     <i class="fa fa-code mr-2"></i>代码示例
                                 </h3>
-                                <pre class="text-xs text-gray-300 overflow-x-auto"><code># 按地区和类别分组
-df.groupby(['region', 'category'])['amount'].sum()
+                                <pre class="text-xs text-green-400 overflow-x-auto"><code>df.groupby(['region', 'category'])['amount'].sum()
 
-# 使用reset_index转换为DataFrame
 result = df.groupby(['region', 'category']).sum().reset_index()</code></pre>
                             </div>
-                            
-                            <div class="bg-yellow-50 rounded-lg p-3">
-                                <h3 class="font-bold text-yellow-800 mb-2 flex items-center">
+                            <div class="tip-card rounded-lg p-3">
+                                <h3 class="font-bold text-yellow-400 mb-2 flex items-center">
                                     <i class="fa fa-lightbulb-o mr-2"></i>小贴士
                                 </h3>
-                                <p class="text-sm text-gray-600">
-                                    多维度分组会产生多层索引，使用reset_index()可以将索引转换为普通列，
-                                    方便后续分析和可视化。
-                                </p>
+                                <p class="text-sm text-gray-400">多维度分组会产生多层索引，使用reset_index()可以将索引转换为普通列。</p>
                             </div>
                         </div>
                         
                         <div id="practice-detail-3" class="p-4 hidden">
-                            <div class="bg-orange-50 rounded-lg p-3 mb-4">
-                                <h3 class="font-bold text-orange-800 mb-2 flex items-center">
+                            <div class="detail-card rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-orange-400 mb-2 flex items-center">
                                     <i class="fa fa-info-circle mr-2"></i>详细说明
                                 </h3>
-                                <p class="text-sm text-gray-600">
-                                    agg()方法允许同时应用多个聚合函数，或者使用自定义的聚合方式。
-                                    可以传入函数名列表或字典来实现灵活的聚合操作。
-                                </p>
+                                <p class="text-sm text-gray-400">agg()方法允许同时应用多个聚合函数，或者使用自定义的聚合方式。可以传入函数名列表或字典来实现灵活的聚合操作。</p>
                             </div>
-                            
-                            <div class="bg-gray-900 rounded-lg p-3 mb-4">
+                            <div class="code-card rounded-lg p-3 mb-4">
                                 <h3 class="font-bold text-green-400 mb-2 flex items-center">
                                     <i class="fa fa-code mr-2"></i>代码示例
                                 </h3>
-                                <pre class="text-xs text-gray-300 overflow-x-auto"><code># 多个聚合函数
-df.groupby('category')['amount'].agg(['sum', 'mean', 'count'])
+                                <pre class="text-xs text-green-400 overflow-x-auto"><code>df.groupby('category')['amount'].agg(['sum', 'mean', 'count'])
 
-# 命名聚合
 df.groupby('category')['amount'].agg(
     总销售额='sum',
     平均金额='mean',
     最大金额='max'
 )</code></pre>
                             </div>
-                            
-                            <div class="bg-yellow-50 rounded-lg p-3">
-                                <h3 class="font-bold text-yellow-800 mb-2 flex items-center">
+                            <div class="tip-card rounded-lg p-3">
+                                <h3 class="font-bold text-yellow-400 mb-2 flex items-center">
                                     <i class="fa fa-lightbulb-o mr-2"></i>小贴士
                                 </h3>
-                                <p class="text-sm text-gray-600">
-                                    使用字典形式的命名聚合可以让结果列具有更有意义的名字，
-                                    便于后续分析和报告制作。
-                                </p>
+                                <p class="text-sm text-gray-400">使用字典形式的命名聚合可以让结果列具有更有意义的名字。</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 
                 <div class="flex-1 flex flex-col ml-4 min-w-0">
-                    <div class="bg-white rounded-t-xl shadow-md px-4 py-3 flex items-center justify-between">
+                    <div class="toolbar rounded-t-xl px-4 py-3 flex items-center justify-between">
                         <div class="flex items-center space-x-2">
-                            <button id="run-code" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors flex items-center">
+                            <button id="run-code" class="run-button px-4 py-2 rounded-lg text-sm font-medium flex items-center">
                                 <i class="fa fa-play mr-2"></i>运行代码
                             </button>
-                            <button id="reset-code" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors flex items-center">
+                            <button id="reset-code" class="neon-button px-4 py-2 rounded-lg text-sm font-medium flex items-center">
                                 <i class="fa fa-refresh mr-2"></i>重置代码
                             </button>
-                            <button id="show-answer" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors flex items-center">
+                            <button id="show-answer" class="neon-button px-4 py-2 rounded-lg text-sm font-medium flex items-center">
                                 <i class="fa fa-eye mr-2"></i>显示参考答案
                             </button>
                         </div>
                         <div class="flex items-center space-x-2">
-                            <button id="start-test" class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors flex items-center">
+                            <button id="start-test" class="test-button px-4 py-2 rounded-lg text-sm font-medium flex items-center">
                                 <i class="fa fa-file-text mr-2"></i>开始测试
                             </button>
-                            <button id="auto-save" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors flex items-center">
+                            <button id="auto-save" class="neon-button px-4 py-2 rounded-lg text-sm font-medium flex items-center">
                                 <i class="fa fa-save mr-2"></i>自动保存
                             </button>
                         </div>
                     </div>
                     
-                    <div class="flex-1 bg-gray-900 rounded-b-xl shadow-md overflow-hidden">
-                        <div class="flex items-center px-4 py-2 bg-gray-800 text-gray-400 text-sm">
-                            <i class="fa fa-file-code-o mr-2"></i>
-                            <span>project2/main.py</span>
+                    <div class="flex-1 glass-panel rounded-b-xl overflow-hidden">
+                        <div class="file-tab flex items-center px-4 py-2 text-gray-400 text-sm">
+                            <i class="fa fa-file-code-o mr-2 text-green-400"></i>
+                            <span class="text-green-400">project2/main.py</span>
                         </div>
-                        <textarea id="code-editor" class="w-full h-[calc(50%-40px)] bg-gray-900 text-green-400 p-4 font-mono text-sm resize-none outline-none" placeholder="在这里输入你的代码...">import pandas as pd
+                        <textarea id="code-editor" class="code-editor w-full h-[calc(50%-40px)] p-4 text-sm" placeholder="在这里输入你的代码...">import pandas as pd
 
 data = {
     'category': ['电子产品', '服装', '电子产品', '食品', '服装', '电子产品'],
@@ -370,18 +542,15 @@ data = {
 }
 df = pd.DataFrame(data)
 
-# 在这里输入你的代码
-# 按category分组，计算每组的总销售额
-
 print(df)</textarea>
                         
-                        <div class="h-[50%] border-t border-gray-700">
-                            <div class="flex items-center px-4 py-2 bg-gray-800 text-gray-400 text-sm">
-                                <i class="fa fa-terminal mr-2"></i>
-                                <span>执行结果</span>
+                        <div class="h-[50%] border-t border-green-500/20">
+                            <div class="file-tab flex items-center px-4 py-2 text-gray-400 text-sm">
+                                <i class="fa fa-terminal mr-2 text-green-400"></i>
+                                <span class="text-green-400">执行结果</span>
                             </div>
-                            <div id="code-output" class="h-[calc(100%-40px)] p-4 overflow-auto bg-gray-950 text-green-400 font-mono text-sm">
-> 执行结果将显示在这里...
+                            <div id="code-output" class="terminal-output h-[calc(100%-40px)] p-4 overflow-auto text-sm">
+<span class="text-green-400">&gt; 执行结果将显示在这里...</span>
                             </div>
                         </div>
                     </div>
@@ -393,80 +562,76 @@ print(df)</textarea>
     <section id="content-test" class="py-8 hidden">
         <div class="container mx-auto px-4">
             <div class="max-w-4xl mx-auto">
-                <div class="bg-green-50 rounded-xl p-6 mb-6">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-2">项目考试</h2>
-                    <p class="text-gray-600">共5道题目，每题20分，满分100分</p>
-                    <div class="flex items-center mt-4">
-                        <i class="fa fa-clock-o mr-2 text-gray-600"></i>
-                        <span class="text-gray-600">考试时间：30分钟</span>
-                    </div>
+                <div class="exam-card rounded-xl p-6 mb-6">
+                    <h2 class="text-2xl font-bold neon-text mb-2">项目考试</h2>
+                    <p class="text-gray-400">共5道题目，每题20分，满分100分</p>
                 </div>
 
                 <div id="exam-questions">
-                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                        <h3 class="font-bold text-gray-800 mb-4">1. 在Pandas中，用于分组的方法是？</h3>
+                    <div class="exam-card rounded-xl p-6 mb-6">
+                        <h3 class="font-bold text-gray-200 mb-4">1. 在Pandas中，用于分组的方法是？</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center"><input type="radio" name="q1" value="A" class="mr-2"><span>A) group()</span></label>
-                            <label class="flex items-center"><input type="radio" name="q1" value="B" class="mr-2"><span>B) groupby()</span></label>
-                            <label class="flex items-center"><input type="radio" name="q1" value="C" class="mr-2"><span>C) aggregate()</span></label>
-                            <label class="flex items-center"><input type="radio" name="q1" value="D" class="mr-2"><span>D) split()</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q1" value="A" class="mr-2"><span>A) group()</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q1" value="B" class="mr-2"><span>B) groupby()</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q1" value="C" class="mr-2"><span>C) aggregate()</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q1" value="D" class="mr-2"><span>D) split()</span></label>
                         </div>
                     </div>
 
-                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                        <h3 class="font-bold text-gray-800 mb-4">2. 以下哪个方法可以同时计算多个聚合指标？</h3>
+                    <div class="exam-card rounded-xl p-6 mb-6">
+                        <h3 class="font-bold text-gray-200 mb-4">2. 以下哪个方法可以同时计算多个聚合指标？</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center"><input type="radio" name="q2" value="A" class="mr-2"><span>A) sum()</span></label>
-                            <label class="flex items-center"><input type="radio" name="q2" value="B" class="mr-2"><span>B) mean()</span></label>
-                            <label class="flex items-center"><input type="radio" name="q2" value="C" class="mr-2"><span>C) agg()</span></label>
-                            <label class="flex items-center"><input type="radio" name="q2" value="D" class="mr-2"><span>D) count()</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q2" value="A" class="mr-2"><span>A) sum()</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q2" value="B" class="mr-2"><span>B) mean()</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q2" value="C" class="mr-2"><span>C) agg()</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q2" value="D" class="mr-2"><span>D) count()</span></label>
                         </div>
                     </div>
 
-                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                        <h3 class="font-bold text-gray-800 mb-4">3. 以下代码的输出是什么？</h3>
+                    <div class="exam-card rounded-xl p-6 mb-6">
+                        <h3 class="font-bold text-gray-200 mb-4">3. 以下代码的输出是什么？</h3>
                         <div class="code-block mb-4"><pre><code>df.groupby('category')['amount'].sum()</code></pre></div>
                         <div class="space-y-2">
-                            <label class="flex items-center"><input type="radio" name="q3" value="A" class="mr-2"><span>A) 每个类别的平均金额</span></label>
-                            <label class="flex items-center"><input type="radio" name="q3" value="B" class="mr-2"><span>B) 每个类别的总金额</span></label>
-                            <label class="flex items-center"><input type="radio" name="q3" value="C" class="mr-2"><span>C) 每个类别的最大金额</span></label>
-                            <label class="flex items-center"><input type="radio" name="q3" value="D" class="mr-2"><span>D) 每个类别的订单数</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q3" value="A" class="mr-2"><span>A) 每个类别的平均金额</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q3" value="B" class="mr-2"><span>B) 每个类别的总金额</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q3" value="C" class="mr-2"><span>C) 每个类别的最大金额</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q3" value="D" class="mr-2"><span>D) 每个类别的订单数</span></label>
                         </div>
                     </div>
 
-                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                        <h3 class="font-bold text-gray-800 mb-4">4. 按多个列分组时，groupby的参数应该是什么类型？</h3>
+                    <div class="exam-card rounded-xl p-6 mb-6">
+                        <h3 class="font-bold text-gray-200 mb-4">4. 按多个列分组时，groupby的参数应该是什么类型？</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center"><input type="radio" name="q4" value="A" class="mr-2"><span>A) 字符串</span></label>
-                            <label class="flex items-center"><input type="radio" name="q4" value="B" class="mr-2"><span>B) 列表</span></label>
-                            <label class="flex items-center"><input type="radio" name="q4" value="C" class="mr-2"><span>C) 字典</span></label>
-                            <label class="flex items-center"><input type="radio" name="q4" value="D" class="mr-2"><span>D) 元组</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q4" value="A" class="mr-2"><span>A) 字符串</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q4" value="B" class="mr-2"><span>B) 列表</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q4" value="C" class="mr-2"><span>C) 字典</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q4" value="D" class="mr-2"><span>D) 元组</span></label>
                         </div>
                     </div>
 
-                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                        <h3 class="font-bold text-gray-800 mb-4">5. 以下哪个不是常用的聚合函数？</h3>
+                    <div class="exam-card rounded-xl p-6 mb-6">
+                        <h3 class="font-bold text-gray-200 mb-4">5. 以下哪个不是常用的聚合函数？</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center"><input type="radio" name="q5" value="A" class="mr-2"><span>A) sum</span></label>
-                            <label class="flex items-center"><input type="radio" name="q5" value="B" class="mr-2"><span>B) mean</span></label>
-                            <label class="flex items-center"><input type="radio" name="q5" value="C" class="mr-2"><span>C) concat</span></label>
-                            <label class="flex items-center"><input type="radio" name="q5" value="D" class="mr-2"><span>D) count</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q5" value="A" class="mr-2"><span>A) sum</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q5" value="B" class="mr-2"><span>B) mean</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q5" value="C" class="mr-2"><span>C) concat</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q5" value="D" class="mr-2"><span>D) count</span></label>
                         </div>
                     </div>
                 </div>
 
                 <div class="text-center">
-                    <button id="submit-exam" class="bg-purple-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors">
+                    <button id="submit-exam" class="test-button px-8 py-3 rounded-lg font-medium">
                         <i class="fa fa-paper-plane mr-2"></i>提交考试
                     </button>
                 </div>
 
                 <div id="exam-result" class="mt-8 hidden">
-                    <div class="bg-white rounded-xl p-6 shadow-md">
+                    <div class="exam-card rounded-xl p-6">
                         <div class="text-center">
-                            <div id="score-circle" class="w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4"></div>
-                            <h3 id="score-text" class="text-2xl font-bold text-gray-800 mb-2"></h3>
-                            <p id="result-text" class="text-gray-600"></p>
+                            <div id="score-circle" class="score-circle w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4"></div>
+                            <h3 id="score-text" class="text-2xl font-bold neon-text mb-2"></h3>
+                            <p id="result-text" class="text-gray-400"></p>
                         </div>
                         <div id="answer-details" class="mt-6"></div>
                     </div>
@@ -475,65 +640,34 @@ print(df)</textarea>
         </div>
     </section>
 
-    <footer class="bg-white py-8 border-t border-gray-200 mt-8">
-        <div class="container mx-auto px-4">
-            <div class="text-center">
-                <p class="text-gray-600">© 2026 Python数据分析实战训练营</p>
-            </div>
+    <footer class="glass-panel py-8 border-t border-green-500/20 mt-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-gray-500">© 2026 Python数据分析实战训练营</p>
         </div>
     </footer>
 
     <script>
-        document.getElementById('menu-toggle').addEventListener('click', function() {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
-        });
-
+        document.getElementById('menu-toggle').addEventListener('click', function() { document.getElementById('mobile-menu').classList.toggle('hidden'); });
         const tabs = ['learn', 'practice', 'test'];
         tabs.forEach(tab => {
             document.getElementById(`tab-${tab}`).addEventListener('click', function() {
-                tabs.forEach(t => {
-                    document.getElementById(`content-${t}`).classList.add('hidden');
-                    document.getElementById(`tab-${t}`).classList.remove('border-b-2', 'border-green-600', 'text-green-600');
-                    document.getElementById(`tab-${t}`).classList.add('text-gray-600');
-                });
+                tabs.forEach(t => { document.getElementById(`content-${t}`).classList.add('hidden'); document.getElementById(`tab-${t}`).classList.remove('active'); });
                 document.getElementById(`content-${tab}`).classList.remove('hidden');
-                document.getElementById(`tab-${tab}`).classList.add('border-b-2', 'border-green-600', 'text-green-600');
-                document.getElementById(`tab-${tab}`).classList.remove('text-gray-600');
+                document.getElementById(`tab-${tab}`).classList.add('active');
             });
         });
-
-        document.getElementById('complete-learn').addEventListener('click', function() {
-            saveProgress('project2', 'learned');
-            alert('已标记为已学习！');
-        });
-
-        function saveProgress(projectId, type) {
-            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
-            if (!progress[projectId]) {
-                progress[projectId] = { learned: false, practiced: false, tested: false };
-            }
-            progress[projectId][type] = true;
-            localStorage.setItem('learningProgress', JSON.stringify(progress));
-        }
-
+        document.getElementById('complete-learn').addEventListener('click', function() { saveProgress('project2', 'learned'); alert('已标记为已学习！'); });
+        function saveProgress(projectId, type) { const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}'); if (!progress[projectId]) progress[projectId] = { learned: false, practiced: false, tested: false }; progress[projectId][type] = true; localStorage.setItem('learningProgress', JSON.stringify(progress)); }
         const practiceNavButtons = ['practice-nav-1', 'practice-nav-2', 'practice-nav-3'];
         const practiceDetails = ['practice-detail-1', 'practice-detail-2', 'practice-detail-3'];
-        
         practiceNavButtons.forEach((btn, index) => {
             document.getElementById(btn).addEventListener('click', function() {
-                practiceNavButtons.forEach((b, i) => {
-                    document.getElementById(b).classList.remove('bg-green-50', 'text-green-600');
-                    document.getElementById(b).classList.add('text-gray-600');
-                    document.getElementById(practiceDetails[i]).classList.add('hidden');
-                });
-                this.classList.add('bg-green-50', 'text-green-600');
-                this.classList.remove('text-gray-600');
+                practiceNavButtons.forEach((b, i) => { document.getElementById(b).classList.remove('active'); document.getElementById(practiceDetails[i]).classList.add('hidden'); });
+                this.classList.add('active');
                 document.getElementById(practiceDetails[index]).classList.remove('hidden');
-                
                 updateCodeEditor(index + 1);
             });
         });
-        
         const codeTemplates = {
             1: `import pandas as pd
 
@@ -543,9 +677,6 @@ data = {
     'amount': [1000, 500, 1200, 300, 800, 1500]
 }
 df = pd.DataFrame(data)
-
-# 在这里输入你的代码
-# 按category分组，计算每组的总销售额
 
 print(df)`,
             2: `import pandas as pd
@@ -557,9 +688,6 @@ data = {
 }
 df = pd.DataFrame(data)
 
-# 在这里输入你的代码
-# 按region和category分组，计算每组的总销售额和订单数
-
 print(df)`,
             3: `import pandas as pd
 
@@ -569,67 +697,25 @@ data = {
 }
 df = pd.DataFrame(data)
 
-# 在这里输入你的代码
-# 使用agg方法，按category分组，计算总销售额、平均金额和最大金额
-
 print(df)`
         };
-        
-        function updateCodeEditor(practiceNum) {
-            const editor = document.getElementById('code-editor');
-            editor.value = codeTemplates[practiceNum];
-            document.getElementById('code-output').textContent = '> 执行结果将显示在这里...';
-        }
-        
+        function updateCodeEditor(practiceNum) { document.getElementById('code-editor').value = codeTemplates[practiceNum]; document.getElementById('code-output').innerHTML = '<span class="text-green-400">&gt; 执行结果将显示在这里...</span>'; }
         document.getElementById('run-code').addEventListener('click', function() {
             const code = document.getElementById('code-editor').value;
             const output = document.getElementById('code-output');
-            
-            try {
-                output.textContent = '> 正在执行...\n\n';
-                
-                const mockResult = simulatePythonExecution(code);
-                output.textContent = '> ' + mockResult;
-            } catch (error) {
-                output.textContent = '> 执行错误: ' + error.message;
-            }
+            output.innerHTML = '<span class="text-green-400">&gt; 正在执行...</span>\n\n';
+            setTimeout(() => { output.innerHTML = '<span class="text-green-400">&gt; 执行完成</span>\n\n<span class="text-green-400">' + simulatePythonExecution(code) + '</span>'; }, 500);
         });
-        
         function simulatePythonExecution(code) {
-            if (code.includes('groupby') && code.includes('sum') && !code.includes('[')) {
-                return `category
-电子产品    3700
-食品         300
-服装        1300
-Name: amount, dtype: int64`;
-            } else if (code.includes('groupby') && code.includes('[') && code.includes('region')) {
-                return `                     amount 订单数
-region category             
-华北   电子产品    1000     1
-      食品         300     1
-华东   服装        800     1
-华南   电子产品    1500     1`;
-            } else if (code.includes('agg')) {
-                return `         总销售额    平均金额    最大金额
-category                             
-电子产品       3700  1233.333333        1500
-食品            300   300.000000         300
-服装           1300   650.000000         800`;
-            } else {
-                return '代码执行成功，但未检测到预期的操作。\n\n提示：请完成题目要求的代码。';
-            }
+            if (code.includes('groupby') && code.includes('sum') && !code.includes('[')) return `category\n电子产品    3700\n食品         300\n服装        1300\nName: amount, dtype: int64`;
+            else if (code.includes('groupby') && code.includes('[') && code.includes('region')) return `                     amount 订单数\nregion category             \n华北   电子产品    1000     1\n      食品         300     1\n华东   服装        800     1\n华南   电子产品    1500     1`;
+            else if (code.includes('agg')) return `         总销售额    平均金额    最大金额\ncategory                             \n电子产品       3700  1233.333333        1500\n食品            300   300.000000         300\n服装           1300   650.000000         800`;
+            else return '代码执行成功，但未检测到预期的操作。\n\n提示：请完成题目要求的代码。';
         }
-        
-        document.getElementById('reset-code').addEventListener('click', function() {
-            const activeNav = document.querySelector('.bg-green-50');
-            const practiceNum = practiceNavButtons.indexOf(activeNav.id) + 1;
-            updateCodeEditor(practiceNum);
-        });
-        
+        document.getElementById('reset-code').addEventListener('click', function() { const activeNav = document.querySelector('.practice-nav-btn.active'); const practiceNum = practiceNavButtons.indexOf(activeNav.id) + 1; updateCodeEditor(practiceNum); });
         document.getElementById('show-answer').addEventListener('click', function() {
-            const activeNav = document.querySelector('.bg-green-50');
+            const activeNav = document.querySelector('.practice-nav-btn.active');
             const practiceNum = practiceNavButtons.indexOf(activeNav.id) + 1;
-            
             const answers = {
                 1: `import pandas as pd
 
@@ -640,7 +726,6 @@ data = {
 }
 df = pd.DataFrame(data)
 
-# 按category分组，计算每组的总销售额
 result = df.groupby('category')['amount'].sum()
 print(result)`,
                 2: `import pandas as pd
@@ -652,10 +737,7 @@ data = {
 }
 df = pd.DataFrame(data)
 
-# 按region和category分组，计算每组的总销售额和订单数
-result = df.groupby(['region', 'category']).agg({
-    'amount': ['sum', 'count']
-}).reset_index()
+result = df.groupby(['region', 'category']).agg({'amount': ['sum', 'count']}).reset_index()
 print(result)`,
                 3: `import pandas as pd
 
@@ -665,78 +747,26 @@ data = {
 }
 df = pd.DataFrame(data)
 
-# 使用agg方法，按category分组，计算总销售额、平均金额和最大金额
-result = df.groupby('category')['amount'].agg(
-    总销售额='sum',
-    平均金额='mean',
-    最大金额='max'
-)
+result = df.groupby('category')['amount'].agg(总销售额='sum', 平均金额='mean', 最大金额='max')
 print(result)`
             };
-            
             document.getElementById('code-editor').value = answers[practiceNum];
         });
-        
-        document.getElementById('start-test').addEventListener('click', function() {
-            document.getElementById('content-practice').classList.add('hidden');
-            document.getElementById('content-test').classList.remove('hidden');
-            document.getElementById('tab-practice').classList.remove('border-b-2', 'border-green-600', 'text-green-600');
-            document.getElementById('tab-practice').classList.add('text-gray-600');
-            document.getElementById('tab-test').classList.add('border-b-2', 'border-green-600', 'text-green-600');
-            document.getElementById('tab-test').classList.remove('text-gray-600');
-        });
-        
-        document.getElementById('auto-save').addEventListener('click', function() {
-            const code = document.getElementById('code-editor').value;
-            localStorage.setItem('project2-practice-code', code);
-            alert('代码已自动保存！');
-        });
-
+        document.getElementById('start-test').addEventListener('click', function() { document.getElementById('content-practice').classList.add('hidden'); document.getElementById('content-test').classList.remove('hidden'); document.getElementById('tab-practice').classList.remove('active'); document.getElementById('tab-test').classList.add('active'); });
+        document.getElementById('auto-save').addEventListener('click', function() { localStorage.setItem('project2-practice-code', document.getElementById('code-editor').value); alert('代码已自动保存！'); });
         const correctAnswers = { q1: 'B', q2: 'C', q3: 'B', q4: 'B', q5: 'C' };
-
         document.getElementById('submit-exam').addEventListener('click', function() {
-            let score = 0;
-            const answers = {};
-            Object.keys(correctAnswers).forEach(q => {
-                const selected = document.querySelector(`input[name="${q}"]:checked`);
-                answers[q] = selected ? selected.value : null;
-                if (answers[q] === correctAnswers[q]) score += 20;
-            });
-
-            document.getElementById('exam-questions').classList.add('hidden');
-            document.getElementById('submit-exam').classList.add('hidden');
-            document.getElementById('exam-result').classList.remove('hidden');
-
-            const scoreCircle = document.getElementById('score-circle');
-            const scoreText = document.getElementById('score-text');
-            const resultText = document.getElementById('result-text');
-            const answerDetails = document.getElementById('answer-details');
-
+            let score = 0; const answers = {};
+            Object.keys(correctAnswers).forEach(q => { const selected = document.querySelector(`input[name="${q}"]:checked`); answers[q] = selected ? selected.value : null; if (answers[q] === correctAnswers[q]) score += 20; });
+            document.getElementById('exam-questions').classList.add('hidden'); document.getElementById('submit-exam').classList.add('hidden'); document.getElementById('exam-result').classList.remove('hidden');
+            const scoreCircle = document.getElementById('score-circle'); const scoreText = document.getElementById('score-text'); const resultText = document.getElementById('result-text'); const answerDetails = document.getElementById('answer-details');
             scoreText.textContent = `得分：${score}/100`;
-            
-            if (score >= 80) {
-                scoreCircle.className = 'w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 bg-green-100';
-                scoreCircle.innerHTML = '<span class="text-3xl">🎉</span>';
-                resultText.textContent = '优秀！你已经掌握了分组聚合的基本知识。';
-                saveProgress('project2', 'tested');
-            } else if (score >= 60) {
-                scoreCircle.className = 'w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 bg-yellow-100';
-                scoreCircle.innerHTML = '<span class="text-3xl">👍</span>';
-                resultText.textContent = '良好！继续努力，争取更高分数。';
-            } else {
-                scoreCircle.className = 'w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 bg-red-100';
-                scoreCircle.innerHTML = '<span class="text-3xl">📚</span>';
-                resultText.textContent = '需要复习一下相关知识，加油！';
-            }
-
-            let details = '<h4 class="font-bold text-gray-800 mb-4">答案详情</h4><div class="space-y-2">';
-            Object.keys(correctAnswers).forEach((q, i) => {
-                const isCorrect = answers[q] === correctAnswers[q];
-                details += `<p class="${isCorrect ? 'text-green-600' : 'text-red-600'}">
-                    ${i+1}. 你的答案: ${answers[q] || '未作答'} | 正确答案: ${correctAnswers[q]} ${isCorrect ? '✓' : '✗'}
-                </p>`;
-            });
-            answerDetails.innerHTML = details;
+            if (score >= 80) { scoreCircle.innerHTML = '<span class="text-4xl">🎉</span>'; resultText.textContent = '优秀！你已经掌握了分组聚合的基本知识。'; resultText.className = 'text-green-400'; saveProgress('project2', 'tested'); }
+            else if (score >= 60) { scoreCircle.innerHTML = '<span class="text-4xl">👍</span>'; resultText.textContent = '良好！继续努力，争取更高分数。'; resultText.className = 'text-yellow-400'; }
+            else { scoreCircle.innerHTML = '<span class="text-4xl">📚</span>'; resultText.textContent = '需要复习一下相关知识，加油！'; resultText.className = 'text-orange-400'; }
+            let details = '<h4 class="font-bold text-gray-300 mb-4">答案详情</h4><div class="space-y-2">';
+            Object.keys(correctAnswers).forEach((q, i) => { const isCorrect = answers[q] === correctAnswers[q]; details += `<p class="${isCorrect ? 'text-green-400' : 'text-red-400'}">${i+1}. 你的答案: ${answers[q] || '未作答'} | 正确答案: ${correctAnswers[q]} ${isCorrect ? '✓' : '✗'}</p>`; });
+            details += '</div>'; answerDetails.innerHTML = details;
         });
     </script>
 </body>
