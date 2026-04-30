@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>项目09：异常值检测 - Python训练营</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+        .nav-tab { transition: all 0.3s ease; }
+        .nav-tab:hover { background-color: rgba(239, 68, 68, 0.1); }
+        .code-block { background-color: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin: 0.5rem 0; }
+        .exercise-question { background-color: #f8fafc; border-left: 4px solid #ef4444; padding: 1rem; margin-bottom: 1rem; }
+        .answer-input { width: 100%; padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 0.375rem; }
+        .result-correct { background-color: #dcfce7; border-color: #22c55e; }
+        .result-wrong { background-color: #fee2e2; border-color: #ef4444; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <nav class="bg-white shadow-md fixed w-full top-0 z-50">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="text-xl font-bold text-red-600">
+                    <a href="../../index.html">Python训练营</a>
+                </div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="../../index.html#home" class="text-gray-700 hover:text-red-600 font-medium">首页</a>
+                    <a href="../../index.html#projects" class="text-gray-700 hover:text-red-600 font-medium">学习项目</a>
+                    <a href="../../index.html#my-progress" class="text-gray-700 hover:text-red-600 font-medium">学习进度</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="menu-toggle" class="text-gray-700 focus:outline-none">
+                        <i class="fa fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="mobile-menu" class="md:hidden hidden mt-4 pb-2">
+                <a href="../../index.html#home" class="block py-2 text-gray-700 hover:text-red-600">首页</a>
+                <a href="../../index.html#projects" class="block py-2 text-gray-700 hover:text-red-600">学习项目</a>
+                <a href="../../index.html#my-progress" class="block py-2 text-gray-700 hover:text-red-600">学习进度</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="pt-20 pb-8 bg-gradient-to-r from-red-600 to-red-800">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center">
+                <span class="bg-white/20 text-white px-3 py-1 rounded-full text-sm font-medium mr-4">项目09</span>
+                <h1 class="text-2xl md:text-3xl font-bold text-white">异常值检测</h1>
+            </div>
+            <p class="text-red-100 mt-4">使用统计方法和机器学习算法检测异常数据</p>
+            <div class="flex items-center mt-4 text-red-100">
+                <i class="fa fa-file-csv mr-2"></i>
+                <span>数据文件: retail_orders.csv</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-white border-b">
+        <div class="container mx-auto px-4">
+            <div class="flex overflow-x-auto">
+                <button id="tab-learn" class="nav-tab flex-shrink-0 px-6 py-4 text-red-600 border-b-2 border-red-600 font-medium">
+                    <i class="fa fa-book mr-2"></i>学习
+                </button>
+                <button id="tab-practice" class="nav-tab flex-shrink-0 px-6 py-4 text-gray-600 hover:text-red-600 font-medium">
+                    <i class="fa fa-code mr-2"></i>练习
+                </button>
+                <button id="tab-test" class="nav-tab flex-shrink-0 px-6 py-4 text-gray-600 hover:text-red-600 font-medium">
+                    <i class="fa fa-file-text mr-2"></i>考试
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section id="content-learn" class="py-8">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-red-50 rounded-xl p-6 mb-8">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4">学习目标</h2>
+                    <ul class="list-disc list-inside text-gray-600 space-y-2">
+                        <li>理解异常值的概念和影响</li>
+                        <li>掌握统计方法检测异常值</li>
+                        <li>学会使用IQR方法识别异常值</li>
+                        <li>掌握Z-score方法</li>
+                        <li>了解机器学习异常检测算法</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">1. 异常值概述</h3>
+                    <p class="text-gray-600 mb-4">异常值是指与其他数据点显著不同的值，可能影响分析结果的准确性。</p>
+                    <div class="code-block">
+                        <pre><code>import pandas as pd
+
+df = pd.read_csv('retail_orders.csv')
+print(df.head())</code></pre>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">2. IQR方法</h3>
+                    <p class="text-gray-600 mb-4">IQR（四分位数间距）方法是常用的异常值检测方法：</p>
+                    <div class="code-block">
+                        <pre><code># 计算IQR
+def detect_outliers_iqr(df, column):
+    Q1 = df[column].quantile(0.25)
+    Q3 = df[column].quantile(0.75)
+    IQR = Q3 - Q1
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
+    outliers = df[(df[column] < lower_bound) | (df[column] > upper_bound)]
+    return outliers, lower_bound, upper_bound
+
+# 检测异常值
+outliers, lower, upper = detect_outliers_iqr(df, 'amount')
+print(f"检测到{len(outliers)}个异常值")
+print(f"下限: {lower:.2f}, 上限: {upper:.2f}")</code></pre>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">3. Z-score方法</h3>
+                    <p class="text-gray-600 mb-4">Z-score衡量数据点与均值的标准差距离：</p>
+                    <div class="code-block">
+                        <pre><code># Z-score方法
+from scipy import stats
+
+# 计算Z-score
+df['z_score'] = stats.zscore(df['amount'])
+
+# 识别异常值（通常|Z| > 3）
+outliers_z = df[abs(df['z_score']) > 3]
+print(f"Z-score检测到{len(outliers_z)}个异常值")</code></pre>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">4. 完整实战代码</h3>
+                    <div class="code-block">
+                        <pre><code>import pandas as pd
+import numpy as np
+from scipy import stats
+import matplotlib.pyplot as plt
+
+plt.rcParams['font.sans-serif'] = ['SimHei']
+
+# 读取数据
+df = pd.read_csv('retail_orders.csv')
+
+# 方法1: IQR方法
+def detect_iqr(df, column):
+    Q1 = df[column].quantile(0.25)
+    Q3 = df[column].quantile(0.75)
+    IQR = Q3 - Q1
+    return df[(df[column] < Q1 - 1.5 * IQR) | (df[column] > Q3 + 1.5 * IQR)]
+
+# 方法2: Z-score方法
+def detect_zscore(df, column, threshold=3):
+    df['z_score'] = stats.zscore(df[column])
+    return df[abs(df['z_score']) > threshold]
+
+# 检测销售额异常值
+iqr_outliers = detect_iqr(df, 'total_amount')
+z_outliers = detect_zscore(df, 'total_amount')
+
+print(f"IQR方法检测到{len(iqr_outliers)}个异常值")
+print(f"Z-score方法检测到{len(z_outliers)}个异常值")
+
+# 可视化异常值
+plt.figure(figsize=(12, 6))
+plt.boxplot(df['total_amount'])
+plt.title('销售额箱线图')
+plt.show()
+
+# 处理异常值：用中位数替换
+median_amount = df['total_amount'].median()
+df['total_amount_clean'] = np.where(
+    df['total_amount'].isin(iqr_outliers['total_amount']),
+    median_amount,
+    df['total_amount']
+)
+
+print("\n处理后的统计描述:")
+print(df[['total_amount', 'total_amount_clean']].describe())</code></pre>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button id="complete-learn" class="bg-red-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-red-700 transition-colors">
+                        <i class="fa fa-check-circle mr-2"></i>标记为已学习
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="content-practice" class="py-8 hidden">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">练习题目</h2>
+
+                <div class="exercise-question">
+                    <h3 class="font-bold text-gray-800 mb-2">练习1：IQR方法</h3>
+                    <p class="text-gray-600 mb-4">编写函数使用IQR方法检测异常值。</p>
+                    <textarea id="practice1-answer" class="answer-input" rows="4" placeholder="请输入你的代码..."></textarea>
+                    <button id="check-practice1" class="mt-2 bg-red-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-700 transition-colors">检查答案</button>
+                    <div id="practice1-result" class="mt-2 p-3 rounded-lg hidden"></div>
+                </div>
+
+                <div class="exercise-question">
+                    <h3 class="font-bold text-gray-800 mb-2">练习2：Z-score方法</h3>
+                    <p class="text-gray-600 mb-4">使用scipy计算Z-score并检测异常值。</p>
+                    <textarea id="practice2-answer" class="answer-input" rows="3" placeholder="请输入你的代码..."></textarea>
+                    <button id="check-practice2" class="mt-2 bg-red-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-700 transition-colors">检查答案</button>
+                    <div id="practice2-result" class="mt-2 p-3 rounded-lg hidden"></div>
+                </div>
+
+                <div class="exercise-question">
+                    <h3 class="font-bold text-gray-800 mb-2">练习3：异常值处理</h3>
+                    <p class="text-gray-600 mb-4">将检测到的异常值用中位数替换。</p>
+                    <textarea id="practice3-answer" class="answer-input" rows="3" placeholder="请输入你的代码..."></textarea>
+                    <button id="check-practice3" class="mt-2 bg-red-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-700 transition-colors">检查答案</button>
+                    <div id="practice3-result" class="mt-2 p-3 rounded-lg hidden"></div>
+                </div>
+
+                <div class="text-center mt-8">
+                    <button id="complete-practice" class="bg-red-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-red-700 transition-colors">
+                        <i class="fa fa-check-circle mr-2"></i>标记为已练习
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="content-test" class="py-8 hidden">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-red-50 rounded-xl p-6 mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">项目考试</h2>
+                    <p class="text-gray-600">共5道题目，每题20分，满分100分</p>
+                </div>
+
+                <div id="exam-questions">
+                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                        <h3 class="font-bold text-gray-800 mb-4">1. 异常值是什么？</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center"><input type="radio" name="q1" value="A" class="mr-2"><span>A) 缺失值</span></label>
+                            <label class="flex items-center"><input type="radio" name="q1" value="B" class="mr-2"><span>B) 与其他数据显著不同的值</span></label>
+                            <label class="flex items-center"><input type="radio" name="q1" value="C" class="mr-2"><span>C) 重复值</span></label>
+                            <label class="flex items-center"><input type="radio" name="q1" value="D" class="mr-2"><span>D) 空值</span></label>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                        <h3 class="font-bold text-gray-800 mb-4">2. IQR方法中，异常值的判断标准是？</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center"><input type="radio" name="q2" value="A" class="mr-2"><span>A) 数据点在Q1-Q3范围内</span></label>
+                            <label class="flex items-center"><input type="radio" name="q2" value="B" class="mr-2"><span>B) 数据点超出Q1-1.5*IQR或Q3+1.5*IQR</span></label>
+                            <label class="flex items-center"><input type="radio" name="q2" value="C" class="mr-2"><span>C) 数据点等于均值</span></label>
+                            <label class="flex items-center"><input type="radio" name="q2" value="D" class="mr-2"><span>D) 数据点大于最大值</span></label>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                        <h3 class="font-bold text-gray-800 mb-4">3. Z-score表示什么？</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center"><input type="radio" name="q3" value="A" class="mr-2"><span>A) 数据点的绝对值</span></label>
+                            <label class="flex items-center"><input type="radio" name="q3" value="B" class="mr-2"><span>B) 数据点与均值的标准差距离</span></label>
+                            <label class="flex items-center"><input type="radio" name="q3" value="C" class="mr-2"><span>C) 数据点的中位数</span></label>
+                            <label class="flex items-center"><input type="radio" name="q3" value="D" class="mr-2"><span>D) 数据点的最小值</span></label>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                        <h3 class="font-bold text-gray-800 mb-4">4. 常用的Z-score异常值阈值是？</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center"><input type="radio" name="q4" value="A" class="mr-2"><span>A) |Z| > 1</span></label>
+                            <label class="flex items-center"><input type="radio" name="q4" value="B" class="mr-2"><span>B) |Z| > 2</span></label>
+                            <label class="flex items-center"><input type="radio" name="q4" value="C" class="mr-2"><span>C) |Z| > 3</span></label>
+                            <label class="flex items-center"><input type="radio" name="q4" value="D" class="mr-2"><span>D) |Z| > 5</span></label>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                        <h3 class="font-bold text-gray-800 mb-4">5. 处理异常值的常用方法不包括？</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center"><input type="radio" name="q5" value="A" class="mr-2"><span>A) 删除异常值</span></label>
+                            <label class="flex items-center"><input type="radio" name="q5" value="B" class="mr-2"><span>B) 用均值/中位数替换</span></label>
+                            <label class="flex items-center"><input type="radio" name="q5" value="C" class="mr-2"><span>C) 保留所有数据不变</span></label>
+                            <label class="flex items-center"><input type="radio" name="q5" value="D" class="mr-2"><span>D) 使用插值法填充</span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button id="submit-exam" class="bg-red-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-red-700 transition-colors">
+                        <i class="fa fa-paper-plane mr-2"></i>提交考试
+                    </button>
+                </div>
+
+                <div id="exam-result" class="mt-8 hidden">
+                    <div class="bg-white rounded-xl p-6 shadow-md">
+                        <div class="text-center">
+                            <div id="score-circle" class="w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4"></div>
+                            <h3 id="score-text" class="text-2xl font-bold text-gray-800 mb-2"></h3>
+                            <p id="result-text" class="text-gray-600"></p>
+                        </div>
+                        <div id="answer-details" class="mt-6"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-white py-8 border-t border-gray-200 mt-8">
+        <div class="container mx-auto px-4">
+            <div class="text-center">
+                <p class="text-gray-600">© 2026 Python数据分析实战训练营</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        const tabs = ['learn', 'practice', 'test'];
+        tabs.forEach(tab => {
+            document.getElementById(`tab-${tab}`).addEventListener('click', function() {
+                tabs.forEach(t => {
+                    document.getElementById(`content-${t}`).classList.add('hidden');
+                    document.getElementById(`tab-${t}`).classList.remove('border-b-2', 'border-red-600', 'text-red-600');
+                    document.getElementById(`tab-${t}`).classList.add('text-gray-600');
+                });
+                document.getElementById(`content-${tab}`).classList.remove('hidden');
+                document.getElementById(`tab-${tab}`).classList.add('border-b-2', 'border-red-600', 'text-red-600');
+                document.getElementById(`tab-${tab}`).classList.remove('text-gray-600');
+            });
+        });
+
+        document.getElementById('complete-learn').addEventListener('click', function() {
+            saveProgress('project9', 'learned');
+            alert('已标记为已学习！');
+        });
+
+        document.getElementById('complete-practice').addEventListener('click', function() {
+            saveProgress('project9', 'practiced');
+            alert('已标记为已练习！');
+        });
+
+        function saveProgress(projectId, type) {
+            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
+            if (!progress[projectId]) {
+                progress[projectId] = { learned: false, practiced: false, tested: false };
+            }
+            progress[projectId][type] = true;
+            localStorage.setItem('learningProgress', JSON.stringify(progress));
+        }
+
+        document.getElementById('check-practice1').addEventListener('click', function() {
+            const answer = document.getElementById('practice1-answer').value;
+            const result = document.getElementById('practice1-result');
+            result.classList.remove('hidden');
+            if (answer.includes('quantile') && answer.includes('IQR')) {
+                result.textContent = '✓ 正确！计算Q1、Q3、IQR，然后找出超出范围的数据。';
+                result.classList.remove('result-wrong');
+                result.classList.add('result-correct');
+            } else {
+                result.textContent = '✗ 答案不完全正确。提示：计算Q1、Q3和IQR，使用1.5*IQR作为边界。';
+                result.classList.remove('result-correct');
+                result.classList.add('result-wrong');
+            }
+        });
+
+        document.getElementById('check-practice2').addEventListener('click', function() {
+            const answer = document.getElementById('practice2-answer').value;
+            const result = document.getElementById('practice2-result');
+            result.classList.remove('hidden');
+            if (answer.includes('stats.zscore')) {
+                result.textContent = '✓ 正确！使用scipy.stats.zscore()计算Z-score。';
+                result.classList.remove('result-wrong');
+                result.classList.add('result-correct');
+            } else {
+                result.textContent = '✗ 答案不完全正确。提示：从scipy.stats导入zscore。';
+                result.classList.remove('result-correct');
+                result.classList.add('result-wrong');
+            }
+        });
+
+        document.getElementById('check-practice3').addEventListener('click', function() {
+            const answer = document.getElementById('practice3-answer').value;
+            const result = document.getElementById('practice3-result');
+            result.classList.remove('hidden');
+            if (answer.includes('median') || answer.includes('np.where')) {
+                result.textContent = '✓ 正确！使用np.where将异常值替换为中位数。';
+                result.classList.remove('result-wrong');
+                result.classList.add('result-correct');
+            } else {
+                result.textContent = '✗ 答案不完全正确。提示：使用df.median()获取中位数进行替换。';
+                result.classList.remove('result-correct');
+                result.classList.add('result-wrong');
+            }
+        });
+
+        const correctAnswers = { q1: 'B', q2: 'B', q3: 'B', q4: 'C', q5: 'C' };
+
+        document.getElementById('submit-exam').addEventListener('click', function() {
+            let score = 0;
+            const answers = {};
+            Object.keys(correctAnswers).forEach(q => {
+                const selected = document.querySelector(`input[name="${q}"]:checked`);
+                answers[q] = selected ? selected.value : null;
+                if (answers[q] === correctAnswers[q]) score += 20;
+            });
+
+            document.getElementById('exam-questions').classList.add('hidden');
+            document.getElementById('submit-exam').classList.add('hidden');
+            document.getElementById('exam-result').classList.remove('hidden');
+
+            const scoreCircle = document.getElementById('score-circle');
+            const scoreText = document.getElementById('score-text');
+            const resultText = document.getElementById('result-text');
+            const answerDetails = document.getElementById('answer-details');
+
+            scoreText.textContent = `得分：${score}/100`;
+            
+            if (score >= 80) {
+                scoreCircle.className = 'w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 bg-red-100';
+                scoreCircle.innerHTML = '<span class="text-3xl">🎉</span>';
+                resultText.textContent = '优秀！你已经掌握了异常值检测的基本知识。';
+                saveProgress('project9', 'tested');
+            } else if (score >= 60) {
+                scoreCircle.className = 'w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 bg-yellow-100';
+                scoreCircle.innerHTML = '<span class="text-3xl">👍</span>';
+                resultText.textContent = '良好！继续努力，争取更高分数。';
+            } else {
+                scoreCircle.className = 'w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 bg-red-100';
+                scoreCircle.innerHTML = '<span class="text-3xl">📚</span>';
+                resultText.textContent = '需要复习一下相关知识，加油！';
+            }
+
+            let details = '<h4 class="font-bold text-gray-800 mb-4">答案详情</h4><div class="space-y-2">';
+            Object.keys(correctAnswers).forEach((q, i) => {
+                const isCorrect = answers[q] === correctAnswers[q];
+                details += `<p class="${isCorrect ? 'text-green-600' : 'text-red-600'}">
+                    ${i+1}. 你的答案: ${answers[q] || '未作答'} | 正确答案: ${correctAnswers[q]} ${isCorrect ? '✓' : '✗'}
+                </p>`;
+            });
+            answerDetails.innerHTML = details;
+        });
+    </script>
+</body>
+</html>

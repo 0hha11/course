@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>项目07：时间序列分析 - Python训练营</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+        .nav-tab { transition: all 0.3s ease; }
+        .nav-tab:hover { background-color: rgba(99, 102, 241, 0.1); }
+        .code-block { background-color: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin: 0.5rem 0; }
+        .exercise-question { background-color: #f8fafc; border-left: 4px solid #6366f1; padding: 1rem; margin-bottom: 1rem; }
+        .answer-input { width: 100%; padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 0.375rem; }
+        .result-correct { background-color: #dcfce7; border-color: #22c55e; }
+        .result-wrong { background-color: #fee2e2; border-color: #ef4444; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <nav class="bg-white shadow-md fixed w-full top-0 z-50">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="text-xl font-bold text-indigo-600">
+                    <a href="../../index.html">Python训练营</a>
+                </div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="../../index.html#home" class="text-gray-700 hover:text-indigo-600 font-medium">首页</a>
+                    <a href="../../index.html#projects" class="text-gray-700 hover:text-indigo-600 font-medium">学习项目</a>
+                    <a href="../../index.html#my-progress" class="text-gray-700 hover:text-indigo-600 font-medium">学习进度</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="menu-toggle" class="text-gray-700 focus:outline-none">
+                        <i class="fa fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="mobile-menu" class="md:hidden hidden mt-4 pb-2">
+                <a href="../../index.html#home" class="block py-2 text-gray-700 hover:text-indigo-600">首页</a>
+                <a href="../../index.html#projects" class="block py-2 text-gray-700 hover:text-indigo-600">学习项目</a>
+                <a href="../../index.html#my-progress" class="block py-2 text-gray-700 hover:text-indigo-600">学习进度</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="pt-20 pb-8 bg-gradient-to-r from-indigo-600 to-indigo-800">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center">
+                <span class="bg-white/20 text-white px-3 py-1 rounded-full text-sm font-medium mr-4">项目07</span>
+                <h1 class="text-2xl md:text-3xl font-bold text-white">时间序列分析</h1>
+            </div>
+            <p class="text-indigo-100 mt-4">分析销售数据的时间趋势，进行简单预测</p>
+            <div class="flex items-center mt-4 text-indigo-100">
+                <i class="fa fa-file-csv mr-2"></i>
+                <span>数据文件: retail_orders.csv</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-white border-b">
+        <div class="container mx-auto px-4">
+            <div class="flex overflow-x-auto">
+                <button id="tab-learn" class="nav-tab flex-shrink-0 px-6 py-4 text-indigo-600 border-b-2 border-indigo-600 font-medium">
+                    <i class="fa fa-book mr-2"></i>学习
+                </button>
+                <button id="tab-practice" class="nav-tab flex-shrink-0 px-6 py-4 text-gray-600 hover:text-indigo-600 font-medium">
+                    <i class="fa fa-code mr-2"></i>练习
+                </button>
+                <button id="tab-test" class="nav-tab flex-shrink-0 px-6 py-4 text-gray-600 hover:text-indigo-600 font-medium">
+                    <i class="fa fa-file-text mr-2"></i>考试
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section id="content-learn" class="py-8">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-indigo-50 rounded-xl p-6 mb-8">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4">学习目标</h2>
+                    <ul class="list-disc list-inside text-gray-600 space-y-2">
+                        <li>理解时间序列数据的特点</li>
+                        <li>掌握时间序列数据的预处理方法</li>
+                        <li>学会绘制时间序列图表</li>
+                        <li>掌握移动平均等平滑方法</li>
+                        <li>能够进行简单的趋势预测</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">1. 时间序列概述</h3>
+                    <p class="text-gray-600 mb-4">时间序列是按时间顺序排列的数据序列，常用于分析趋势、周期性和季节性。</p>
+                    <div class="code-block">
+                        <pre><code>import pandas as pd
+
+# 读取时间序列数据
+df = pd.read_csv('retail_orders.csv')
+df['order_date'] = pd.to_datetime(df['order_date'])
+df = df.set_index('order_date')
+print(df.head())</code></pre>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">2. 时间序列可视化</h3>
+                    <p class="text-gray-600 mb-4">通过可视化可以直观观察时间序列的趋势和模式：</p>
+                    <div class="code-block">
+                        <pre><code>import matplotlib.pyplot as plt
+
+plt.rcParams['font.sans-serif'] = ['SimHei']
+plt.rcParams['axes.unicode_minus'] = False
+
+# 绘制时间序列图
+plt.figure(figsize=(12, 6))
+plt.plot(df.index, df['sales'], label='销售额')
+plt.title('销售趋势')
+plt.xlabel('日期')
+plt.ylabel('销售额')
+plt.legend()
+plt.show()</code></pre>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">3. 移动平均</h3>
+                    <p class="text-gray-600 mb-4">移动平均用于平滑时间序列数据，揭示趋势：</p>
+                    <div class="code-block">
+                        <pre><code># 计算7日移动平均
+df['ma7'] = df['sales'].rolling(window=7).mean()
+
+# 计算30日移动平均
+df['ma30'] = df['sales'].rolling(window=30).mean()
+
+# 可视化移动平均
+plt.figure(figsize=(12, 6))
+plt.plot(df['sales'], label='原始数据', alpha=0.5)
+plt.plot(df['ma7'], label='7日移动平均')
+plt.plot(df['ma30'], label='30日移动平均')
+plt.title('销售趋势与移动平均')
+plt.legend()
+plt.show()</code></pre>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">4. 完整实战代码</h3>
+                    <div class="code-block">
+                        <pre><code>import pandas as pd
+import matplotlib.pyplot as plt
+
+plt.rcParams['font.sans-serif'] = ['SimHei']
+plt.rcParams['axes.unicode_minus'] = False
+
+# 读取数据
+df = pd.read_csv('retail_orders.csv')
+df['order_date'] = pd.to_datetime(df['order_date'])
+df = df.set_index('order_date')
+
+# 按日期聚合
+daily_sales = df['total_amount'].resample('D').sum()
+
+# 计算移动平均
+daily_sales['ma7'] = daily_sales.rolling(window=7).mean()
+daily_sales['ma30'] = daily_sales.rolling(window=30).mean()
+
+# 可视化
+plt.figure(figsize=(14, 7))
+plt.plot(daily_sales, label='日销售额', alpha=0.5)
+plt.plot(daily_sales['ma7'], label='7日移动平均', linewidth=2)
+plt.plot(daily_sales['ma30'], label='30日移动平均', linewidth=2)
+plt.title('销售趋势分析')
+plt.xlabel('日期')
+plt.ylabel('销售额')
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.show()
+
+# 计算月度趋势
+monthly_sales = df['total_amount'].resample('M').sum()
+print("月度销售额:")
+print(monthly_sales)
+
+# 计算同比增长率
+monthly_sales['growth_rate'] = monthly_sales.pct_change() * 100
+print("\n月度增长率(%):")
+print(monthly_sales['growth_rate'])</code></pre>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button id="complete-learn" class="bg-indigo-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
+                        <i class="fa fa-check-circle mr-2"></i>标记为已学习
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="content-practice" class="py-8 hidden">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">练习题目</h2>
+
+                <div class="exercise-question">
+                    <h3 class="font-bold text-gray-800 mb-2">练习1：时间序列重采样</h3>
+                    <p class="text-gray-600 mb-4">将日数据重采样为月度数据。</p>
+                    <textarea id="practice1-answer" class="answer-input" rows="2" placeholder="请输入你的代码..."></textarea>
+                    <button id="check-practice1" class="mt-2 bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-indigo-700 transition-colors">检查答案</button>
+                    <div id="practice1-result" class="mt-2 p-3 rounded-lg hidden"></div>
+                </div>
+
+                <div class="exercise-question">
+                    <h3 class="font-bold text-gray-800 mb-2">练习2：移动平均计算</h3>
+                    <p class="text-gray-600 mb-4">计算7日移动平均。</p>
+                    <textarea id="practice2-answer" class="answer-input" rows="2" placeholder="请输入你的代码..."></textarea>
+                    <button id="check-practice2" class="mt-2 bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-indigo-700 transition-colors">检查答案</button>
+                    <div id="practice2-result" class="mt-2 p-3 rounded-lg hidden"></div>
+                </div>
+
+                <div class="exercise-question">
+                    <h3 class="font-bold text-gray-800 mb-2">练习3：增长率计算</h3>
+                    <p class="text-gray-600 mb-4">计算月度销售额的同比增长率。</p>
+                    <textarea id="practice3-answer" class="answer-input" rows="2" placeholder="请输入你的代码..."></textarea>
+                    <button id="check-practice3" class="mt-2 bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-indigo-700 transition-colors">检查答案</button>
+                    <div id="practice3-result" class="mt-2 p-3 rounded-lg hidden"></div>
+                </div>
+
+                <div class="text-center mt-8">
+                    <button id="complete-practice" class="bg-indigo-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
+                        <i class="fa fa-check-circle mr-2"></i>标记为已练习
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="content-test" class="py-8 hidden">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-indigo-50 rounded-xl p-6 mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">项目考试</h2>
+                    <p class="text-gray-600">共5道题目，每题20分，满分100分</p>
+                </div>
+
+                <div id="exam-questions">
+                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                        <h3 class="font-bold text-gray-800 mb-4">1. 时间序列数据的特点是什么？</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center"><input type="radio" name="q1" value="A" class="mr-2"><span>A) 数据无序排列</span></label>
+                            <label class="flex items-center"><input type="radio" name="q1" value="B" class="mr-2"><span>B) 数据按时间顺序排列</span></label>
+                            <label class="flex items-center"><input type="radio" name="q1" value="C" class="mr-2"><span>C) 数据随机分布</span></label>
+                            <label class="flex items-center"><input type="radio" name="q1" value="D" class="mr-2"><span>D) 数据没有时间戳</span></label>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                        <h3 class="font-bold text-gray-800 mb-4">2. 移动平均的主要作用是什么？</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center"><input type="radio" name="q2" value="A" class="mr-2"><span>A) 增加数据噪声</span></label>
+                            <label class="flex items-center"><input type="radio" name="q2" value="B" class="mr-2"><span>B) 平滑数据，揭示趋势</span></label>
+                            <label class="flex items-center"><input type="radio" name="q2" value="C" class="mr-2"><span>C) 增加数据量</span></label>
+                            <label class="flex items-center"><input type="radio" name="q2" value="D" class="mr-2"><span>D) 减少数据维度</span></label>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                        <h3 class="font-bold text-gray-800 mb-4">3. 将日数据转换为月数据使用什么方法？</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center"><input type="radio" name="q3" value="A" class="mr-2"><span>A) resample('M')</span></label>
+                            <label class="flex items-center"><input type="radio" name="q3" value="B" class="mr-2"><span>B) groupby()</span></label>
+                            <label class="flex items-center"><input type="radio" name="q3" value="C" class="mr-2"><span>C) pivot()</span></label>
+                            <label class="flex items-center"><input type="radio" name="q3" value="D" class="mr-2"><span>D) merge()</span></label>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                        <h3 class="font-bold text-gray-800 mb-4">4. rolling(window=7)表示什么？</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center"><input type="radio" name="q4" value="A" class="mr-2"><span>A) 选择第7行数据</span></label>
+                            <label class="flex items-center"><input type="radio" name="q4" value="B" class="mr-2"><span>B) 7个数据点的滚动窗口</span></label>
+                            <label class="flex items-center"><input type="radio" name="q4" value="C" class="mr-2"><span>C) 每隔7行取一个数据</span></label>
+                            <label class="flex items-center"><input type="radio" name="q4" value="D" class="mr-2"><span>D) 删除前7行数据</span></label>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                        <h3 class="font-bold text-gray-800 mb-4">5. 计算增长率使用什么方法？</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center"><input type="radio" name="q5" value="A" class="mr-2"><span>A) diff()</span></label>
+                            <label class="flex items-center"><input type="radio" name="q5" value="B" class="mr-2"><span>B) pct_change()</span></label>
+                            <label class="flex items-center"><input type="radio" name="q5" value="C" class="mr-2"><span>C) cumprod()</span></label>
+                            <label class="flex items-center"><input type="radio" name="q5" value="D" class="mr-2"><span>D) cumsum()</span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button id="submit-exam" class="bg-indigo-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
+                        <i class="fa fa-paper-plane mr-2"></i>提交考试
+                    </button>
+                </div>
+
+                <div id="exam-result" class="mt-8 hidden">
+                    <div class="bg-white rounded-xl p-6 shadow-md">
+                        <div class="text-center">
+                            <div id="score-circle" class="w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4"></div>
+                            <h3 id="score-text" class="text-2xl font-bold text-gray-800 mb-2"></h3>
+                            <p id="result-text" class="text-gray-600"></p>
+                        </div>
+                        <div id="answer-details" class="mt-6"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-white py-8 border-t border-gray-200 mt-8">
+        <div class="container mx-auto px-4">
+            <div class="text-center">
+                <p class="text-gray-600">© 2026 Python数据分析实战训练营</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        const tabs = ['learn', 'practice', 'test'];
+        tabs.forEach(tab => {
+            document.getElementById(`tab-${tab}`).addEventListener('click', function() {
+                tabs.forEach(t => {
+                    document.getElementById(`content-${t}`).classList.add('hidden');
+                    document.getElementById(`tab-${t}`).classList.remove('border-b-2', 'border-indigo-600', 'text-indigo-600');
+                    document.getElementById(`tab-${t}`).classList.add('text-gray-600');
+                });
+                document.getElementById(`content-${tab}`).classList.remove('hidden');
+                document.getElementById(`tab-${tab}`).classList.add('border-b-2', 'border-indigo-600', 'text-indigo-600');
+                document.getElementById(`tab-${tab}`).classList.remove('text-gray-600');
+            });
+        });
+
+        document.getElementById('complete-learn').addEventListener('click', function() {
+            saveProgress('project7', 'learned');
+            alert('已标记为已学习！');
+        });
+
+        document.getElementById('complete-practice').addEventListener('click', function() {
+            saveProgress('project7', 'practiced');
+            alert('已标记为已练习！');
+        });
+
+        function saveProgress(projectId, type) {
+            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
+            if (!progress[projectId]) {
+                progress[projectId] = { learned: false, practiced: false, tested: false };
+            }
+            progress[projectId][type] = true;
+            localStorage.setItem('learningProgress', JSON.stringify(progress));
+        }
+
+        document.getElementById('check-practice1').addEventListener('click', function() {
+            const answer = document.getElementById('practice1-answer').value;
+            const result = document.getElementById('practice1-result');
+            result.classList.remove('hidden');
+            if (answer.includes('resample') && (answer.includes('M') || answer.includes('month'))) {
+                result.textContent = '✓ 正确！使用resample("M")进行月度重采样。';
+                result.classList.remove('result-wrong');
+                result.classList.add('result-correct');
+            } else {
+                result.textContent = '✗ 答案不完全正确。提示：使用df.resample("M")方法。';
+                result.classList.remove('result-correct');
+                result.classList.add('result-wrong');
+            }
+        });
+
+        document.getElementById('check-practice2').addEventListener('click', function() {
+            const answer = document.getElementById('practice2-answer').value;
+            const result = document.getElementById('practice2-result');
+            result.classList.remove('hidden');
+            if (answer.includes('rolling') && answer.includes('7')) {
+                result.textContent = '✓ 正确！使用rolling(window=7).mean()计算移动平均。';
+                result.classList.remove('result-wrong');
+                result.classList.add('result-correct');
+            } else {
+                result.textContent = '✗ 答案不完全正确。提示：使用df.rolling(window=7).mean()方法。';
+                result.classList.remove('result-correct');
+                result.classList.add('result-wrong');
+            }
+        });
+
+        document.getElementById('check-practice3').addEventListener('click', function() {
+            const answer = document.getElementById('practice3-answer').value;
+            const result = document.getElementById('practice3-result');
+            result.classList.remove('hidden');
+            if (answer.includes('pct_change')) {
+                result.textContent = '✓ 正确！使用pct_change()计算增长率。';
+                result.classList.remove('result-wrong');
+                result.classList.add('result-correct');
+            } else {
+                result.textContent = '✗ 答案不完全正确。提示：使用df.pct_change()方法。';
+                result.classList.remove('result-correct');
+                result.classList.add('result-wrong');
+            }
+        });
+
+        const correctAnswers = { q1: 'B', q2: 'B', q3: 'A', q4: 'B', q5: 'B' };
+
+        document.getElementById('submit-exam').addEventListener('click', function() {
+            let score = 0;
+            const answers = {};
+            Object.keys(correctAnswers).forEach(q => {
+                const selected = document.querySelector(`input[name="${q}"]:checked`);
+                answers[q] = selected ? selected.value : null;
+                if (answers[q] === correctAnswers[q]) score += 20;
+            });
+
+            document.getElementById('exam-questions').classList.add('hidden');
+            document.getElementById('submit-exam').classList.add('hidden');
+            document.getElementById('exam-result').classList.remove('hidden');
+
+            const scoreCircle = document.getElementById('score-circle');
+            const scoreText = document.getElementById('score-text');
+            const resultText = document.getElementById('result-text');
+            const answerDetails = document.getElementById('answer-details');
+
+            scoreText.textContent = `得分：${score}/100`;
+            
+            if (score >= 80) {
+                scoreCircle.className = 'w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 bg-indigo-100';
+                scoreCircle.innerHTML = '<span class="text-3xl">🎉</span>';
+                resultText.textContent = '优秀！你已经掌握了时间序列分析的基本知识。';
+                saveProgress('project7', 'tested');
+            } else if (score >= 60) {
+                scoreCircle.className = 'w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 bg-yellow-100';
+                scoreCircle.innerHTML = '<span class="text-3xl">👍</span>';
+                resultText.textContent = '良好！继续努力，争取更高分数。';
+            } else {
+                scoreCircle.className = 'w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 bg-red-100';
+                scoreCircle.innerHTML = '<span class="text-3xl">📚</span>';
+                resultText.textContent = '需要复习一下相关知识，加油！';
+            }
+
+            let details = '<h4 class="font-bold text-gray-800 mb-4">答案详情</h4><div class="space-y-2">';
+            Object.keys(correctAnswers).forEach((q, i) => {
+                const isCorrect = answers[q] === correctAnswers[q];
+                details += `<p class="${isCorrect ? 'text-green-600' : 'text-red-600'}">
+                    ${i+1}. 你的答案: ${answers[q] || '未作答'} | 正确答案: ${correctAnswers[q]} ${isCorrect ? '✓' : '✗'}
+                </p>`;
+            });
+            answerDetails.innerHTML = details;
+        });
+    </script>
+</body>
+</html>

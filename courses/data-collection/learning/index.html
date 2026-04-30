@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据采集与处理学习内容 - TT的个人学习页面</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+        .section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background-color: #f9fafb;
+            border-radius: 0.5rem;
+        }
+        .subsection {
+            margin-top: 1rem;
+            margin-left: 1.5rem;
+        }
+        .code-block {
+            background-color: #f1f5f9;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            overflow-x: auto;
+            margin: 0.5rem 0;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 导航栏 -->
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="text-2xl font-bold text-blue-600">TT的学习空间</div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="../../../index.html" class="text-gray-700 hover:text-blue-600 font-medium">首页</a>
+                    <a href="../../../about.html" class="text-gray-700 hover:text-blue-600 font-medium">关于我</a>
+                    <a href="../../../index.html#tests" class="text-gray-700 hover:text-blue-600 font-medium">学习测试</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="menu-toggle" class="text-gray-700 focus:outline-none">
+                        <i class="fa fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- 移动端菜单 -->
+            <div id="mobile-menu" class="md:hidden hidden mt-4 pb-2">
+                <a href="../../../index.html" class="block py-2 text-gray-700 hover:text-blue-600">首页</a>
+                <a href="../../../about.html" class="block py-2 text-gray-700 hover:text-blue-600">关于我</a>
+                <a href="../../../index.html#tests" class="block py-2 text-gray-700 hover:text-blue-600">学习测试</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 课程学习内容 -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row">
+                <!-- 左侧导航 -->
+                <div class="md:w-1/4 mb-8 md:mb-0">
+                    <div class="bg-gray-50 p-6 rounded-lg sticky top-4">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">课程导航</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#overview" class="text-gray-600 hover:text-blue-600">课程概述</a></li>
+                            <li><a href="#chapter1" class="text-gray-600 hover:text-blue-600">第1章：数据采集概述</a></li>
+                            <li><a href="#chapter2" class="text-gray-600 hover:text-blue-600">第2章：网络爬虫基础</a></li>
+                            <li><a href="#chapter3" class="text-gray-600 hover:text-blue-600">第3章：Python爬虫库</a></li>
+                            <li><a href="#chapter4" class="text-gray-600 hover:text-blue-600">第4章：数据存储</a></li>
+                            <li><a href="#chapter5" class="text-gray-600 hover:text-blue-600">第5章：数据预处理</a></li>
+                            <li><a href="#chapter6" class="text-gray-600 hover:text-blue-600">第6章：数据质量评估</a></li>
+                            <li><a href="#chapter7" class="text-gray-600 hover:text-blue-600">第7章：高级数据采集技术</a></li>
+                            <li><a href="#chapter8" class="text-gray-600 hover:text-blue-600">第8章：案例分析</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 右侧内容 -->
+                <div class="md:w-3/4 md:pl-8">
+                    <div class="mb-8">
+                        <h1 class="text-3xl font-bold text-gray-800 mb-4">数据采集与处理学习内容</h1>
+                        <div class="flex items-center text-gray-600 mb-6">
+                            <i class="fa fa-book mr-2"></i>
+                            <span>详细的课程知识点和学习指南</span>
+                        </div>
+
+                        <div id="overview" class="section">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-4">课程概述</h2>
+                            <p class="text-gray-600 mb-4">
+                                数据采集与处理课程是商务数据分析与应用专业的核心课程之一，旨在帮助学生掌握数据采集的方法和技术，
+                                以及数据预处理和转换的技巧，为后续的数据分析和挖掘提供高质量的数据基础。
+                            </p>
+                            <p class="text-gray-600">
+                                通过本课程的学习，学生将能够：
+                            </p>
+                            <ul class="list-disc list-inside text-gray-600 space-y-2 mt-2">
+                                <li>掌握数据采集的基本概念和方法</li>
+                                <li>学习网络爬虫技术和工具</li>
+                                <li>掌握数据预处理和转换的技巧</li>
+                                <li>学习数据清洗和数据质量评估</li>
+                                <li>能够从多种数据源采集和处理数据</li>
+                            </ul>
+                        </div>
+
+                        <div id="chapter1" class="section">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-4">第1章：数据采集概述</h2>
+                            <div class="subsection">
+                                <h3 class="text-xl font-bold text-gray-700 mb-3">1.1 数据采集的概念和重要性</h3>
+                                <p class="text-gray-600 mb-3">
+                                    数据采集是指从各种数据源获取数据的过程，是数据分析的第一步。高质量的数据采集是后续分析的基础。
+                                </p>
+                                <p class="text-gray-600 mb-3">
+                                    数据采集的重要性：
+                                </p>
+                                <ul class="list-disc list-inside text-gray-600 space-y-2">
+                                    <li>为数据分析提供原始数据</li>
+                                    <li>确保数据的完整性和准确性</li>
+                                    <li>支持业务决策和问题解决</li>
+                                    <li>发现新的业务机会</li>
+                                    <li>提高数据处理的效率</li>
+                                </ul>
+                            </div>
+                            <div class="subsection">
+                                <h3 class="text-xl font-bold text-gray-700 mb-3">1.2 数据源的类型</h3>
+                                <p class="text-gray-600 mb-3">
+                                    常见的数据源类型：
+                                </p>
+                                <ul class="list-disc list-inside text-gray-600 space-y-2">
+                                    <li><strong>网页数据</strong>：网站、社交媒体、论坛等</li>
+                                    <li><strong>数据库</strong>：关系型数据库、NoSQL数据库等</li>
+                                    <li><strong>API接口</strong>：第三方服务提供的API</li>
+                                    <li><strong>文件数据</strong>：CSV、Excel、JSON等格式的文件</li>
+                                    <li><strong>传感器数据</strong>：IoT设备、监控系统等</li>
+                                    <li><strong>日志数据</strong>：服务器日志、应用日志等</li>
+                                </ul>
+                            </div>
+                            <div class="subsection">
+                                <h3 class="text-xl font-bold text-gray-700 mb-3">1.3 数据采集的应用场景</h3>
+                                <ul class="list-disc list-inside text-gray-600 space-y-2">
+                                    <li>市场调研：收集竞争对手信息、市场趋势等</li>
+                                    <li>价格监控：跟踪电商平台的商品价格</li>
+                                    <li>社交媒体分析：收集和分析社交平台数据</li>
+                                    <li>新闻聚合：自动收集和整理新闻信息</li>
+                                    <li>学术研究：收集研究数据和文献资料</li>
+                                    <li>业务分析：收集企业内部和外部业务数据</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div id="chapter2" class="section">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-4">第2章：网络爬虫基础</h2>
+                            <div class="subsection">
+                                <h3 class="text-xl font-bold text-gray-700 mb-3">2.1 HTTP协议基础</h3>
+                                <p class="text-gray-600 mb-3">
+                                    HTTP（HyperText Transfer Protocol）是用于在Web上传输数据的协议，是爬虫与Web服务器通信的基础。
+                                </p>
+                                <ul class="list-disc list-inside text-gray-600 space-y-2">
+                                    <li><strong>请求方法</strong>：GET、POST、PUT、DELETE等</li>
+                                    <li><strong>请求头</strong>：User-Agent、Cookie、Referer等</li>
+                                    <li><strong>响应状态码</strong>：200（成功）、404（未找到）、500（服务器错误）等</li>
+                                    <li><strong>响应头</strong>：Content-Type、Set-Cookie等</li>
+                                    <li><strong>响应体</strong>：服务器返回的实际内容</li>
+                                </ul>
+                            </div>
+                            <div class="subsection">
+                                <h3 class="text-xl font-bold text-gray-700 mb-3">2.2 HTML结构解析</h3>
+                                <p class="text-gray-600 mb-3">
+                                    HTML（HyperText Markup Language）是网页的标准标记语言，爬虫需要解析HTML结构来提取数据。
+                                </p>
+                                <div class="code-block">
+                                    <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;示例网页&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="container"&gt;
+        &lt;h1&gt;标题&lt;/h1&gt;
+        &lt;p class="content"&gt;内容&lt;/p&gt;
+        &lt;a href="https://example.com"&gt;链接&lt;/a&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                                </div>
+                            </div>
+                            <div class="subsection">
+                                <h3 class="text-xl font-bold text-gray-700 mb-3">2.3 爬虫的工作原理和流程</h3>
+                                <ol class="list-decimal list-inside text-gray-600 space-y-2">
+                                    <li><strong>URL队列</strong>：存储待爬取的URL</li>
+                                    <li><strong>发送请求</strong>：向服务器发送HTTP请求</li>
+                                    <li><strong>获取响应</strong>：接收服务器返回的响应</li>
+                                    <li><strong>解析内容</strong>：解析HTML或其他格式的内容</li>
+                                    <li><strong>提取数据</strong>：从解析后的内容中提取需要的数据</li>
+                                    <li><strong>存储数据</strong>：将提取的数据存储到本地或数据库</li>
+                                    <li><strong>发现新URL</strong>：从当前页面中发现新的URL并加入队列</li>
+                                    <li><strong>重复过程</strong>：继续爬取下一个URL</li>
+                                </ol>
+                            </div>
+                            <div class="subsection">
+                                <h3 class="text-xl font-bold text-gray-700 mb-3">2.4 爬虫的合法性和道德规范</h3>
+                                <ul class="list-disc list-inside text-gray-600 space-y-2">
+                                    <li>遵守网站的robots.txt规则</li>
+                                    <li>不要过度请求，避免对服务器造成压力</li>
+                                    <li>尊重网站的版权和知识产权</li>
+                                    <li>不要爬取敏感信息</li>
+                                    <li>遵守相关法律法规</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div id="chapter3" class="section">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-4">第3章：Python爬虫库</h2>
+                            <div class="subsection">
+                                <h3 class="text-xl font-bold text-gray-700 mb-3">3.1 Requests库的使用</h3>
+                                <p class="text-gray-600 mb-3">
+                                    Requests是Python中用于发送HTTP请求的库，简单易用，是爬虫的基础工具。
+                                </p>
+                                <div class="code-block">
+                                    <pre><code>import requests
+
+# 发送GET请求
+response = requests.get('https://example.com')
+print(response.status_code)  # 打印状态码
+print(response.text)        # 打印响应内容
+
+# 发送带参数的GET请求
+params = {'key1': 'value1', 'key2': 'value2'}
+response = requests.get('https://example.com', params=params)
+print(response.url)  # 打印完整URL
+
+# 发送POST请求
+data = {'username': 'user', 'password': 'pass'}
+response = requests.post('https://example.com/login', data=data)
+
+# 设置请求头
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+}
+response = requests.get('https://example.com', headers=headers)
+
+# 处理Cookie
+response = requests.get('https://example.com')
+cookies = response.cookies
+response = requests.get('https://example.com/profile', cookies=cookies)</code></pre>
+                                </div>
+                            </div>
+                            <div class="subsection">
+                                <h3 class="text-xl font-bold text-gray-700 mb-3">3.2 BeautifulSoup库的使用</h3>
+                                <p class="text-gray-600 mb-3">
+                                    BeautifulSoup是Python中用于解析HTML和XML的库，可以方便地提取网页中的数据。
+                                </p>
+                                <div class="code-block">
+                                    <pre><code>from bs4 import BeautifulSoup
+import requests
+
+# 获取网页内容
+response = requests.get('https://example.com')
+html = response.text
+
+# 创建BeautifulSoup对象
+soup = BeautifulSoup(html, 'html.parser')
+
+# 查找元素
+# 通过标签名查找
+title = soup.find('h1')
+print(title.text)
+
+# 通过类名查找
+content = soup.find(class_='content')
+print(content.text)
+
+# 通过ID查找
+header = soup.find(id='header')
+print(header.text)
+
+# 查找所有符合条件的元素
+links = soup.find_all('a')
+for link in links:
+    print(link.get('href'))
+
+# 使用CSS选择器
+items = soup.select('.item')
+for item in items:
+    print(item.text)
+
+# 提取嵌套元素
+div = soup.find('div', class_='container')
+p = div.find('p')
+print(p.text)</code></pre>
+                                </div>
+                            </div>
+                            <div class="subsection">
+                                <h3 class="text-xl font-bold text-gray-700 mb-3">3.3 Scrapy框架的使用</h3>
+                                <p class="text-gray-600 mb-3">
+                                    Scrapy是一个功能强大的Python爬虫框架，提供了完整的爬虫解决方案。
+                                </p>
+                                <div class="code-block">
+                                    <pre><code># 创建Scrapy项目
+# scrapy startproject tutorial
+
+# 创建爬虫
+# scrapy genspider example example.com
+
+# 爬虫代码示例
+import scrapy
+
+class ExampleSpider(scrapy.Spider):
+    name = 'example'
+    allowed_domains = ['example.com']
+    start_urls = ['http://example.com/']
+
+    def parse(self, response):
+        # 提取数据
+        title = response.css('h1::text').get()
+        content = response.css('.content::text').get()
+        
+        #  yield数据
+        yield {
+            'title': title,
+            'content': content
+        }
+        
+        # 跟进链接
+        next_page = response.css('a.next::attr(href)').get()
+        if next_page:
+            yield response.follow(next_page, self.parse)
+
+# 运行爬虫
+# scrapy crawl example
+
+# 存储数据
+# scrapy crawl example -o items.json</code></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="chapter4" class="section">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-4">第4章：数据存储</h2>
+                            <div class="subsection">
+                                <h3 class="text-xl font-bold text-gray-700 mb-3">4.1 数据存储格式</h3>
+                                <p class="text-gray-600 mb-3">
+                                    常见的数据存储格式：
+                                </p>
+                                <ul class="list-disc list-inside text-gray-600 space-y-2">
+                                    <li><strong>CSV</strong>：逗号分隔值，适合存储表格数据</li>
+                                    <li><strong>JSON</strong>：JavaScript对象表示法，适合存储结构化数据</li>
+                                    <li><strong>XML</strong>：可扩展标记语言，适合存储层次化数据</li>
+                                    <li><strong>Excel</strong>：电子表格格式，适合存储复杂的表格数据</li>
+                                    <li><strong>Pickle</strong>：Python特有的序列化格式</li>
+                                </ul>
+                                <div class="code-block">
+                                    <pre><code>import csv
+import json
+import pandas as pd
+
+# 存储为CSV
+with open('data.csv', 'w', newline='', encoding='utf-8') as f:
+    writer = csv.writer(f)
+    writer.writerow(['name', 'age', 'city'])
+    writer.writerow(['Tom', 18, 'Beijing'])
+    writer.writerow(['Jerry', 20, 'Shanghai'])
+
+# 存储为JSON
+data = [
+    {'name': 'Tom', 'age': 18, 'city': 'Beijing'},
+    {'name': 'Jerry', 'age': 20, 'city': 'Shanghai'}
+]
+with open('data.json', 'w', encoding='utf-8') as f:
+    json.dump(data, f, ensure_ascii=False, indent=2)
+
+# 存储为Excel
+df = pd.DataFrame(data)
+df.to_excel('data.xlsx', index=False)</code></pre>
+                                </div>
+                            </div>
+                            <div class="subsection">
+                                <h3 class="text-xl font-bold text-gray-700 mb-3">4.2 数据库存储</h3>
+                                <p class="text-gray-600 mb-3">
+                                    常见的数据库类型：
+                                </p>
+                                <ul class="list-disc list-inside text-gray-600 space-y-2">
+                                    <li><strong>关系型数据库</strong>：MySQL、PostgreSQL、SQLite等</li>
+                                    <li><strong>NoSQL数据库</strong>：MongoDB、Redis、Cassandra等</li>
+                                </ul>
+                                <div class="code-block">
+                                    <pre><code>import sqlite3
+import pymongo
+
+# SQLite存储
+conn = sqlite3.connect('data.db')
+cursor = conn.cursor()
+
+# 创建表
+cursor.execute('''CREATE TABLE IF NOT EXISTS users 
+                (id INTEGER PRIMARY KEY, name TEXT, age INTEGER, city TEXT)''')
+
+# 插入数据
+cursor.execute("INSERT INTO users (name, age, city) VALUES (?, ?, ?)", ('Tom', 18, 'Beijing'))
+conn.commit()
+
+# 查询数据
+cursor.execute("SELECT * FROM users")
+rows = cursor.fetchall()
+for row in rows:
+    print(row)
+
+conn.close()
+
+# MongoDB存储
+client = pymongo.MongoClient('mongodb://localhost:27017/')
+db = client['test']
+collection = db['users']
+
+# 插入数据
+user = {'name': 'Tom', 'age': 18, 'city': 'Beijing'}
+collection.insert_one(user)
+
+# 查询数据
+users = collection.find()
+for user in users:
+    print(user)</code></pre>
+                                </div>
+                            </div>
+                            <div class="subsection">
+                                <h3 class="text-xl font-bold text-gray-700 mb-3">4.3 文件系统存储</h3>
+                                <p class="text-gray-600 mb-3">
+                                    文件系统存储是最基本的数据存储方式，适合存储各种类型的文件。
+                                </p>
+                                <div class="code-block">
+                                    <pre><code>import os
+import shutil
+
+# 创建目录
+os.makedirs('data', exist_ok=True)
+
+# 写入文件
+with open('data/text.txt', 'w', encoding='utf-8') as f:
+    f.write('Hello, World!')
+
+# 读取文件
+with open('data/text.txt', 'r', encoding='utf-8') as f:
+    content = f.read()
+    print(content)
+
+# 复制文件
+shutil.copy('data/text.txt', 'data/text_copy.txt')
+
+# 删除文件
+os.remove('data/text_copy.txt')</code></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="chapter5" class="section">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-4">第5章：数据预处理</h2>
+                            <div class="subsection">
+                                <h3 class="text-xl font-bold text-gray-700 mb-3">5.1 数据清洗</h3>
+                                <p class="text-gray-600 mb-3">
+                                    数据清洗是指处理数据中的错误、缺失值和异常值的过程。
+                                </p>
+                                <div class="code-block">
+                                    <pre><code>import pandas as pd
+import numpy as np
+
+# 创建示例数据
+data = {
+    'name': ['Tom', 'Jerry', 'Alice', 'Bob', None],
+    'age': [18, 20, None, 25, 30],
+    'city': ['Beijing', 'Shanghai', 'Guangzhou', 'Shenzhen', 'Beijing'],
+    'salary': [5000, 6000, 7000, 8000, 9000]
+}
+
+df = pd.DataFrame(data)
+print("原始数据:")
+print(df)
+
+# 处理缺失值
+df['name'].fillna('Unknown', inplace=True)
+df['age'].fillna(df['age'].mean(), inplace=True)
+
+# 处理重复值
+df.drop_duplicates(subset=['city'], keep='first', inplace=True)
+
+# 处理异常值
+# 假设salary的合理范围是4000-10000
+df = df[(df['salary'] >= 4000) & (df['salary'] <= 10000)]
+
+print("清洗后的数据:")
+print(df)</code></pre>
+                                </div>
+                            </div>
+                            <div class="subsection">
+                                <h3 class="text-xl font-bold text-gray-700 mb-3">5.2 数据转换</h3>
+                                <p class="text-gray-600 mb-3">
+                                    数据转换是指将数据从一种格式或结构转换为另一种格式或结构的过程。
+                                </p>
+                                <div class="code-block">
+                                    <pre><code>import pandas as pd
+import numpy as np
+
+# 创建示例数据
+df = pd.DataFrame({
+    'name': ['Tom', 'Jerry', 'Alice', 'Bob'],
+    'age': [18, 20, 22, 25],
+    'city': ['Beijing', 'Shanghai', 'Guangzhou', 'Shenzhen'],
+    'salary': [5000, 6000, 7000, 8000]
+})
+
+print("原始数据:")
+print(df)
+
+# 数据类型转换
+df['age'] = df['age'].astype(float)
+df['salary'] = df['salary'].astype(float)
+
+# 标准化
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+df['salary_standardized'] = scaler.fit_transform(df[['salary']])
+
+# 编码分类变量
+df = pd.get_dummies(df, columns=['city'])
+
+print("转换后的数据:")
+print(df)</code></pre>
+                                </div>
+                            </div>
+                            <div class="subsection">
+                                <h3 class="text-xl font-bold text-gray-700 mb-3">5.3 数据集成</h3>
+                                <p class="text-gray-600 mb-3">
+                                    数据集成是指将来自不同数据源的数据合并成一个统一的数据集的过程。
+                                </p>
+                                <div class="code-block">
+                                    <pre><code>import pandas as pd
+
+# 创建两个示例数据集
+df1 = pd.DataFrame({
+    'id': [1, 2, 3, 4],
+    'name': ['Tom', 'Jerry', 'Alice', 'Bob'],
+    'age': [18, 20, 22, 25]
+})
+
+df2 = pd.DataFrame({
+    'id': [1, 2, 3, 5],
+    'city': ['Beijing', 'Shanghai', 'Guangzhou', 'Shenzhen'],
+    'salary': [5000, 6000, 7000, 8000]
+})
+
+print("数据集1:")
+print(df1)
+print("\n数据集2:")
+print(df2)
+
+# 内连接
+inner_join = pd.merge(df1, df2, on='id', how='inner')
+print("\n内连接:")
+print(inner_join)
+
+# 左连接
+left_join = pd.merge(df1, df2, on='id', how='left')
+print("\n左连接:")
+print(left_join)
+
+# 右连接
+right_join = pd.merge(df1, df2, on='id', how='right')
+print("\n右连接:")
+print(right_join)
+
+# 外连接
+outer_join = pd.merge(df1, df2, on='id', how='outer')
+print("\n外连接:")
+print(outer_join)</code></pre>
+                                </div>
+                            </div>
+                            <div class="subsection">
+                                <h3 class="text-xl font-bold text-gray-700 mb-3">5.4 数据规约</h3>
+                                <p class="text-gray-600 mb-3">
+                                    数据规约是指通过减少数据量来提高数据处理效率的过程。
+                                </p>
+                                <div class="code-block">
+                                    <pre><code>import pandas as pd
+import numpy as np
+from sklearn.decomposition import PCA
+
+# 创建示例数据
+np.random.seed(42)
+df = pd.DataFrame({
+    'feature1': np.random.randn(100),
+    'feature2': np.random.randn(100),
+    'feature3': np.random.randn(100),
+    'feature4': np.random.randn(100),
+    'feature5': np.random.randn(100)
+})
+
+print("原始数据形状:", df.shape)
+
+# 特征选择
+# 选择方差较大的特征
+variance = df.var()
+selected_features = variance[variance > 0.8].index
+df_selected = df[selected_features]
+print("特征选择后的数据形状:", df_selected.shape)
+
+# 主成分分析（PCA）
+pca = PCA(n_components=2)
+df_pca = pca.fit_transform(df)
+print("PCA后的数据形状:", df_pca.shape)
+
+# 数据采样
+df_sampled = df.sample(frac=0.5, random_state=42)
+print("采样后的数据形状:", df_sampled.shape)</code></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="chapter6" class="section">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-4">第6章：数据质量评估</h2>
+                            <div class="subsection">
+                                <h3 class="text-xl font-bold text-gray-700 mb-3">6.1 数据质量的维度</h3>
+                                <p class="text-gray-600 mb-3">
+                                    数据质量的主要维度：
+                                </p>
+                                <ul class="list-disc list-inside text-gray-600 space-y-2">
+                                    <li><strong>完整性</strong>：数据是否完整，是否有缺失值</li>
+                                    <li><strong>准确性</strong>：数据是否准确反映真实情况</li>
+                                    <li><strong>一致性</strong>：数据是否一致，是否有矛盾</li>
+                                    <li><strong>时效性</strong>：数据是否及时更新</li>
+                                    <li><strong>可靠性</strong>：数据来源是否可靠</li>
+                                    <li><strong>可访问性</strong>：数据是否易于访问和使用</li>
+                                </ul>
+                            </div>
+                            <div class="subsection">
+                                <h3 class="text-xl font-bold text-gray-700 mb-3">6.2 数据质量评估方法</h3>
+                                <div class="code-block">
+                                    <pre><code>import pandas as pd
+import numpy as np
+
+# 创建示例数据
+data = {
+    'name': ['Tom', 'Jerry', 'Alice', 'Bob', None],
+    'age': [18, 20, None, 25, 30],
+    'city': ['Beijing', 'Shanghai', 'Guangzhou', 'Shenzhen', 'Beijing'],
+    'salary': [5000, 6000, 7000, 8000, 9000]
+}
+
+df = pd.DataFrame(data)
+
+# 评估完整性
+missing_values = df.isnull().sum()
+missing_percentage = (df.isnull().sum() / len(df)) * 100
+print("缺失值情况:")
+print(missing_values)
+print("\n缺失值百分比:")
+print(missing_percentage)
+
+# 评估一致性
+# 检查重复值
+duplicate_rows = df.duplicated()
+print("\n重复行:")
+print(duplicate_rows.sum())
+
+# 评估准确性
+# 检查年龄是否合理
+total_rows = len(df)
+invalid_age = len(df[(df['age'] < 0) | (df['age'] > 120)])
+print("\n无效年龄数量:", invalid_age)
+print("年龄准确率:", (total_rows - invalid_age) / total_rows * 100, "%")
+
+# 评估时效性
+# 假设数据是2023年收集的，检查数据是否是2023年的
+df['year'] = [2023, 2023, 2022, 2023, 2023]
+outdated_data = len(df[df['year'] < 2023])
+print("\n过时数据数量:", outdated_data)
+print("数据时效性:", (total_rows - outdated_data) / total_rows * 100, "%")</code></pre>
+                                </div>
+                            </div>
+                            <div class="subsection">
+                                <h3 class="text-xl font-bold text-gray-700 mb-3">6.3 数据质量改进策略</h3>
+                                <ul class="list-disc list-inside text-gray-600 space-y-2">
+                                    <li><strong>数据清洗</strong>：处理缺失值、异常值和重复值</li>
+                                    <li><strong>数据验证</strong>：在数据输入时进行验证</li>
+                                    <li><strong>数据标准化</strong>：统一数据格式和标准</li>
+                                    <li><strong>数据监控</strong>：定期检查数据质量</li>
+                                    <li><strong>数据治理</strong>：建立数据管理体系</li>
+                                    <li><strong>技术改进</strong>：使用更先进的数据处理技术</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div id="chapter7" class="section">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-4">第7章：高级数据采集技术</h2>
+                            <div class="subsection">
+                                <h3 class="text-xl font-bold text-gray-700 mb-3">7.1 API接口数据采集</h3>
+                                <p class="text-gray-600 mb-3">
+                                    API（Application Programming Interface）是应用程序编程接口，通过API可以更高效地获取数据。
+                                </p>
+                                <div class="code-block">
+                                    <pre><code>import requests
+import json
+
+# 调用公开API
+url = 'https://api.github.com/users/octocat'
+response = requests.get(url)
+
+if response.status_code == 200:
+    data = response.json()
+    print("用户名:", data['login'])
+    print("名称:", data['name'])
+    print(" followers:", data['followers'])
+else:
+    print("请求失败:", response.status_code)
+
+# 调用需要认证的API
+api_key = 'your_api_key'
+url = 'https://api.example.com/data'
+headers = {'Authorization': f'Bearer {api_key}'}
+response = requests.get(url, headers=headers)
+
+if response.status_code == 200:
+    data = response.json()
+    print(data)
+else:
+    print("请求失败:", response.status_code)
+
+# 调用带参数的API
+url = 'https://api.example.com/search'
+params = {'q': 'python', 'page': 1, 'per_page': 10}
+response = requests.get(url, params=params)
+
+if response.status_code == 200:
+    data = response.json()
+    print(data)
+else:
+    print("请求失败:", response.status_code)</code></pre>
+                                </div>
+                            </div>
+                            <div class="subsection">
+                                <h3 class="text-xl font-bold text-gray-700 mb-3">7.2 动态网页数据采集</h3>
+                                <p class="text-gray-600 mb-3">
+                                    动态网页是指使用JavaScript动态生成内容的网页，需要使用特殊的技术来采集数据。
+                                </p>
+                                <div class="code-block">
+                                    <pre><code>from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
+import time
+
+# 配置Chrome选项
+options = Options()
+options.add_argument('--headless')  # 无界面模式
+options.add_argument('--disable-gpu')
+
+# 创建WebDriver实例
+driver = webdriver.Chrome(options=options)
+
+# 访问网页
+driver.get('https://example.com')
+
+# 等待页面加载
+time.sleep(2)
+
+# 查找元素
+title = driver.find_element(By.TAG_NAME, 'h1').text
+print("标题:", title)
+
+# 点击按钮
+button = driver.find_element(By.CSS_SELECTOR, '.button')
+button.click()
+
+# 等待页面更新
+time.sleep(2)
+
+# 提取更新后的数据
+content = driver.find_element(By.CLASS_NAME, 'content').text
+print("内容:", content)
+
+# 关闭浏览器
+driver.quit()
+
+# 使用Requests-HTML库
+from requests_html import HTMLSession
+
+session = HTMLSession()
+response = session.get('https://example.com')
+
+# 执行JavaScript
+response.html.render()
+
+# 提取数据
+title = response.html.find('h1', first=True).text
+print("标题:", title)
+
+content = response.html.find('.content', first=True).text
+print("内容:", content)</code></pre>
+                                </div>
+                            </div>
+                            <div class="subsection">
+                                <h3 class="text-xl font-bold text-gray-700 mb-3">7.3 分布式爬虫</h3>
+                                <p class="text-gray-600 mb-3">
+                                    分布式爬虫是指使用多台服务器或多进程同时进行数据采集，提高采集效率。
+                                </p>
+                                <ul class="list-disc list-inside text-gray-600 space-y-2">
+                                    <li><strong>Scrapy-Redis</strong>：基于Redis的分布式爬虫框架</li>
+                                    <li><strong>Celery</strong>：分布式任务队列</li>
+                                    <li><strong>Apache Spark</strong>：大数据处理框架</li>
+                                </ul>
+                                <div class="code-block">
+                                    <pre><code># Scrapy-Redis示例配置
+# settings.py
+REDIS_URL = 'redis://localhost:6379'
+DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
+SCHEDULER = "scrapy_redis.scheduler.Scheduler"
+SCHEDULER_PERSIST = True
+
+# 爬虫代码
+import scrapy
+from scrapy_redis.spiders import RedisSpider
+
+class ExampleSpider(RedisSpider):
+    name = 'example'
+    redis_key = 'example:start_urls'
+
+    def parse(self, response):
+        # 提取数据
+        title = response.css('h1::text').get()
+        yield {'title': title}
+        
+        # 跟进链接
+        for href in response.css('a::attr(href)').getall():
+            yield response.follow(href, self.parse)
+
+# 启动爬虫
+# scrapy runspider example_spider.py
+
+# 添加起始URL到Redis
+# redis-cli> lpush example:start_urls https://example.com</code></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="chapter8" class="section">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-4">第8章：案例分析</h2>
+                            <div class="subsection">
+                                <h3 class="text-xl font-bold text-gray-700 mb-3">8.1 案例一：电商商品数据采集</h3>
+                                <p class="text-gray-600 mb-3">
+                                    采集电商平台的商品数据，包括商品名称、价格、评价等信息。
+                                </p>
+                                <div class="code-block">
+                                    <pre><code>import requests
+from bs4 import BeautifulSoup
+import csv
+
+# 采集商品数据
+def crawl_products(url):
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+    
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    
+    products = []
+    
+    # 提取商品信息
+    for item in soup.select('.product-item'):
+        name = item.select_one('.product-name').text.strip()
+        price = item.select_one('.product-price').text.strip()
+        rating = item.select_one('.product-rating').text.strip()
+        reviews = item.select_one('.product-reviews').text.strip()
+        
+        products.append({
+            'name': name,
+            'price': price,
+            'rating': rating,
+            'reviews': reviews
+        })
+    
+    return products
+
+# 主函数
+def main():
+    url = 'https://example.com/products'
+    products = crawl_products(url)
+    
+    # 存储数据
+    with open('products.csv', 'w', newline='', encoding='utf-8') as f:
+        writer = csv.DictWriter(f, fieldnames=['name', 'price', 'rating', 'reviews'])
+        writer.writeheader()
+        writer.writerows(products)
+    
+    print(f"采集了{len(products)}个商品数据")
+
+if __name__ == '__main__':
+    main()</code></pre>
+                                </div>
+                            </div>
+                            <div class="subsection">
+                                <h3 class="text-xl font-bold text-gray-700 mb-3">8.2 案例二：社交媒体数据采集</h3>
+                                <p class="text-gray-600 mb-3">
+                                    采集社交媒体平台的用户数据和帖子数据。
+                                </p>
+                                <div class="code-block">
+                                    <pre><code>import requests
+import json
+
+# 使用API采集社交媒体数据
+def crawl_social_media(api_key, user_id):
+    url = f'https://api.socialmedia.com/users/{user_id}/posts'
+    headers = {
+        'Authorization': f'Bearer {api_key}',
+        'Content-Type': 'application/json'
+    }
+    
+    response = requests.get(url, headers=headers)
+    
+    if response.status_code == 200:
+        data = response.json()
+        return data['posts']
+    else:
+        print(f"请求失败: {response.status_code}")
+        return []
+
+# 主函数
+def main():
+    api_key = 'your_api_key'
+    user_id = '123456789'
+    
+    posts = crawl_social_media(api_key, user_id)
+    
+    # 存储数据
+    with open('social_media_posts.json', 'w', encoding='utf-8') as f:
+        json.dump(posts, f, ensure_ascii=False, indent=2)
+    
+    print(f"采集了{len(posts)}条帖子数据")
+
+if __name__ == '__main__':
+    main()</code></pre>
+                                </div>
+                            </div>
+                            <div class="subsection">
+                                <h3 class="text-xl font-bold text-gray-700 mb-3">8.3 案例三：新闻数据采集与分析</h3>
+                                <p class="text-gray-600 mb-3">
+                                    采集新闻网站的新闻数据，并进行简单的分析。
+                                </p>
+                                <div class="code-block">
+                                    <pre><code>import requests
+from bs4 import BeautifulSoup
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# 采集新闻数据
+def crawl_news(url):
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+    
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    
+    news = []
+    
+    # 提取新闻信息
+    for item in soup.select('.news-item'):
+        title = item.select_one('.news-title').text.strip()
+        content = item.select_one('.news-content').text.strip()
+        date = item.select_one('.news-date').text.strip()
+        category = item.select_one('.news-category').text.strip()
+        
+        news.append({
+            'title': title,
+            'content': content,
+            'date': date,
+            'category': category
+        })
+    
+    return news
+
+# 分析新闻数据
+def analyze_news(news):
+    df = pd.DataFrame(news)
+    
+    # 统计各分类的新闻数量
+    category_counts = df['category'].value_counts()
+    print("各分类新闻数量:")
+    print(category_counts)
+    
+    # 绘制饼图
+    plt.figure(figsize=(10, 6))
+    category_counts.plot.pie(autopct='%1.1f%%')
+    plt.title('新闻分类分布')
+    plt.ylabel('')
+    plt.savefig('news_category.png')
+    plt.show()
+
+# 主函数
+def main():
+    url = 'https://example.com/news'
+    news = crawl_news(url)
+    
+    # 存储数据
+    df = pd.DataFrame(news)
+    df.to_csv('news.csv', index=False, encoding='utf-8')
+    
+    # 分析数据
+    analyze_news(news)
+    
+    print(f"采集了{len(news)}条新闻数据")
+
+if __name__ == '__main__':
+    main()</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系方式 -->
+    <footer class="bg-white py-8 border-t border-gray-200">
+        <div class="container mx-auto px-4">
+            <div class="text-center">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">联系方式</h3>
+                <div class="flex justify-center space-x-6 mb-4">
+                    <a href="mailto:example@example.com" class="text-gray-600 hover:text-blue-600">
+                        <i class="fa fa-envelope text-xl"></i>
+                    </a>
+                    <a href="https://github.com" class="text-gray-600 hover:text-blue-600">
+                        <i class="fa fa-github text-xl"></i>
+                    </a>
+                    <a href="https://linkedin.com" class="text-gray-600 hover:text-blue-600">
+                        <i class="fa fa-linkedin text-xl"></i>
+                    </a>
+                </div>
+                <p class="text-gray-600">© 2026 TT的个人学习页面</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 移动端菜单切换
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>

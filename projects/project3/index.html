@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>项目03：购物篮分析 - Python训练营</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+        .nav-tab { transition: all 0.3s ease; }
+        .nav-tab:hover { background-color: rgba(168, 85, 247, 0.1); }
+        .code-block { background-color: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin: 0.5rem 0; }
+        .exercise-question { background-color: #f8fafc; border-left: 4px solid #a855f7; padding: 1rem; margin-bottom: 1rem; }
+        .answer-input { width: 100%; padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 0.375rem; }
+        .result-correct { background-color: #dcfce7; border-color: #22c55e; }
+        .result-wrong { background-color: #fee2e2; border-color: #ef4444; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <nav class="bg-white shadow-md fixed w-full top-0 z-50">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="text-xl font-bold text-purple-600">
+                    <a href="../../index.html">Python训练营</a>
+                </div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="../../index.html#home" class="text-gray-700 hover:text-purple-600 font-medium">首页</a>
+                    <a href="../../index.html#projects" class="text-gray-700 hover:text-purple-600 font-medium">学习项目</a>
+                    <a href="../../index.html#my-progress" class="text-gray-700 hover:text-purple-600 font-medium">学习进度</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="menu-toggle" class="text-gray-700 focus:outline-none">
+                        <i class="fa fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="mobile-menu" class="md:hidden hidden mt-4 pb-2">
+                <a href="../../index.html#home" class="block py-2 text-gray-700 hover:text-purple-600">首页</a>
+                <a href="../../index.html#projects" class="block py-2 text-gray-700 hover:text-purple-600">学习项目</a>
+                <a href="../../index.html#my-progress" class="block py-2 text-gray-700 hover:text-purple-600">学习进度</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="pt-20 pb-8 bg-gradient-to-r from-purple-600 to-purple-800">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center">
+                <span class="bg-white/20 text-white px-3 py-1 rounded-full text-sm font-medium mr-4">项目03</span>
+                <h1 class="text-2xl md:text-3xl font-bold text-white">购物篮分析</h1>
+            </div>
+            <p class="text-purple-100 mt-4">分析商品关联规则，识别热销组合</p>
+            <div class="flex items-center mt-4 text-purple-100">
+                <i class="fa fa-file-csv mr-2"></i>
+                <span>数据文件: market_basket.csv</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-white border-b">
+        <div class="container mx-auto px-4">
+            <div class="flex overflow-x-auto">
+                <button id="tab-learn" class="nav-tab flex-shrink-0 px-6 py-4 text-purple-600 border-b-2 border-purple-600 font-medium">
+                    <i class="fa fa-book mr-2"></i>学习
+                </button>
+                <button id="tab-practice" class="nav-tab flex-shrink-0 px-6 py-4 text-gray-600 hover:text-purple-600 font-medium">
+                    <i class="fa fa-code mr-2"></i>练习
+                </button>
+                <button id="tab-test" class="nav-tab flex-shrink-0 px-6 py-4 text-gray-600 hover:text-purple-600 font-medium">
+                    <i class="fa fa-file-text mr-2"></i>考试
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section id="content-learn" class="py-8">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-purple-50 rounded-xl p-6 mb-8">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4">学习目标</h2>
+                    <ul class="list-disc list-inside text-gray-600 space-y-2">
+                        <li>理解购物篮分析的概念和应用场景</li>
+                        <li>掌握关联规则挖掘的基本原理</li>
+                        <li>学会计算支持度、置信度和提升度</li>
+                        <li>使用Apriori算法发现商品关联规则</li>
+                        <li>分析和解读关联规则结果</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">1. 购物篮分析概述</h3>
+                    <p class="text-gray-600 mb-4">购物篮分析是一种数据挖掘技术，用于发现顾客购买行为中的关联模式。它可以帮助商家了解哪些商品经常一起被购买。</p>
+                    <div class="code-block">
+                        <pre><code>import pandas as pd
+
+# 读取购物篮数据
+df = pd.read_csv('market_basket.csv')
+print(df.head())</code></pre>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">2. 关联规则的核心指标</h3>
+                    <p class="text-gray-600 mb-4">关联规则有三个核心指标：</p>
+                    <ul class="list-disc list-inside text-gray-600 space-y-2 mb-4">
+                        <li><strong>支持度(Support)</strong>：表示项集在数据集中出现的频率</li>
+                        <li><strong>置信度(Confidence)</strong>：表示在购买A的情况下购买B的概率</li>
+                        <li><strong>提升度(Lift)</strong>：表示购买A对购买B的影响程度</li>
+                    </ul>
+                    <div class="code-block">
+                        <pre><code># 计算支持度 P(A ∩ B)
+support_ab = len(df[(df['A'] == 1) & (df['B'] == 1)]) / len(df)
+
+# 计算置信度 P(B|A) = P(A ∩ B) / P(A)
+confidence_ab = support_ab / (len(df[df['A'] == 1]) / len(df))
+
+# 计算提升度 Lift = Confidence(A→B) / Support(B)
+support_b = len(df[df['B'] == 1]) / len(df)
+lift_ab = confidence_ab / support_b</code></pre>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">3. 使用Apriori算法</h3>
+                    <p class="text-gray-600 mb-4">Apriori是经典的关联规则挖掘算法，它通过逐层搜索的方式发现频繁项集。</p>
+                    <div class="code-block">
+                        <pre><code>from mlxtend.frequent_patterns import apriori, association_rules
+
+# 准备数据（假设数据已转换为one-hot编码）
+basket = df.set_index('order_id').astype(bool)
+
+# 挖掘频繁项集
+frequent_itemsets = apriori(basket, min_support=0.05, use_colnames=True)
+
+# 生成关联规则
+rules = association_rules(frequent_itemsets, metric='lift', min_threshold=1)
+
+# 查看结果
+print(rules[['antecedents', 'consequents', 'support', 'confidence', 'lift']])</code></pre>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">4. 完整实战代码</h3>
+                    <div class="code-block">
+                        <pre><code>import pandas as pd
+from mlxtend.frequent_patterns import apriori, association_rules
+
+# 读取数据
+df = pd.read_csv('market_basket.csv')
+
+# 数据预处理
+basket = df.groupby(['order_id', 'product'])['quantity'].sum().unstack().fillna(0)
+basket = basket.applymap(lambda x: 1 if x > 0 else 0)
+
+# 挖掘频繁项集
+frequent_itemsets = apriori(basket, min_support=0.03, use_colnames=True)
+print("频繁项集:")
+print(frequent_itemsets.sort_values('support', ascending=False))
+
+# 生成关联规则
+rules = association_rules(frequent_itemsets, metric='lift', min_threshold=1)
+
+# 筛选有意义的规则
+filtered_rules = rules[(rules['confidence'] > 0.5) & (rules['lift'] > 1.5)]
+print("\n关联规则:")
+print(filtered_rules[['antecedents', 'consequents', 'support', 'confidence', 'lift']])
+
+# 按提升度排序
+sorted_rules = filtered_rules.sort_values('lift', ascending=False)
+print("\n按提升度排序:")
+print(sorted_rules.head(10))</code></pre>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button id="complete-learn" class="bg-purple-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors">
+                        <i class="fa fa-check-circle mr-2"></i>标记为已学习
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="content-practice" class="py-8 hidden">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">练习题目</h2>
+
+                <div class="exercise-question">
+                    <h3 class="font-bold text-gray-800 mb-2">练习1：计算支持度</h3>
+                    <p class="text-gray-600 mb-4">给定包含1000笔订单的数据，其中200笔订单同时购买了商品A和商品B，计算{A,B}的支持度。</p>
+                    <input type="number" id="practice1-answer" class="answer-input" placeholder="请输入答案">
+                    <button id="check-practice1" class="mt-2 bg-purple-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-purple-700 transition-colors">检查答案</button>
+                    <div id="practice1-result" class="mt-2 p-3 rounded-lg hidden"></div>
+                </div>
+
+                <div class="exercise-question">
+                    <h3 class="font-bold text-gray-800 mb-2">练习2：计算置信度</h3>
+                    <p class="text-gray-600 mb-4">如果支持度{A,B}=0.15，支持度{A}=0.3，计算规则A→B的置信度。</p>
+                    <input type="number" id="practice2-answer" class="answer-input" placeholder="请输入答案">
+                    <button id="check-practice2" class="mt-2 bg-purple-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-purple-700 transition-colors">检查答案</button>
+                    <div id="practice2-result" class="mt-2 p-3 rounded-lg hidden"></div>
+                </div>
+
+                <div class="exercise-question">
+                    <h3 class="font-bold text-gray-800 mb-2">练习3：应用Apriori</h3>
+                    <p class="text-gray-600 mb-4">使用mlxtend库的apriori函数挖掘频繁项集，设置最小支持度为0.05。</p>
+                    <textarea id="practice3-answer" class="answer-input" rows="3" placeholder="请输入你的代码..."></textarea>
+                    <button id="check-practice3" class="mt-2 bg-purple-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-purple-700 transition-colors">检查答案</button>
+                    <div id="practice3-result" class="mt-2 p-3 rounded-lg hidden"></div>
+                </div>
+
+                <div class="text-center mt-8">
+                    <button id="complete-practice" class="bg-purple-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors">
+                        <i class="fa fa-check-circle mr-2"></i>标记为已练习
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="content-test" class="py-8 hidden">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-purple-50 rounded-xl p-6 mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">项目考试</h2>
+                    <p class="text-gray-600">共5道题目，每题20分，满分100分</p>
+                </div>
+
+                <div id="exam-questions">
+                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                        <h3 class="font-bold text-gray-800 mb-4">1. 购物篮分析主要用于发现什么？</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center"><input type="radio" name="q1" value="A" class="mr-2"><span>A) 客户消费能力</span></label>
+                            <label class="flex items-center"><input type="radio" name="q1" value="B" class="mr-2"><span>B) 商品关联规则</span></label>
+                            <label class="flex items-center"><input type="radio" name="q1" value="C" class="mr-2"><span>C) 销售趋势</span></label>
+                            <label class="flex items-center"><input type="radio" name="q1" value="D" class="mr-2"><span>D) 库存水平</span></label>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                        <h3 class="font-bold text-gray-800 mb-4">2. 支持度表示什么？</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center"><input type="radio" name="q2" value="A" class="mr-2"><span>A) 购买A后购买B的概率</span></label>
+                            <label class="flex items-center"><input type="radio" name="q2" value="B" class="mr-2"><span>B) 项集出现的频率</span></label>
+                            <label class="flex items-center"><input type="radio" name="q2" value="C" class="mr-2"><span>C) 购买A对购买B的影响</span></label>
+                            <label class="flex items-center"><input type="radio" name="q2" value="D" class="mr-2"><span>D) 商品的销量排名</span></label>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                        <h3 class="font-bold text-gray-800 mb-4">3. 提升度大于1表示什么？</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center"><input type="radio" name="q3" value="A" class="mr-2"><span>A) A和B负相关</span></label>
+                            <label class="flex items-center"><input type="radio" name="q3" value="B" class="mr-2"><span>B) A和B正相关</span></label>
+                            <label class="flex items-center"><input type="radio" name="q3" value="C" class="mr-2"><span>C) A和B独立</span></label>
+                            <label class="flex items-center"><input type="radio" name="q3" value="D" class="mr-2"><span>D) 数据有问题</span></label>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                        <h3 class="font-bold text-gray-800 mb-4">4. 经典的关联规则挖掘算法是？</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center"><input type="radio" name="q4" value="A" class="mr-2"><span>A) K-means</span></label>
+                            <label class="flex items-center"><input type="radio" name="q4" value="B" class="mr-2"><span>B) Apriori</span></label>
+                            <label class="flex items-center"><input type="radio" name="q4" value="C" class="mr-2"><span>C) Decision Tree</span></label>
+                            <label class="flex items-center"><input type="radio" name="q4" value="D" class="mr-2"><span>D) SVM</span></label>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                        <h3 class="font-bold text-gray-800 mb-4">5. 置信度的计算公式是？</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center"><input type="radio" name="q5" value="A" class="mr-2"><span>A) P(A∩B) / P(A)</span></label>
+                            <label class="flex items-center"><input type="radio" name="q5" value="B" class="mr-2"><span>B) P(A∩B) / P(B)</span></label>
+                            <label class="flex items-center"><input type="radio" name="q5" value="C" class="mr-2"><span>C) P(A) * P(B)</span></label>
+                            <label class="flex items-center"><input type="radio" name="q5" value="D" class="mr-2"><span>D) P(A) + P(B)</span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button id="submit-exam" class="bg-purple-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors">
+                        <i class="fa fa-paper-plane mr-2"></i>提交考试
+                    </button>
+                </div>
+
+                <div id="exam-result" class="mt-8 hidden">
+                    <div class="bg-white rounded-xl p-6 shadow-md">
+                        <div class="text-center">
+                            <div id="score-circle" class="w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4"></div>
+                            <h3 id="score-text" class="text-2xl font-bold text-gray-800 mb-2"></h3>
+                            <p id="result-text" class="text-gray-600"></p>
+                        </div>
+                        <div id="answer-details" class="mt-6"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-white py-8 border-t border-gray-200 mt-8">
+        <div class="container mx-auto px-4">
+            <div class="text-center">
+                <p class="text-gray-600">© 2026 Python数据分析实战训练营</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        const tabs = ['learn', 'practice', 'test'];
+        tabs.forEach(tab => {
+            document.getElementById(`tab-${tab}`).addEventListener('click', function() {
+                tabs.forEach(t => {
+                    document.getElementById(`content-${t}`).classList.add('hidden');
+                    document.getElementById(`tab-${t}`).classList.remove('border-b-2', 'border-purple-600', 'text-purple-600');
+                    document.getElementById(`tab-${t}`).classList.add('text-gray-600');
+                });
+                document.getElementById(`content-${tab}`).classList.remove('hidden');
+                document.getElementById(`tab-${tab}`).classList.add('border-b-2', 'border-purple-600', 'text-purple-600');
+                document.getElementById(`tab-${tab}`).classList.remove('text-gray-600');
+            });
+        });
+
+        document.getElementById('complete-learn').addEventListener('click', function() {
+            saveProgress('project3', 'learned');
+            alert('已标记为已学习！');
+        });
+
+        document.getElementById('complete-practice').addEventListener('click', function() {
+            saveProgress('project3', 'practiced');
+            alert('已标记为已练习！');
+        });
+
+        function saveProgress(projectId, type) {
+            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
+            if (!progress[projectId]) {
+                progress[projectId] = { learned: false, practiced: false, tested: false };
+            }
+            progress[projectId][type] = true;
+            localStorage.setItem('learningProgress', JSON.stringify(progress));
+        }
+
+        document.getElementById('check-practice1').addEventListener('click', function() {
+            const answer = parseFloat(document.getElementById('practice1-answer').value);
+            const result = document.getElementById('practice1-result');
+            result.classList.remove('hidden');
+            if (answer === 0.2) {
+                result.textContent = '✓ 正确！支持度 = 200/1000 = 0.2';
+                result.classList.remove('result-wrong');
+                result.classList.add('result-correct');
+            } else {
+                result.textContent = '✗ 答案不正确。提示：支持度 = 同时购买A和B的订单数 / 总订单数';
+                result.classList.remove('result-correct');
+                result.classList.add('result-wrong');
+            }
+        });
+
+        document.getElementById('check-practice2').addEventListener('click', function() {
+            const answer = parseFloat(document.getElementById('practice2-answer').value);
+            const result = document.getElementById('practice2-result');
+            result.classList.remove('hidden');
+            if (answer === 0.5) {
+                result.textContent = '✓ 正确！置信度 = 0.15/0.3 = 0.5';
+                result.classList.remove('result-wrong');
+                result.classList.add('result-correct');
+            } else {
+                result.textContent = '✗ 答案不正确。提示：置信度 = 支持度{A,B} / 支持度{A}';
+                result.classList.remove('result-correct');
+                result.classList.add('result-wrong');
+            }
+        });
+
+        document.getElementById('check-practice3').addEventListener('click', function() {
+            const answer = document.getElementById('practice3-answer').value;
+            const result = document.getElementById('practice3-result');
+            result.classList.remove('hidden');
+            if (answer.includes('apriori') && answer.includes('min_support')) {
+                result.textContent = '✓ 正确！使用apriori函数并设置min_support参数。';
+                result.classList.remove('result-wrong');
+                result.classList.add('result-correct');
+            } else {
+                result.textContent = '✗ 答案不完全正确。提示：使用mlxtend.frequent_patterns.apriori';
+                result.classList.remove('result-correct');
+                result.classList.add('result-wrong');
+            }
+        });
+
+        const correctAnswers = { q1: 'B', q2: 'B', q3: 'B', q4: 'B', q5: 'A' };
+
+        document.getElementById('submit-exam').addEventListener('click', function() {
+            let score = 0;
+            const answers = {};
+            Object.keys(correctAnswers).forEach(q => {
+                const selected = document.querySelector(`input[name="${q}"]:checked`);
+                answers[q] = selected ? selected.value : null;
+                if (answers[q] === correctAnswers[q]) score += 20;
+            });
+
+            document.getElementById('exam-questions').classList.add('hidden');
+            document.getElementById('submit-exam').classList.add('hidden');
+            document.getElementById('exam-result').classList.remove('hidden');
+
+            const scoreCircle = document.getElementById('score-circle');
+            const scoreText = document.getElementById('score-text');
+            const resultText = document.getElementById('result-text');
+            const answerDetails = document.getElementById('answer-details');
+
+            scoreText.textContent = `得分：${score}/100`;
+            
+            if (score >= 80) {
+                scoreCircle.className = 'w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 bg-purple-100';
+                scoreCircle.innerHTML = '<span class="text-3xl">🎉</span>';
+                resultText.textContent = '优秀！你已经掌握了购物篮分析的基本知识。';
+                saveProgress('project3', 'tested');
+            } else if (score >= 60) {
+                scoreCircle.className = 'w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 bg-yellow-100';
+                scoreCircle.innerHTML = '<span class="text-3xl">👍</span>';
+                resultText.textContent = '良好！继续努力，争取更高分数。';
+            } else {
+                scoreCircle.className = 'w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 bg-red-100';
+                scoreCircle.innerHTML = '<span class="text-3xl">📚</span>';
+                resultText.textContent = '需要复习一下相关知识，加油！';
+            }
+
+            let details = '<h4 class="font-bold text-gray-800 mb-4">答案详情</h4><div class="space-y-2">';
+            Object.keys(correctAnswers).forEach((q, i) => {
+                const isCorrect = answers[q] === correctAnswers[q];
+                details += `<p class="${isCorrect ? 'text-green-600' : 'text-red-600'}">
+                    ${i+1}. 你的答案: ${answers[q] || '未作答'} | 正确答案: ${correctAnswers[q]} ${isCorrect ? '✓' : '✗'}
+                </p>`;
+            });
+            answerDetails.innerHTML = details;
+        });
+    </script>
+</body>
+</html>

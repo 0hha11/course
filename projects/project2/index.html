@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>项目02：销售数据分组聚合 - Python训练营</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+        .nav-tab { transition: all 0.3s ease; }
+        .nav-tab:hover { background-color: rgba(34, 197, 94, 0.1); }
+        .code-block { background-color: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin: 0.5rem 0; }
+        .exercise-question { background-color: #f8fafc; border-left: 4px solid #22c55e; padding: 1rem; margin-bottom: 1rem; }
+        .answer-input { width: 100%; padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 0.375rem; }
+        .result-correct { background-color: #dcfce7; border-color: #22c55e; }
+        .result-wrong { background-color: #fee2e2; border-color: #ef4444; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <nav class="bg-white shadow-md fixed w-full top-0 z-50">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="text-xl font-bold text-green-600">
+                    <a href="../../index.html">Python训练营</a>
+                </div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="../../index.html#home" class="text-gray-700 hover:text-green-600 font-medium">首页</a>
+                    <a href="../../index.html#projects" class="text-gray-700 hover:text-green-600 font-medium">学习项目</a>
+                    <a href="../../index.html#my-progress" class="text-gray-700 hover:text-green-600 font-medium">学习进度</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="menu-toggle" class="text-gray-700 focus:outline-none">
+                        <i class="fa fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="mobile-menu" class="md:hidden hidden mt-4 pb-2">
+                <a href="../../index.html#home" class="block py-2 text-gray-700 hover:text-green-600">首页</a>
+                <a href="../../index.html#projects" class="block py-2 text-gray-700 hover:text-green-600">学习项目</a>
+                <a href="../../index.html#my-progress" class="block py-2 text-gray-700 hover:text-green-600">学习进度</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="pt-20 pb-8 bg-gradient-to-r from-green-600 to-green-800">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center">
+                <span class="bg-white/20 text-white px-3 py-1 rounded-full text-sm font-medium mr-4">项目02</span>
+                <h1 class="text-2xl md:text-3xl font-bold text-white">销售数据分组聚合</h1>
+            </div>
+            <p class="text-green-100 mt-4">按产品、地区、时间进行分组，计算销售统计指标</p>
+            <div class="flex items-center mt-4 text-green-100">
+                <i class="fa fa-file-csv mr-2"></i>
+                <span>数据文件: retail_orders.csv</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-white border-b">
+        <div class="container mx-auto px-4">
+            <div class="flex overflow-x-auto">
+                <button id="tab-learn" class="nav-tab flex-shrink-0 px-6 py-4 text-green-600 border-b-2 border-green-600 font-medium">
+                    <i class="fa fa-book mr-2"></i>学习
+                </button>
+                <button id="tab-practice" class="nav-tab flex-shrink-0 px-6 py-4 text-gray-600 hover:text-green-600 font-medium">
+                    <i class="fa fa-code mr-2"></i>练习
+                </button>
+                <button id="tab-test" class="nav-tab flex-shrink-0 px-6 py-4 text-gray-600 hover:text-green-600 font-medium">
+                    <i class="fa fa-file-text mr-2"></i>考试
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section id="content-learn" class="py-8">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-green-50 rounded-xl p-6 mb-8">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4">学习目标</h2>
+                    <ul class="list-disc list-inside text-gray-600 space-y-2">
+                        <li>理解分组聚合的概念和用途</li>
+                        <li>掌握groupby方法的基本用法</li>
+                        <li>学会计算常用统计指标（求和、均值、计数等）</li>
+                        <li>掌握多维度分组和聚合操作</li>
+                        <li>学会使用agg方法进行自定义聚合</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">1. 分组聚合概述</h3>
+                    <p class="text-gray-600 mb-4">分组聚合是数据分析中常用的操作，它将数据按照某个或某些列进行分组，然后对每个组进行聚合计算。</p>
+                    <div class="code-block">
+                        <pre><code>import pandas as pd
+
+df = pd.read_csv('retail_orders.csv')
+
+# 查看数据
+print(df.head())</code></pre>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">2. 基本分组聚合</h3>
+                    <p class="text-gray-600 mb-4">使用groupby方法进行分组，然后使用聚合函数计算统计指标。</p>
+                    <div class="code-block">
+                        <pre><code># 按产品类别分组，计算总销售额
+category_sales = df.groupby('category')['total_amount'].sum()
+print(category_sales)
+
+# 按地区分组，计算平均订单金额
+region_avg = df.groupby('region')['total_amount'].mean()
+print(region_avg)
+
+# 按产品类别分组，计算订单数量
+category_count = df.groupby('category')['order_id'].count()
+print(category_count)</code></pre>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">3. 多维度分组</h3>
+                    <p class="text-gray-600 mb-4">可以按照多个列进行分组，实现更细粒度的分析。</p>
+                    <div class="code-block">
+                        <pre><code># 按地区和产品类别分组
+region_category = df.groupby(['region', 'category'])['total_amount'].sum()
+print(region_category)
+
+# 按年份和月份分组
+time_group = df.groupby(['year', 'month'])['total_amount'].sum()
+print(time_group)
+
+# 重置索引，将多级索引转换为列
+result = region_category.reset_index()
+print(result)</code></pre>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">4. 多个聚合函数</h3>
+                    <p class="text-gray-600 mb-4">使用agg方法可以同时计算多个统计指标。</p>
+                    <div class="code-block">
+                        <pre><code># 计算多个统计指标
+stats = df.groupby('category')['total_amount'].agg([
+    'sum', 'mean', 'max', 'min', 'count'
+])
+print(stats)
+
+# 为聚合结果命名
+stats_named = df.groupby('category')['total_amount'].agg(
+    总销售额='sum',
+    平均金额='mean',
+    最大金额='max',
+    订单数='count'
+)
+print(stats_named)</code></pre>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">5. 完整实战代码</h3>
+                    <div class="code-block">
+                        <pre><code>import pandas as pd
+
+# 读取数据
+df = pd.read_csv('retail_orders.csv')
+
+# 计算总价
+df['total_amount'] = df['price'] * df['quantity']
+
+# 1. 按产品类别分析
+category_analysis = df.groupby('category')['total_amount'].agg(
+    总销售额='sum',
+    平均金额='mean',
+    订单数='count'
+)
+print("按产品类别分析:")
+print(category_analysis)
+
+# 2. 按地区分析
+region_analysis = df.groupby('region')['total_amount'].agg(
+    总销售额='sum',
+    平均金额='mean'
+)
+print("\n按地区分析:")
+print(region_analysis)
+
+# 3. 多维度分析
+multi_analysis = df.groupby(['region', 'category'])['total_amount'].sum()
+print("\n按地区和类别分析:")
+print(multi_analysis)
+
+# 4. 按时间分析
+df['order_date'] = pd.to_datetime(df['order_date'])
+df['month'] = df['order_date'].dt.month
+monthly_sales = df.groupby('month')['total_amount'].sum()
+print("\n月度销售趋势:")
+print(monthly_sales)</code></pre>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button id="complete-learn" class="bg-green-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors">
+                        <i class="fa fa-check-circle mr-2"></i>标记为已学习
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="content-practice" class="py-8 hidden">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">练习题目</h2>
+
+                <div class="exercise-question">
+                    <h3 class="font-bold text-gray-800 mb-2">练习1：按类别分组求和</h3>
+                    <p class="text-gray-600 mb-4">给定DataFrame df，按category列分组，计算每个类别的总销售额（total_amount列）。</p>
+                    <textarea id="practice1-answer" class="answer-input" rows="2" placeholder="请输入你的代码..."></textarea>
+                    <button id="check-practice1" class="mt-2 bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700 transition-colors">检查答案</button>
+                    <div id="practice1-result" class="mt-2 p-3 rounded-lg hidden"></div>
+                </div>
+
+                <div class="exercise-question">
+                    <h3 class="font-bold text-gray-800 mb-2">练习2：多维度分组</h3>
+                    <p class="text-gray-600 mb-4">按region和category两列分组，计算每组的总销售额和订单数量。</p>
+                    <textarea id="practice2-answer" class="answer-input" rows="3" placeholder="请输入你的代码..."></textarea>
+                    <button id="check-practice2" class="mt-2 bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700 transition-colors">检查答案</button>
+                    <div id="practice2-result" class="mt-2 p-3 rounded-lg hidden"></div>
+                </div>
+
+                <div class="exercise-question">
+                    <h3 class="font-bold text-gray-800 mb-2">练习3：自定义聚合</h3>
+                    <p class="text-gray-600 mb-4">使用agg方法，按category分组，计算总销售额、平均金额和最大金额。</p>
+                    <textarea id="practice3-answer" class="answer-input" rows="3" placeholder="请输入你的代码..."></textarea>
+                    <button id="check-practice3" class="mt-2 bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700 transition-colors">检查答案</button>
+                    <div id="practice3-result" class="mt-2 p-3 rounded-lg hidden"></div>
+                </div>
+
+                <div class="text-center mt-8">
+                    <button id="complete-practice" class="bg-green-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors">
+                        <i class="fa fa-check-circle mr-2"></i>标记为已练习
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="content-test" class="py-8 hidden">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-green-50 rounded-xl p-6 mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">项目考试</h2>
+                    <p class="text-gray-600">共5道题目，每题20分，满分100分</p>
+                </div>
+
+                <div id="exam-questions">
+                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                        <h3 class="font-bold text-gray-800 mb-4">1. 在Pandas中，用于分组的方法是？</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center"><input type="radio" name="q1" value="A" class="mr-2"><span>A) group()</span></label>
+                            <label class="flex items-center"><input type="radio" name="q1" value="B" class="mr-2"><span>B) groupby()</span></label>
+                            <label class="flex items-center"><input type="radio" name="q1" value="C" class="mr-2"><span>C) aggregate()</span></label>
+                            <label class="flex items-center"><input type="radio" name="q1" value="D" class="mr-2"><span>D) split()</span></label>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                        <h3 class="font-bold text-gray-800 mb-4">2. 以下哪个方法可以同时计算多个聚合指标？</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center"><input type="radio" name="q2" value="A" class="mr-2"><span>A) sum()</span></label>
+                            <label class="flex items-center"><input type="radio" name="q2" value="B" class="mr-2"><span>B) mean()</span></label>
+                            <label class="flex items-center"><input type="radio" name="q2" value="C" class="mr-2"><span>C) agg()</span></label>
+                            <label class="flex items-center"><input type="radio" name="q2" value="D" class="mr-2"><span>D) count()</span></label>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                        <h3 class="font-bold text-gray-800 mb-4">3. 以下代码的输出是什么？</h3>
+                        <div class="code-block mb-4"><pre><code>df.groupby('category')['amount'].sum()</code></pre></div>
+                        <div class="space-y-2">
+                            <label class="flex items-center"><input type="radio" name="q3" value="A" class="mr-2"><span>A) 每个类别的平均金额</span></label>
+                            <label class="flex items-center"><input type="radio" name="q3" value="B" class="mr-2"><span>B) 每个类别的总金额</span></label>
+                            <label class="flex items-center"><input type="radio" name="q3" value="C" class="mr-2"><span>C) 每个类别的最大金额</span></label>
+                            <label class="flex items-center"><input type="radio" name="q3" value="D" class="mr-2"><span>D) 每个类别的订单数</span></label>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                        <h3 class="font-bold text-gray-800 mb-4">4. 按多个列分组时，groupby的参数应该是什么类型？</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center"><input type="radio" name="q4" value="A" class="mr-2"><span>A) 字符串</span></label>
+                            <label class="flex items-center"><input type="radio" name="q4" value="B" class="mr-2"><span>B) 列表</span></label>
+                            <label class="flex items-center"><input type="radio" name="q4" value="C" class="mr-2"><span>C) 字典</span></label>
+                            <label class="flex items-center"><input type="radio" name="q4" value="D" class="mr-2"><span>D) 元组</span></label>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                        <h3 class="font-bold text-gray-800 mb-4">5. 以下哪个不是常用的聚合函数？</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center"><input type="radio" name="q5" value="A" class="mr-2"><span>A) sum</span></label>
+                            <label class="flex items-center"><input type="radio" name="q5" value="B" class="mr-2"><span>B) mean</span></label>
+                            <label class="flex items-center"><input type="radio" name="q5" value="C" class="mr-2"><span>C) concat</span></label>
+                            <label class="flex items-center"><input type="radio" name="q5" value="D" class="mr-2"><span>D) count</span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button id="submit-exam" class="bg-green-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors">
+                        <i class="fa fa-paper-plane mr-2"></i>提交考试
+                    </button>
+                </div>
+
+                <div id="exam-result" class="mt-8 hidden">
+                    <div class="bg-white rounded-xl p-6 shadow-md">
+                        <div class="text-center">
+                            <div id="score-circle" class="w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4"></div>
+                            <h3 id="score-text" class="text-2xl font-bold text-gray-800 mb-2"></h3>
+                            <p id="result-text" class="text-gray-600"></p>
+                        </div>
+                        <div id="answer-details" class="mt-6"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-white py-8 border-t border-gray-200 mt-8">
+        <div class="container mx-auto px-4">
+            <div class="text-center">
+                <p class="text-gray-600">© 2026 Python数据分析实战训练营</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        const tabs = ['learn', 'practice', 'test'];
+        tabs.forEach(tab => {
+            document.getElementById(`tab-${tab}`).addEventListener('click', function() {
+                tabs.forEach(t => {
+                    document.getElementById(`content-${t}`).classList.add('hidden');
+                    document.getElementById(`tab-${t}`).classList.remove('border-b-2', 'border-green-600', 'text-green-600');
+                    document.getElementById(`tab-${t}`).classList.add('text-gray-600');
+                });
+                document.getElementById(`content-${tab}`).classList.remove('hidden');
+                document.getElementById(`tab-${tab}`).classList.add('border-b-2', 'border-green-600', 'text-green-600');
+                document.getElementById(`tab-${tab}`).classList.remove('text-gray-600');
+            });
+        });
+
+        document.getElementById('complete-learn').addEventListener('click', function() {
+            saveProgress('project2', 'learned');
+            alert('已标记为已学习！');
+        });
+
+        document.getElementById('complete-practice').addEventListener('click', function() {
+            saveProgress('project2', 'practiced');
+            alert('已标记为已练习！');
+        });
+
+        function saveProgress(projectId, type) {
+            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
+            if (!progress[projectId]) {
+                progress[projectId] = { learned: false, practiced: false, tested: false };
+            }
+            progress[projectId][type] = true;
+            localStorage.setItem('learningProgress', JSON.stringify(progress));
+        }
+
+        document.getElementById('check-practice1').addEventListener('click', function() {
+            const answer = document.getElementById('practice1-answer').value;
+            const result = document.getElementById('practice1-result');
+            result.classList.remove('hidden');
+            if (answer.includes('groupby') && answer.includes('sum')) {
+                result.textContent = '✓ 正确！df.groupby("category")["total_amount"].sum()';
+                result.classList.remove('result-wrong');
+                result.classList.add('result-correct');
+            } else {
+                result.textContent = '✗ 答案不完全正确。提示：使用groupby和sum方法。';
+                result.classList.remove('result-correct');
+                result.classList.add('result-wrong');
+            }
+        });
+
+        document.getElementById('check-practice2').addEventListener('click', function() {
+            const answer = document.getElementById('practice2-answer').value;
+            const result = document.getElementById('practice2-result');
+            result.classList.remove('hidden');
+            if (answer.includes('groupby') && answer.includes('[') && answer.includes(']') && answer.includes('sum')) {
+                result.textContent = '✓ 正确！使用df.groupby(["region", "category"])进行多维度分组。';
+                result.classList.remove('result-wrong');
+                result.classList.add('result-correct');
+            } else {
+                result.textContent = '✗ 答案不完全正确。提示：groupby参数使用列表。';
+                result.classList.remove('result-correct');
+                result.classList.add('result-wrong');
+            }
+        });
+
+        document.getElementById('check-practice3').addEventListener('click', function() {
+            const answer = document.getElementById('practice3-answer').value;
+            const result = document.getElementById('practice3-result');
+            result.classList.remove('hidden');
+            if (answer.includes('agg')) {
+                result.textContent = '✓ 正确！使用agg方法可以同时计算多个聚合指标。';
+                result.classList.remove('result-wrong');
+                result.classList.add('result-correct');
+            } else {
+                result.textContent = '✗ 答案不完全正确。提示：使用agg方法进行自定义聚合。';
+                result.classList.remove('result-correct');
+                result.classList.add('result-wrong');
+            }
+        });
+
+        const correctAnswers = { q1: 'B', q2: 'C', q3: 'B', q4: 'B', q5: 'C' };
+
+        document.getElementById('submit-exam').addEventListener('click', function() {
+            let score = 0;
+            const answers = {};
+            Object.keys(correctAnswers).forEach(q => {
+                const selected = document.querySelector(`input[name="${q}"]:checked`);
+                answers[q] = selected ? selected.value : null;
+                if (answers[q] === correctAnswers[q]) score += 20;
+            });
+
+            document.getElementById('exam-questions').classList.add('hidden');
+            document.getElementById('submit-exam').classList.add('hidden');
+            document.getElementById('exam-result').classList.remove('hidden');
+
+            const scoreCircle = document.getElementById('score-circle');
+            const scoreText = document.getElementById('score-text');
+            const resultText = document.getElementById('result-text');
+            const answerDetails = document.getElementById('answer-details');
+
+            scoreText.textContent = `得分：${score}/100`;
+            
+            if (score >= 80) {
+                scoreCircle.className = 'w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 bg-green-100';
+                scoreCircle.innerHTML = '<span class="text-3xl">🎉</span>';
+                resultText.textContent = '优秀！你已经掌握了分组聚合的基本知识。';
+                saveProgress('project2', 'tested');
+            } else if (score >= 60) {
+                scoreCircle.className = 'w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 bg-yellow-100';
+                scoreCircle.innerHTML = '<span class="text-3xl">👍</span>';
+                resultText.textContent = '良好！继续努力，争取更高分数。';
+            } else {
+                scoreCircle.className = 'w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 bg-red-100';
+                scoreCircle.innerHTML = '<span class="text-3xl">📚</span>';
+                resultText.textContent = '需要复习一下相关知识，加油！';
+            }
+
+            let details = '<h4 class="font-bold text-gray-800 mb-4">答案详情</h4><div class="space-y-2">';
+            Object.keys(correctAnswers).forEach((q, i) => {
+                const isCorrect = answers[q] === correctAnswers[q];
+                details += `<p class="${isCorrect ? 'text-green-600' : 'text-red-600'}">
+                    ${i+1}. 你的答案: ${answers[q] || '未作答'} | 正确答案: ${correctAnswers[q]} ${isCorrect ? '✓' : '✗'}
+                </p>`;
+            });
+            answerDetails.innerHTML = details;
+        });
+    </script>
+</body>
+</html>
