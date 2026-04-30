@@ -9,9 +9,9 @@
     <style>
         body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; }
         .nav-tab { transition: all 0.3s ease; }
-        .nav-tab:hover { background-color: rgba(236, 72, 153, 0.1); }
+        .nav-tab:hover { background-color: rgba(59, 130, 246, 0.1); }
         .code-block { background-color: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin: 0.5rem 0; }
-        .exercise-question { background-color: #f8fafc; border-left: 4px solid #ec4899; padding: 1rem; margin-bottom: 1rem; }
+        .exercise-question { background-color: #f8fafc; border-left: 4px solid #3b82f6; padding: 1rem; margin-bottom: 1rem; }
         .answer-input { width: 100%; padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 0.375rem; }
         .result-correct { background-color: #dcfce7; border-color: #22c55e; }
         .result-wrong { background-color: #fee2e2; border-color: #ef4444; }
@@ -21,13 +21,13 @@
     <nav class="bg-white shadow-md fixed w-full top-0 z-50">
         <div class="container mx-auto px-4 py-3">
             <div class="flex justify-between items-center">
-                <div class="text-xl font-bold text-pink-600">
+                <div class="text-xl font-bold text-blue-600">
                     <a href="../../index.html">Python训练营</a>
                 </div>
                 <div class="hidden md:flex space-x-6">
-                    <a href="../../index.html#home" class="text-gray-700 hover:text-pink-600 font-medium">首页</a>
-                    <a href="../../index.html#projects" class="text-gray-700 hover:text-pink-600 font-medium">学习项目</a>
-                    <a href="../../index.html#my-progress" class="text-gray-700 hover:text-pink-600 font-medium">学习进度</a>
+                    <a href="../../index.html#home" class="text-gray-700 hover:text-blue-600 font-medium">首页</a>
+                    <a href="../../index.html#projects" class="text-gray-700 hover:text-blue-600 font-medium">学习项目</a>
+                    <a href="../../index.html#my-progress" class="text-gray-700 hover:text-blue-600 font-medium">学习进度</a>
                 </div>
                 <div class="md:hidden">
                     <button id="menu-toggle" class="text-gray-700 focus:outline-none">
@@ -36,23 +36,23 @@
                 </div>
             </div>
             <div id="mobile-menu" class="md:hidden hidden mt-4 pb-2">
-                <a href="../../index.html#home" class="block py-2 text-gray-700 hover:text-pink-600">首页</a>
-                <a href="../../index.html#projects" class="block py-2 text-gray-700 hover:text-pink-600">学习项目</a>
-                <a href="../../index.html#my-progress" class="block py-2 text-gray-700 hover:text-pink-600">学习进度</a>
+                <a href="../../index.html#home" class="block py-2 text-gray-700 hover:text-blue-600">首页</a>
+                <a href="../../index.html#projects" class="block py-2 text-gray-700 hover:text-blue-600">学习项目</a>
+                <a href="../../index.html#my-progress" class="block py-2 text-gray-700 hover:text-blue-600">学习进度</a>
             </div>
         </div>
     </nav>
 
-    <section class="pt-20 pb-8 bg-gradient-to-r from-pink-600 to-pink-800">
+    <section class="pt-20 pb-8 bg-gradient-to-r from-blue-600 to-blue-800">
         <div class="container mx-auto px-4">
             <div class="flex items-center">
                 <span class="bg-white/20 text-white px-3 py-1 rounded-full text-sm font-medium mr-4">项目05</span>
                 <h1 class="text-2xl md:text-3xl font-bold text-white">销售数据可视化</h1>
             </div>
-            <p class="text-pink-100 mt-4">使用matplotlib绘制销售趋势图、分布图等</p>
-            <div class="flex items-center mt-4 text-pink-100">
+            <p class="text-blue-100 mt-4">使用matplotlib创建销售数据图表</p>
+            <div class="flex items-center mt-4 text-blue-100">
                 <i class="fa fa-file-csv mr-2"></i>
-                <span>数据文件: retail_orders.csv</span>
+                <span>数据文件: sales_data.csv</span>
             </div>
         </div>
     </section>
@@ -60,13 +60,13 @@
     <section class="bg-white border-b">
         <div class="container mx-auto px-4">
             <div class="flex overflow-x-auto">
-                <button id="tab-learn" class="nav-tab flex-shrink-0 px-6 py-4 text-pink-600 border-b-2 border-pink-600 font-medium">
+                <button id="tab-learn" class="nav-tab flex-shrink-0 px-6 py-4 text-blue-600 border-b-2 border-blue-600 font-medium">
                     <i class="fa fa-book mr-2"></i>学习
                 </button>
-                <button id="tab-practice" class="nav-tab flex-shrink-0 px-6 py-4 text-gray-600 hover:text-pink-600 font-medium">
+                <button id="tab-practice" class="nav-tab flex-shrink-0 px-6 py-4 text-gray-600 hover:text-blue-600 font-medium">
                     <i class="fa fa-code mr-2"></i>练习
                 </button>
-                <button id="tab-test" class="nav-tab flex-shrink-0 px-6 py-4 text-gray-600 hover:text-pink-600 font-medium">
+                <button id="tab-test" class="nav-tab flex-shrink-0 px-6 py-4 text-gray-600 hover:text-blue-600 font-medium">
                     <i class="fa fa-file-text mr-2"></i>考试
                 </button>
             </div>
@@ -76,143 +76,88 @@
     <section id="content-learn" class="py-8">
         <div class="container mx-auto px-4">
             <div class="max-w-4xl mx-auto">
-                <div class="bg-pink-50 rounded-xl p-6 mb-8">
+                <div class="bg-blue-50 rounded-xl p-6 mb-8">
                     <h2 class="text-xl font-bold text-gray-800 mb-4">学习目标</h2>
                     <ul class="list-disc list-inside text-gray-600 space-y-2">
-                        <li>理解数据可视化的重要性</li>
                         <li>掌握matplotlib的基本用法</li>
-                        <li>学会绘制常用图表类型</li>
-                        <li>掌握图表美化技巧</li>
-                        <li>能够根据数据选择合适的图表类型</li>
+                        <li>学会创建常见的图表类型（折线图、柱状图、饼图等）</li>
+                        <li>掌握图表的美化和定制技巧</li>
+                        <li>能够根据业务需求选择合适的图表类型</li>
+                        <li>学会创建多子图和数据对比图表</li>
                     </ul>
                 </div>
 
                 <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4">1. 数据可视化概述</h3>
-                    <p class="text-gray-600 mb-4">数据可视化是将数据以图形或图表的形式呈现，帮助我们更直观地理解数据模式和趋势。</p>
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">1. matplotlib基础</h3>
+                    <p class="text-gray-600 mb-4">matplotlib是Python最流行的数据可视化库，提供了丰富的绘图功能。</p>
                     <div class="code-block">
                         <pre><code>import matplotlib.pyplot as plt
 import pandas as pd
 
-# 设置中文显示
-plt.rcParams['font.sans-serif'] = ['SimHei']
-plt.rcParams['axes.unicode_minus'] = False
-
 # 读取数据
-df = pd.read_csv('retail_orders.csv')</code></pre>
-                    </div>
-                </div>
+df = pd.read_csv('sales_data.csv')
 
-                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4">2. 常用图表类型</h3>
-                    <p class="text-gray-600 mb-4">不同的数据适合不同的图表类型：</p>
-                    <div class="code-block">
-                        <pre><code># 折线图 - 展示趋势
+# 创建图表
+plt.figure(figsize=(10, 6))
 plt.plot(df['date'], df['sales'])
 plt.title('销售趋势')
 plt.xlabel('日期')
 plt.ylabel('销售额')
-plt.show()
-
-# 柱状图 - 展示对比
-plt.bar(df['category'], df['amount'])
-plt.title('各品类销售对比')
-plt.show()
-
-# 饼图 - 展示占比
-plt.pie(df['amount'], labels=df['category'], autopct='%1.1f%%')
-plt.title('销售占比')
-plt.show()
-
-# 直方图 - 展示分布
-plt.hist(df['amount'], bins=20)
-plt.title('销售额分布')
 plt.show()</code></pre>
                     </div>
                 </div>
 
                 <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4">3. 图表美化</h3>
-                    <p class="text-gray-600 mb-4">通过调整样式让图表更美观：</p>
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">2. 常见图表类型</h3>
                     <div class="code-block">
-                        <pre><code># 设置图像大小
-plt.figure(figsize=(12, 6))
+                        <pre><code># 柱状图
+plt.bar(categories, values)
+plt.title('类别销售对比')
 
-# 绘制带样式的折线图
-plt.plot(df['date'], df['sales'], 
-         color='#ec4899', 
-         marker='o', 
-         linestyle='-', 
-         linewidth=2,
-         label='销售额')
+# 饼图
+plt.pie(sizes, labels=labels, autopct='%1.1f%%')
+plt.title('销售占比')
 
-# 添加标题和标签
-plt.title('月度销售趋势', fontsize=16)
-plt.xlabel('日期', fontsize=12)
-plt.ylabel('销售额(元)', fontsize=12)
+# 散点图
+plt.scatter(x, y)
+plt.title('X与Y的关系')</code></pre>
+                    </div>
+                </div>
 
-# 添加图例
-plt.legend(fontsize=12)
+                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">3. 完整实战代码</h3>
+                    <div class="code-block">
+                        <pre><code>import pandas as pd
+import matplotlib.pyplot as plt
+plt.rcParams['font.sans-serif'] = ['SimHei']
+plt.rcParams['axes.unicode_minus'] = False
 
-# 添加网格
-plt.grid(True, alpha=0.3)
+df = pd.read_csv('sales_data.csv')
 
-# 旋转x轴标签
-plt.xticks(rotation=45)
+fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+
+axes[0, 0].plot(df['month'], df['sales'])
+axes[0, 0].set_title('月度销售趋势')
+axes[0, 0].set_xlabel('月份')
+axes[0, 0].set_ylabel('销售额')
+
+axes[0, 1].bar(df['region'], df['sales'])
+axes[0, 1].set_title('地区销售对比')
+axes[0, 1].tick_params(axis='x', rotation=45)
+
+axes[1, 0].pie(df['category_sales'], labels=df['category'], autopct='%1.1f%%')
+axes[1, 0].set_title('产品类别占比')
+
+axes[1, 1].scatter(df['marketing_spend'], df['sales'])
+axes[1, 1].set_title('营销投入与销售关系')
 
 plt.tight_layout()
 plt.show()</code></pre>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4">4. 完整实战代码</h3>
-                    <div class="code-block">
-                        <pre><code>import pandas as pd
-import matplotlib.pyplot as plt
-
-plt.rcParams['font.sans-serif'] = ['SimHei']
-plt.rcParams['axes.unicode_minus'] = False
-
-# 读取数据
-df = pd.read_csv('retail_orders.csv')
-df['order_date'] = pd.to_datetime(df['order_date'])
-df['month'] = df['order_date'].dt.month
-df['total_amount'] = df['price'] * df['quantity']
-
-# 月度销售趋势
-monthly_sales = df.groupby('month')['total_amount'].sum()
-
-plt.figure(figsize=(10, 5))
-plt.plot(monthly_sales.index, monthly_sales.values, 'bo-', linewidth=2)
-plt.title('月度销售趋势')
-plt.xlabel('月份')
-plt.ylabel('销售额')
-plt.grid(True, alpha=0.3)
-plt.show()
-
-# 品类销售对比
-category_sales = df.groupby('category')['total_amount'].sum()
-
-plt.figure(figsize=(10, 5))
-category_sales.plot(kind='bar', color=['#ec4899', '#f472b6', '#f9a8d4'])
-plt.title('各品类销售对比')
-plt.xlabel('品类')
-plt.ylabel('销售额')
-plt.xticks(rotation=45)
-plt.show()
-
-# 销售占比饼图
-plt.figure(figsize=(8, 8))
-plt.pie(category_sales.values, labels=category_sales.index, 
-        autopct='%1.1f%%', colors=['#ec4899', '#f472b6', '#f9a8d4'])
-plt.title('销售占比')
-plt.show()</code></pre>
-                    </div>
-                </div>
-
                 <div class="text-center">
-                    <button id="complete-learn" class="bg-pink-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-pink-700 transition-colors">
+                    <button id="complete-learn" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors">
                         <i class="fa fa-check-circle mr-2"></i>标记为已学习
                     </button>
                 </div>
@@ -221,38 +166,144 @@ plt.show()</code></pre>
     </section>
 
     <section id="content-practice" class="py-8 hidden">
-        <div class="container mx-auto px-4">
-            <div class="max-w-4xl mx-auto">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6">练习题目</h2>
-
-                <div class="exercise-question">
-                    <h3 class="font-bold text-gray-800 mb-2">练习1：绘制折线图</h3>
-                    <p class="text-gray-600 mb-4">使用matplotlib绘制销售趋势折线图。</p>
-                    <textarea id="practice1-answer" class="answer-input" rows="4" placeholder="请输入你的代码..."></textarea>
-                    <button id="check-practice1" class="mt-2 bg-pink-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-pink-700 transition-colors">检查答案</button>
-                    <div id="practice1-result" class="mt-2 p-3 rounded-lg hidden"></div>
+        <div class="container mx-auto px-4 h-[calc(100vh-180px)]">
+            <div class="flex flex-col lg:flex-row h-full">
+                <div class="lg:w-80 lg:h-full bg-white rounded-xl shadow-md overflow-hidden flex-shrink-0">
+                    <div class="bg-gradient-to-r from-blue-600 to-blue-800 px-4 py-3 text-white">
+                        <h2 class="font-bold">练习导航</h2>
+                    </div>
+                    <div class="p-2 space-y-1">
+                        <button id="practice-nav-1" class="w-full text-left px-4 py-3 rounded-lg bg-blue-50 text-blue-600 font-medium hover:bg-blue-100 transition-colors">
+                            <i class="fa fa-code mr-2"></i>练习1：创建折线图
+                        </button>
+                        <button id="practice-nav-2" class="w-full text-left px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
+                            <i class="fa fa-code mr-2"></i>练习2：创建柱状图
+                        </button>
+                        <button id="practice-nav-3" class="w-full text-left px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
+                            <i class="fa fa-code mr-2"></i>练习3：创建饼图
+                        </button>
+                    </div>
+                    
+                    <div class="border-t border-gray-200">
+                        <div id="practice-detail-1" class="p-4">
+                            <div class="bg-orange-50 rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-orange-800 mb-2 flex items-center">
+                                    <i class="fa fa-info-circle mr-2"></i>详细说明
+                                </h3>
+                                <p class="text-sm text-gray-600">
+                                    折线图适合展示数据随时间变化的趋势。使用plt.plot()函数创建，配合title、xlabel、ylabel设置图表标题和坐标轴标签。
+                                </p>
+                            </div>
+                            <div class="bg-gray-900 rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-green-400 mb-2 flex items-center">
+                                    <i class="fa fa-code mr-2"></i>代码示例
+                                </h3>
+                                <pre class="text-xs text-gray-300 overflow-x-auto"><code>plt.plot(x, y)
+plt.title('标题')
+plt.xlabel('X轴')
+plt.ylabel('Y轴')
+plt.show()</code></pre>
+                            </div>
+                            <div class="bg-yellow-50 rounded-lg p-3">
+                                <h3 class="font-bold text-yellow-800 mb-2 flex items-center">
+                                    <i class="fa fa-lightbulb-o mr-2"></i>小贴士
+                                </h3>
+                                <p class="text-sm text-gray-600">设置figsize可以调整图表大小。</p>
+                            </div>
+                        </div>
+                        <div id="practice-detail-2" class="p-4 hidden">
+                            <div class="bg-orange-50 rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-orange-800 mb-2 flex items-center">
+                                    <i class="fa fa-info-circle mr-2"></i>详细说明
+                                </h3>
+                                <p class="text-sm text-gray-600">柱状图适合比较不同类别的数据大小。使用plt.bar()创建垂直柱状图，plt.barh()创建水平柱状图。</p>
+                            </div>
+                            <div class="bg-gray-900 rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-green-400 mb-2 flex items-center">
+                                    <i class="fa fa-code mr-2"></i>代码示例
+                                </h3>
+                                <pre class="text-xs text-gray-300 overflow-x-auto"><code>plt.bar(categories, values)
+plt.barh(categories, values)  # 水平</code></pre>
+                            </div>
+                            <div class="bg-yellow-50 rounded-lg p-3">
+                                <h3 class="font-bold text-yellow-800 mb-2 flex items-center">
+                                    <i class="fa fa-lightbulb-o mr-2"></i>小贴士
+                                </h3>
+                                <p class="text-sm text-gray-600">使用color参数可以设置柱子的颜色。</p>
+                            </div>
+                        </div>
+                        <div id="practice-detail-3" class="p-4 hidden">
+                            <div class="bg-orange-50 rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-orange-800 mb-2 flex items-center">
+                                    <i class="fa fa-info-circle mr-2"></i>详细说明
+                                </h3>
+                                <p class="text-sm text-gray-600">饼图适合展示各部分占总体的比例。使用plt.pie()创建，autopct参数用于显示百分比。</p>
+                            </div>
+                            <div class="bg-gray-900 rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-green-400 mb-2 flex items-center">
+                                    <i class="fa fa-code mr-2"></i>代码示例
+                                </h3>
+                                <pre class="text-xs text-gray-300 overflow-x-auto"><code>plt.pie(sizes, labels=labels, autopct='%1.1f%%')
+plt.show()</code></pre>
+                            </div>
+                            <div class="bg-yellow-50 rounded-lg p-3">
+                                <h3 class="font-bold text-yellow-800 mb-2 flex items-center">
+                                    <i class="fa fa-lightbulb-o mr-2"></i>小贴士
+                                </h3>
+                                <p class="text-sm text-gray-600">explode参数可以突出显示某个扇区。</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                
+                <div class="flex-1 flex flex-col ml-4 min-w-0">
+                    <div class="bg-white rounded-t-xl shadow-md px-4 py-3 flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <button id="run-code" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center">
+                                <i class="fa fa-play mr-2"></i>运行代码
+                            </button>
+                            <button id="reset-code" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors flex items-center">
+                                <i class="fa fa-refresh mr-2"></i>重置代码
+                            </button>
+                            <button id="show-answer" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors flex items-center">
+                                <i class="fa fa-eye mr-2"></i>显示参考答案
+                            </button>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button id="start-test" class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors flex items-center">
+                                <i class="fa fa-file-text mr-2"></i>开始测试
+                            </button>
+                            <button id="auto-save" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors flex items-center">
+                                <i class="fa fa-save mr-2"></i>自动保存
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-1 bg-gray-900 rounded-b-xl shadow-md overflow-hidden">
+                        <div class="flex items-center px-4 py-2 bg-gray-800 text-gray-400 text-sm">
+                            <i class="fa fa-file-code-o mr-2"></i>
+                            <span>project5/main.py</span>
+                        </div>
+                        <textarea id="code-editor" class="w-full h-[calc(50%-40px)] bg-gray-900 text-green-400 p-4 font-mono text-sm resize-none outline-none" placeholder="在这里输入你的代码...">import matplotlib.pyplot as plt
+import pandas as pd
 
-                <div class="exercise-question">
-                    <h3 class="font-bold text-gray-800 mb-2">练习2：绘制柱状图</h3>
-                    <p class="text-gray-600 mb-4">绘制各品类销售对比的柱状图。</p>
-                    <textarea id="practice2-answer" class="answer-input" rows="4" placeholder="请输入你的代码..."></textarea>
-                    <button id="check-practice2" class="mt-2 bg-pink-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-pink-700 transition-colors">检查答案</button>
-                    <div id="practice2-result" class="mt-2 p-3 rounded-lg hidden"></div>
-                </div>
+months = ['1月', '2月', '3月', '4月', '5月', '6月']
+sales = [1200, 1500, 1800, 1600, 2000, 2200]
 
-                <div class="exercise-question">
-                    <h3 class="font-bold text-gray-800 mb-2">练习3：设置中文显示</h3>
-                    <p class="text-gray-600 mb-4">如何在matplotlib中设置中文显示？</p>
-                    <textarea id="practice3-answer" class="answer-input" rows="2" placeholder="请输入你的答案..."></textarea>
-                    <button id="check-practice3" class="mt-2 bg-pink-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-pink-700 transition-colors">检查答案</button>
-                    <div id="practice3-result" class="mt-2 p-3 rounded-lg hidden"></div>
-                </div>
+# 在这里输入你的代码
+# 创建折线图展示月度销售趋势
 
-                <div class="text-center mt-8">
-                    <button id="complete-practice" class="bg-pink-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-pink-700 transition-colors">
-                        <i class="fa fa-check-circle mr-2"></i>标记为已练习
-                    </button>
+print("图表数据已准备好")</textarea>
+                        <div class="h-[50%] border-t border-gray-700">
+                            <div class="flex items-center px-4 py-2 bg-gray-800 text-gray-400 text-sm">
+                                <i class="fa fa-terminal mr-2"></i>
+                                <span>执行结果</span>
+                            </div>
+                            <div id="code-output" class="h-[calc(100%-40px)] p-4 overflow-auto bg-gray-950 text-green-400 font-mono text-sm">
+> 执行结果将显示在这里...
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -261,69 +312,58 @@ plt.show()</code></pre>
     <section id="content-test" class="py-8 hidden">
         <div class="container mx-auto px-4">
             <div class="max-w-4xl mx-auto">
-                <div class="bg-pink-50 rounded-xl p-6 mb-6">
+                <div class="bg-blue-50 rounded-xl p-6 mb-6">
                     <h2 class="text-2xl font-bold text-gray-800 mb-2">项目考试</h2>
                     <p class="text-gray-600">共5道题目，每题20分，满分100分</p>
                 </div>
-
                 <div id="exam-questions">
                     <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                        <h3 class="font-bold text-gray-800 mb-4">1. matplotlib中绘制折线图的方法是？</h3>
+                        <h3 class="font-bold text-gray-800 mb-4">1. matplotlib中用于创建折线图的函数是？</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center"><input type="radio" name="q1" value="A" class="mr-2"><span>A) plt.bar()</span></label>
+                            <label class="flex items-center"><input type="radio" name="q1" value="A" class="mr-2"><span>A) plt.line()</span></label>
                             <label class="flex items-center"><input type="radio" name="q1" value="B" class="mr-2"><span>B) plt.plot()</span></label>
-                            <label class="flex items-center"><input type="radio" name="q1" value="C" class="mr-2"><span>C) plt.pie()</span></label>
-                            <label class="flex items-center"><input type="radio" name="q1" value="D" class="mr-2"><span>D) plt.hist()</span></label>
+                            <label class="flex items-center"><input type="radio" name="q1" value="C" class="mr-2"><span>C) plt.scatter()</span></label>
+                            <label class="flex items-center"><input type="radio" name="q1" value="D" class="mr-2"><span>D) plt.bar()</span></label>
                         </div>
                     </div>
-
                     <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                        <h3 class="font-bold text-gray-800 mb-4">2. 展示数据占比关系适合使用哪种图表？</h3>
+                        <h3 class="font-bold text-gray-800 mb-4">2. 哪种图表最适合展示数据随时间变化的趋势？</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center"><input type="radio" name="q2" value="A" class="mr-2"><span>A) 折线图</span></label>
-                            <label class="flex items-center"><input type="radio" name="q2" value="B" class="mr-2"><span>B) 柱状图</span></label>
-                            <label class="flex items-center"><input type="radio" name="q2" value="C" class="mr-2"><span>C) 饼图</span></label>
-                            <label class="flex items-center"><input type="radio" name="q2" value="D" class="mr-2"><span>D) 直方图</span></label>
+                            <label class="flex items-center"><input type="radio" name="q2" value="A" class="mr-2"><span>A) 饼图</span></label>
+                            <label class="flex items-center"><input type="radio" name="q2" value="B" class="mr-2"><span>B) 折线图</span></label>
+                            <label class="flex items-center"><input type="radio" name="q2" value="C" class="mr-2"><span>C) 散点图</span></label>
                         </div>
                     </div>
-
                     <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                        <h3 class="font-bold text-gray-800 mb-4">3. 展示数据分布适合使用哪种图表？</h3>
+                        <h3 class="font-bold text-gray-800 mb-4">3. 用于设置图表标题的函数是？</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center"><input type="radio" name="q3" value="A" class="mr-2"><span>A) 折线图</span></label>
-                            <label class="flex items-center"><input type="radio" name="q3" value="B" class="mr-2"><span>B) 柱状图</span></label>
-                            <label class="flex items-center"><input type="radio" name="q3" value="C" class="mr-2"><span>C) 饼图</span></label>
-                            <label class="flex items-center"><input type="radio" name="q3" value="D" class="mr-2"><span>D) 直方图</span></label>
+                            <label class="flex items-center"><input type="radio" name="q3" value="A" class="mr-2"><span>A) plt.label()</span></label>
+                            <label class="flex items-center"><input type="radio" name="q3" value="B" class="mr-2"><span>B) plt.title()</span></label>
+                            <label class="flex items-center"><input type="radio" name="q3" value="C" class="mr-2"><span>C) plt.header()</span></label>
                         </div>
                     </div>
-
                     <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                        <h3 class="font-bold text-gray-800 mb-4">4. 设置图表标题的方法是？</h3>
+                        <h3 class="font-bold text-gray-800 mb-4">4. 创建柱状图使用的函数是？</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center"><input type="radio" name="q4" value="A" class="mr-2"><span>A) plt.title()</span></label>
-                            <label class="flex items-center"><input type="radio" name="q4" value="B" class="mr-2"><span>B) plt.xlabel()</span></label>
-                            <label class="flex items-center"><input type="radio" name="q4" value="C" class="mr-2"><span>C) plt.ylabel()</span></label>
-                            <label class="flex items-center"><input type="radio" name="q4" value="D" class="mr-2"><span>D) plt.legend()</span></label>
+                            <label class="flex items-center"><input type="radio" name="q4" value="A" class="mr-2"><span>A) plt.bar()</span></label>
+                            <label class="flex items-center"><input type="radio" name="q4" value="B" class="mr-2"><span>B) plt.column()</span></label>
+                            <label class="flex items-center"><input type="radio" name="q4" value="C" class="mr-2"><span>C) plt.hist()</span></label>
                         </div>
                     </div>
-
                     <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                        <h3 class="font-bold text-gray-800 mb-4">5. 如何设置图像大小？</h3>
+                        <h3 class="font-bold text-gray-800 mb-4">5. 创建子图使用哪个函数？</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center"><input type="radio" name="q5" value="A" class="mr-2"><span>A) plt.resize()</span></label>
-                            <label class="flex items-center"><input type="radio" name="q5" value="B" class="mr-2"><span>B) plt.figure(figsize=())</span></label>
-                            <label class="flex items-center"><input type="radio" name="q5" value="C" class="mr-2"><span>C) plt.size()</span></label>
-                            <label class="flex items-center"><input type="radio" name="q5" value="D" class="mr-2"><span>D) plt.set_size()</span></label>
+                            <label class="flex items-center"><input type="radio" name="q5" value="A" class="mr-2"><span>A) plt.subplots()</span></label>
+                            <label class="flex items-center"><input type="radio" name="q5" value="B" class="mr-2"><span>B) plt.subplot()</span></label>
+                            <label class="flex items-center"><input type="radio" name="q5" value="C" class="mr-2"><span>C) plt.grid()</span></label>
                         </div>
                     </div>
                 </div>
-
                 <div class="text-center">
-                    <button id="submit-exam" class="bg-pink-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-pink-700 transition-colors">
+                    <button id="submit-exam" class="bg-purple-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors">
                         <i class="fa fa-paper-plane mr-2"></i>提交考试
                     </button>
                 </div>
-
                 <div id="exam-result" class="mt-8 hidden">
                     <div class="bg-white rounded-xl p-6 shadow-md">
                         <div class="text-center">
@@ -356,11 +396,11 @@ plt.show()</code></pre>
             document.getElementById(`tab-${tab}`).addEventListener('click', function() {
                 tabs.forEach(t => {
                     document.getElementById(`content-${t}`).classList.add('hidden');
-                    document.getElementById(`tab-${t}`).classList.remove('border-b-2', 'border-pink-600', 'text-pink-600');
+                    document.getElementById(`tab-${t}`).classList.remove('border-b-2', 'border-blue-600', 'text-blue-600');
                     document.getElementById(`tab-${t}`).classList.add('text-gray-600');
                 });
                 document.getElementById(`content-${tab}`).classList.remove('hidden');
-                document.getElementById(`tab-${tab}`).classList.add('border-b-2', 'border-pink-600', 'text-pink-600');
+                document.getElementById(`tab-${tab}`).classList.add('border-b-2', 'border-blue-600', 'text-blue-600');
                 document.getElementById(`tab-${tab}`).classList.remove('text-gray-600');
             });
         });
@@ -370,110 +410,145 @@ plt.show()</code></pre>
             alert('已标记为已学习！');
         });
 
-        document.getElementById('complete-practice').addEventListener('click', function() {
-            saveProgress('project5', 'practiced');
-            alert('已标记为已练习！');
-        });
-
         function saveProgress(projectId, type) {
             const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
-            if (!progress[projectId]) {
-                progress[projectId] = { learned: false, practiced: false, tested: false };
-            }
+            if (!progress[projectId]) progress[projectId] = { learned: false, practiced: false, tested: false };
             progress[projectId][type] = true;
             localStorage.setItem('learningProgress', JSON.stringify(progress));
         }
 
-        document.getElementById('check-practice1').addEventListener('click', function() {
-            const answer = document.getElementById('practice1-answer').value;
-            const result = document.getElementById('practice1-result');
-            result.classList.remove('hidden');
-            if (answer.includes('plt.plot')) {
-                result.textContent = '✓ 正确！使用plt.plot()绘制折线图。';
-                result.classList.remove('result-wrong');
-                result.classList.add('result-correct');
-            } else {
-                result.textContent = '✗ 答案不完全正确。提示：使用plt.plot()方法。';
-                result.classList.remove('result-correct');
-                result.classList.add('result-wrong');
-            }
+        const practiceNavButtons = ['practice-nav-1', 'practice-nav-2', 'practice-nav-3'];
+        const practiceDetails = ['practice-detail-1', 'practice-detail-2', 'practice-detail-3'];
+        
+        practiceNavButtons.forEach((btn, index) => {
+            document.getElementById(btn).addEventListener('click', function() {
+                practiceNavButtons.forEach((b, i) => {
+                    document.getElementById(b).classList.remove('bg-blue-50', 'text-blue-600');
+                    document.getElementById(b).classList.add('text-gray-600');
+                    document.getElementById(practiceDetails[i]).classList.add('hidden');
+                });
+                this.classList.add('bg-blue-50', 'text-blue-600');
+                this.classList.remove('text-gray-600');
+                document.getElementById(practiceDetails[index]).classList.remove('hidden');
+                updateCodeEditor(index + 1);
+            });
+        });
+        
+        const codeTemplates = {
+            1: `import matplotlib.pyplot as plt
+
+months = ['1月', '2月', '3月', '4月', '5月', '6月']
+sales = [1200, 1500, 1800, 1600, 2000, 2200]
+
+# 在这里输入你的代码
+# 创建折线图展示月度销售趋势
+
+print("图表数据已准备好")`,
+            2: `import matplotlib.pyplot as plt
+
+regions = ['华北', '华东', '华南', '西南', '西北']
+sales = [5000, 6500, 4200, 3000, 2500]
+
+# 在这里输入你的代码
+# 创建柱状图展示各地区销售
+
+print("柱状图数据已准备好")`,
+            3: `import matplotlib.pyplot as plt
+
+categories = ['电子产品', '服装', '食品', '家居']
+sizes = [35, 25, 20, 20]
+
+# 在这里输入你的代码
+# 创建饼图展示产品类别占比
+
+print("饼图数据已准备好")`
+        };
+        
+        function updateCodeEditor(practiceNum) {
+            document.getElementById('code-editor').value = codeTemplates[practiceNum];
+            document.getElementById('code-output').textContent = '> 执行结果将显示在这里...';
+        }
+        
+        document.getElementById('run-code').addEventListener('click', function() {
+            const output = document.getElementById('code-output');
+            output.textContent = '> 正在执行...\n\n> matplotlib图表渲染完成！\n> 请在右侧预览区域查看图表';
+        });
+        
+        document.getElementById('reset-code').addEventListener('click', function() {
+            const activeNav = document.querySelector('.bg-blue-50');
+            const practiceNum = practiceNavButtons.indexOf(activeNav.id) + 1;
+            updateCodeEditor(practiceNum);
+        });
+        
+        document.getElementById('show-answer').addEventListener('click', function() {
+            const activeNav = document.querySelector('.bg-blue-50');
+            const practiceNum = practiceNavButtons.indexOf(activeNav.id) + 1;
+            const answers = {
+                1: `import matplotlib.pyplot as plt
+
+months = ['1月', '2月', '3月', '4月', '5月', '6月']
+sales = [1200, 1500, 1800, 1600, 2000, 2200]
+
+plt.figure(figsize=(10, 6))
+plt.plot(months, sales, marker='o')
+plt.title('月度销售趋势')
+plt.xlabel('月份')
+plt.ylabel('销售额(万元)')
+plt.grid(True)
+plt.show()`,
+                2: `import matplotlib.pyplot as plt
+
+regions = ['华北', '华东', '华南', '西南', '西北']
+sales = [5000, 6500, 4200, 3000, 2500]
+
+plt.figure(figsize=(10, 6))
+plt.bar(regions, sales, color='steelblue')
+plt.title('各地区销售对比')
+plt.xlabel('地区')
+plt.ylabel('销售额(万元)')
+plt.show()`,
+                3: `import matplotlib.pyplot as plt
+
+categories = ['电子产品', '服装', '食品', '家居']
+sizes = [35, 25, 20, 20]
+
+plt.figure(figsize=(8, 8))
+plt.pie(sizes, labels=categories, autopct='%1.1f%%', startangle=90)
+plt.title('产品类别销售占比')
+plt.show()`
+            };
+            document.getElementById('code-editor').value = answers[practiceNum];
+        });
+        
+        document.getElementById('start-test').addEventListener('click', function() {
+            document.getElementById('content-practice').classList.add('hidden');
+            document.getElementById('content-test').classList.remove('hidden');
+            document.getElementById('tab-practice').classList.remove('border-b-2', 'border-blue-600', 'text-blue-600');
+            document.getElementById('tab-practice').classList.add('text-gray-600');
+            document.getElementById('tab-test').classList.add('border-b-2', 'border-blue-600', 'text-blue-600');
+            document.getElementById('tab-test').classList.remove('text-gray-600');
+        });
+        
+        document.getElementById('auto-save').addEventListener('click', function() {
+            localStorage.setItem('project5-practice-code', document.getElementById('code-editor').value);
+            alert('代码已自动保存！');
         });
 
-        document.getElementById('check-practice2').addEventListener('click', function() {
-            const answer = document.getElementById('practice2-answer').value;
-            const result = document.getElementById('practice2-result');
-            result.classList.remove('hidden');
-            if (answer.includes('plt.bar') || answer.includes('kind=\'bar\'')) {
-                result.textContent = '✓ 正确！使用plt.bar()或df.plot(kind="bar")绘制柱状图。';
-                result.classList.remove('result-wrong');
-                result.classList.add('result-correct');
-            } else {
-                result.textContent = '✗ 答案不完全正确。提示：使用plt.bar()方法。';
-                result.classList.remove('result-correct');
-                result.classList.add('result-wrong');
-            }
-        });
-
-        document.getElementById('check-practice3').addEventListener('click', function() {
-            const answer = document.getElementById('practice3-answer').value;
-            const result = document.getElementById('practice3-result');
-            result.classList.remove('hidden');
-            if (answer.includes('rcParams') || answer.includes('font.sans-serif')) {
-                result.textContent = '✓ 正确！设置plt.rcParams["font.sans-serif"] = ["SimHei"]';
-                result.classList.remove('result-wrong');
-                result.classList.add('result-correct');
-            } else {
-                result.textContent = '✗ 答案不完全正确。提示：使用plt.rcParams设置字体。';
-                result.classList.remove('result-correct');
-                result.classList.add('result-wrong');
-            }
-        });
-
-        const correctAnswers = { q1: 'B', q2: 'C', q3: 'D', q4: 'A', q5: 'B' };
-
+        const correctAnswers = { q1: 'B', q2: 'B', q3: 'B', q4: 'A', q5: 'A' };
         document.getElementById('submit-exam').addEventListener('click', function() {
             let score = 0;
-            const answers = {};
             Object.keys(correctAnswers).forEach(q => {
                 const selected = document.querySelector(`input[name="${q}"]:checked`);
-                answers[q] = selected ? selected.value : null;
-                if (answers[q] === correctAnswers[q]) score += 20;
+                if (selected && selected.value === correctAnswers[q]) score += 20;
             });
-
             document.getElementById('exam-questions').classList.add('hidden');
             document.getElementById('submit-exam').classList.add('hidden');
             document.getElementById('exam-result').classList.remove('hidden');
-
-            const scoreCircle = document.getElementById('score-circle');
-            const scoreText = document.getElementById('score-text');
-            const resultText = document.getElementById('result-text');
-            const answerDetails = document.getElementById('answer-details');
-
-            scoreText.textContent = `得分：${score}/100`;
-            
-            if (score >= 80) {
-                scoreCircle.className = 'w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 bg-pink-100';
-                scoreCircle.innerHTML = '<span class="text-3xl">🎉</span>';
-                resultText.textContent = '优秀！你已经掌握了数据可视化的基本知识。';
-                saveProgress('project5', 'tested');
-            } else if (score >= 60) {
-                scoreCircle.className = 'w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 bg-yellow-100';
-                scoreCircle.innerHTML = '<span class="text-3xl">👍</span>';
-                resultText.textContent = '良好！继续努力，争取更高分数。';
-            } else {
-                scoreCircle.className = 'w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 bg-red-100';
-                scoreCircle.innerHTML = '<span class="text-3xl">📚</span>';
-                resultText.textContent = '需要复习一下相关知识，加油！';
-            }
-
-            let details = '<h4 class="font-bold text-gray-800 mb-4">答案详情</h4><div class="space-y-2">';
-            Object.keys(correctAnswers).forEach((q, i) => {
-                const isCorrect = answers[q] === correctAnswers[q];
-                details += `<p class="${isCorrect ? 'text-green-600' : 'text-red-600'}">
-                    ${i+1}. 你的答案: ${answers[q] || '未作答'} | 正确答案: ${correctAnswers[q]} ${isCorrect ? '✓' : '✗'}
-                </p>`;
-            });
-            answerDetails.innerHTML = details;
+            document.getElementById('score-text').textContent = `得分：${score}/100`;
+            document.getElementById('score-circle').className = 'w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 ' + (score >= 80 ? 'bg-blue-100' : 'bg-yellow-100');
+            document.getElementById('score-circle').innerHTML = score >= 80 ? '<span class="text-3xl">🎉</span>' : '<span class="text-3xl">👍</span>';
+            document.getElementById('result-text').textContent = score >= 80 ? '优秀！' : '继续努力！';
+            if (score >= 80) saveProgress('project5', 'tested');
         });
     </script>
 </body>

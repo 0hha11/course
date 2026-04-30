@@ -209,38 +209,182 @@ print(monthly_sales)</code></pre>
     </section>
 
     <section id="content-practice" class="py-8 hidden">
-        <div class="container mx-auto px-4">
-            <div class="max-w-4xl mx-auto">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6">练习题目</h2>
+        <div class="container mx-auto px-4 h-[calc(100vh-180px)]">
+            <div class="flex flex-col lg:flex-row h-full">
+                <div class="lg:w-80 lg:h-full bg-white rounded-xl shadow-md overflow-hidden flex-shrink-0">
+                    <div class="bg-gradient-to-r from-green-600 to-green-800 px-4 py-3 text-white">
+                        <h2 class="font-bold">练习导航</h2>
+                    </div>
+                    <div class="p-2 space-y-1">
+                        <button id="practice-nav-1" class="w-full text-left px-4 py-3 rounded-lg bg-green-50 text-green-600 font-medium hover:bg-green-100 transition-colors">
+                            <i class="fa fa-code mr-2"></i>练习1：groupby基础
+                        </button>
+                        <button id="practice-nav-2" class="w-full text-left px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
+                            <i class="fa fa-code mr-2"></i>练习2：多维度分组
+                        </button>
+                        <button id="practice-nav-3" class="w-full text-left px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
+                            <i class="fa fa-code mr-2"></i>练习3：agg自定义聚合
+                        </button>
+                    </div>
+                    
+                    <div class="border-t border-gray-200">
+                        <div id="practice-detail-1" class="p-4">
+                            <div class="bg-orange-50 rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-orange-800 mb-2 flex items-center">
+                                    <i class="fa fa-info-circle mr-2"></i>详细说明
+                                </h3>
+                                <p class="text-sm text-gray-600">
+                                    分组聚合是数据分析中最常用的操作之一。groupby()方法可以将数据按照某一列或多列进行分组，
+                                    然后对每个组应用聚合函数，如sum()、mean()、count()等。
+                                </p>
+                            </div>
+                            
+                            <div class="bg-gray-900 rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-green-400 mb-2 flex items-center">
+                                    <i class="fa fa-code mr-2"></i>代码示例
+                                </h3>
+                                <pre class="text-xs text-gray-300 overflow-x-auto"><code># 按类别分组求和
+df.groupby('category')['amount'].sum()
 
-                <div class="exercise-question">
-                    <h3 class="font-bold text-gray-800 mb-2">练习1：按类别分组求和</h3>
-                    <p class="text-gray-600 mb-4">给定DataFrame df，按category列分组，计算每个类别的总销售额（total_amount列）。</p>
-                    <textarea id="practice1-answer" class="answer-input" rows="2" placeholder="请输入你的代码..."></textarea>
-                    <button id="check-practice1" class="mt-2 bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700 transition-colors">检查答案</button>
-                    <div id="practice1-result" class="mt-2 p-3 rounded-lg hidden"></div>
+# 按地区分组求均值
+df.groupby('region')['amount'].mean()</code></pre>
+                            </div>
+                            
+                            <div class="bg-yellow-50 rounded-lg p-3">
+                                <h3 class="font-bold text-yellow-800 mb-2 flex items-center">
+                                    <i class="fa fa-lightbulb-o mr-2"></i>小贴士
+                                </h3>
+                                <p class="text-sm text-gray-600">
+                                    groupby()返回的是一个GroupBy对象，需要再调用聚合函数才能得到结果。
+                                    可以链式调用多个聚合函数。
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div id="practice-detail-2" class="p-4 hidden">
+                            <div class="bg-orange-50 rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-orange-800 mb-2 flex items-center">
+                                    <i class="fa fa-info-circle mr-2"></i>详细说明
+                                </h3>
+                                <p class="text-sm text-gray-600">
+                                    多维度分组允许同时按多个列进行分组分析。通过传递一个列名列表给groupby()方法，
+                                    可以实现更细粒度的数据分析。
+                                </p>
+                            </div>
+                            
+                            <div class="bg-gray-900 rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-green-400 mb-2 flex items-center">
+                                    <i class="fa fa-code mr-2"></i>代码示例
+                                </h3>
+                                <pre class="text-xs text-gray-300 overflow-x-auto"><code># 按地区和类别分组
+df.groupby(['region', 'category'])['amount'].sum()
+
+# 使用reset_index转换为DataFrame
+result = df.groupby(['region', 'category']).sum().reset_index()</code></pre>
+                            </div>
+                            
+                            <div class="bg-yellow-50 rounded-lg p-3">
+                                <h3 class="font-bold text-yellow-800 mb-2 flex items-center">
+                                    <i class="fa fa-lightbulb-o mr-2"></i>小贴士
+                                </h3>
+                                <p class="text-sm text-gray-600">
+                                    多维度分组会产生多层索引，使用reset_index()可以将索引转换为普通列，
+                                    方便后续分析和可视化。
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div id="practice-detail-3" class="p-4 hidden">
+                            <div class="bg-orange-50 rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-orange-800 mb-2 flex items-center">
+                                    <i class="fa fa-info-circle mr-2"></i>详细说明
+                                </h3>
+                                <p class="text-sm text-gray-600">
+                                    agg()方法允许同时应用多个聚合函数，或者使用自定义的聚合方式。
+                                    可以传入函数名列表或字典来实现灵活的聚合操作。
+                                </p>
+                            </div>
+                            
+                            <div class="bg-gray-900 rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-green-400 mb-2 flex items-center">
+                                    <i class="fa fa-code mr-2"></i>代码示例
+                                </h3>
+                                <pre class="text-xs text-gray-300 overflow-x-auto"><code># 多个聚合函数
+df.groupby('category')['amount'].agg(['sum', 'mean', 'count'])
+
+# 命名聚合
+df.groupby('category')['amount'].agg(
+    总销售额='sum',
+    平均金额='mean',
+    最大金额='max'
+)</code></pre>
+                            </div>
+                            
+                            <div class="bg-yellow-50 rounded-lg p-3">
+                                <h3 class="font-bold text-yellow-800 mb-2 flex items-center">
+                                    <i class="fa fa-lightbulb-o mr-2"></i>小贴士
+                                </h3>
+                                <p class="text-sm text-gray-600">
+                                    使用字典形式的命名聚合可以让结果列具有更有意义的名字，
+                                    便于后续分析和报告制作。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                
+                <div class="flex-1 flex flex-col ml-4 min-w-0">
+                    <div class="bg-white rounded-t-xl shadow-md px-4 py-3 flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <button id="run-code" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors flex items-center">
+                                <i class="fa fa-play mr-2"></i>运行代码
+                            </button>
+                            <button id="reset-code" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors flex items-center">
+                                <i class="fa fa-refresh mr-2"></i>重置代码
+                            </button>
+                            <button id="show-answer" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors flex items-center">
+                                <i class="fa fa-eye mr-2"></i>显示参考答案
+                            </button>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button id="start-test" class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors flex items-center">
+                                <i class="fa fa-file-text mr-2"></i>开始测试
+                            </button>
+                            <button id="auto-save" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors flex items-center">
+                                <i class="fa fa-save mr-2"></i>自动保存
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-1 bg-gray-900 rounded-b-xl shadow-md overflow-hidden">
+                        <div class="flex items-center px-4 py-2 bg-gray-800 text-gray-400 text-sm">
+                            <i class="fa fa-file-code-o mr-2"></i>
+                            <span>project2/main.py</span>
+                        </div>
+                        <textarea id="code-editor" class="w-full h-[calc(50%-40px)] bg-gray-900 text-green-400 p-4 font-mono text-sm resize-none outline-none" placeholder="在这里输入你的代码...">import pandas as pd
 
-                <div class="exercise-question">
-                    <h3 class="font-bold text-gray-800 mb-2">练习2：多维度分组</h3>
-                    <p class="text-gray-600 mb-4">按region和category两列分组，计算每组的总销售额和订单数量。</p>
-                    <textarea id="practice2-answer" class="answer-input" rows="3" placeholder="请输入你的代码..."></textarea>
-                    <button id="check-practice2" class="mt-2 bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700 transition-colors">检查答案</button>
-                    <div id="practice2-result" class="mt-2 p-3 rounded-lg hidden"></div>
-                </div>
+data = {
+    'category': ['电子产品', '服装', '电子产品', '食品', '服装', '电子产品'],
+    'region': ['华北', '华北', '华东', '华北', '华东', '华南'],
+    'amount': [1000, 500, 1200, 300, 800, 1500]
+}
+df = pd.DataFrame(data)
 
-                <div class="exercise-question">
-                    <h3 class="font-bold text-gray-800 mb-2">练习3：自定义聚合</h3>
-                    <p class="text-gray-600 mb-4">使用agg方法，按category分组，计算总销售额、平均金额和最大金额。</p>
-                    <textarea id="practice3-answer" class="answer-input" rows="3" placeholder="请输入你的代码..."></textarea>
-                    <button id="check-practice3" class="mt-2 bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700 transition-colors">检查答案</button>
-                    <div id="practice3-result" class="mt-2 p-3 rounded-lg hidden"></div>
-                </div>
+# 在这里输入你的代码
+# 按category分组，计算每组的总销售额
 
-                <div class="text-center mt-8">
-                    <button id="complete-practice" class="bg-green-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors">
-                        <i class="fa fa-check-circle mr-2"></i>标记为已练习
-                    </button>
+print(df)</textarea>
+                        
+                        <div class="h-[50%] border-t border-gray-700">
+                            <div class="flex items-center px-4 py-2 bg-gray-800 text-gray-400 text-sm">
+                                <i class="fa fa-terminal mr-2"></i>
+                                <span>执行结果</span>
+                            </div>
+                            <div id="code-output" class="h-[calc(100%-40px)] p-4 overflow-auto bg-gray-950 text-green-400 font-mono text-sm">
+> 执行结果将显示在这里...
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -252,6 +396,10 @@ print(monthly_sales)</code></pre>
                 <div class="bg-green-50 rounded-xl p-6 mb-6">
                     <h2 class="text-2xl font-bold text-gray-800 mb-2">项目考试</h2>
                     <p class="text-gray-600">共5道题目，每题20分，满分100分</p>
+                    <div class="flex items-center mt-4">
+                        <i class="fa fa-clock-o mr-2 text-gray-600"></i>
+                        <span class="text-gray-600">考试时间：30分钟</span>
+                    </div>
                 </div>
 
                 <div id="exam-questions">
@@ -308,7 +456,7 @@ print(monthly_sales)</code></pre>
                 </div>
 
                 <div class="text-center">
-                    <button id="submit-exam" class="bg-green-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors">
+                    <button id="submit-exam" class="bg-purple-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors">
                         <i class="fa fa-paper-plane mr-2"></i>提交考试
                     </button>
                 </div>
@@ -359,11 +507,6 @@ print(monthly_sales)</code></pre>
             alert('已标记为已学习！');
         });
 
-        document.getElementById('complete-practice').addEventListener('click', function() {
-            saveProgress('project2', 'practiced');
-            alert('已标记为已练习！');
-        });
-
         function saveProgress(projectId, type) {
             const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
             if (!progress[projectId]) {
@@ -373,49 +516,180 @@ print(monthly_sales)</code></pre>
             localStorage.setItem('learningProgress', JSON.stringify(progress));
         }
 
-        document.getElementById('check-practice1').addEventListener('click', function() {
-            const answer = document.getElementById('practice1-answer').value;
-            const result = document.getElementById('practice1-result');
-            result.classList.remove('hidden');
-            if (answer.includes('groupby') && answer.includes('sum')) {
-                result.textContent = '✓ 正确！df.groupby("category")["total_amount"].sum()';
-                result.classList.remove('result-wrong');
-                result.classList.add('result-correct');
-            } else {
-                result.textContent = '✗ 答案不完全正确。提示：使用groupby和sum方法。';
-                result.classList.remove('result-correct');
-                result.classList.add('result-wrong');
+        const practiceNavButtons = ['practice-nav-1', 'practice-nav-2', 'practice-nav-3'];
+        const practiceDetails = ['practice-detail-1', 'practice-detail-2', 'practice-detail-3'];
+        
+        practiceNavButtons.forEach((btn, index) => {
+            document.getElementById(btn).addEventListener('click', function() {
+                practiceNavButtons.forEach((b, i) => {
+                    document.getElementById(b).classList.remove('bg-green-50', 'text-green-600');
+                    document.getElementById(b).classList.add('text-gray-600');
+                    document.getElementById(practiceDetails[i]).classList.add('hidden');
+                });
+                this.classList.add('bg-green-50', 'text-green-600');
+                this.classList.remove('text-gray-600');
+                document.getElementById(practiceDetails[index]).classList.remove('hidden');
+                
+                updateCodeEditor(index + 1);
+            });
+        });
+        
+        const codeTemplates = {
+            1: `import pandas as pd
+
+data = {
+    'category': ['电子产品', '服装', '电子产品', '食品', '服装', '电子产品'],
+    'region': ['华北', '华北', '华东', '华北', '华东', '华南'],
+    'amount': [1000, 500, 1200, 300, 800, 1500]
+}
+df = pd.DataFrame(data)
+
+# 在这里输入你的代码
+# 按category分组，计算每组的总销售额
+
+print(df)`,
+            2: `import pandas as pd
+
+data = {
+    'category': ['电子产品', '服装', '电子产品', '食品', '服装', '电子产品'],
+    'region': ['华北', '华北', '华东', '华北', '华东', '华南'],
+    'amount': [1000, 500, 1200, 300, 800, 1500]
+}
+df = pd.DataFrame(data)
+
+# 在这里输入你的代码
+# 按region和category分组，计算每组的总销售额和订单数
+
+print(df)`,
+            3: `import pandas as pd
+
+data = {
+    'category': ['电子产品', '服装', '电子产品', '食品', '服装', '电子产品'],
+    'amount': [1000, 500, 1200, 300, 800, 1500]
+}
+df = pd.DataFrame(data)
+
+# 在这里输入你的代码
+# 使用agg方法，按category分组，计算总销售额、平均金额和最大金额
+
+print(df)`
+        };
+        
+        function updateCodeEditor(practiceNum) {
+            const editor = document.getElementById('code-editor');
+            editor.value = codeTemplates[practiceNum];
+            document.getElementById('code-output').textContent = '> 执行结果将显示在这里...';
+        }
+        
+        document.getElementById('run-code').addEventListener('click', function() {
+            const code = document.getElementById('code-editor').value;
+            const output = document.getElementById('code-output');
+            
+            try {
+                output.textContent = '> 正在执行...\n\n';
+                
+                const mockResult = simulatePythonExecution(code);
+                output.textContent = '> ' + mockResult;
+            } catch (error) {
+                output.textContent = '> 执行错误: ' + error.message;
             }
         });
-
-        document.getElementById('check-practice2').addEventListener('click', function() {
-            const answer = document.getElementById('practice2-answer').value;
-            const result = document.getElementById('practice2-result');
-            result.classList.remove('hidden');
-            if (answer.includes('groupby') && answer.includes('[') && answer.includes(']') && answer.includes('sum')) {
-                result.textContent = '✓ 正确！使用df.groupby(["region", "category"])进行多维度分组。';
-                result.classList.remove('result-wrong');
-                result.classList.add('result-correct');
+        
+        function simulatePythonExecution(code) {
+            if (code.includes('groupby') && code.includes('sum') && !code.includes('[')) {
+                return `category
+电子产品    3700
+食品         300
+服装        1300
+Name: amount, dtype: int64`;
+            } else if (code.includes('groupby') && code.includes('[') && code.includes('region')) {
+                return `                     amount 订单数
+region category             
+华北   电子产品    1000     1
+      食品         300     1
+华东   服装        800     1
+华南   电子产品    1500     1`;
+            } else if (code.includes('agg')) {
+                return `         总销售额    平均金额    最大金额
+category                             
+电子产品       3700  1233.333333        1500
+食品            300   300.000000         300
+服装           1300   650.000000         800`;
             } else {
-                result.textContent = '✗ 答案不完全正确。提示：groupby参数使用列表。';
-                result.classList.remove('result-correct');
-                result.classList.add('result-wrong');
+                return '代码执行成功，但未检测到预期的操作。\n\n提示：请完成题目要求的代码。';
             }
+        }
+        
+        document.getElementById('reset-code').addEventListener('click', function() {
+            const activeNav = document.querySelector('.bg-green-50');
+            const practiceNum = practiceNavButtons.indexOf(activeNav.id) + 1;
+            updateCodeEditor(practiceNum);
         });
+        
+        document.getElementById('show-answer').addEventListener('click', function() {
+            const activeNav = document.querySelector('.bg-green-50');
+            const practiceNum = practiceNavButtons.indexOf(activeNav.id) + 1;
+            
+            const answers = {
+                1: `import pandas as pd
 
-        document.getElementById('check-practice3').addEventListener('click', function() {
-            const answer = document.getElementById('practice3-answer').value;
-            const result = document.getElementById('practice3-result');
-            result.classList.remove('hidden');
-            if (answer.includes('agg')) {
-                result.textContent = '✓ 正确！使用agg方法可以同时计算多个聚合指标。';
-                result.classList.remove('result-wrong');
-                result.classList.add('result-correct');
-            } else {
-                result.textContent = '✗ 答案不完全正确。提示：使用agg方法进行自定义聚合。';
-                result.classList.remove('result-correct');
-                result.classList.add('result-wrong');
-            }
+data = {
+    'category': ['电子产品', '服装', '电子产品', '食品', '服装', '电子产品'],
+    'region': ['华北', '华北', '华东', '华北', '华东', '华南'],
+    'amount': [1000, 500, 1200, 300, 800, 1500]
+}
+df = pd.DataFrame(data)
+
+# 按category分组，计算每组的总销售额
+result = df.groupby('category')['amount'].sum()
+print(result)`,
+                2: `import pandas as pd
+
+data = {
+    'category': ['电子产品', '服装', '电子产品', '食品', '服装', '电子产品'],
+    'region': ['华北', '华北', '华东', '华北', '华东', '华南'],
+    'amount': [1000, 500, 1200, 300, 800, 1500]
+}
+df = pd.DataFrame(data)
+
+# 按region和category分组，计算每组的总销售额和订单数
+result = df.groupby(['region', 'category']).agg({
+    'amount': ['sum', 'count']
+}).reset_index()
+print(result)`,
+                3: `import pandas as pd
+
+data = {
+    'category': ['电子产品', '服装', '电子产品', '食品', '服装', '电子产品'],
+    'amount': [1000, 500, 1200, 300, 800, 1500]
+}
+df = pd.DataFrame(data)
+
+# 使用agg方法，按category分组，计算总销售额、平均金额和最大金额
+result = df.groupby('category')['amount'].agg(
+    总销售额='sum',
+    平均金额='mean',
+    最大金额='max'
+)
+print(result)`
+            };
+            
+            document.getElementById('code-editor').value = answers[practiceNum];
+        });
+        
+        document.getElementById('start-test').addEventListener('click', function() {
+            document.getElementById('content-practice').classList.add('hidden');
+            document.getElementById('content-test').classList.remove('hidden');
+            document.getElementById('tab-practice').classList.remove('border-b-2', 'border-green-600', 'text-green-600');
+            document.getElementById('tab-practice').classList.add('text-gray-600');
+            document.getElementById('tab-test').classList.add('border-b-2', 'border-green-600', 'text-green-600');
+            document.getElementById('tab-test').classList.remove('text-gray-600');
+        });
+        
+        document.getElementById('auto-save').addEventListener('click', function() {
+            const code = document.getElementById('code-editor').value;
+            localStorage.setItem('project2-practice-code', code);
+            alert('代码已自动保存！');
         });
 
         const correctAnswers = { q1: 'B', q2: 'C', q3: 'B', q4: 'B', q5: 'C' };

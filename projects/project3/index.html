@@ -183,38 +183,178 @@ print(sorted_rules.head(10))</code></pre>
     </section>
 
     <section id="content-practice" class="py-8 hidden">
-        <div class="container mx-auto px-4">
-            <div class="max-w-4xl mx-auto">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6">练习题目</h2>
+        <div class="container mx-auto px-4 h-[calc(100vh-180px)]">
+            <div class="flex flex-col lg:flex-row h-full">
+                <div class="lg:w-80 lg:h-full bg-white rounded-xl shadow-md overflow-hidden flex-shrink-0">
+                    <div class="bg-gradient-to-r from-purple-600 to-purple-800 px-4 py-3 text-white">
+                        <h2 class="font-bold">练习导航</h2>
+                    </div>
+                    <div class="p-2 space-y-1">
+                        <button id="practice-nav-1" class="w-full text-left px-4 py-3 rounded-lg bg-purple-50 text-purple-600 font-medium hover:bg-purple-100 transition-colors">
+                            <i class="fa fa-code mr-2"></i>练习1：支持度计算
+                        </button>
+                        <button id="practice-nav-2" class="w-full text-left px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
+                            <i class="fa fa-code mr-2"></i>练习2：置信度计算
+                        </button>
+                        <button id="practice-nav-3" class="w-full text-left px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
+                            <i class="fa fa-code mr-2"></i>练习3：Apriori应用
+                        </button>
+                    </div>
+                    
+                    <div class="border-t border-gray-200">
+                        <div id="practice-detail-1" class="p-4">
+                            <div class="bg-orange-50 rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-orange-800 mb-2 flex items-center">
+                                    <i class="fa fa-info-circle mr-2"></i>详细说明
+                                </h3>
+                                <p class="text-sm text-gray-600">
+                                    支持度表示某个项集在所有交易中出现的频率。计算公式：支持度(A) = 包含A的交易数 / 总交易数。
+                                    支持度越高，说明该商品或商品组合越常见。
+                                </p>
+                            </div>
+                            
+                            <div class="bg-gray-900 rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-green-400 mb-2 flex items-center">
+                                    <i class="fa fa-code mr-2"></i>代码示例
+                                </h3>
+                                <pre class="text-xs text-gray-300 overflow-x-auto"><code># 计算单个商品的支持度
+support_a = len(df[df['A'] == 1]) / len(df)
 
-                <div class="exercise-question">
-                    <h3 class="font-bold text-gray-800 mb-2">练习1：计算支持度</h3>
-                    <p class="text-gray-600 mb-4">给定包含1000笔订单的数据，其中200笔订单同时购买了商品A和商品B，计算{A,B}的支持度。</p>
-                    <input type="number" id="practice1-answer" class="answer-input" placeholder="请输入答案">
-                    <button id="check-practice1" class="mt-2 bg-purple-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-purple-700 transition-colors">检查答案</button>
-                    <div id="practice1-result" class="mt-2 p-3 rounded-lg hidden"></div>
+# 计算商品组合的支持度
+support_ab = len(df[(df['A'] == 1) & (df['B'] == 1)]) / len(df)</code></pre>
+                            </div>
+                            
+                            <div class="bg-yellow-50 rounded-lg p-3">
+                                <h3 class="font-bold text-yellow-800 mb-2 flex items-center">
+                                    <i class="fa fa-lightbulb-o mr-2"></i>小贴士
+                                </h3>
+                                <p class="text-sm text-gray-600">
+                                    支持度用于衡量商品或组合的普遍性。通常设置一个最低支持度阈值来筛选频繁项集。
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div id="practice-detail-2" class="p-4 hidden">
+                            <div class="bg-orange-50 rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-orange-800 mb-2 flex items-center">
+                                    <i class="fa fa-info-circle mr-2"></i>详细说明
+                                </h3>
+                                <p class="text-sm text-gray-600">
+                                    置信度表示在购买商品A的交易中，同时购买商品B的比例。计算公式：置信度(A→B) = 支持度(A,B) / 支持度(A)。
+                                    置信度越高，说明购买A后购买B的可能性越大。
+                                </p>
+                            </div>
+                            
+                            <div class="bg-gray-900 rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-green-400 mb-2 flex items-center">
+                                    <i class="fa fa-code mr-2"></i>代码示例
+                                </h3>
+                                <pre class="text-xs text-gray-300 overflow-x-auto"><code># 计算置信度
+confidence_ab = support_ab / support_a
+
+# 或者直接计算
+confidence_ab = len(df[(df['A'] == 1) & (df['B'] == 1)]) / len(df[df['A'] == 1])</code></pre>
+                            </div>
+                            
+                            <div class="bg-yellow-50 rounded-lg p-3">
+                                <h3 class="font-bold text-yellow-800 mb-2 flex items-center">
+                                    <i class="fa fa-lightbulb-o mr-2"></i>小贴士
+                                </h3>
+                                <p class="text-sm text-gray-600">
+                                    置信度是有方向性的，置信度(A→B)不等于置信度(B→A)。需要根据业务需求选择合适的规则方向。
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div id="practice-detail-3" class="p-4 hidden">
+                            <div class="bg-orange-50 rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-orange-800 mb-2 flex items-center">
+                                    <i class="fa fa-info-circle mr-2"></i>详细说明
+                                </h3>
+                                <p class="text-sm text-gray-600">
+                                    Apriori算法是经典的关联规则挖掘算法。它通过迭代的方式找出所有满足最小支持度的频繁项集，
+                                    然后基于频繁项集生成关联规则。
+                                </p>
+                            </div>
+                            
+                            <div class="bg-gray-900 rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-green-400 mb-2 flex items-center">
+                                    <i class="fa fa-code mr-2"></i>代码示例
+                                </h3>
+                                <pre class="text-xs text-gray-300 overflow-x-auto"><code>from mlxtend.frequent_patterns import apriori, association_rules
+
+# 挖掘频繁项集
+frequent = apriori(basket, min_support=0.05, use_colnames=True)
+
+# 生成关联规则
+rules = association_rules(frequent, metric='lift', min_threshold=1)</code></pre>
+                            </div>
+                            
+                            <div class="bg-yellow-50 rounded-lg p-3">
+                                <h3 class="font-bold text-yellow-800 mb-2 flex items-center">
+                                    <i class="fa fa-lightbulb-o mr-2"></i>小贴士
+                                </h3>
+                                <p class="text-sm text-gray-600">
+                                    提升度(Lift)衡量规则的有效性。Lift > 1表示正相关，Lift < 1表示负相关，Lift = 1表示无相关性。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                
+                <div class="flex-1 flex flex-col ml-4 min-w-0">
+                    <div class="bg-white rounded-t-xl shadow-md px-4 py-3 flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <button id="run-code" class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors flex items-center">
+                                <i class="fa fa-play mr-2"></i>运行代码
+                            </button>
+                            <button id="reset-code" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors flex items-center">
+                                <i class="fa fa-refresh mr-2"></i>重置代码
+                            </button>
+                            <button id="show-answer" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors flex items-center">
+                                <i class="fa fa-eye mr-2"></i>显示参考答案
+                            </button>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button id="start-test" class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors flex items-center">
+                                <i class="fa fa-file-text mr-2"></i>开始测试
+                            </button>
+                            <button id="auto-save" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors flex items-center">
+                                <i class="fa fa-save mr-2"></i>自动保存
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-1 bg-gray-900 rounded-b-xl shadow-md overflow-hidden">
+                        <div class="flex items-center px-4 py-2 bg-gray-800 text-gray-400 text-sm">
+                            <i class="fa fa-file-code-o mr-2"></i>
+                            <span>project3/main.py</span>
+                        </div>
+                        <textarea id="code-editor" class="w-full h-[calc(50%-40px)] bg-gray-900 text-green-400 p-4 font-mono text-sm resize-none outline-none" placeholder="在这里输入你的代码...">import pandas as pd
 
-                <div class="exercise-question">
-                    <h3 class="font-bold text-gray-800 mb-2">练习2：计算置信度</h3>
-                    <p class="text-gray-600 mb-4">如果支持度{A,B}=0.15，支持度{A}=0.3，计算规则A→B的置信度。</p>
-                    <input type="number" id="practice2-answer" class="answer-input" placeholder="请输入答案">
-                    <button id="check-practice2" class="mt-2 bg-purple-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-purple-700 transition-colors">检查答案</button>
-                    <div id="practice2-result" class="mt-2 p-3 rounded-lg hidden"></div>
-                </div>
+data = {
+    'order_id': [1, 2, 3, 4, 5],
+    'A': [1, 1, 0, 1, 1],
+    'B': [1, 0, 1, 1, 0],
+    'C': [0, 1, 1, 0, 1]
+}
+df = pd.DataFrame(data)
 
-                <div class="exercise-question">
-                    <h3 class="font-bold text-gray-800 mb-2">练习3：应用Apriori</h3>
-                    <p class="text-gray-600 mb-4">使用mlxtend库的apriori函数挖掘频繁项集，设置最小支持度为0.05。</p>
-                    <textarea id="practice3-answer" class="answer-input" rows="3" placeholder="请输入你的代码..."></textarea>
-                    <button id="check-practice3" class="mt-2 bg-purple-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-purple-700 transition-colors">检查答案</button>
-                    <div id="practice3-result" class="mt-2 p-3 rounded-lg hidden"></div>
-                </div>
+# 在这里输入你的代码
+# 计算商品A的支持度（出现频率）
 
-                <div class="text-center mt-8">
-                    <button id="complete-practice" class="bg-purple-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors">
-                        <i class="fa fa-check-circle mr-2"></i>标记为已练习
-                    </button>
+print(df)</textarea>
+                        
+                        <div class="h-[50%] border-t border-gray-700">
+                            <div class="flex items-center px-4 py-2 bg-gray-800 text-gray-400 text-sm">
+                                <i class="fa fa-terminal mr-2"></i>
+                                <span>执行结果</span>
+                            </div>
+                            <div id="code-output" class="h-[calc(100%-40px)] p-4 overflow-auto bg-gray-950 text-green-400 font-mono text-sm">
+> 执行结果将显示在这里...
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -226,6 +366,10 @@ print(sorted_rules.head(10))</code></pre>
                 <div class="bg-purple-50 rounded-xl p-6 mb-6">
                     <h2 class="text-2xl font-bold text-gray-800 mb-2">项目考试</h2>
                     <p class="text-gray-600">共5道题目，每题20分，满分100分</p>
+                    <div class="flex items-center mt-4">
+                        <i class="fa fa-clock-o mr-2 text-gray-600"></i>
+                        <span class="text-gray-600">考试时间：30分钟</span>
+                    </div>
                 </div>
 
                 <div id="exam-questions">
@@ -332,11 +476,6 @@ print(sorted_rules.head(10))</code></pre>
             alert('已标记为已学习！');
         });
 
-        document.getElementById('complete-practice').addEventListener('click', function() {
-            saveProgress('project3', 'practiced');
-            alert('已标记为已练习！');
-        });
-
         function saveProgress(projectId, type) {
             const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
             if (!progress[projectId]) {
@@ -346,49 +485,186 @@ print(sorted_rules.head(10))</code></pre>
             localStorage.setItem('learningProgress', JSON.stringify(progress));
         }
 
-        document.getElementById('check-practice1').addEventListener('click', function() {
-            const answer = parseFloat(document.getElementById('practice1-answer').value);
-            const result = document.getElementById('practice1-result');
-            result.classList.remove('hidden');
-            if (answer === 0.2) {
-                result.textContent = '✓ 正确！支持度 = 200/1000 = 0.2';
-                result.classList.remove('result-wrong');
-                result.classList.add('result-correct');
-            } else {
-                result.textContent = '✗ 答案不正确。提示：支持度 = 同时购买A和B的订单数 / 总订单数';
-                result.classList.remove('result-correct');
-                result.classList.add('result-wrong');
+        const practiceNavButtons = ['practice-nav-1', 'practice-nav-2', 'practice-nav-3'];
+        const practiceDetails = ['practice-detail-1', 'practice-detail-2', 'practice-detail-3'];
+        
+        practiceNavButtons.forEach((btn, index) => {
+            document.getElementById(btn).addEventListener('click', function() {
+                practiceNavButtons.forEach((b, i) => {
+                    document.getElementById(b).classList.remove('bg-purple-50', 'text-purple-600');
+                    document.getElementById(b).classList.add('text-gray-600');
+                    document.getElementById(practiceDetails[i]).classList.add('hidden');
+                });
+                this.classList.add('bg-purple-50', 'text-purple-600');
+                this.classList.remove('text-gray-600');
+                document.getElementById(practiceDetails[index]).classList.remove('hidden');
+                
+                updateCodeEditor(index + 1);
+            });
+        });
+        
+        const codeTemplates = {
+            1: `import pandas as pd
+
+data = {
+    'order_id': [1, 2, 3, 4, 5],
+    'A': [1, 1, 0, 1, 1],
+    'B': [1, 0, 1, 1, 0],
+    'C': [0, 1, 1, 0, 1]
+}
+df = pd.DataFrame(data)
+
+# 在这里输入你的代码
+# 计算商品A的支持度（出现频率）
+
+print(df)`,
+            2: `import pandas as pd
+
+data = {
+    'order_id': [1, 2, 3, 4, 5],
+    'A': [1, 1, 0, 1, 1],
+    'B': [1, 0, 1, 1, 0],
+    'C': [0, 1, 1, 0, 1]
+}
+df = pd.DataFrame(data)
+
+# 在这里输入你的代码
+# 计算规则A→B的置信度
+
+print(df)`,
+            3: `import pandas as pd
+
+data = {
+    'order_id': [1, 2, 3, 4, 5],
+    'A': [1, 1, 0, 1, 1],
+    'B': [1, 0, 1, 1, 0],
+    'C': [0, 1, 1, 0, 1]
+}
+df = pd.DataFrame(data)
+
+# 在这里输入你的代码
+# 使用Apriori算法挖掘频繁项集
+# 注意：这是模拟演示，实际需要mlxtend库
+
+print("频繁项集分析结果...")`
+        };
+        
+        function updateCodeEditor(practiceNum) {
+            const editor = document.getElementById('code-editor');
+            editor.value = codeTemplates[practiceNum];
+            document.getElementById('code-output').textContent = '> 执行结果将显示在这里...';
+        }
+        
+        document.getElementById('run-code').addEventListener('click', function() {
+            const code = document.getElementById('code-editor').value;
+            const output = document.getElementById('code-output');
+            
+            try {
+                output.textContent = '> 正在执行...\n\n';
+                
+                const mockResult = simulatePythonExecution(code);
+                output.textContent = '> ' + mockResult;
+            } catch (error) {
+                output.textContent = '> 执行错误: ' + error.message;
             }
         });
-
-        document.getElementById('check-practice2').addEventListener('click', function() {
-            const answer = parseFloat(document.getElementById('practice2-answer').value);
-            const result = document.getElementById('practice2-result');
-            result.classList.remove('hidden');
-            if (answer === 0.5) {
-                result.textContent = '✓ 正确！置信度 = 0.15/0.3 = 0.5';
-                result.classList.remove('result-wrong');
-                result.classList.add('result-correct');
+        
+        function simulatePythonExecution(code) {
+            if (code.includes('A') && code.includes('== 1') && !code.includes('B')) {
+                return `商品A的支持度: 0.8
+（共5笔订单，4笔包含商品A）`;
+            } else if (code.includes('A') && code.includes('B')) {
+                return `规则A→B的置信度: 0.75
+（包含A的4笔订单中，3笔也包含B）`;
+            } else if (code.includes('Apriori') || code.includes('apriori')) {
+                return `频繁项集:
+{frozenset({'A'})}     : 0.8
+{frozenset({'B'})}     : 0.6
+{frozenset({'A', 'B'})}: 0.6
+{frozenset({'B', 'C'})}: 0.4`;
             } else {
-                result.textContent = '✗ 答案不正确。提示：置信度 = 支持度{A,B} / 支持度{A}';
-                result.classList.remove('result-correct');
-                result.classList.add('result-wrong');
+                return '代码执行成功，但未检测到预期的操作。\n\n提示：请完成题目要求的代码。';
             }
+        }
+        
+        document.getElementById('reset-code').addEventListener('click', function() {
+            const activeNav = document.querySelector('.bg-purple-50');
+            const practiceNum = practiceNavButtons.indexOf(activeNav.id) + 1;
+            updateCodeEditor(practiceNum);
         });
+        
+        document.getElementById('show-answer').addEventListener('click', function() {
+            const activeNav = document.querySelector('.bg-purple-50');
+            const practiceNum = practiceNavButtons.indexOf(activeNav.id) + 1;
+            
+            const answers = {
+                1: `import pandas as pd
 
-        document.getElementById('check-practice3').addEventListener('click', function() {
-            const answer = document.getElementById('practice3-answer').value;
-            const result = document.getElementById('practice3-result');
-            result.classList.remove('hidden');
-            if (answer.includes('apriori') && answer.includes('min_support')) {
-                result.textContent = '✓ 正确！使用apriori函数并设置min_support参数。';
-                result.classList.remove('result-wrong');
-                result.classList.add('result-correct');
-            } else {
-                result.textContent = '✗ 答案不完全正确。提示：使用mlxtend.frequent_patterns.apriori';
-                result.classList.remove('result-correct');
-                result.classList.add('result-wrong');
-            }
+data = {
+    'order_id': [1, 2, 3, 4, 5],
+    'A': [1, 1, 0, 1, 1],
+    'B': [1, 0, 1, 1, 0],
+    'C': [0, 1, 1, 0, 1]
+}
+df = pd.DataFrame(data)
+
+# 计算商品A的支持度
+support_a = len(df[df['A'] == 1]) / len(df)
+print(f"商品A的支持度: {support_a}")`,
+                2: `import pandas as pd
+
+data = {
+    'order_id': [1, 2, 3, 4, 5],
+    'A': [1, 1, 0, 1, 1],
+    'B': [1, 0, 1, 1, 0],
+    'C': [0, 1, 1, 0, 1]
+}
+df = pd.DataFrame(data)
+
+# 计算规则A→B的置信度
+support_ab = len(df[(df['A'] == 1) & (df['B'] == 1)]) / len(df)
+support_a = len(df[df['A'] == 1]) / len(df)
+confidence_ab = support_ab / support_a
+print(f"规则A→B的置信度: {confidence_ab}")`,
+                3: `import pandas as pd
+
+data = {
+    'order_id': [1, 2, 3, 4, 5],
+    'A': [1, 1, 0, 1, 1],
+    'B': [1, 0, 1, 1, 0],
+    'C': [0, 1, 1, 0, 1]
+}
+df = pd.DataFrame(data)
+
+# 使用Apriori算法挖掘频繁项集
+from mlxtend.frequent_patterns import apriori, association_rules
+
+basket = df.set_index('order_id').astype(bool)
+frequent_itemsets = apriori(basket, min_support=0.05, use_colnames=True)
+rules = association_rules(frequent_itemsets, metric='lift', min_threshold=1)
+
+print("频繁项集:")
+print(frequent_itemsets)
+print("\\n关联规则:")
+print(rules[['antecedents', 'consequents', 'support', 'confidence', 'lift']])`
+            };
+            
+            document.getElementById('code-editor').value = answers[practiceNum];
+        });
+        
+        document.getElementById('start-test').addEventListener('click', function() {
+            document.getElementById('content-practice').classList.add('hidden');
+            document.getElementById('content-test').classList.remove('hidden');
+            document.getElementById('tab-practice').classList.remove('border-b-2', 'border-purple-600', 'text-purple-600');
+            document.getElementById('tab-practice').classList.add('text-gray-600');
+            document.getElementById('tab-test').classList.add('border-b-2', 'border-purple-600', 'text-purple-600');
+            document.getElementById('tab-test').classList.remove('text-gray-600');
+        });
+        
+        document.getElementById('auto-save').addEventListener('click', function() {
+            const code = document.getElementById('code-editor').value;
+            localStorage.setItem('project3-practice-code', code);
+            alert('代码已自动保存！');
         });
 
         const correctAnswers = { q1: 'B', q2: 'B', q3: 'B', q4: 'B', q5: 'A' };

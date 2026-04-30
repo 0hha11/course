@@ -201,38 +201,185 @@ print(df['cluster_name'].value_counts())</code></pre>
     </section>
 
     <section id="content-practice" class="py-8 hidden">
-        <div class="container mx-auto px-4">
-            <div class="max-w-4xl mx-auto">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6">练习题目</h2>
+        <div class="container mx-auto px-4 h-[calc(100vh-180px)]">
+            <div class="flex flex-col lg:flex-row h-full">
+                <div class="lg:w-80 lg:h-full bg-white rounded-xl shadow-md overflow-hidden flex-shrink-0">
+                    <div class="bg-gradient-to-r from-orange-600 to-orange-800 px-4 py-3 text-white">
+                        <h2 class="font-bold">练习导航</h2>
+                    </div>
+                    <div class="p-2 space-y-1">
+                        <button id="practice-nav-1" class="w-full text-left px-4 py-3 rounded-lg bg-orange-50 text-orange-600 font-medium hover:bg-orange-100 transition-colors">
+                            <i class="fa fa-code mr-2"></i>练习1：创建K-means模型
+                        </button>
+                        <button id="practice-nav-2" class="w-full text-left px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
+                            <i class="fa fa-code mr-2"></i>练习2：肘部法则
+                        </button>
+                        <button id="practice-nav-3" class="w-full text-left px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
+                            <i class="fa fa-code mr-2"></i>练习3：数据标准化
+                        </button>
+                    </div>
+                    
+                    <div class="border-t border-gray-200">
+                        <div id="practice-detail-1" class="p-4">
+                            <div class="bg-orange-50 rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-orange-800 mb-2 flex items-center">
+                                    <i class="fa fa-info-circle mr-2"></i>详细说明
+                                </h3>
+                                <p class="text-sm text-gray-600">
+                                    K-means是一种无监督学习算法，用于将数据分成K个簇。使用sklearn.cluster.KMeans可以快速创建和训练模型。
+                                    主要参数包括n_clusters（簇数量）和random_state（随机种子）。
+                                </p>
+                            </div>
+                            
+                            <div class="bg-gray-900 rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-green-400 mb-2 flex items-center">
+                                    <i class="fa fa-code mr-2"></i>代码示例
+                                </h3>
+                                <pre class="text-xs text-gray-300 overflow-x-auto"><code>from sklearn.cluster import KMeans
 
-                <div class="exercise-question">
-                    <h3 class="font-bold text-gray-800 mb-2">练习1：创建K-means模型</h3>
-                    <p class="text-gray-600 mb-4">使用sklearn创建一个K-means模型，设置聚类数量为3。</p>
-                    <textarea id="practice1-answer" class="answer-input" rows="3" placeholder="请输入你的代码..."></textarea>
-                    <button id="check-practice1" class="mt-2 bg-orange-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-orange-700 transition-colors">检查答案</button>
-                    <div id="practice1-result" class="mt-2 p-3 rounded-lg hidden"></div>
+kmeans = KMeans(n_clusters=3, random_state=42)
+kmeans.fit(features)
+
+labels = kmeans.labels_
+centers = kmeans.cluster_centers_</code></pre>
+                            </div>
+                            
+                            <div class="bg-yellow-50 rounded-lg p-3">
+                                <h3 class="font-bold text-yellow-800 mb-2 flex items-center">
+                                    <i class="fa fa-lightbulb-o mr-2"></i>小贴士
+                                </h3>
+                                <p class="text-sm text-gray-600">
+                                    random_state参数用于保证结果的可重复性。设置相同的随机种子，每次运行会得到相同的聚类结果。
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div id="practice-detail-2" class="p-4 hidden">
+                            <div class="bg-orange-50 rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-orange-800 mb-2 flex items-center">
+                                    <i class="fa fa-info-circle mr-2"></i>详细说明
+                                </h3>
+                                <p class="text-sm text-gray-600">
+                                    肘部法则通过绘制不同K值对应的惯性（inertia）曲线，选择"肘部"位置的K值作为最佳聚类数。
+                                    惯性是每个样本到其所属簇中心的距离平方和，越小越好。
+                                </p>
+                            </div>
+                            
+                            <div class="bg-gray-900 rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-green-400 mb-2 flex items-center">
+                                    <i class="fa fa-code mr-2"></i>代码示例
+                                </h3>
+                                <pre class="text-xs text-gray-300 overflow-x-auto"><code>import matplotlib.pyplot as plt
+
+inertia = []
+for k in range(1, 11):
+    kmeans = KMeans(n_clusters=k)
+    kmeans.fit(features)
+    inertia.append(kmeans.inertia_)
+
+plt.plot(range(1, 11), inertia, 'bo-')
+plt.show()</code></pre>
+                            </div>
+                            
+                            <div class="bg-yellow-50 rounded-lg p-3">
+                                <h3 class="font-bold text-yellow-800 mb-2 flex items-center">
+                                    <i class="fa fa-lightbulb-o mr-2"></i>小贴士
+                                </h3>
+                                <p class="text-sm text-gray-600">
+                                    肘部位置通常出现在惯性下降速度明显变缓的地方。但也要结合业务需求来确定最终的K值。
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div id="practice-detail-3" class="p-4 hidden">
+                            <div class="bg-orange-50 rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-orange-800 mb-2 flex items-center">
+                                    <i class="fa fa-info-circle mr-2"></i>详细说明
+                                </h3>
+                                <p class="text-sm text-gray-600">
+                                    数据标准化在聚类前非常重要，因为不同特征的量纲可能差异很大。
+                                    StandardScaler可以将数据转换为均值为0、标准差为1的标准化数据。
+                                </p>
+                            </div>
+                            
+                            <div class="bg-gray-900 rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-green-400 mb-2 flex items-center">
+                                    <i class="fa fa-code mr-2"></i>代码示例
+                                </h3>
+                                <pre class="text-xs text-gray-300 overflow-x-auto"><code>from sklearn.preprocessing import StandardScaler
+
+scaler = StandardScaler()
+scaled_features = scaler.fit_transform(features)
+
+kmeans = KMeans(n_clusters=3)
+kmeans.fit(scaled_features)</code></pre>
+                            </div>
+                            
+                            <div class="bg-yellow-50 rounded-lg p-3">
+                                <h3 class="font-bold text-yellow-800 mb-2 flex items-center">
+                                    <i class="fa fa-lightbulb-o mr-2"></i>小贴士
+                                </h3>
+                                <p class="text-sm text-gray-600">
+                                    标准化可以防止数值大的特征主导聚类结果，确保每个特征对聚类的贡献是公平的。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                
+                <div class="flex-1 flex flex-col ml-4 min-w-0">
+                    <div class="bg-white rounded-t-xl shadow-md px-4 py-3 flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <button id="run-code" class="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-orange-700 transition-colors flex items-center">
+                                <i class="fa fa-play mr-2"></i>运行代码
+                            </button>
+                            <button id="reset-code" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors flex items-center">
+                                <i class="fa fa-refresh mr-2"></i>重置代码
+                            </button>
+                            <button id="show-answer" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors flex items-center">
+                                <i class="fa fa-eye mr-2"></i>显示参考答案
+                            </button>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button id="start-test" class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors flex items-center">
+                                <i class="fa fa-file-text mr-2"></i>开始测试
+                            </button>
+                            <button id="auto-save" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors flex items-center">
+                                <i class="fa fa-save mr-2"></i>自动保存
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-1 bg-gray-900 rounded-b-xl shadow-md overflow-hidden">
+                        <div class="flex items-center px-4 py-2 bg-gray-800 text-gray-400 text-sm">
+                            <i class="fa fa-file-code-o mr-2"></i>
+                            <span>project4/main.py</span>
+                        </div>
+                        <textarea id="code-editor" class="w-full h-[calc(50%-40px)] bg-gray-900 text-green-400 p-4 font-mono text-sm resize-none outline-none" placeholder="在这里输入你的代码...">import pandas as pd
+import numpy as np
 
-                <div class="exercise-question">
-                    <h3 class="font-bold text-gray-800 mb-2">练习2：肘部法则</h3>
-                    <p class="text-gray-600 mb-4">编写代码使用肘部法则确定最佳K值。</p>
-                    <textarea id="practice2-answer" class="answer-input" rows="4" placeholder="请输入你的代码..."></textarea>
-                    <button id="check-practice2" class="mt-2 bg-orange-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-orange-700 transition-colors">检查答案</button>
-                    <div id="practice2-result" class="mt-2 p-3 rounded-lg hidden"></div>
-                </div>
+data = {
+    'customer_id': [1, 2, 3, 4, 5, 6],
+    'total_spent': [5000, 1200, 8000, 300, 4500, 2000],
+    'visit_count': [50, 15, 80, 5, 40, 25]
+}
+df = pd.DataFrame(data)
 
-                <div class="exercise-question">
-                    <h3 class="font-bold text-gray-800 mb-2">练习3：数据标准化</h3>
-                    <p class="text-gray-600 mb-4">为什么在聚类前需要进行数据标准化？</p>
-                    <textarea id="practice3-answer" class="answer-input" rows="2" placeholder="请输入你的答案..."></textarea>
-                    <button id="check-practice3" class="mt-2 bg-orange-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-orange-700 transition-colors">检查答案</button>
-                    <div id="practice3-result" class="mt-2 p-3 rounded-lg hidden"></div>
-                </div>
+# 在这里输入你的代码
+# 创建K-means模型，设置聚类数量为3
 
-                <div class="text-center mt-8">
-                    <button id="complete-practice" class="bg-orange-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-orange-700 transition-colors">
-                        <i class="fa fa-check-circle mr-2"></i>标记为已练习
-                    </button>
+print(df)</textarea>
+                        
+                        <div class="h-[50%] border-t border-gray-700">
+                            <div class="flex items-center px-4 py-2 bg-gray-800 text-gray-400 text-sm">
+                                <i class="fa fa-terminal mr-2"></i>
+                                <span>执行结果</span>
+                            </div>
+                            <div id="code-output" class="h-[calc(100%-40px)] p-4 overflow-auto bg-gray-950 text-green-400 font-mono text-sm">
+> 执行结果将显示在这里...
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -244,6 +391,10 @@ print(df['cluster_name'].value_counts())</code></pre>
                 <div class="bg-orange-50 rounded-xl p-6 mb-6">
                     <h2 class="text-2xl font-bold text-gray-800 mb-2">项目考试</h2>
                     <p class="text-gray-600">共5道题目，每题20分，满分100分</p>
+                    <div class="flex items-center mt-4">
+                        <i class="fa fa-clock-o mr-2 text-gray-600"></i>
+                        <span class="text-gray-600">考试时间：30分钟</span>
+                    </div>
                 </div>
 
                 <div id="exam-questions">
@@ -299,7 +450,7 @@ print(df['cluster_name'].value_counts())</code></pre>
                 </div>
 
                 <div class="text-center">
-                    <button id="submit-exam" class="bg-orange-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-orange-700 transition-colors">
+                    <button id="submit-exam" class="bg-purple-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors">
                         <i class="fa fa-paper-plane mr-2"></i>提交考试
                     </button>
                 </div>
@@ -350,11 +501,6 @@ print(df['cluster_name'].value_counts())</code></pre>
             alert('已标记为已学习！');
         });
 
-        document.getElementById('complete-practice').addEventListener('click', function() {
-            saveProgress('project4', 'practiced');
-            alert('已标记为已练习！');
-        });
-
         function saveProgress(projectId, type) {
             const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
             if (!progress[projectId]) {
@@ -364,49 +510,213 @@ print(df['cluster_name'].value_counts())</code></pre>
             localStorage.setItem('learningProgress', JSON.stringify(progress));
         }
 
-        document.getElementById('check-practice1').addEventListener('click', function() {
-            const answer = document.getElementById('practice1-answer').value;
-            const result = document.getElementById('practice1-result');
-            result.classList.remove('hidden');
-            if (answer.includes('KMeans') && answer.includes('n_clusters=3')) {
-                result.textContent = '✓ 正确！from sklearn.cluster import KMeans; kmeans = KMeans(n_clusters=3)';
-                result.classList.remove('result-wrong');
-                result.classList.add('result-correct');
-            } else {
-                result.textContent = '✗ 答案不完全正确。提示：使用sklearn.cluster.KMeans，设置n_clusters=3。';
-                result.classList.remove('result-correct');
-                result.classList.add('result-wrong');
+        const practiceNavButtons = ['practice-nav-1', 'practice-nav-2', 'practice-nav-3'];
+        const practiceDetails = ['practice-detail-1', 'practice-detail-2', 'practice-detail-3'];
+        
+        practiceNavButtons.forEach((btn, index) => {
+            document.getElementById(btn).addEventListener('click', function() {
+                practiceNavButtons.forEach((b, i) => {
+                    document.getElementById(b).classList.remove('bg-orange-50', 'text-orange-600');
+                    document.getElementById(b).classList.add('text-gray-600');
+                    document.getElementById(practiceDetails[i]).classList.add('hidden');
+                });
+                this.classList.add('bg-orange-50', 'text-orange-600');
+                this.classList.remove('text-gray-600');
+                document.getElementById(practiceDetails[index]).classList.remove('hidden');
+                
+                updateCodeEditor(index + 1);
+            });
+        });
+        
+        const codeTemplates = {
+            1: `import pandas as pd
+import numpy as np
+
+data = {
+    'customer_id': [1, 2, 3, 4, 5, 6],
+    'total_spent': [5000, 1200, 8000, 300, 4500, 2000],
+    'visit_count': [50, 15, 80, 5, 40, 25]
+}
+df = pd.DataFrame(data)
+
+# 在这里输入你的代码
+# 创建K-means模型，设置聚类数量为3
+
+print(df)`,
+            2: `import pandas as pd
+import numpy as np
+
+data = {
+    'customer_id': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    'total_spent': [5000, 1200, 8000, 300, 4500, 2000, 6000, 1500, 7000, 1000],
+    'visit_count': [50, 15, 80, 5, 40, 25, 60, 20, 70, 10]
+}
+df = pd.DataFrame(data)
+
+# 在这里输入你的代码
+# 使用肘部法则确定最佳K值，测试K从1到5
+
+print(df)`,
+            3: `import pandas as pd
+from sklearn.preprocessing import StandardScaler
+
+data = {
+    'customer_id': [1, 2, 3, 4, 5],
+    'total_spent': [5000, 1200, 8000, 300, 4500],
+    'visit_count': [50, 15, 80, 5, 40]
+}
+df = pd.DataFrame(data)
+
+# 在这里输入你的代码
+# 对特征进行标准化处理
+
+features = df[['total_spent', 'visit_count']]
+print(features)`,
+        };
+        
+        function updateCodeEditor(practiceNum) {
+            const editor = document.getElementById('code-editor');
+            editor.value = codeTemplates[practiceNum];
+            document.getElementById('code-output').textContent = '> 执行结果将显示在这里...';
+        }
+        
+        document.getElementById('run-code').addEventListener('click', function() {
+            const code = document.getElementById('code-editor').value;
+            const output = document.getElementById('code-output');
+            
+            try {
+                output.textContent = '> 正在执行...\n\n';
+                
+                const mockResult = simulatePythonExecution(code);
+                output.textContent = '> ' + mockResult;
+            } catch (error) {
+                output.textContent = '> 执行错误: ' + error.message;
             }
         });
+        
+        function simulatePythonExecution(code) {
+            if (code.includes('KMeans') && code.includes('n_clusters')) {
+                return `K-means模型已创建
+聚类数量: 3
+随机种子: 42
 
-        document.getElementById('check-practice2').addEventListener('click', function() {
-            const answer = document.getElementById('practice2-answer').value;
-            const result = document.getElementById('practice2-result');
-            result.classList.remove('hidden');
-            if (answer.includes('inertia') && answer.includes('range')) {
-                result.textContent = '✓ 正确！计算不同K值的inertia并绘制肘部曲线。';
-                result.classList.remove('result-wrong');
-                result.classList.add('result-correct');
+客户分组:
+簇0: 2个客户
+簇1: 2个客户
+簇2: 2个客户`;
+            } else if (code.includes('inertia')) {
+                return `肘部法则结果:
+K=1: inertia=45000000
+K=2: inertia=18000000
+K=3: inertia=8000000
+K=4: inertia=5000000
+K=5: inertia=3500000
+
+建议K值: 3（肘部位置）`;
+            } else if (code.includes('StandardScaler')) {
+                return `标准化后的特征:
+   total_spent  visit_count
+0     0.723      0.625
+1    -0.682     -0.625
+2     1.385      1.000
+3    -1.082     -1.000
+4     0.234      0.375
+
+（数据已转换为均值为0，标准差为1）`;
             } else {
-                result.textContent = '✗ 答案不完全正确。提示：遍历K值，计算inertia，绘制曲线找拐点。';
-                result.classList.remove('result-correct');
-                result.classList.add('result-wrong');
+                return '代码执行成功，但未检测到预期的操作。\n\n提示：请完成题目要求的代码。';
             }
+        }
+        
+        document.getElementById('reset-code').addEventListener('click', function() {
+            const activeNav = document.querySelector('.bg-orange-50');
+            const practiceNum = practiceNavButtons.indexOf(activeNav.id) + 1;
+            updateCodeEditor(practiceNum);
         });
+        
+        document.getElementById('show-answer').addEventListener('click', function() {
+            const activeNav = document.querySelector('.bg-orange-50');
+            const practiceNum = practiceNavButtons.indexOf(activeNav.id) + 1;
+            
+            const answers = {
+                1: `import pandas as pd
+from sklearn.cluster import KMeans
 
-        document.getElementById('check-practice3').addEventListener('click', function() {
-            const answer = document.getElementById('practice3-answer').value;
-            const result = document.getElementById('practice3-result');
-            result.classList.remove('hidden');
-            if (answer.includes('尺度') || answer.includes('量纲') || answer.includes('标准化')) {
-                result.textContent = '✓ 正确！标准化可以防止数值大的特征主导聚类结果。';
-                result.classList.remove('result-wrong');
-                result.classList.add('result-correct');
-            } else {
-                result.textContent = '✗ 答案不完全正确。提示：不同特征可能有不同量纲，标准化使它们具有可比性。';
-                result.classList.remove('result-correct');
-                result.classList.add('result-wrong');
-            }
+data = {
+    'customer_id': [1, 2, 3, 4, 5, 6],
+    'total_spent': [5000, 1200, 8000, 300, 4500, 2000],
+    'visit_count': [50, 15, 80, 5, 40, 25]
+}
+df = pd.DataFrame(data)
+
+# 创建K-means模型，设置聚类数量为3
+kmeans = KMeans(n_clusters=3, random_state=42)
+
+# 对特征进行聚类
+features = df[['total_spent', 'visit_count']]
+df['cluster'] = kmeans.fit_predict(features)
+
+print("聚类结果:")
+print(df)
+print("\\n簇中心点:")
+print(kmeans.cluster_centers_)`,
+                2: `import pandas as pd
+from sklearn.cluster import KMeans
+
+data = {
+    'customer_id': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    'total_spent': [5000, 1200, 8000, 300, 4500, 2000, 6000, 1500, 7000, 1000],
+    'visit_count': [50, 15, 80, 5, 40, 25, 60, 20, 70, 10]
+}
+df = pd.DataFrame(data)
+
+# 使用肘部法则确定最佳K值
+features = df[['total_spent', 'visit_count']]
+inertia = []
+
+for k in range(1, 6):
+    kmeans = KMeans(n_clusters=k, random_state=42)
+    kmeans.fit(features)
+    inertia.append(kmeans.inertia_)
+    print(f"K={k}: inertia={kmeans.inertia_}")
+
+print("\\n建议选择肘部位置的K值")`,
+                3: `import pandas as pd
+from sklearn.preprocessing import StandardScaler
+
+data = {
+    'customer_id': [1, 2, 3, 4, 5],
+    'total_spent': [5000, 1200, 8000, 300, 4500],
+    'visit_count': [50, 15, 80, 5, 40]
+}
+df = pd.DataFrame(data)
+
+# 对特征进行标准化处理
+scaler = StandardScaler()
+features = df[['total_spent', 'visit_count']]
+scaled_features = scaler.fit_transform(features)
+
+df_scaled = pd.DataFrame(scaled_features, columns=['total_spent_scaled', 'visit_count_scaled'])
+print("标准化后的数据:")
+print(df_scaled)`
+            };
+            
+            document.getElementById('code-editor').value = answers[practiceNum];
+        });
+        
+        document.getElementById('start-test').addEventListener('click', function() {
+            document.getElementById('content-practice').classList.add('hidden');
+            document.getElementById('content-test').classList.remove('hidden');
+            document.getElementById('tab-practice').classList.remove('border-b-2', 'border-orange-600', 'text-orange-600');
+            document.getElementById('tab-practice').classList.add('text-gray-600');
+            document.getElementById('tab-test').classList.add('border-b-2', 'border-orange-600', 'text-orange-600');
+            document.getElementById('tab-test').classList.remove('text-gray-600');
+        });
+        
+        document.getElementById('auto-save').addEventListener('click', function() {
+            const code = document.getElementById('code-editor').value;
+            localStorage.setItem('project4-practice-code', code);
+            alert('代码已自动保存！');
         });
 
         const correctAnswers = { q1: 'B', q2: 'D', q3: 'B', q4: 'B', q5: 'B' };

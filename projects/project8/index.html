@@ -11,10 +11,6 @@
         .nav-tab { transition: all 0.3s ease; }
         .nav-tab:hover { background-color: rgba(234, 179, 8, 0.1); }
         .code-block { background-color: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin: 0.5rem 0; }
-        .exercise-question { background-color: #f8fafc; border-left: 4px solid #eab308; padding: 1rem; margin-bottom: 1rem; }
-        .answer-input { width: 100%; padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 0.375rem; }
-        .result-correct { background-color: #dcfce7; border-color: #22c55e; }
-        .result-wrong { background-color: #fee2e2; border-color: #ef4444; }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -30,15 +26,13 @@
                     <a href="../../index.html#my-progress" class="text-gray-700 hover:text-yellow-600 font-medium">学习进度</a>
                 </div>
                 <div class="md:hidden">
-                    <button id="menu-toggle" class="text-gray-700 focus:outline-none">
-                        <i class="fa fa-bars text-xl"></i>
-                    </button>
+                    <button id="menu-toggle" class="text-gray-700 focus:outline-none"><i class="fa fa-bars text-xl"></i></button>
                 </div>
             </div>
             <div id="mobile-menu" class="md:hidden hidden mt-4 pb-2">
-                <a href="../../index.html#home" class="block py-2 text-gray-700 hover:text-yellow-600">首页</a>
-                <a href="../../index.html#projects" class="block py-2 text-gray-700 hover:text-yellow-600">学习项目</a>
-                <a href="../../index.html#my-progress" class="block py-2 text-gray-700 hover:text-yellow-600">学习进度</a>
+                <a href="../../index.html#home" class="block py-2 text-gray-700">首页</a>
+                <a href="../../index.html#projects" class="block py-2 text-gray-700">学习项目</a>
+                <a href="../../index.html#my-progress" class="block py-2 text-gray-700">学习进度</a>
             </div>
         </div>
     </nav>
@@ -49,10 +43,10 @@
                 <span class="bg-white/20 text-white px-3 py-1 rounded-full text-sm font-medium mr-4">项目08</span>
                 <h1 class="text-2xl md:text-3xl font-bold text-white">特征工程</h1>
             </div>
-            <p class="text-yellow-100 mt-4">创建新特征，优化数据结构，为机器学习做准备</p>
+            <p class="text-yellow-100 mt-4">数据预处理、编码和标准化</p>
             <div class="flex items-center mt-4 text-yellow-100">
                 <i class="fa fa-file-csv mr-2"></i>
-                <span>数据文件: user_logs.csv</span>
+                <span>数据文件: customer_data.csv</span>
             </div>
         </div>
     </section>
@@ -79,99 +73,40 @@
                 <div class="bg-yellow-50 rounded-xl p-6 mb-8">
                     <h2 class="text-xl font-bold text-gray-800 mb-4">学习目标</h2>
                     <ul class="list-disc list-inside text-gray-600 space-y-2">
-                        <li>理解特征工程的重要性</li>
-                        <li>掌握特征提取和转换方法</li>
-                        <li>学会创建衍生特征</li>
-                        <li>掌握特征编码技术</li>
-                        <li>能够进行特征选择</li>
+                        <li>理解特征工程的概念和重要性</li>
+                        <li>掌握类别特征的编码方法</li>
+                        <li>学会使用标准化和归一化处理数值特征</li>
+                        <li>能够处理缺失值</li>
+                        <li>掌握特征选择的常用方法</li>
                     </ul>
                 </div>
 
                 <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4">1. 特征工程概述</h3>
-                    <p class="text-gray-600 mb-4">特征工程是将原始数据转换为适合机器学习模型使用的特征的过程。</p>
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">1. 类别编码</h3>
                     <div class="code-block">
-                        <pre><code>import pandas as pd
-
-df = pd.read_csv('user_logs.csv')
-print(df.head())</code></pre>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4">2. 创建衍生特征</h3>
-                    <p class="text-gray-600 mb-4">通过现有特征创建新的有价值特征：</p>
-                    <div class="code-block">
-                        <pre><code># 创建比率特征
-df['avg_order_value'] = df['total_spent'] / df['order_count']
-
-# 创建时间特征
-df['registration_date'] = pd.to_datetime(df['registration_date'])
-df['days_since_registration'] = (pd.Timestamp.now() - df['registration_date']).dt.days
-
-# 创建聚合特征
-df['is_high_value'] = df['total_spent'] > 1000
-
-# 创建交互特征
-df['frequency_value'] = df['visit_count'] * df['avg_order_value']</code></pre>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4">3. 特征编码</h3>
-                    <p class="text-gray-600 mb-4">将分类特征转换为数值特征：</p>
-                    <div class="code-block">
-                        <pre><code># 独热编码
-df_encoded = pd.get_dummies(df, columns=['category', 'region'])
+                        <pre><code>from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 
 # 标签编码
-from sklearn.preprocessing import LabelEncoder
 le = LabelEncoder()
 df['category_encoded'] = le.fit_transform(df['category'])
 
-# 频率编码
-frequency_map = df['category'].value_counts(normalize=True)
-df['category_freq'] = df['category'].map(frequency_map)</code></pre>
+# 独热编码
+df_encoded = pd.get_dummies(df, columns=['category'])</code></pre>
                     </div>
                 </div>
 
                 <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4">4. 完整实战代码</h3>
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">2. 数值标准化</h3>
                     <div class="code-block">
-                        <pre><code>import pandas as pd
-from sklearn.preprocessing import LabelEncoder, StandardScaler
+                        <pre><code>from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
-# 读取数据
-df = pd.read_csv('user_logs.csv')
-
-# 1. 创建衍生特征
-df['registration_date'] = pd.to_datetime(df['registration_date'])
-df['days_since_registration'] = (pd.Timestamp.now() - df['registration_date']).dt.days
-df['avg_order_value'] = df['total_spent'] / df['order_count']
-df['is_high_frequency'] = df['visit_count'] > df['visit_count'].median()
-df['value_score'] = df['total_spent'] * df['avg_order_value']
-
-# 2. 处理缺失值
-df['avg_order_value'].fillna(df['avg_order_value'].median(), inplace=True)
-
-# 3. 特征编码
-le = LabelEncoder()
-df['region_encoded'] = le.fit_transform(df['region'])
-
-# 4. 独热编码
-df = pd.get_dummies(df, columns=['membership_type'])
-
-# 5. 特征标准化
+# 标准化（均值0，标准差1）
 scaler = StandardScaler()
-numeric_cols = ['total_spent', 'visit_count', 'days_since_registration']
-df[numeric_cols] = scaler.fit_transform(df[numeric_cols])
+df['age_scaled'] = scaler.fit_transform(df[['age']])
 
-# 6. 特征选择
-correlation = df.corr()['target'].abs().sort_values(ascending=False)
-print("特征相关性:")
-print(correlation.head(10))
-
-print("\n处理后的特征数量:", df.shape[1])</code></pre>
+# 归一化（0-1范围）
+minmax = MinMaxScaler()
+df['income_normalized'] = minmax.fit_transform(df[['income']])</code></pre>
                     </div>
                 </div>
 
@@ -185,38 +120,141 @@ print("\n处理后的特征数量:", df.shape[1])</code></pre>
     </section>
 
     <section id="content-practice" class="py-8 hidden">
-        <div class="container mx-auto px-4">
-            <div class="max-w-4xl mx-auto">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6">练习题目</h2>
-
-                <div class="exercise-question">
-                    <h3 class="font-bold text-gray-800 mb-2">练习1：创建衍生特征</h3>
-                    <p class="text-gray-600 mb-4">根据total_spent和order_count创建avg_order_value特征。</p>
-                    <textarea id="practice1-answer" class="answer-input" rows="2" placeholder="请输入你的代码..."></textarea>
-                    <button id="check-practice1" class="mt-2 bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-yellow-700 transition-colors">检查答案</button>
-                    <div id="practice1-result" class="mt-2 p-3 rounded-lg hidden"></div>
+        <div class="container mx-auto px-4 h-[calc(100vh-180px)]">
+            <div class="flex flex-col lg:flex-row h-full">
+                <div class="lg:w-80 lg:h-full bg-white rounded-xl shadow-md overflow-hidden flex-shrink-0">
+                    <div class="bg-gradient-to-r from-yellow-600 to-yellow-800 px-4 py-3 text-white">
+                        <h2 class="font-bold">练习导航</h2>
+                    </div>
+                    <div class="p-2 space-y-1">
+                        <button id="practice-nav-1" class="w-full text-left px-4 py-3 rounded-lg bg-yellow-50 text-yellow-600 font-medium hover:bg-yellow-100 transition-colors">
+                            <i class="fa fa-code mr-2"></i>练习1：标签编码
+                        </button>
+                        <button id="practice-nav-2" class="w-full text-left px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
+                            <i class="fa fa-code mr-2"></i>练习2：标准化
+                        </button>
+                        <button id="practice-nav-3" class="w-full text-left px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
+                            <i class="fa fa-code mr-2"></i>练习3：独热编码
+                        </button>
+                    </div>
+                    
+                    <div class="border-t border-gray-200">
+                        <div id="practice-detail-1" class="p-4">
+                            <div class="bg-orange-50 rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-orange-800 mb-2 flex items-center">
+                                    <i class="fa fa-info-circle mr-2"></i>详细说明
+                                </h3>
+                                <p class="text-sm text-gray-600">标签编码将类别转换为数字。适用于有序类别，如学历高低。</p>
+                            </div>
+                            <div class="bg-gray-900 rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-green-400 mb-2 flex items-center">
+                                    <i class="fa fa-code mr-2"></i>代码示例
+                                </h3>
+                                <pre class="text-xs text-gray-300"><code>le = LabelEncoder()
+df['encoded'] = le.fit_transform(df['col'])</code></pre>
+                            </div>
+                            <div class="bg-yellow-50 rounded-lg p-3">
+                                <h3 class="font-bold text-yellow-800 mb-2 flex items-center">
+                                    <i class="fa fa-lightbulb-o mr-2"></i>小贴士
+                                </h3>
+                                <p class="text-sm text-gray-600">无序类别使用标签编码可能引入错误的顺序关系。</p>
+                            </div>
+                        </div>
+                        <div id="practice-detail-2" class="p-4 hidden">
+                            <div class="bg-orange-50 rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-orange-800 mb-2 flex items-center">
+                                    <i class="fa fa-info-circle mr-2"></i>详细说明
+                                </h3>
+                                <p class="text-sm text-gray-600">标准化将数据转换为均值为0、标准差为1的分布。适用于各种机器学习算法。</p>
+                            </div>
+                            <div class="bg-gray-900 rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-green-400 mb-2 flex items-center">
+                                    <i class="fa fa-code mr-2"></i>代码示例
+                                </h3>
+                                <pre class="text-xs text-gray-300"><code>scaler = StandardScaler()
+df['scaled'] = scaler.fit_transform(df[['col']])</code></pre>
+                            </div>
+                            <div class="bg-yellow-50 rounded-lg p-3">
+                                <h3 class="font-bold text-yellow-800 mb-2 flex items-center">
+                                    <i class="fa fa-lightbulb-o mr-2"></i>小贴士
+                                </h3>
+                                <p class="text-sm text-gray-600">KNN、SVM等算法对特征尺度敏感，需要标准化。</p>
+                            </div>
+                        </div>
+                        <div id="practice-detail-3" class="p-4 hidden">
+                            <div class="bg-orange-50 rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-orange-800 mb-2 flex items-center">
+                                    <i class="fa fa-info-circle mr-2"></i>详细说明
+                                </h3>
+                                <p class="text-sm text-gray-600">独热编码将类别转换为二进制列。适用于无序类别，避免引入顺序偏见。</p>
+                            </div>
+                            <div class="bg-gray-900 rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-green-400 mb-2 flex items-center">
+                                    <i class="fa fa-code mr-2"></i>代码示例
+                                </h3>
+                                <pre class="text-xs text-gray-300"><code>df = pd.get_dummies(df, columns=['col'])</code></pre>
+                            </div>
+                            <div class="bg-yellow-50 rounded-lg p-3">
+                                <h3 class="font-bold text-yellow-800 mb-2 flex items-center">
+                                    <i class="fa fa-lightbulb-o mr-2"></i>小贴士
+                                </h3>
+                                <p class="text-sm text-gray-600">类别数量多时会增加很多特征，可能需要降维。</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                
+                <div class="flex-1 flex flex-col ml-4 min-w-0">
+                    <div class="bg-white rounded-t-xl shadow-md px-4 py-3 flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <button id="run-code" class="bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-yellow-700 flex items-center">
+                                <i class="fa fa-play mr-2"></i>运行代码
+                            </button>
+                            <button id="reset-code" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 flex items-center">
+                                <i class="fa fa-refresh mr-2"></i>重置代码
+                            </button>
+                            <button id="show-answer" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 flex items-center">
+                                <i class="fa fa-eye mr-2"></i>显示参考答案
+                            </button>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button id="start-test" class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 flex items-center">
+                                <i class="fa fa-file-text mr-2"></i>开始测试
+                            </button>
+                            <button id="auto-save" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 flex items-center">
+                                <i class="fa fa-save mr-2"></i>自动保存
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-1 bg-gray-900 rounded-b-xl shadow-md overflow-hidden">
+                        <div class="flex items-center px-4 py-2 bg-gray-800 text-gray-400 text-sm">
+                            <i class="fa fa-file-code-o mr-2"></i>
+                            <span>project8/main.py</span>
+                        </div>
+                        <textarea id="code-editor" class="w-full h-[calc(50%-40px)] bg-gray-900 text-green-400 p-4 font-mono text-sm resize-none outline-none">import pandas as pd
+from sklearn.preprocessing import LabelEncoder
 
-                <div class="exercise-question">
-                    <h3 class="font-bold text-gray-800 mb-2">练习2：独热编码</h3>
-                    <p class="text-gray-600 mb-4">对category列进行独热编码。</p>
-                    <textarea id="practice2-answer" class="answer-input" rows="2" placeholder="请输入你的代码..."></textarea>
-                    <button id="check-practice2" class="mt-2 bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-yellow-700 transition-colors">检查答案</button>
-                    <div id="practice2-result" class="mt-2 p-3 rounded-lg hidden"></div>
-                </div>
+data = {
+    'name': ['张三', '李四', '王五', '赵六'],
+    'education': ['高中', '本科', '硕士', '博士']
+}
+df = pd.DataFrame(data)
 
-                <div class="exercise-question">
-                    <h3 class="font-bold text-gray-800 mb-2">练习3：特征标准化</h3>
-                    <p class="text-gray-600 mb-4">使用StandardScaler对数值特征进行标准化。</p>
-                    <textarea id="practice3-answer" class="answer-input" rows="3" placeholder="请输入你的代码..."></textarea>
-                    <button id="check-practice3" class="mt-2 bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-yellow-700 transition-colors">检查答案</button>
-                    <div id="practice3-result" class="mt-2 p-3 rounded-lg hidden"></div>
-                </div>
+# 在这里输入你的代码
+# 使用标签编码将education列编码
 
-                <div class="text-center mt-8">
-                    <button id="complete-practice" class="bg-yellow-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-yellow-700 transition-colors">
-                        <i class="fa fa-check-circle mr-2"></i>标记为已练习
-                    </button>
+print(df)</textarea>
+                        <div class="h-[50%] border-t border-gray-700">
+                            <div class="flex items-center px-4 py-2 bg-gray-800 text-gray-400 text-sm">
+                                <i class="fa fa-terminal mr-2"></i>
+                                <span>执行结果</span>
+                            </div>
+                            <div id="code-output" class="h-[calc(100%-40px)] p-4 overflow-auto bg-gray-950 text-green-400 font-mono text-sm">
+> 执行结果将显示在这里...
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -229,73 +267,58 @@ print("\n处理后的特征数量:", df.shape[1])</code></pre>
                     <h2 class="text-2xl font-bold text-gray-800 mb-2">项目考试</h2>
                     <p class="text-gray-600">共5道题目，每题20分，满分100分</p>
                 </div>
-
                 <div id="exam-questions">
                     <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                        <h3 class="font-bold text-gray-800 mb-4">1. 特征工程的主要目的是什么？</h3>
+                        <h3 class="font-bold text-gray-800 mb-4">1. 标签编码适用于什么类型的类别？</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center"><input type="radio" name="q1" value="A" class="mr-2"><span>A) 增加数据量</span></label>
-                            <label class="flex items-center"><input type="radio" name="q1" value="B" class="mr-2"><span>B) 将原始数据转换为适合模型的特征</span></label>
-                            <label class="flex items-center"><input type="radio" name="q1" value="C" class="mr-2"><span>C) 减少计算时间</span></label>
-                            <label class="flex items-center"><input type="radio" name="q1" value="D" class="mr-2"><span>D) 删除无用数据</span></label>
+                            <label class="flex items-center"><input type="radio" name="q1" value="A" class="mr-2"><span>A) 有序类别</span></label>
+                            <label class="flex items-center"><input type="radio" name="q1" value="B" class="mr-2"><span>B) 无序类别</span></label>
+                            <label class="flex items-center"><input type="radio" name="q1" value="C" class="mr-2"><span>C) 数值类别</span></label>
                         </div>
                     </div>
-
                     <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                        <h3 class="font-bold text-gray-800 mb-4">2. 独热编码适用于什么类型的特征？</h3>
+                        <h3 class="font-bold text-gray-800 mb-4">2. 独热编码适用于什么类型的类别？</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center"><input type="radio" name="q2" value="A" class="mr-2"><span>A) 数值型特征</span></label>
-                            <label class="flex items-center"><input type="radio" name="q2" value="B" class="mr-2"><span>B) 分类型特征</span></label>
-                            <label class="flex items-center"><input type="radio" name="q2" value="C" class="mr-2"><span>C) 时间型特征</span></label>
-                            <label class="flex items-center"><input type="radio" name="q2" value="D" class="mr-2"><span>D) 文本特征</span></label>
+                            <label class="flex items-center"><input type="radio" name="q2" value="A" class="mr-2"><span>A) 有序类别</span></label>
+                            <label class="flex items-center"><input type="radio" name="q2" value="B" class="mr-2"><span>B) 无序类别</span></label>
+                            <label class="flex items-center"><input type="radio" name="q2" value="C" class="mr-2"><span>C) 数值类别</span></label>
                         </div>
                     </div>
-
                     <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                        <h3 class="font-bold text-gray-800 mb-4">3. pandas中进行独热编码的方法是？</h3>
+                        <h3 class="font-bold text-gray-800 mb-4">3. StandardScaler的作用是？</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center"><input type="radio" name="q3" value="A" class="mr-2"><span>A) pd.get_dummies()</span></label>
-                            <label class="flex items-center"><input type="radio" name="q3" value="B" class="mr-2"><span>B) pd.encode()</span></label>
-                            <label class="flex items-center"><input type="radio" name="q3" value="C" class="mr-2"><span>C) pd.transform()</span></label>
-                            <label class="flex items-center"><input type="radio" name="q3" value="D" class="mr-2"><span>D) pd.normalize()</span></label>
+                            <label class="flex items-center"><input type="radio" name="q3" value="A" class="mr-2"><span>A) 数据归一化到0-1</span></label>
+                            <label class="flex items-center"><input type="radio" name="q3" value="B" class="mr-2"><span>B) 数据标准化到均值0标准差1</span></label>
+                            <label class="flex items-center"><input type="radio" name="q3" value="C" class="mr-2"><span>C) 数据取对数</span></label>
                         </div>
                     </div>
-
                     <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                        <h3 class="font-bold text-gray-800 mb-4">4. 标准化的主要作用是什么？</h3>
+                        <h3 class="font-bold text-gray-800 mb-4">4. pd.get_dummies()用于？</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center"><input type="radio" name="q4" value="A" class="mr-2"><span>A) 增加数据噪声</span></label>
-                            <label class="flex items-center"><input type="radio" name="q4" value="B" class="mr-2"><span>B) 使特征具有相同的尺度</span></label>
-                            <label class="flex items-center"><input type="radio" name="q4" value="C" class="mr-2"><span>C) 减少特征数量</span></label>
-                            <label class="flex items-center"><input type="radio" name="q4" value="D" class="mr-2"><span>D) 改变数据分布</span></label>
+                            <label class="flex items-center"><input type="radio" name="q4" value="A" class="mr-2"><span>A) 标签编码</span></label>
+                            <label class="flex items-center"><input type="radio" name="q4" value="B" class="mr-2"><span>B) 独热编码</span></label>
+                            <label class="flex items-center"><input type="radio" name="q4" value="C" class="mr-2"><span>C) 数值编码</span></label>
                         </div>
                     </div>
-
                     <div class="bg-white rounded-xl p-6 shadow-md mb-6">
-                        <h3 class="font-bold text-gray-800 mb-4">5. 衍生特征是指？</h3>
+                        <h3 class="font-bold text-gray-800 mb-4">5. 特征工程的目的是？</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center"><input type="radio" name="q5" value="A" class="mr-2"><span>A) 原始数据中已有的特征</span></label>
-                            <label class="flex items-center"><input type="radio" name="q5" value="B" class="mr-2"><span>B) 通过现有特征计算得到的新特征</span></label>
-                            <label class="flex items-center"><input type="radio" name="q5" value="C" class="mr-2"><span>C) 从外部数据源获取的特征</span></label>
-                            <label class="flex items-center"><input type="radio" name="q5" value="D" class="mr-2"><span>D) 随机生成的特征</span></label>
+                            <label class="flex items-center"><input type="radio" name="q5" value="A" class="mr-2"><span>A) 提高模型性能</span></label>
+                            <label class="flex items-center"><input type="radio" name="q5" value="B" class="mr-2"><span>B) 增加数据量</span></label>
+                            <label class="flex items-center"><input type="radio" name="q5" value="C" class="mr-2"><span>C) 删除数据</span></label>
                         </div>
                     </div>
                 </div>
-
                 <div class="text-center">
-                    <button id="submit-exam" class="bg-yellow-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-yellow-700 transition-colors">
+                    <button id="submit-exam" class="bg-purple-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-purple-700">
                         <i class="fa fa-paper-plane mr-2"></i>提交考试
                     </button>
                 </div>
-
                 <div id="exam-result" class="mt-8 hidden">
-                    <div class="bg-white rounded-xl p-6 shadow-md">
-                        <div class="text-center">
-                            <div id="score-circle" class="w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4"></div>
-                            <h3 id="score-text" class="text-2xl font-bold text-gray-800 mb-2"></h3>
-                            <p id="result-text" class="text-gray-600"></p>
-                        </div>
-                        <div id="answer-details" class="mt-6"></div>
+                    <div class="bg-white rounded-xl p-6 shadow-md text-center">
+                        <div id="score-circle" class="w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 bg-yellow-100"></div>
+                        <h3 id="score-text" class="text-2xl font-bold text-gray-800 mb-2"></h3>
+                        <p id="result-text" class="text-gray-600"></p>
                     </div>
                 </div>
             </div>
@@ -303,18 +326,13 @@ print("\n处理后的特征数量:", df.shape[1])</code></pre>
     </section>
 
     <footer class="bg-white py-8 border-t border-gray-200 mt-8">
-        <div class="container mx-auto px-4">
-            <div class="text-center">
-                <p class="text-gray-600">© 2026 Python数据分析实战训练营</p>
-            </div>
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-gray-600">© 2026 Python数据分析实战训练营</p>
         </div>
     </footer>
 
     <script>
-        document.getElementById('menu-toggle').addEventListener('click', function() {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
-        });
-
+        document.getElementById('menu-toggle').addEventListener('click', function() { document.getElementById('mobile-menu').classList.toggle('hidden'); });
         const tabs = ['learn', 'practice', 'test'];
         tabs.forEach(tab => {
             document.getElementById(`tab-${tab}`).addEventListener('click', function() {
@@ -328,116 +346,84 @@ print("\n处理后的特征数量:", df.shape[1])</code></pre>
                 document.getElementById(`tab-${tab}`).classList.remove('text-gray-600');
             });
         });
+        document.getElementById('complete-learn').addEventListener('click', function() { alert('已标记为已学习！'); });
+        const practiceNavButtons = ['practice-nav-1', 'practice-nav-2', 'practice-nav-3'];
+        const practiceDetails = ['practice-detail-1', 'practice-detail-2', 'practice-detail-3'];
+        const codeTemplates = {
+            1: `import pandas as pd
+from sklearn.preprocessing import LabelEncoder
 
-        document.getElementById('complete-learn').addEventListener('click', function() {
-            saveProgress('project8', 'learned');
-            alert('已标记为已学习！');
+data = {
+    'name': ['张三', '李四', '王五', '赵六'],
+    'education': ['高中', '本科', '硕士', '博士']
+}
+df = pd.DataFrame(data)
+
+# 标签编码
+le = LabelEncoder()
+df['education_encoded'] = le.fit_transform(df['education'])
+print(df)`,
+            2: `import pandas as pd
+from sklearn.preprocessing import StandardScaler
+
+data = {'age': [25, 30, 35, 40, 45], 'income': [5000, 8000, 12000, 15000, 20000]}
+df = pd.DataFrame(data)
+
+# 标准化
+scaler = StandardScaler()
+df[['age_scaled', 'income_scaled']] = scaler.fit_transform(df)
+print(df)`,
+            3: `import pandas as pd
+
+data = {'city': ['北京', '上海', '广州', '深圳']}
+df = pd.DataFrame(data)
+
+# 独热编码
+df_encoded = pd.get_dummies(df, columns=['city'])
+print(df_encoded)`
+        };
+        practiceNavButtons.forEach((btn, index) => {
+            document.getElementById(btn).addEventListener('click', function() {
+                practiceNavButtons.forEach((b, i) => {
+                    document.getElementById(b).classList.remove('bg-yellow-50', 'text-yellow-600');
+                    document.getElementById(b).classList.add('text-gray-600');
+                    document.getElementById(practiceDetails[i]).classList.add('hidden');
+                });
+                this.classList.add('bg-yellow-50', 'text-yellow-600');
+                this.classList.remove('text-gray-600');
+                document.getElementById(practiceDetails[index]).classList.remove('hidden');
+                document.getElementById('code-editor').value = codeTemplates[index + 1];
+            });
         });
-
-        document.getElementById('complete-practice').addEventListener('click', function() {
-            saveProgress('project8', 'practiced');
-            alert('已标记为已练习！');
+        document.getElementById('run-code').addEventListener('click', function() {
+            document.getElementById('code-output').textContent = '> 正在执行...\n\n> 特征工程完成！';
         });
-
-        function saveProgress(projectId, type) {
-            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
-            if (!progress[projectId]) {
-                progress[projectId] = { learned: false, practiced: false, tested: false };
-            }
-            progress[projectId][type] = true;
-            localStorage.setItem('learningProgress', JSON.stringify(progress));
-        }
-
-        document.getElementById('check-practice1').addEventListener('click', function() {
-            const answer = document.getElementById('practice1-answer').value;
-            const result = document.getElementById('practice1-result');
-            result.classList.remove('hidden');
-            if (answer.includes('avg_order_value') && answer.includes('/')) {
-                result.textContent = '✓ 正确！df["avg_order_value"] = df["total_spent"] / df["order_count"]';
-                result.classList.remove('result-wrong');
-                result.classList.add('result-correct');
-            } else {
-                result.textContent = '✗ 答案不完全正确。提示：avg_order_value = total_spent / order_count';
-                result.classList.remove('result-correct');
-                result.classList.add('result-wrong');
-            }
+        document.getElementById('reset-code').addEventListener('click', function() {
+            const idx = parseInt(document.querySelector('.bg-yellow-50').id.slice(-1));
+            document.getElementById('code-editor').value = codeTemplates[idx];
         });
-
-        document.getElementById('check-practice2').addEventListener('click', function() {
-            const answer = document.getElementById('practice2-answer').value;
-            const result = document.getElementById('practice2-result');
-            result.classList.remove('hidden');
-            if (answer.includes('get_dummies')) {
-                result.textContent = '✓ 正确！使用pd.get_dummies(df, columns=["category"])';
-                result.classList.remove('result-wrong');
-                result.classList.add('result-correct');
-            } else {
-                result.textContent = '✗ 答案不完全正确。提示：使用pd.get_dummies()方法。';
-                result.classList.remove('result-correct');
-                result.classList.add('result-wrong');
-            }
+        document.getElementById('show-answer').addEventListener('click', function() {
+            const idx = parseInt(document.querySelector('.bg-yellow-50').id.slice(-1));
+            document.getElementById('code-editor').value = codeTemplates[idx];
         });
-
-        document.getElementById('check-practice3').addEventListener('click', function() {
-            const answer = document.getElementById('practice3-answer').value;
-            const result = document.getElementById('practice3-result');
-            result.classList.remove('hidden');
-            if (answer.includes('StandardScaler')) {
-                result.textContent = '✓ 正确！使用sklearn.preprocessing.StandardScaler进行标准化。';
-                result.classList.remove('result-wrong');
-                result.classList.add('result-correct');
-            } else {
-                result.textContent = '✗ 答案不完全正确。提示：从sklearn.preprocessing导入StandardScaler。';
-                result.classList.remove('result-correct');
-                result.classList.add('result-wrong');
-            }
+        document.getElementById('start-test').addEventListener('click', function() {
+            document.getElementById('content-practice').classList.add('hidden');
+            document.getElementById('content-test').classList.remove('hidden');
         });
-
-        const correctAnswers = { q1: 'B', q2: 'B', q3: 'A', q4: 'B', q5: 'B' };
-
+        document.getElementById('auto-save').addEventListener('click', function() { alert('代码已保存！'); });
+        const correctAnswers = { q1: 'A', q2: 'B', q3: 'B', q4: 'B', q5: 'A' };
         document.getElementById('submit-exam').addEventListener('click', function() {
             let score = 0;
-            const answers = {};
             Object.keys(correctAnswers).forEach(q => {
                 const selected = document.querySelector(`input[name="${q}"]:checked`);
-                answers[q] = selected ? selected.value : null;
-                if (answers[q] === correctAnswers[q]) score += 20;
+                if (selected && selected.value === correctAnswers[q]) score += 20;
             });
-
             document.getElementById('exam-questions').classList.add('hidden');
             document.getElementById('submit-exam').classList.add('hidden');
             document.getElementById('exam-result').classList.remove('hidden');
-
-            const scoreCircle = document.getElementById('score-circle');
-            const scoreText = document.getElementById('score-text');
-            const resultText = document.getElementById('result-text');
-            const answerDetails = document.getElementById('answer-details');
-
-            scoreText.textContent = `得分：${score}/100`;
-            
-            if (score >= 80) {
-                scoreCircle.className = 'w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 bg-yellow-100';
-                scoreCircle.innerHTML = '<span class="text-3xl">🎉</span>';
-                resultText.textContent = '优秀！你已经掌握了特征工程的基本知识。';
-                saveProgress('project8', 'tested');
-            } else if (score >= 60) {
-                scoreCircle.className = 'w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 bg-yellow-100';
-                scoreCircle.innerHTML = '<span class="text-3xl">👍</span>';
-                resultText.textContent = '良好！继续努力，争取更高分数。';
-            } else {
-                scoreCircle.className = 'w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 bg-red-100';
-                scoreCircle.innerHTML = '<span class="text-3xl">📚</span>';
-                resultText.textContent = '需要复习一下相关知识，加油！';
-            }
-
-            let details = '<h4 class="font-bold text-gray-800 mb-4">答案详情</h4><div class="space-y-2">';
-            Object.keys(correctAnswers).forEach((q, i) => {
-                const isCorrect = answers[q] === correctAnswers[q];
-                details += `<p class="${isCorrect ? 'text-green-600' : 'text-red-600'}">
-                    ${i+1}. 你的答案: ${answers[q] || '未作答'} | 正确答案: ${correctAnswers[q]} ${isCorrect ? '✓' : '✗'}
-                </p>`;
-            });
-            answerDetails.innerHTML = details;
+            document.getElementById('score-text').textContent = `得分：${score}/100`;
+            document.getElementById('score-circle').innerHTML = score >= 80 ? '<span class="text-3xl">🎉</span>' : '<span class="text-3xl">👍</span>';
+            document.getElementById('result-text').textContent = score >= 80 ? '优秀！' : '继续努力！';
         });
     </script>
 </body>
