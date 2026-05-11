@@ -3,229 +3,374 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>项目02：销售数据分组聚合 - Python训练营</title>
+    <title>项目01：电商订单数据清洗 - Python训练营</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pyodide@0.24.1/dist/pyodide.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
-        
+        :root {
+            --primary: #00f5ff;
+            --primary-rgb: 0, 245, 255;
+            --secondary: #8b5cf6;
+            --accent: #00ff88;
+            --bg-dark: #0a0a1a;
+            --bg-panel: rgba(20, 20, 40, 0.8);
+            --text: #e0e0e0;
+            --text-muted: #9ca3af;
+            --border: rgba(0, 245, 255, 0.2);
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+        .light-theme {
+            --bg-dark: #f3f4f6;
+            --bg-panel: rgba(255, 255, 255, 0.95);
+            --text: #1f2937;
+            --text-muted: #6b7280;
+            --border: rgba(0, 0, 0, 0.1);
+        }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
         body {
             font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            background: #0a0a1a;
-            color: #e0e0e0;
+            background: var(--bg-dark);
+            color: var(--text);
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
+            transition: background 0.3s, color 0.3s;
         }
-        
         body::before {
             content: '';
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
             background: 
-                radial-gradient(circle at 20% 20%, rgba(34, 197, 94, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(0, 245, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 20% 20%, rgba(var(--primary-rgb), 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
                 linear-gradient(rgba(10, 10, 26, 0.95), rgba(10, 10, 26, 0.95)),
-                repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(34, 197, 94, 0.02) 50px, rgba(34, 197, 94, 0.02) 51px),
-                repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(34, 197, 94, 0.02) 50px, rgba(34, 197, 94, 0.02) 51px);
+                repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(var(--primary-rgb), 0.03) 50px, rgba(var(--primary-rgb), 0.03) 51px),
+                repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(var(--primary-rgb), 0.03) 50px, rgba(var(--primary-rgb), 0.03) 51px);
             pointer-events: none;
             z-index: -1;
         }
-        
         .scanline {
             position: fixed;
             top: 0; left: 0; right: 0;
             height: 2px;
-            background: linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.5), transparent);
+            background: linear-gradient(90deg, transparent, rgba(var(--primary-rgb), 0.5), transparent);
             animation: scanline 4s linear infinite;
             pointer-events: none;
             z-index: 9999;
         }
-        
-        @keyframes scanline {
-            0% { top: 0; opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { top: 100%; opacity: 0; }
-        }
-        
+        @keyframes scanline { 0% { top: 0; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
         .glass-panel {
-            background: rgba(20, 20, 40, 0.8);
+            background: var(--bg-panel);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(34, 197, 94, 0.2);
-            box-shadow: 0 0 20px rgba(34, 197, 94, 0.1), inset 0 0 20px rgba(34, 197, 94, 0.05);
+            border: 1px solid var(--border);
+            box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.1), inset 0 0 20px rgba(var(--primary-rgb), 0.05);
         }
-        
         .neon-border {
-            border: 1px solid rgba(34, 197, 94, 0.5);
-            box-shadow: 0 0 10px rgba(34, 197, 94, 0.3), inset 0 0 10px rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(var(--primary-rgb), 0.5);
+            box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.3), inset 0 0 10px rgba(var(--primary-rgb), 0.1);
         }
-        
         .neon-text {
-            background: linear-gradient(135deg, #22c55e, #00f5ff);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-shadow: 0 0 30px rgba(34, 197, 94, 0.5);
+            text-shadow: 0 0 30px rgba(var(--primary-rgb), 0.5);
         }
-        
         .neon-button {
-            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(0, 245, 255, 0.1));
-            border: 1px solid rgba(34, 197, 94, 0.5);
-            color: #22c55e;
+            background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.2), rgba(139, 92, 246, 0.2));
+            border: 1px solid rgba(var(--primary-rgb), 0.5);
+            color: var(--primary);
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }
-        
         .neon-button::before {
             content: '';
             position: absolute;
             top: 0; left: -100%; width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.3), transparent);
+            background: linear-gradient(90deg, transparent, rgba(var(--primary-rgb), 0.3), transparent);
             transition: left 0.5s ease;
         }
-        
         .neon-button:hover::before { left: 100%; }
-        
-        .neon-button:hover {
-            box-shadow: 0 0 20px rgba(34, 197, 94, 0.5), 0 0 40px rgba(34, 197, 94, 0.3);
-            border-color: #22c55e;
-        }
-        
+        .neon-button:hover { box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.5), 0 0 40px rgba(var(--primary-rgb), 0.3); border-color: var(--primary); }
         .run-button {
             background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 136, 0.1));
             border: 1px solid rgba(0, 255, 136, 0.5);
             color: #00ff88;
         }
-        
-        .run-button:hover {
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5), 0 0 40px rgba(0, 255, 136, 0.3);
-            border-color: #00ff88;
-        }
-        
+        .run-button:hover { box-shadow: 0 0 20px rgba(0, 255, 136, 0.5), 0 0 40px rgba(0, 255, 136, 0.3); border-color: #00ff88; }
         .test-button {
             background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(139, 92, 246, 0.1));
             border: 1px solid rgba(139, 92, 246, 0.5);
             color: #8b5cf6;
         }
-        
-        .test-button:hover {
-            box-shadow: 0 0 20px rgba(139, 92, 246, 0.5), 0 0 40px rgba(139, 92, 246, 0.3);
-            border-color: #8b5cf6;
-        }
-        
+        .test-button:hover { box-shadow: 0 0 20px rgba(139, 92, 246, 0.5), 0 0 40px rgba(139, 92, 246, 0.3); border-color: #8b5cf6; }
         .nav-tab { transition: all 0.3s ease; position: relative; }
-        
         .nav-tab::after {
             content: '';
             position: absolute;
             bottom: 0; left: 50%;
             width: 0; height: 2px;
-            background: linear-gradient(90deg, #22c55e, #00f5ff);
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
             transition: all 0.3s ease;
             transform: translateX(-50%);
         }
-        
         .nav-tab:hover::after, .nav-tab.active::after { width: 80%; }
-        .nav-tab.active { color: #22c55e; text-shadow: 0 0 10px rgba(34, 197, 94, 0.5); }
-        
+        .nav-tab.active { color: var(--primary); text-shadow: 0 0 10px rgba(var(--primary-rgb), 0.5); }
         .code-block {
             background: rgba(10, 10, 26, 0.9);
-            border: 1px solid rgba(34, 197, 94, 0.3);
-            color: #00ff88;
+            border: 1px solid rgba(var(--primary-rgb), 0.3);
+            color: var(--accent);
             padding: 1rem;
             border-radius: 0.5rem;
             overflow-x: auto;
             margin: 0.5rem 0;
             font-family: 'Courier New', monospace;
         }
-        
         .practice-nav-btn {
             background: rgba(20, 20, 40, 0.6);
-            border: 1px solid rgba(34, 197, 94, 0.2);
-            color: #e0e0e0;
+            border: 1px solid rgba(var(--primary-rgb), 0.2);
+            color: var(--text);
             transition: all 0.3s ease;
         }
-        
-        .practice-nav-btn:hover {
-            background: rgba(34, 197, 94, 0.1);
-            border-color: rgba(34, 197, 94, 0.5);
-        }
-        
+        .practice-nav-btn:hover { background: rgba(var(--primary-rgb), 0.1); border-color: rgba(var(--primary-rgb), 0.5); }
         .practice-nav-btn.active {
-            background: rgba(34, 197, 94, 0.15);
-            border-color: #22c55e;
-            color: #22c55e;
-            box-shadow: 0 0 15px rgba(34, 197, 94, 0.3);
+            background: rgba(var(--primary-rgb), 0.15);
+            border-color: var(--primary);
+            color: var(--primary);
+            box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.3);
         }
-        
         .detail-card {
             background: rgba(20, 20, 40, 0.8);
             border: 1px solid rgba(255, 165, 0, 0.3);
             box-shadow: 0 0 15px rgba(255, 165, 0, 0.1);
         }
-        
         .code-card {
             background: rgba(10, 10, 26, 0.95);
             border: 1px solid rgba(0, 255, 136, 0.3);
             box-shadow: 0 0 15px rgba(0, 255, 136, 0.1);
         }
-        
         .tip-card {
             background: rgba(20, 20, 40, 0.8);
             border: 1px solid rgba(255, 215, 0, 0.3);
             box-shadow: 0 0 15px rgba(255, 215, 0, 0.1);
         }
-        
         .code-editor {
             background: rgba(5, 5, 15, 0.95);
-            color: #00ff88;
+            color: var(--accent);
             font-family: 'Courier New', monospace;
             border: none;
             resize: none;
             outline: none;
+            line-height: 1.6;
+            tab-size: 4;
         }
-        
+        .code-editor::placeholder { color: rgba(0, 255, 136, 0.3); }
         .terminal-output {
             background: rgba(5, 5, 15, 0.95);
-            color: #00ff88;
+            color: var(--accent);
             font-family: 'Courier New', monospace;
         }
-        
         .file-tab {
             background: rgba(30, 30, 50, 0.8);
-            border-bottom: 1px solid rgba(34, 197, 94, 0.2);
+            border-bottom: 1px solid rgba(var(--primary-rgb), 0.2);
         }
-        
         .toolbar {
             background: rgba(20, 20, 40, 0.9);
-            border: 1px solid rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(var(--primary-rgb), 0.2);
             border-bottom: none;
         }
-        
         .learning-card {
-            background: rgba(20, 20, 40, 0.8);
-            border: 1px solid rgba(34, 197, 94, 0.2);
-            box-shadow: 0 0 20px rgba(34, 197, 94, 0.1);
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.1);
         }
-        
         .exam-card {
-            background: rgba(20, 20, 40, 0.8);
+            background: var(--bg-panel);
             border: 1px solid rgba(139, 92, 246, 0.3);
             box-shadow: 0 0 20px rgba(139, 92, 246, 0.1);
         }
-        
-        input[type="radio"] { accent-color: #22c55e; }
-        
+        input[type="radio"] { accent-color: var(--primary); }
         .score-circle {
-            background: rgba(20, 20, 40, 0.8);
-            border: 2px solid rgba(34, 197, 94, 0.5);
-            box-shadow: 0 0 30px rgba(34, 197, 94, 0.3);
+            background: var(--bg-panel);
+            border: 2px solid rgba(var(--primary-rgb), 0.5);
+            box-shadow: 0 0 30px rgba(var(--primary-rgb), 0.3);
         }
-        
+        .glow-text { text-shadow: 0 0 10px currentColor; }
+        .theme-toggle {
+            width: 50px;
+            height: 26px;
+            background: rgba(var(--primary-rgb), 0.2);
+            border-radius: 13px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .theme-toggle::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 50%;
+            top: 3px;
+            left: 3px;
+            transition: all 0.3s;
+        }
+        .theme-toggle.active { background: rgba(var(--primary-rgb), 0.4); }
+        .theme-toggle.active::after { left: 27px; }
+        .modal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+        .tooltip {
+            position: relative;
+        }
+        .tooltip::after {
+            content: attr(data-tip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 100;
+        }
+        .tooltip:hover::after { opacity: 1; visibility: visible; }
+        .file-tree-item { padding: 0.25rem 0.5rem; cursor: pointer; transition: all 0.2s; }
+        .file-tree-item:hover { background: rgba(var(--primary-rgb), 0.1); }
+        .file-tree-item.active { background: rgba(var(--primary-rgb), 0.2); color: var(--primary); }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .status-running { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .status-success { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+        .status-error { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .breadcrumb-item { color: var(--text-muted); transition: color 0.2s; }
+        .breadcrumb-item:hover { color: var(--primary); }
+        .breadcrumb-item.active { color: var(--primary); }
+        .split-handle {
+            background: rgba(var(--primary-rgb), 0.3);
+            cursor: ns-resize;
+            transition: background 0.2s;
+        }
+        .split-handle:hover { background: rgba(var(--primary-rgb), 0.5); }
+        .shortcut-key {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .history-item {
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .history-item:hover { background: rgba(var(--primary-rgb), 0.1); }
+        .favorite-btn.active { color: #fbbf24; }
+        .difficulty-badge { padding: 0.125rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem; }
+        .difficulty-easy { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+        .difficulty-medium { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .difficulty-hard { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .completion-animation {
+            animation: completionPop 0.5s ease-out;
+        }
+        @keyframes completionPop {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .code-highlight-line {
+            background: rgba(var(--primary-rgb), 0.1);
+            border-left: 3px solid var(--primary);
+        }
+        .autocomplete-dropdown {
+            position: absolute;
+            background: rgba(20, 20, 40, 0.98);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+        .autocomplete-dropdown.active { display: block; }
+        .autocomplete-item {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .autocomplete-item:hover, .autocomplete-item.selected {
+            background: rgba(var(--primary-rgb), 0.2);
+        }
+        .loading-spinner {
+            border: 3px solid rgba(var(--primary-rgb), 0.1);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 1rem 1.5rem;
+            z-index: 2000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+        }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .kbd {
+            display: inline-block;
+            padding: 0.2em 0.5em;
+            font: 80% sans-serif;
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
     </style>
 </head>
 <body>
@@ -237,50 +382,82 @@
                 <div class="text-xl font-bold neon-text" style="font-family: 'Orbitron', sans-serif;">
                     <a href="../../index.html">Python训练营</a>
                 </div>
-                <div class="hidden md:flex space-x-6">
-                    <a href="../../index.html#home" class="text-gray-300 hover:text-green-400 font-medium transition-colors">首页</a>
-                    <a href="../../index.html#projects" class="text-gray-300 hover:text-green-400 font-medium transition-colors">学习项目</a>
-                    <a href="../../index.html#my-progress" class="text-gray-300 hover:text-green-400 font-medium transition-colors">学习进度</a>
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="../../index.html#home" class="text-gray-300 hover:text-cyan-400 font-medium transition-colors">首页</a>
+                    <a href="../../index.html#projects" class="text-gray-300 hover:text-cyan-400 font-medium transition-colors">学习项目</a>
+                    <a href="../../index.html#my-progress" class="text-gray-300 hover:text-cyan-400 font-medium transition-colors">学习进度</a>
+                    <div class="flex items-center space-x-4 ml-4">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa fa-moon-o text-gray-400"></i>
+                            <div id="theme-toggle" class="theme-toggle" onclick="toggleTheme()"></div>
+                            <i class="fa fa-sun-o text-yellow-400"></i>
+                        </div>
+                    </div>
                 </div>
-                <div class="md:hidden">
-                    <button id="menu-toggle" class="text-green-400 focus:outline-none"><i class="fa fa-bars text-xl"></i></button>
+                <div class="md:hidden flex items-center space-x-2">
+                    <div id="theme-toggle-mobile" class="theme-toggle" onclick="toggleTheme()"></div>
+                    <button id="menu-toggle" class="text-cyan-400 focus:outline-none"><i class="fa fa-bars text-xl"></i></button>
                 </div>
             </div>
             <div id="mobile-menu" class="md:hidden hidden mt-4 pb-2">
-                <a href="../../index.html#home" class="block py-2 text-gray-300 hover:text-green-400">首页</a>
-                <a href="../../index.html#projects" class="block py-2 text-gray-300 hover:text-green-400">学习项目</a>
-                <a href="../../index.html#my-progress" class="block py-2 text-gray-300 hover:text-green-400">学习进度</a>
+                <a href="../../index.html#home" class="block py-2 text-gray-300 hover:text-cyan-400">首页</a>
+                <a href="../../index.html#projects" class="block py-2 text-gray-300 hover:text-cyan-400">学习项目</a>
+                <a href="../../index.html#my-progress" class="block py-2 text-gray-300 hover:text-cyan-400">学习进度</a>
             </div>
         </div>
     </nav>
 
     <section class="pt-20 pb-8 relative overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-r from-green-900/30 to-cyan-900/30"></div>
-        <div class="absolute inset-0" style="background: radial-gradient(circle at 30% 50%, rgba(34, 197, 94, 0.1) 0%, transparent 50%), radial-gradient(circle at 70% 50%, rgba(0, 245, 255, 0.1) 0%, transparent 50%);"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-900/30 to-purple-900/30"></div>
         <div class="container mx-auto px-4 relative z-10">
-            <div class="flex items-center">
-                <span class="glass-panel text-green-400 px-4 py-1 rounded-full text-sm font-medium mr-4 neon-border" style="font-family: 'Orbitron', sans-serif;">PROJECT 02</span>
-                <h1 class="text-2xl md:text-3xl font-bold neon-text">销售数据分组聚合</h1>
+            <div class="flex items-center space-x-2 text-sm text-gray-400 mb-2">
+                <a href="../../index.html" class="hover:text-cyan-400">首页</a>
+                <i class="fa fa-chevron-right text-xs"></i>
+                <a href="../../index.html#projects" class="hover:text-cyan-400">学习项目</a>
+                <i class="fa fa-chevron-right text-xs"></i>
+                <span class="text-cyan-400">项目01</span>
             </div>
-            <p class="text-gray-400 mt-4">按产品、地区、时间进行分组，计算销售统计指标</p>
-            <div class="flex items-center mt-4 text-gray-500">
-                <i class="fa fa-file-csv mr-2 text-green-400"></i>
-                <span>数据文件: <span class="text-green-400">retail_orders.csv</span></span>
+            <div class="flex items-center">
+                <span class="glass-panel text-cyan-400 px-4 py-1 rounded-full text-sm font-medium mr-4 neon-border" style="font-family: 'Orbitron', sans-serif;">PROJECT 01</span>
+                <h1 class="text-2xl md:text-3xl font-bold neon-text">电商订单数据清洗</h1>
+                <button id="favorite-btn" class="ml-4 text-gray-400 hover:text-yellow-400 transition-colors" onclick="toggleFavorite()">
+                    <i class="fa fa-star text-xl"></i>
+                </button>
+            </div>
+            <p class="text-gray-400 mt-4">处理缺失值、异常值，格式化时间列，计算总价</p>
+            <div class="flex items-center mt-4 space-x-4">
+                <span class="text-gray-500"><i class="fa fa-database mr-2 text-cyan-400"></i>数据文件: <span class="text-cyan-400">retail_orders.csv</span></span>
+                <span class="text-gray-500"><i class="fa fa-signal mr-2 text-green-400"></i>难度: <span class="difficulty-badge difficulty-easy">入门</span></span>
+                <span class="text-gray-500"><i class="fa fa-clock-o mr-2 text-yellow-400"></i>预计: <span class="text-yellow-400">30分钟</span></span>
+            </div>
+            <div id="daily-challenge" class="mt-4 glass-panel rounded-lg p-4 hidden">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
+                        <i class="fa fa-bolt text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-yellow-400">每日一练</h4>
+                        <p class="text-sm text-gray-400" id="daily-challenge-text"></p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <section class="glass-panel border-b border-green-500/20">
+    <section class="glass-panel border-b border-cyan-500/20">
         <div class="container mx-auto px-4">
             <div class="flex overflow-x-auto">
-                <button id="tab-learn" class="nav-tab active flex-shrink-0 px-6 py-4 text-green-400 font-medium">
+                <button id="tab-learn" class="nav-tab active flex-shrink-0 px-6 py-4 text-cyan-400 font-medium">
                     <i class="fa fa-book mr-2"></i>学习
                 </button>
-                <button id="tab-practice" class="nav-tab flex-shrink-0 px-6 py-4 text-gray-400 hover:text-green-400 font-medium">
+                <button id="tab-practice" class="nav-tab flex-shrink-0 px-6 py-4 text-gray-400 hover:text-cyan-400 font-medium">
                     <i class="fa fa-code mr-2"></i>练习
                 </button>
-                <button id="tab-test" class="nav-tab flex-shrink-0 px-6 py-4 text-gray-400 hover:text-green-400 font-medium">
+                <button id="tab-test" class="nav-tab flex-shrink-0 px-6 py-4 text-gray-400 hover:text-cyan-400 font-medium">
                     <i class="fa fa-file-text mr-2"></i>考试
+                </button>
+                <button id="tab-history" class="nav-tab flex-shrink-0 px-6 py-4 text-gray-400 hover:text-cyan-400 font-medium">
+                    <i class="fa fa-history mr-2"></i>历史
                 </button>
             </div>
         </div>
@@ -292,113 +469,123 @@
                 <div class="learning-card rounded-xl p-6 mb-8 neon-border">
                     <h2 class="text-xl font-bold neon-text mb-4">学习目标</h2>
                     <ul class="list-disc list-inside text-gray-400 space-y-2">
-                        <li>理解分组聚合的概念和用途</li>
-                        <li>掌握groupby方法的基本用法</li>
-                        <li>学会计算常用统计指标（求和、均值、计数等）</li>
-                        <li>掌握多维度分组和聚合操作</li>
-                        <li>学会使用agg方法进行自定义聚合</li>
+                        <li>了解数据清洗的基本概念和重要性</li>
+                        <li>掌握处理缺失值的常用方法</li>
+                        <li>学会识别和处理异常值</li>
+                        <li>掌握时间列的格式化方法</li>
+                        <li>能够计算订单总价等关键指标</li>
                     </ul>
                 </div>
 
                 <div class="learning-card rounded-xl p-6 mb-6">
-                    <h3 class="text-lg font-bold text-green-400 mb-4">1. 分组聚合概述</h3>
-                    <p class="text-gray-400 mb-4">分组聚合是数据分析中常用的操作，它将数据按照某个或某些列进行分组，然后对每个组进行聚合计算。</p>
+                    <h3 class="text-lg font-bold text-cyan-400 mb-4">1. 数据清洗概述</h3>
+                    <p class="text-gray-400 mb-4">数据清洗是数据分析的第一步，也是最重要的一步。它指的是对原始数据进行检查、清理和转换，以确保数据的质量和可用性。</p>
+                    <div class="tip-card rounded-lg p-4">
+                        <p class="text-yellow-400 text-sm"><i class="fa fa-lightbulb-o mr-2"></i><strong>小贴士：</strong>高质量的数据是高质量分析的基础。花时间做好数据清洗工作，可以避免后续分析中出现各种问题。</p>
+                    </div>
+                </div>
+
+                <div class="learning-card rounded-xl p-6 mb-6">
+                    <h3 class="text-lg font-bold text-cyan-400 mb-4">2. 处理缺失值</h3>
+                    <p class="text-gray-400 mb-4">缺失值是数据分析中常见的问题。常见的处理方法包括：</p>
+                    <ul class="list-disc list-inside text-gray-400 space-y-2 mb-4">
+                        <li><strong class="text-cyan-400">删除法</strong>：删除包含缺失值的行或列</li>
+                        <li><strong class="text-cyan-400">填充法</strong>：用均值、中位数、众数等填充</li>
+                        <li><strong class="text-cyan-400">插值法</strong>：使用线性插值等方法估计缺失值</li>
+                    </ul>
+                    <h4 class="font-bold text-gray-300 mb-2">代码示例：</h4>
                     <div class="code-block">
-                        <pre><code>import pandas as pd
+                        <pre><code class="language-python">import pandas as pd
+import numpy as np
 
 df = pd.read_csv('retail_orders.csv')
 
-print(df.head())</code></pre>
+# 检查缺失值
+print(df.isnull().sum())
+
+# 删除包含缺失值的行
+df_clean = df.dropna()
+
+# 用均值填充数值型缺失值
+df['age'].fillna(df['age'].mean(), inplace=True)
+
+# 用众数填充类别型缺失值
+df['gender'].fillna('Unknown', inplace=True)</code></pre>
                     </div>
+                    <button class="neon-button mt-3 px-4 py-2 rounded-lg text-sm" onclick="copyCode(this)">
+                        <i class="fa fa-copy mr-2"></i>复制代码
+                    </button>
                 </div>
 
                 <div class="learning-card rounded-xl p-6 mb-6">
-                    <h3 class="text-lg font-bold text-green-400 mb-4">2. 基本分组聚合</h3>
-                    <p class="text-gray-400 mb-4">使用groupby方法进行分组，然后使用聚合函数计算统计指标。</p>
+                    <h3 class="text-lg font-bold text-cyan-400 mb-4">3. 处理异常值</h3>
+                    <p class="text-gray-400 mb-4">异常值是指与其他数据点显著不同的值。常见的检测方法包括：</p>
+                    <ul class="list-disc list-inside text-gray-400 space-y-2 mb-4">
+                        <li><strong class="text-cyan-400">统计方法</strong>：使用3σ原则或IQR方法</li>
+                        <li><strong class="text-cyan-400">可视化方法</strong>：使用箱线图、散点图等</li>
+                    </ul>
+                    <h4 class="font-bold text-gray-300 mb-2">代码示例：</h4>
                     <div class="code-block">
-                        <pre><code>category_sales = df.groupby('category')['total_amount'].sum()
-print(category_sales)
+                        <pre><code class="language-python">def detect_outliers(df, column):
+    Q1 = df[column].quantile(0.25)
+    Q3 = df[column].quantile(0.75)
+    IQR = Q3 - Q1
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
+    outliers = df[(df[column] < lower_bound) | (df[column] > upper_bound)]
+    return outliers
 
-region_avg = df.groupby('region')['total_amount'].mean()
-print(region_avg)
-
-category_count = df.groupby('category')['order_id'].count()
-print(category_count)</code></pre>
+# 使用中位数替换异常值
+median_amount = df['amount'].median()
+df.loc[(df['amount'] < lower_bound) | (df['amount'] > upper_bound), 'amount'] = median_amount</code></pre>
                     </div>
+                    <button class="neon-button mt-3 px-4 py-2 rounded-lg text-sm" onclick="copyCode(this)">
+                        <i class="fa fa-copy mr-2"></i>复制代码
+                    </button>
                 </div>
 
                 <div class="learning-card rounded-xl p-6 mb-6">
-                    <h3 class="text-lg font-bold text-green-400 mb-4">3. 多维度分组</h3>
-                    <p class="text-gray-400 mb-4">可以按照多个列进行分组，实现更细粒度的分析。</p>
+                    <h3 class="text-lg font-bold text-cyan-400 mb-4">4. 时间列格式化</h3>
+                    <h4 class="font-bold text-gray-300 mb-2">代码示例：</h4>
                     <div class="code-block">
-                        <pre><code>region_category = df.groupby(['region', 'category'])['total_amount'].sum()
-print(region_category)
+                        <pre><code class="language-python">df['order_date'] = pd.to_datetime(df['order_date'])
 
-time_group = df.groupby(['year', 'month'])['total_amount'].sum()
-print(time_group)
+# 提取时间组件
+df['year'] = df['order_date'].dt.year
+df['month'] = df['order_date'].dt.month
+df['day'] = df['order_date'].dt.day
+df['weekday'] = df['order_date'].dt.weekday
 
-result = region_category.reset_index()
-print(result)</code></pre>
+# 格式化输出
+df['date_str'] = df['order_date'].dt.strftime('%Y-%m-%d')</code></pre>
                     </div>
+                    <button class="neon-button mt-3 px-4 py-2 rounded-lg text-sm" onclick="copyCode(this)">
+                        <i class="fa fa-copy mr-2"></i>复制代码
+                    </button>
                 </div>
 
                 <div class="learning-card rounded-xl p-6 mb-6">
-                    <h3 class="text-lg font-bold text-green-400 mb-4">4. 多个聚合函数</h3>
-                    <p class="text-gray-400 mb-4">使用agg方法可以同时计算多个统计指标。</p>
+                    <h3 class="text-lg font-bold text-cyan-400 mb-4">5. 计算总价</h3>
                     <div class="code-block">
-                        <pre><code>stats = df.groupby('category')['total_amount'].agg([
-    'sum', 'mean', 'max', 'min', 'count'
-])
-print(stats)
-
-stats_named = df.groupby('category')['total_amount'].agg(
-    总销售额='sum',
-    平均金额='mean',
-    最大金额='max',
-    订单数='count'
-)
-print(stats_named)</code></pre>
-                    </div>
-                </div>
-
-                <div class="learning-card rounded-xl p-6 mb-6">
-                    <h3 class="text-lg font-bold text-green-400 mb-4">5. 完整实战代码</h3>
-                    <div class="code-block">
-                        <pre><code>import pandas as pd
-
-df = pd.read_csv('retail_orders.csv')
-
+                        <pre><code class="language-python"># 计算总价
 df['total_amount'] = df['price'] * df['quantity']
 
-category_analysis = df.groupby('category')['total_amount'].agg(
-    总销售额='sum',
-    平均金额='mean',
-    订单数='count'
-)
-print("按产品类别分析:")
-print(category_analysis)
+# 统计分析
+total_sales = df['total_amount'].sum()
+avg_order_amount = df['total_amount'].mean()
+max_order_amount = df['total_amount'].max()
 
-region_analysis = df.groupby('region')['total_amount'].agg(
-    总销售额='sum',
-    平均金额='mean'
-)
-print("\n按地区分析:")
-print(region_analysis)
-
-multi_analysis = df.groupby(['region', 'category'])['total_amount'].sum()
-print("\n按地区和类别分析:")
-print(multi_analysis)
-
-df['order_date'] = pd.to_datetime(df['order_date'])
-df['month'] = df['order_date'].dt.month
-monthly_sales = df.groupby('month')['total_amount'].sum()
-print("\n月度销售趋势:")
-print(monthly_sales)</code></pre>
+print(f"总销售额: {total_sales:.2f}")
+print(f"平均订单金额: {avg_order_amount:.2f}")
+print(f"最大订单金额: {max_order_amount:.2f}")</code></pre>
                     </div>
+                    <button class="neon-button mt-3 px-4 py-2 rounded-lg text-sm" onclick="copyCode(this)">
+                        <i class="fa fa-copy mr-2"></i>复制代码
+                    </button>
                 </div>
 
                 <div class="text-center">
-                    <button id="complete-learn" class="neon-button px-8 py-3 rounded-lg font-medium">
+                    <button id="complete-learn" class="neon-button px-8 py-3 rounded-lg font-medium completion-animation">
                         <i class="fa fa-check-circle mr-2"></i>标记为已学习
                     </button>
                 </div>
@@ -407,146 +594,274 @@ print(monthly_sales)</code></pre>
     </section>
 
     <section id="content-practice" class="py-8 hidden">
-        <div class="container mx-auto px-4 h-[calc(100vh-180px)]">
-            <div class="flex flex-col lg:flex-row h-full">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col lg:flex-row h-[calc(100vh-220px)]">
                 <div class="lg:w-80 lg:h-full glass-panel rounded-xl overflow-hidden flex-shrink-0">
-                    <div class="px-4 py-3 border-b border-green-500/30">
+                    <div class="px-4 py-3 border-b border-cyan-500/30 flex justify-between items-center">
                         <h2 class="font-bold neon-text">练习导航</h2>
+                        <button class="neon-button px-3 py-1 rounded text-xs" onclick="showAllPractices()">
+                            <i class="fa fa-list mr-1"></i>全部
+                        </button>
                     </div>
-                    <div class="p-2 space-y-1">
+                    <div class="p-2 space-y-1 max-h-40 overflow-y-auto" id="practice-list-filter">
                         <button id="practice-nav-1" class="practice-nav-btn active w-full text-left px-4 py-3 rounded-lg font-medium">
-                            <i class="fa fa-code mr-2"></i>练习1：groupby基础
+                            <i class="fa fa-code mr-2"></i>练习1：处理缺失值
+                            <span class="difficulty-badge difficulty-easy text-xs ml-2">入门</span>
                         </button>
                         <button id="practice-nav-2" class="practice-nav-btn w-full text-left px-4 py-3 rounded-lg font-medium">
-                            <i class="fa fa-code mr-2"></i>练习2：多维度分组
+                            <i class="fa fa-code mr-2"></i>练习2：计算总价
+                            <span class="difficulty-badge difficulty-easy text-xs ml-2">入门</span>
                         </button>
                         <button id="practice-nav-3" class="practice-nav-btn w-full text-left px-4 py-3 rounded-lg font-medium">
-                            <i class="fa fa-code mr-2"></i>练习3：agg自定义聚合
+                            <i class="fa fa-code mr-2"></i>练习3：时间格式化
+                            <span class="difficulty-badge difficulty-medium text-xs ml-2">进阶</span>
+                        </button>
+                        <button id="practice-nav-4" class="practice-nav-btn w-full text-left px-4 py-3 rounded-lg font-medium">
+                            <i class="fa fa-code mr-2"></i>练习4：异常值检测
+                            <span class="difficulty-badge difficulty-medium text-xs ml-2">进阶</span>
+                        </button>
+                        <button id="practice-nav-5" class="practice-nav-btn w-full text-left px-4 py-3 rounded-lg font-medium">
+                            <i class="fa fa-code mr-2"></i>练习5：综合清洗
+                            <span class="difficulty-badge difficulty-hard text-xs ml-2">挑战</span>
                         </button>
                     </div>
                     
-                    <div class="border-t border-green-500/20">
+                    <div class="border-t border-cyan-500/20">
                         <div id="practice-detail-1" class="p-4">
-                            <div class="detail-card rounded-lg p-3 mb-4">
-                                <h3 class="font-bold text-orange-400 mb-2 flex items-center">
-                                    <i class="fa fa-info-circle mr-2"></i>详细说明
-                                </h3>
-                                <p class="text-sm text-gray-400">分组聚合是数据分析中最常用的操作之一。groupby()方法可以将数据按照某一列或多列进行分组，然后对每个组应用聚合函数。</p>
+                            <div class="flex justify-between items-start mb-3">
+                                <div class="detail-card rounded-lg p-3 flex-1">
+                                    <h3 class="font-bold text-orange-400 mb-2 flex items-center">
+                                        <i class="fa fa-info-circle mr-2"></i>详细说明
+                                    </h3>
+                                    <p class="text-sm text-gray-400">使用fillna()方法处理缺失值：用均值填充数值型列的缺失值，用指定值填充类别型列的缺失值。</p>
+                                </div>
+                                <button class="text-yellow-400 hover:text-yellow-300 ml-2" onclick="togglePracticeFavorite(1)">
+                                    <i class="fa fa-star"></i>
+                                </button>
                             </div>
                             <div class="code-card rounded-lg p-3 mb-4">
                                 <h3 class="font-bold text-green-400 mb-2 flex items-center">
-                                    <i class="fa fa-code mr-2"></i>代码示例
+                                    <i class="fa fa-lightbulb-o mr-2"></i>代码提示
                                 </h3>
-                                <pre class="text-xs text-green-400 overflow-x-auto"><code>df.groupby('category')['amount'].sum()
-
-df.groupby('region')['amount'].mean()</code></pre>
+                                <pre class="text-xs text-green-400 overflow-x-auto"><code>df['age'].fillna(df['age'].mean(), inplace=True)
+df['gender'].fillna('Unknown', inplace=True)</code></pre>
                             </div>
-                            <div class="tip-card rounded-lg p-3">
-                                <h3 class="font-bold text-yellow-400 mb-2 flex items-center">
-                                    <i class="fa fa-lightbulb-o mr-2"></i>小贴士
-                                </h3>
-                                <p class="text-sm text-gray-400">groupby()返回的是一个GroupBy对象，需要再调用聚合函数才能得到结果。</p>
+                            <button class="neon-button w-full py-2 rounded-lg text-sm mb-2" onclick="showHint(1)">
+                                <i class="fa fa-question-circle mr-2"></i>获取提示
+                            </button>
+                            <div id="hint-1" class="tip-card rounded-lg p-3 hidden">
+                                <p class="text-sm text-gray-400">提示：fillna()方法可以传入均值(mean())、中位数(median())或固定值。</p>
                             </div>
                         </div>
                         
                         <div id="practice-detail-2" class="p-4 hidden">
-                            <div class="detail-card rounded-lg p-3 mb-4">
-                                <h3 class="font-bold text-orange-400 mb-2 flex items-center">
-                                    <i class="fa fa-info-circle mr-2"></i>详细说明
-                                </h3>
-                                <p class="text-sm text-gray-400">多维度分组允许同时按多个列进行分组分析。通过传递一个列名列表给groupby()方法，可以实现更细粒度的数据分析。</p>
+                            <div class="flex justify-between items-start mb-3">
+                                <div class="detail-card rounded-lg p-3 flex-1">
+                                    <h3 class="font-bold text-orange-400 mb-2 flex items-center">
+                                        <i class="fa fa-info-circle mr-2"></i>详细说明
+                                    </h3>
+                                    <p class="text-sm text-gray-400">在订单数据分析中，计算总价是一项基本操作。总价 = 单价 × 数量。</p>
+                                </div>
+                                <button class="text-yellow-400 hover:text-yellow-300 ml-2" onclick="togglePracticeFavorite(2)">
+                                    <i class="fa fa-star"></i>
+                                </button>
                             </div>
                             <div class="code-card rounded-lg p-3 mb-4">
                                 <h3 class="font-bold text-green-400 mb-2 flex items-center">
-                                    <i class="fa fa-code mr-2"></i>代码示例
+                                    <i class="fa fa-lightbulb-o mr-2"></i>代码提示
                                 </h3>
-                                <pre class="text-xs text-green-400 overflow-x-auto"><code>df.groupby(['region', 'category'])['amount'].sum()
-
-result = df.groupby(['region', 'category']).sum().reset_index()</code></pre>
+                                <pre class="text-xs text-green-400 overflow-x-auto"><code>df['total_amount'] = df['price'] * df['quantity']
+print(df[['price', 'quantity', 'total_amount']])</code></pre>
                             </div>
-                            <div class="tip-card rounded-lg p-3">
-                                <h3 class="font-bold text-yellow-400 mb-2 flex items-center">
-                                    <i class="fa fa-lightbulb-o mr-2"></i>小贴士
-                                </h3>
-                                <p class="text-sm text-gray-400">多维度分组会产生多层索引，使用reset_index()可以将索引转换为普通列。</p>
+                            <button class="neon-button w-full py-2 rounded-lg text-sm mb-2" onclick="showHint(2)">
+                                <i class="fa fa-question-circle mr-2"></i>获取提示
+                            </button>
+                            <div id="hint-2" class="tip-card rounded-lg p-3 hidden">
+                                <p class="text-sm text-gray-400">提示：Pandas支持向量化运算，可以直接对整列进行数学运算。</p>
                             </div>
                         </div>
                         
                         <div id="practice-detail-3" class="p-4 hidden">
-                            <div class="detail-card rounded-lg p-3 mb-4">
-                                <h3 class="font-bold text-orange-400 mb-2 flex items-center">
-                                    <i class="fa fa-info-circle mr-2"></i>详细说明
-                                </h3>
-                                <p class="text-sm text-gray-400">agg()方法允许同时应用多个聚合函数，或者使用自定义的聚合方式。可以传入函数名列表或字典来实现灵活的聚合操作。</p>
+                            <div class="flex justify-between items-start mb-3">
+                                <div class="detail-card rounded-lg p-3 flex-1">
+                                    <h3 class="font-bold text-orange-400 mb-2 flex items-center">
+                                        <i class="fa fa-info-circle mr-2"></i>详细说明
+                                    </h3>
+                                    <p class="text-sm text-gray-400">将字符串转换为datetime格式后，可以方便地提取年、月、日等信息。</p>
+                                </div>
+                                <button class="text-yellow-400 hover:text-yellow-300 ml-2" onclick="togglePracticeFavorite(3)">
+                                    <i class="fa fa-star"></i>
+                                </button>
                             </div>
                             <div class="code-card rounded-lg p-3 mb-4">
                                 <h3 class="font-bold text-green-400 mb-2 flex items-center">
-                                    <i class="fa fa-code mr-2"></i>代码示例
+                                    <i class="fa fa-lightbulb-o mr-2"></i>代码提示
                                 </h3>
-                                <pre class="text-xs text-green-400 overflow-x-auto"><code>df.groupby('category')['amount'].agg(['sum', 'mean', 'count'])
+                                <pre class="text-xs text-green-400 overflow-x-auto"><code>df['order_date'] = pd.to_datetime(df['order_date'])
+df['year'] = df['order_date'].dt.year
+df['month'] = df['order_date'].dt.month</code></pre>
+                            </div>
+                            <button class="neon-button w-full py-2 rounded-lg text-sm mb-2" onclick="showHint(3)">
+                                <i class="fa fa-question-circle mr-2"></i>获取提示
+                            </button>
+                            <div id="hint-3" class="tip-card rounded-lg p-3 hidden">
+                                <p class="text-sm text-gray-400">提示：使用dt属性可以访问datetime对象的各种属性。</p>
+                            </div>
+                        </div>
 
-df.groupby('category')['amount'].agg(
-    总销售额='sum',
-    平均金额='mean',
-    最大金额='max'
-)</code></pre>
+                        <div id="practice-detail-4" class="p-4 hidden">
+                            <div class="flex justify-between items-start mb-3">
+                                <div class="detail-card rounded-lg p-3 flex-1">
+                                    <h3 class="font-bold text-orange-400 mb-2 flex items-center">
+                                        <i class="fa fa-info-circle mr-2"></i>详细说明
+                                    </h3>
+                                    <p class="text-sm text-gray-400">使用IQR方法检测和处理异常值。IQR = Q3 - Q1，正常范围是 [Q1-1.5*IQR, Q3+1.5*IQR]。</p>
+                                </div>
+                                <button class="text-yellow-400 hover:text-yellow-300 ml-2" onclick="togglePracticeFavorite(4)">
+                                    <i class="fa fa-star"></i>
+                                </button>
                             </div>
-                            <div class="tip-card rounded-lg p-3">
-                                <h3 class="font-bold text-yellow-400 mb-2 flex items-center">
-                                    <i class="fa fa-lightbulb-o mr-2"></i>小贴士
+                            <div class="code-card rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-green-400 mb-2 flex items-center">
+                                    <i class="fa fa-lightbulb-o mr-2"></i>代码提示
                                 </h3>
-                                <p class="text-sm text-gray-400">使用字典形式的命名聚合可以让结果列具有更有意义的名字。</p>
+                                <pre class="text-xs text-green-400 overflow-x-auto"><code>Q1 = df['amount'].quantile(0.25)
+Q3 = df['amount'].quantile(0.75)
+IQR = Q3 - Q1</code></pre>
                             </div>
+                            <button class="neon-button w-full py-2 rounded-lg text-sm mb-2" onclick="showHint(4)">
+                                <i class="fa fa-question-circle mr-2"></i>获取提示
+                            </button>
+                            <div id="hint-4" class="tip-card rounded-lg p-3 hidden">
+                                <p class="text-sm text-gray-400">提示：用中位数替换超出正常范围的异常值。</p>
+                            </div>
+                        </div>
+
+                        <div id="practice-detail-5" class="p-4 hidden">
+                            <div class="flex justify-between items-start mb-3">
+                                <div class="detail-card rounded-lg p-3 flex-1">
+                                    <h3 class="font-bold text-orange-400 mb-2 flex items-center">
+                                        <i class="fa fa-info-circle mr-2"></i>详细说明
+                                    </h3>
+                                    <p class="text-sm text-gray-400">综合运用缺失值处理、异常值检测、时间格式化和总价计算完成数据清洗。</p>
+                                </div>
+                                <button class="text-yellow-400 hover:text-yellow-300 ml-2" onclick="togglePracticeFavorite(5)">
+                                    <i class="fa fa-star"></i>
+                                </button>
+                            </div>
+                            <div class="code-card rounded-lg p-3 mb-4">
+                                <h3 class="font-bold text-green-400 mb-2 flex items-center">
+                                    <i class="fa fa-lightbulb-o mr-2"></i>代码提示
+                                </h3>
+                                <pre class="text-xs text-green-400 overflow-x-auto"><code># 综合步骤：
+# 1. 处理缺失值
+# 2. 检测异常值
+# 3. 格式化日期
+# 4. 计算总价
+# 5. 保存结果</code></pre>
+                            </div>
+                            <button class="neon-button w-full py-2 rounded-lg text-sm mb-2" onclick="showHint(5)">
+                                <i class="fa fa-question-circle mr-2"></i>获取提示
+                            </button>
+                            <div id="hint-5" class="tip-card rounded-lg p-3 hidden">
+                                <p class="text-sm text-gray-400">提示：按顺序执行每一步，使用中位数填充异常值，使用pd.to_datetime()转换日期。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-cyan-500/20 p-4">
+                        <h3 class="font-bold text-gray-300 mb-3 flex items-center">
+                            <i class="fa fa-folder mr-2 text-cyan-400"></i>文件树
+                        </h3>
+                        <div class="space-y-1 text-sm">
+                            <div class="file-tree-item active"><i class="fa fa-file-code-o mr-2 text-cyan-400"></i>main.py</div>
+                            <div class="file-tree-item"><i class="fa fa-file-text mr-2 text-gray-400"></i>data.py</div>
+                            <div class="file-tree-item"><i class="fa fa-file-text mr-2 text-gray-400"></i>utils.py</div>
+                            <div class="file-tree-item"><i class="fa fa-file-excel-o mr-2 text-green-400"></i>retail_orders.csv</div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="flex-1 flex flex-col ml-4 min-w-0">
-                    <div class="toolbar rounded-t-xl px-4 py-3 flex items-center justify-between">
-                        <div class="flex items-center space-x-2">
-                            <button id="run-code" class="run-button px-4 py-2 rounded-lg text-sm font-medium flex items-center">
+                <div class="flex-1 flex flex-col ml-0 lg:ml-4 mt-4 lg:mt-0 min-w-0">
+                    <div class="toolbar rounded-t-xl px-4 py-3 flex flex-wrap items-center justify-between gap-2">
+                        <div class="flex items-center space-x-2 flex-wrap">
+                            <button id="run-code" class="run-button px-4 py-2 rounded-lg text-sm font-medium flex items-center tooltip" data-tip="Ctrl+Enter">
                                 <i class="fa fa-play mr-2"></i>运行代码
+                                <span class="shortcut-key ml-2">Ctrl+Enter</span>
                             </button>
-                            <button id="reset-code" class="neon-button px-4 py-2 rounded-lg text-sm font-medium flex items-center">
-                                <i class="fa fa-refresh mr-2"></i>重置代码
+                            <button id="reset-code" class="neon-button px-4 py-2 rounded-lg text-sm font-medium flex items-center tooltip" data-tip="Ctrl+R">
+                                <i class="fa fa-refresh mr-2"></i>重置
                             </button>
-                            <button id="show-answer" class="neon-button px-4 py-2 rounded-lg text-sm font-medium flex items-center">
-                                <i class="fa fa-eye mr-2"></i>显示参考答案
+                            <button id="format-code" class="neon-button px-4 py-2 rounded-lg text-sm font-medium flex items-center tooltip" data-tip="Ctrl+Shift+F">
+                                <i class="fa fa-indent mr-2"></i>格式化
+                            </button>
+                            <button id="download-output" class="neon-button px-4 py-2 rounded-lg text-sm font-medium flex items-center">
+                                <i class="fa fa-download mr-2"></i>下载
                             </button>
                         </div>
-                        <div class="flex items-center space-x-2">
+                        <div class="flex items-center space-x-2 flex-wrap">
+                            <button id="show-answer-basic" class="neon-button px-4 py-2 rounded-lg text-sm font-medium flex items-center" onclick="showAnswer('basic')">
+                                <i class="fa fa-eye mr-2"></i>基础答案
+                            </button>
+                            <button id="show-answer-advanced" class="neon-button px-4 py-2 rounded-lg text-sm font-medium flex items-center" onclick="showAnswer('advanced')">
+                                <i class="fa fa-star mr-2"></i>进阶答案
+                            </button>
                             <button id="start-test" class="test-button px-4 py-2 rounded-lg text-sm font-medium flex items-center">
-                                <i class="fa fa-file-text mr-2"></i>开始测试
+                                <i class="fa fa-file-text mr-2"></i>测试
                             </button>
                             <button id="auto-save" class="neon-button px-4 py-2 rounded-lg text-sm font-medium flex items-center">
-                                <i class="fa fa-save mr-2"></i>自动保存
+                                <i class="fa fa-save mr-2"></i>保存
                             </button>
                         </div>
                     </div>
                     
-                    <div class="flex-1 glass-panel rounded-b-xl overflow-hidden">
-                        <div class="file-tab flex items-center px-4 py-2 text-gray-400 text-sm">
-                            <i class="fa fa-file-code-o mr-2 text-green-400"></i>
-                            <span class="text-green-400">project2/main.py</span>
+                    <div class="flex-1 glass-panel rounded-b-xl overflow-hidden flex flex-col">
+                        <div class="file-tab flex items-center justify-between px-4 py-2 text-gray-400 text-sm">
+                            <div class="flex items-center">
+                                <i class="fa fa-file-code-o mr-2 text-cyan-400"></i>
+                                <span class="text-cyan-400">project1/main.py</span>
+                                <span id="unsaved-indicator" class="ml-2 text-yellow-400 hidden">●</span>
+                            </div>
+                            <div class="flex items-center space-x-3 text-xs">
+                                <span id="cursor-position" class="text-gray-500">行 1, 列 1</span>
+                                <span id="char-count" class="text-gray-500">0 字符</span>
+                                <span id="execution-time" class="text-gray-500 hidden">执行: 0ms</span>
+                            </div>
                         </div>
-                        <textarea id="code-editor" class="code-editor w-full h-[calc(50%-40px)] p-4 text-sm" placeholder="在这里输入你的代码...">import pandas as pd
-
-data = {
-    'category': ['电子产品', '服装', '电子产品', '食品', '服装', '电子产品'],
-    'region': ['华北', '华北', '华东', '华北', '华东', '华南'],
-    'amount': [1000, 500, 1200, 300, 800, 1500]
-}
-df = pd.DataFrame(data)
-
-print(df)</textarea>
+                        <div class="flex-1 flex flex-col min-h-0">
+                            <div class="flex-1 relative">
+                                <textarea id="code-editor" class="code-editor w-full h-full p-4 text-sm absolute inset-0" placeholder="在这里输入你的代码..."></textarea>
+                                <div id="line-numbers" class="absolute left-0 top-0 p-4 text-gray-600 text-sm pointer-events-none font-mono" style="width: 3rem;"></div>
+                                <div id="autocomplete-dropdown" class="autocomplete-dropdown"></div>
+                            </div>
+                        </div>
                         
-                        <div class="h-[50%] border-t border-green-500/20">
-                            <div class="file-tab flex items-center px-4 py-2 text-gray-400 text-sm">
-                                <i class="fa fa-terminal mr-2 text-green-400"></i>
-                                <span class="text-green-400">执行结果</span>
+                        <div class="split-handle h-2 cursor-ns-resize" id="output-splitter"></div>
+                        
+                        <div class="h-[40%]" id="output-panel">
+                            <div class="file-tab flex items-center justify-between px-4 py-2 text-gray-400 text-sm">
+                                <div class="flex items-center">
+                                    <i class="fa fa-terminal mr-2 text-green-400"></i>
+                                    <span class="text-green-400">执行结果</span>
+                                    <span id="execution-status" class="status-badge ml-2 hidden"></span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <button class="text-gray-400 hover:text-white" onclick="clearOutput()">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                    <button class="text-gray-400 hover:text-white" onclick="toggleFullscreen()">
+                                        <i class="fa fa-expand"></i>
+                                    </button>
+                                </div>
                             </div>
                             <div id="code-output" class="terminal-output h-[calc(100%-40px)] p-4 overflow-auto text-sm">
-<span class="text-green-400">&gt; 执行结果将显示在这里...</span>
+                                <span class="text-cyan-400">&gt; 准备就绪，请输入代码后点击运行...</span>
+                                <div class="mt-4 text-gray-500 text-xs">
+                                    <p><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span> 运行代码</p>
+                                    <p><span class="kbd">Ctrl</span> + <span class="kbd">R</span> 重置代码</p>
+                                    <p><span class="kbd">Ctrl</span> + <span class="kbd">S</span> 保存代码</p>
+                                    <p><span class="kbd">Ctrl</span> + <span class="kbd">F</span> 格式化代码</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -561,57 +876,63 @@ print(df)</textarea>
                 <div class="exam-card rounded-xl p-6 mb-6">
                     <h2 class="text-2xl font-bold neon-text mb-2">项目考试</h2>
                     <p class="text-gray-400">共5道题目，每题20分，满分100分</p>
+                    <div class="flex items-center mt-4 text-gray-500">
+                        <i class="fa fa-clock-o mr-2 text-purple-400"></i>
+                        <span>考试时间：<span class="text-purple-400">30分钟</span></span>
+                    </div>
                 </div>
 
                 <div id="exam-questions">
                     <div class="exam-card rounded-xl p-6 mb-6">
-                        <h3 class="font-bold text-gray-200 mb-4">1. 在Pandas中，用于分组的方法是？</h3>
+                        <h3 class="font-bold text-gray-200 mb-4">1. 以下哪种方法不是处理缺失值的常用方法？</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q1" value="A" class="mr-2"><span>A) group()</span></label>
-                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q1" value="B" class="mr-2"><span>B) groupby()</span></label>
-                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q1" value="C" class="mr-2"><span>C) aggregate()</span></label>
-                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q1" value="D" class="mr-2"><span>D) split()</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer"><input type="radio" name="q1" value="A" class="mr-2"><span>A) 删除法</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer"><input type="radio" name="q1" value="B" class="mr-2"><span>B) 填充法</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer"><input type="radio" name="q1" value="C" class="mr-2"><span>C) 排序法</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer"><input type="radio" name="q1" value="D" class="mr-2"><span>D) 插值法</span></label>
                         </div>
                     </div>
 
                     <div class="exam-card rounded-xl p-6 mb-6">
-                        <h3 class="font-bold text-gray-200 mb-4">2. 以下哪个方法可以同时计算多个聚合指标？</h3>
+                        <h3 class="font-bold text-gray-200 mb-4">2. 在Pandas中，将字符串转换为datetime格式的正确方法是？</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q2" value="A" class="mr-2"><span>A) sum()</span></label>
-                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q2" value="B" class="mr-2"><span>B) mean()</span></label>
-                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q2" value="C" class="mr-2"><span>C) agg()</span></label>
-                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q2" value="D" class="mr-2"><span>D) count()</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer"><input type="radio" name="q2" value="A" class="mr-2"><span>A) datetime(df['date'])</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer"><input type="radio" name="q2" value="B" class="mr-2"><span>B) pd.to_datetime(df['date'])</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer"><input type="radio" name="q2" value="C" class="mr-2"><span>C) df['date'].to_datetime()</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer"><input type="radio" name="q2" value="D" class="mr-2"><span>D) convert_to_date(df['date'])</span></label>
                         </div>
                     </div>
 
                     <div class="exam-card rounded-xl p-6 mb-6">
-                        <h3 class="font-bold text-gray-200 mb-4">3. 以下代码的输出是什么？</h3>
-                        <div class="code-block mb-4"><pre><code>df.groupby('category')['amount'].sum()</code></pre></div>
+                        <h3 class="font-bold text-gray-200 mb-4">3. 以下代码的作用是什么？</h3>
+                        <div class="code-block mb-4">
+                            <pre><code class="language-python">df['total'] = df['price'] * df['quantity']</code></pre>
+                        </div>
                         <div class="space-y-2">
-                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q3" value="A" class="mr-2"><span>A) 每个类别的平均金额</span></label>
-                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q3" value="B" class="mr-2"><span>B) 每个类别的总金额</span></label>
-                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q3" value="C" class="mr-2"><span>C) 每个类别的最大金额</span></label>
-                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q3" value="D" class="mr-2"><span>D) 每个类别的订单数</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer"><input type="radio" name="q3" value="A" class="mr-2"><span>A) 计算总价</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer"><input type="radio" name="q3" value="B" class="mr-2"><span>B) 计算平均值</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer"><input type="radio" name="q3" value="C" class="mr-2"><span>C) 计算总和</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer"><input type="radio" name="q3" value="D" class="mr-2"><span>D) 计算中位数</span></label>
                         </div>
                     </div>
 
                     <div class="exam-card rounded-xl p-6 mb-6">
-                        <h3 class="font-bold text-gray-200 mb-4">4. 按多个列分组时，groupby的参数应该是什么类型？</h3>
+                        <h3 class="font-bold text-gray-200 mb-4">4. 使用IQR方法检测异常值时，通常使用多少倍的IQR作为边界？</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q4" value="A" class="mr-2"><span>A) 字符串</span></label>
-                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q4" value="B" class="mr-2"><span>B) 列表</span></label>
-                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q4" value="C" class="mr-2"><span>C) 字典</span></label>
-                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q4" value="D" class="mr-2"><span>D) 元组</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer"><input type="radio" name="q4" value="A" class="mr-2"><span>A) 1倍</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer"><input type="radio" name="q4" value="B" class="mr-2"><span>B) 1.5倍</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer"><input type="radio" name="q4" value="C" class="mr-2"><span>C) 2倍</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer"><input type="radio" name="q4" value="D" class="mr-2"><span>D) 2.5倍</span></label>
                         </div>
                     </div>
 
                     <div class="exam-card rounded-xl p-6 mb-6">
-                        <h3 class="font-bold text-gray-200 mb-4">5. 以下哪个不是常用的聚合函数？</h3>
+                        <h3 class="font-bold text-gray-200 mb-4">5. 以下哪个方法可以删除DataFrame中包含缺失值的行？</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q5" value="A" class="mr-2"><span>A) sum</span></label>
-                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q5" value="B" class="mr-2"><span>B) mean</span></label>
-                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q5" value="C" class="mr-2"><span>C) concat</span></label>
-                            <label class="flex items-center text-gray-300 hover:text-green-400 cursor-pointer"><input type="radio" name="q5" value="D" class="mr-2"><span>D) count</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer"><input type="radio" name="q5" value="A" class="mr-2"><span>A) df.fillna()</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer"><input type="radio" name="q5" value="B" class="mr-2"><span>B) df.dropna()</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer"><input type="radio" name="q5" value="C" class="mr-2"><span>C) df.remove()</span></label>
+                            <label class="flex items-center text-gray-300 hover:text-cyan-400 cursor-pointer"><input type="radio" name="q5" value="D" class="mr-2"><span>D) df.delete()</span></label>
                         </div>
                     </div>
                 </div>
@@ -636,134 +957,940 @@ print(df)</textarea>
         </div>
     </section>
 
-    <footer class="glass-panel py-8 border-t border-green-500/20 mt-8">
+    <section id="content-history" class="py-8 hidden">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="glass-panel rounded-xl p-6 mb-6">
+                    <h2 class="text-2xl font-bold neon-text mb-4">运行历史记录</h2>
+                    <div id="code-history-list" class="space-y-2">
+                        <p class="text-gray-400">暂无历史记录</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="glass-panel py-8 border-t border-cyan-500/20 mt-8">
         <div class="container mx-auto px-4 text-center">
-            <p class="text-gray-500">© 2026 Python数据分析实战训练营</p>
+            <p class="text-gray-500">© 2026 Python数据分析实战训练营 | 项目01</p>
         </div>
     </footer>
 
+    <div id="answer-modal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="modal-title" class="text-xl font-bold neon-text">参考答案</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-white">
+                    <i class="fa fa-times text-xl"></i>
+                </button>
+            </div>
+            <div id="modal-content" class="code-block"></div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">
+        <div class="flex items-center">
+            <i id="toast-icon" class="fa fa-check-circle text-green-400 mr-3"></i>
+            <span id="toast-message"></span>
+        </div>
+    </div>
+
+    <div id="pyodide-loading" class="fixed inset-0 bg-black/50 flex items-center justify-center z-[1001]">
+        <div class="text-center">
+            <div class="loading-spinner mx-auto mb-4"></div>
+            <p class="text-white">正在加载Python环境...</p>
+        </div>
+    </div>
+
     <script>
-        document.getElementById('menu-toggle').addEventListener('click', function() { document.getElementById('mobile-menu').classList.toggle('hidden'); });
-        const tabs = ['learn', 'practice', 'test'];
-        tabs.forEach(tab => {
-            document.getElementById(`tab-${tab}`).addEventListener('click', function() {
-                tabs.forEach(t => { document.getElementById(`content-${t}`).classList.add('hidden'); document.getElementById(`tab-${t}`).classList.remove('active'); });
-                document.getElementById(`content-${tab}`).classList.remove('hidden');
-                document.getElementById(`tab-${tab}`).classList.add('active');
-            });
-        });
-        document.getElementById('complete-learn').addEventListener('click', function() { saveProgress('project2', 'learned'); alert('已标记为已学习！'); });
-        function saveProgress(projectId, type) { const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}'); if (!progress[projectId]) progress[projectId] = { learned: false, practiced: false, tested: false }; progress[projectId][type] = true; localStorage.setItem('learningProgress', JSON.stringify(progress)); }
-        const practiceNavButtons = ['practice-nav-1', 'practice-nav-2', 'practice-nav-3'];
-        const practiceDetails = ['practice-detail-1', 'practice-detail-2', 'practice-detail-3'];
-        practiceNavButtons.forEach((btn, index) => {
-            document.getElementById(btn).addEventListener('click', function() {
-                practiceNavButtons.forEach((b, i) => { document.getElementById(b).classList.remove('active'); document.getElementById(practiceDetails[i]).classList.add('hidden'); });
-                this.classList.add('active');
-                document.getElementById(practiceDetails[index]).classList.remove('hidden');
-                updateCodeEditor(index + 1);
-            });
-        });
-        const codeTemplates = {
-            1: `import pandas as pd
+        let pyodide = null;
+        let isLoading = true;
+        let codeHistory = [];
+        let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+        let practiceFavorites = JSON.parse(localStorage.getItem('practiceFavorites') || '{}');
+        let codeVersions = JSON.parse(localStorage.getItem('codeVersions') || '{}');
+        let currentPractice = 1;
+        let isModified = false;
+        let executionStartTime = 0;
+        
+        const pythonKeywords = ['import', 'from', 'def', 'class', 'if', 'else', 'elif', 'for', 'while', 'return', 'try', 'except', 'finally', 'with', 'as', 'pass', 'break', 'continue', 'and', 'or', 'not', 'in', 'is', 'True', 'False', 'None', 'lambda', 'yield', 'global', 'nonlocal', 'assert', 'raise', 'del'];
+        const pandasFunctions = ['pd', 'DataFrame', 'Series', 'read_csv', 'read_excel', 'to_datetime', 'to_csv', 'to_excel', 'merge', 'concat', 'groupby', 'dropna', 'fillna', 'isnull', 'notnull', 'describe', 'info', 'head', 'tail', 'loc', 'iloc', 'reset_index', 'set_index', 'rename', 'drop', 'sort_values', 'sort_index', 'value_counts', 'unique', 'nunique', 'sum', 'mean', 'median', 'std', 'min', 'max', 'count', 'agg', 'apply', 'map', 'resample', 'rolling', 'expanding', 'pivot_table', 'crosstab', 'cut', 'qcut'];
+        const numpyFunctions = ['np', 'array', 'zeros', 'ones', 'arange', 'linspace', 'random', 'reshape', 'transpose', 'dot', 'sum', 'mean', 'std', 'min', 'max', 'argmin', 'argmax', 'where', 'select', 'concatenate', 'stack', 'split', 'save', 'load'];
+
+        async function initPyodide() {
+            try {
+                pyodide = await loadPyodide({
+                    indexURL: "https://cdn.jsdelivr.net/npm/pyodide@0.24.1/"
+                });
+                await pyodide.loadPackage(['pandas', 'numpy', 'pytz']);
+                document.getElementById('pyodide-loading').style.display = 'none';
+                isLoading = false;
+                log('Python环境加载完成', 'success');
+                showToast('Python环境就绪', 'success');
+            } catch (error) {
+                console.error('Pyodide加载失败:', error);
+                document.getElementById('pyodide-loading').innerHTML = `
+                    <div class="text-center">
+                        <p class="text-red-400 mb-4">Python环境加载失败</p>
+                        <button onclick="location.reload()" class="neon-button px-4 py-2 rounded">重试</button>
+                    </div>
+                `;
+            }
+        }
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = { timestamp, message, type, project: 'project1' };
+            const logs = JSON.parse(localStorage.getItem('appLogs') || '[]');
+            logs.push(logEntry);
+            if (logs.length > 100) logs.shift();
+            localStorage.setItem('appLogs', JSON.stringify(logs));
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toast-icon');
+            const msg = document.getElementById('toast-message');
+            
+            msg.textContent = message;
+            if (type === 'success') icon.className = 'fa fa-check-circle text-green-400 mr-3';
+            else if (type === 'error') icon.className = 'fa fa-times-circle text-red-400 mr-3';
+            else if (type === 'warning') icon.className = 'fa fa-exclamation-circle text-yellow-400 mr-3';
+            
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+            const toggles = document.querySelectorAll('.theme-toggle');
+            toggles.forEach(t => t.classList.toggle('active'));
+            localStorage.setItem('theme', document.body.classList.contains('light-theme') ? 'light' : 'dark');
+            log('主题切换: ' + (document.body.classList.contains('light-theme') ? '浅色' : '深色'));
+        }
+
+        function toggleFavorite() {
+            const btn = document.getElementById('favorite-btn');
+            const isFav = btn.classList.toggle('active');
+            if (isFav) {
+                btn.innerHTML = '<i class="fa fa-star text-xl text-yellow-400"></i>';
+                if (!favorites.includes('project1')) {
+                    favorites.push('project1');
+                    localStorage.setItem('favorites', JSON.stringify(favorites));
+                    showToast('已添加到收藏', 'success');
+                }
+            } else {
+                btn.innerHTML = '<i class="fa fa-star text-xl"></i>';
+                favorites = favorites.filter(f => f !== 'project1');
+                localStorage.setItem('favorites', JSON.stringify(favorites));
+            }
+            log('项目收藏: ' + (isFav ? '添加' : '移除'));
+        }
+
+        function togglePracticeFavorite(practiceId) {
+            const key = `project1_practice${practiceId}`;
+            practiceFavorites[key] = !practiceFavorites[key];
+            localStorage.setItem('practiceFavorites', JSON.stringify(practiceFavorites));
+            showToast(practiceFavorites[key] ? '已收藏此练习' : '已取消收藏', 'success');
+        }
+
+        function showHint(practiceId) {
+            const hint = document.getElementById(`hint-${practiceId}`);
+            hint.classList.toggle('hidden');
+            log('查看练习' + practiceId + '提示');
+        }
+
+        function showAllPractices() {
+            log('查看全部练习列表');
+        }
+
+        function copyCode(btn) {
+            const code = btn.previousElementSibling.querySelector('code').textContent;
+            navigator.clipboard.writeText(code);
+            btn.innerHTML = '<i class="fa fa-check mr-2"></i>已复制';
+            setTimeout(() => btn.innerHTML = '<i class="fa fa-copy mr-2"></i>复制代码', 2000);
+            log('复制代码片段');
+        }
+
+        function showAnswer(type) {
+            const modal = document.getElementById('answer-modal');
+            const title = document.getElementById('modal-title');
+            const content = document.getElementById('modal-content');
+            
+            const answers = {
+                basic: {
+                    1: `import pandas as pd
+import numpy as np
 
 data = {
-    'category': ['电子产品', '服装', '电子产品', '食品', '服装', '电子产品'],
-    'region': ['华北', '华北', '华东', '华北', '华东', '华南'],
-    'amount': [1000, 500, 1200, 300, 800, 1500]
+    'name': ['Alice', 'Bob', 'Charlie', 'David', 'Eve'],
+    'age': [25, np.nan, 30, 35, np.nan],
+    'gender': ['F', 'M', np.nan, 'M', 'F']
 }
 df = pd.DataFrame(data)
 
+df['age'].fillna(df['age'].mean(), inplace=True)
+df['gender'].fillna('Unknown', inplace=True)
+
+print(df)`,
+                    2: `import pandas as pd
+
+data = {
+    'product': ['A', 'B', 'C', 'A', 'B'],
+    'price': [100, 200, 150, 100, 200],
+    'quantity': [2, 1, 3, 4, 2]
+}
+df = pd.DataFrame(data)
+
+df['total_amount'] = df['price'] * df['quantity']
+print(df)`,
+                    3: `import pandas as pd
+
+data = {
+    'order_date': ['2023-01-15', '2023-02-20', '2023-03-10'],
+    'amount': [100, 200, 150]
+}
+df = pd.DataFrame(data)
+
+df['order_date'] = pd.to_datetime(df['order_date'])
+df['year'] = df['order_date'].dt.year
+df['month'] = df['order_date'].dt.month
+print(df)`,
+                    4: `import pandas as pd
+import numpy as np
+
+data = {'amount': [100, 200, 50, 300, 25, 400]}
+df = pd.DataFrame(data)
+
+Q1 = df['amount'].quantile(0.25)
+Q3 = df['amount'].quantile(0.75)
+IQR = Q3 - Q1
+lower = Q1 - 1.5 * IQR
+upper = Q3 + 1.5 * IQR
+
+median = df['amount'].median()
+df.loc[(df['amount'] < lower) | (df['amount'] > upper), 'amount'] = median
+print(df)`,
+                    5: `import pandas as pd
+import numpy as np
+
+data = {
+    'name': ['Alice', 'Bob', None],
+    'date': ['2023-01-15', '2023-02-20', '2023-03-10'],
+    'price': [100, 200, 50],
+    'quantity': [2, 1, 3]
+}
+df = pd.DataFrame(data)
+
+df['name'].fillna('Unknown', inplace=True)
+df['date'] = pd.to_datetime(df['date'])
+df['total'] = df['price'] * df['quantity']
+
+Q1 = df['total'].quantile(0.25)
+Q3 = df['total'].quantile(0.75)
+IQR = Q3 - Q1
+df.loc[(df['total'] < Q1 - 1.5*IQR) | (df['total'] > Q3 + 1.5*IQR), 'total'] = df['total'].median()
+
+print(df)`
+                },
+                advanced: {
+                    1: `import pandas as pd
+import numpy as np
+from sklearn.impute import SimpleImputer
+
+data = {
+    'name': ['Alice', 'Bob', 'Charlie', 'David', 'Eve'],
+    'age': [25, np.nan, 30, 35, np.nan],
+    'gender': ['F', 'M', np.nan, 'M', 'F'],
+    'score': [85, 90, np.nan, 88, 92]
+}
+df = pd.DataFrame(data)
+
+numeric_cols = df.select_dtypes(include=[np.number]).columns
+df[numeric_cols] = df[numeric_cols].fillna(df[numeric_cols].mean())
+
+categorical_cols = df.select_dtypes(include=['object']).columns
+for col in categorical_cols:
+    df[col].fillna(df[col].mode()[0], inplace=True)
+
+print(df)`,
+                    2: `import pandas as pd
+import numpy as np
+
+data = {
+    'product': ['A', 'B', 'C', 'A', 'B'],
+    'price': [100, 200, 150, 100, 200],
+    'quantity': [2, 1, 3, 4, 2],
+    'discount': [0.1, 0.15, 0.1, 0.2, 0.15]
+}
+df = pd.DataFrame(data)
+
+df['gross'] = df['price'] * df['quantity']
+df['discount_amount'] = df['gross'] * df['discount']
+df['net'] = df['gross'] - df['discount_amount']
+
+print("订单汇总:")
+print(df[['product', 'gross', 'discount_amount', 'net']])
+print(f"\\n总销售额: {df['net'].sum():.2f}")`,
+                    3: `import pandas as pd
+import numpy as np
+
+data = {
+    'order_date': ['2023-01-15 10:30:00', '2023-02-20 14:45:00', '2023-03-10 09:15:00'],
+    'amount': [100, 200, 150]
+}
+df = pd.DataFrame(data)
+
+df['order_date'] = pd.to_datetime(df['order_date'])
+
+df['year'] = df['order_date'].dt.year
+df['month'] = df['order_date'].dt.month
+df['day'] = df['order_date'].dt.day
+df['hour'] = df['order_date'].dt.hour
+df['weekday'] = df['order_date'].dt.day_name()
+df['quarter'] = df['order_date'].dt.quarter
+df['is_weekend'] = df['order_date'].dt.dayofweek.isin([5, 6]).astype(int)
+
+print(df)`,
+                    4: `import pandas as pd
+import numpy as np
+
+def remove_outliers(df, column, method='iqr'):
+    if method == 'iqr':
+        Q1 = df[column].quantile(0.25)
+        Q3 = df[column].quantile(0.75)
+        IQR = Q3 - Q1
+        lower = Q1 - 1.5 * IQR
+        upper = Q3 + 1.5 * IQR
+        return df[(df[column] >= lower) & (df[column] <= upper)]
+    elif method == 'zscore':
+        z_scores = np.abs((df[column] - df[column].mean()) / df[column].std())
+        return df[z_scores < 3]
+
+data = {'amount': [100, 200, 50, 300, 25, 400, 150, 180]}
+df = pd.DataFrame(data)
+
+df_clean = remove_outliers(df, 'amount', method='iqr')
+print(f"原始数据: {len(df)} 行")
+print(f"清理后: {len(df_clean)} 行")
+print(df_clean)`,
+                    5: `import pandas as pd
+import numpy as np
+
+def clean_data(df):
+    df = df.copy()
+    
+    for col in df.select_dtypes(include=[np.number]).columns:
+        Q1 = df[col].quantile(0.25)
+        Q3 = df[col].quantile(0.75)
+        IQR = Q3 - Q1
+        df.loc[(df[col] < Q1 - 1.5*IQR) | (df[col] > Q3 + 1.5*IQR), col] = df[col].median()
+    
+    for col in df.select_dtypes(include=[np.number]).columns:
+        df[col].fillna(df[col].median(), inplace=True)
+    
+    for col in df.select_dtypes(include=['object']).columns:
+        df[col].fillna(df[col].mode()[0], inplace=True)
+    
+    return df
+
+data = {
+    'name': ['Alice', 'Bob', None, 'David'],
+    'date': ['2023-01-15', '2023-02-20', '2023-03-10', '2023-01-25'],
+    'price': [100, 200, 50, 300],
+    'quantity': [2, 1, 3, 4]
+}
+df = pd.DataFrame(data)
+df = clean_data(df)
+df['total'] = df['price'] * df['quantity']
+print(df)`
+                }
+            };
+
+            title.textContent = type === 'basic' ? '基础参考答案' : '进阶参考答案';
+            content.innerHTML = `<pre><code class="language-python">${answers[type][currentPractice]}</code></pre>`;
+            modal.classList.add('active');
+            Prism.highlightAll();
+            log('查看' + (type === 'basic' ? '基础' : '进阶') + '答案');
+        }
+
+        function closeModal() {
+            document.getElementById('answer-modal').classList.remove('active');
+        }
+
+        function clearOutput() {
+            document.getElementById('code-output').innerHTML = '<span class="text-cyan-400">&gt; 输出已清空</span>';
+        }
+
+        function toggleFullscreen() {
+            const panel = document.getElementById('output-panel');
+            panel.classList.toggle('h-full');
+            panel.classList.toggle('h-[40%]');
+        }
+
+        function updateLineNumbers() {
+            const editor = document.getElementById('code-editor');
+            const lineNumbers = document.getElementById('line-numbers');
+            const lines = editor.value.split('\n').length;
+            let numbers = '';
+            for (let i = 1; i <= lines; i++) {
+                numbers += i + '\n';
+            }
+            lineNumbers.textContent = numbers;
+            lineNumbers.style.height = editor.scrollHeight + 'px';
+        }
+
+        function updateCursorPosition() {
+            const editor = document.getElementById('code-editor');
+            const cursorPos = editor.selectionStart;
+            const text = editor.value.substring(0, cursorPos);
+            const lines = text.split('\n');
+            const line = lines.length;
+            const col = lines[lines.length - 1].length + 1;
+            
+            document.getElementById('cursor-position').textContent = `行 ${line}, 列 ${col}`;
+        }
+
+        function showAutocomplete(text, cursorPos) {
+            const dropdown = document.getElementById('autocomplete-dropdown');
+            const lines = text.substring(0, cursorPos).split('\n');
+            const currentLine = lines[lines.length - 1];
+            
+            const words = [...pythonKeywords, ...pandasFunctions, ...numpyFunctions];
+            const matches = words.filter(w => w.startsWith(currentLine.split(/[\s(,)]/).pop()) && w.length > 2);
+            
+            if (matches.length > 0) {
+                dropdown.innerHTML = matches.slice(0, 10).map((m, i) => 
+                    `<div class="autocomplete-item" data-value="${m}">${m}</div>`
+                ).join('');
+                dropdown.classList.add('active');
+                
+                dropdown.querySelectorAll('.autocomplete-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const word = item.dataset.value;
+                        const before = text.substring(0, cursorPos - currentLine.split(/[\s(,)]/).pop().length);
+                        const after = text.substring(cursorPos);
+                        editor.value = before + word + after;
+                        editor.selectionStart = editor.selectionEnd = before.length + word.length;
+                        dropdown.classList.remove('active');
+                        editor.focus();
+                    });
+                });
+            } else {
+                dropdown.classList.remove('active');
+            }
+        }
+
+        async function runCode() {
+            const code = document.getElementById('code-editor').value;
+            const output = document.getElementById('code-output');
+            const status = document.getElementById('execution-status');
+            
+            if (!code.trim()) {
+                showToast('请输入代码', 'warning');
+                return;
+            }
+
+            executionStartTime = performance.now();
+            status.className = 'status-badge ml-2 status-running';
+            status.textContent = '运行中';
+            status.classList.remove('hidden');
+            
+            output.innerHTML = '<span class="text-yellow-400">&gt; 正在执行...</span>\n\n';
+            output.scrollTop = output.scrollHeight;
+
+            if (isLoading) {
+                output.innerHTML += '<span class="text-red-400">错误: Python环境未加载完成</span>';
+                return;
+            }
+
+            try {
+                const result = await pyodide.runPythonAsync(code);
+                const executionTime = Math.round(performance.now() - executionStartTime);
+                
+                document.getElementById('execution-time').textContent = `执行: ${executionTime}ms`;
+                document.getElementById('execution-time').classList.remove('hidden');
+                
+                status.className = 'status-badge ml-2 status-success';
+                status.textContent = '成功';
+                
+                let outputText = result ? String(result) : '';
+                output.innerHTML = `<span class="text-green-400">&gt; 执行完成 (${executionTime}ms)</span>\n\n`;
+                if (outputText) {
+                    output.innerHTML += `<span class="text-green-400">${outputText}</span>`;
+                }
+                
+                saveToHistory(code, outputText, executionTime, true);
+                log('代码执行成功', 'success');
+            } catch (error) {
+                const executionTime = Math.round(performance.now() - executionStartTime);
+                
+                status.className = 'status-badge ml-2 status-error';
+                status.textContent = '失败';
+                
+                output.innerHTML = `<span class="text-red-400">&gt; 执行错误 (${executionTime}ms)</span>\n\n`;
+                output.innerHTML += `<span class="text-red-400">${error.message}</span>`;
+                
+                saveToHistory(code, error.message, executionTime, false);
+                log('代码执行失败: ' + error.message, 'error');
+            }
+            
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function saveToHistory(code, output, time, success) {
+            const entry = {
+                id: Date.now(),
+                code: code,
+                output: output,
+                time: time,
+                success: success,
+                timestamp: new Date().toLocaleString(),
+                practice: currentPractice
+            };
+            
+            codeHistory.unshift(entry);
+            if (codeHistory.length > 50) codeHistory.pop();
+            localStorage.setItem('codeHistory_project1', JSON.stringify(codeHistory));
+            
+            updateHistoryDisplay();
+        }
+
+        function updateHistoryDisplay() {
+            const list = document.getElementById('code-history-list');
+            if (codeHistory.length === 0) {
+                list.innerHTML = '<p class="text-gray-400">暂无历史记录</p>';
+                return;
+            }
+            
+            list.innerHTML = codeHistory.slice(0, 10).map(entry => `
+                <div class="history-item" onclick="loadHistory(${entry.id})">
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-2">
+                                <span class="status-badge ${entry.success ? 'status-success' : 'status-error'}">${entry.success ? '成功' : '失败'}</span>
+                                <span class="text-gray-500 text-xs">${entry.timestamp}</span>
+                            </div>
+                            <p class="text-sm text-gray-300 mt-1 truncate">${entry.code.substring(0, 50)}...</p>
+                            <p class="text-xs text-gray-500">执行时间: ${entry.time}ms</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadHistory(id) {
+            const entry = codeHistory.find(e => e.id === id);
+            if (entry) {
+                document.getElementById('code-editor').value = entry.code;
+                document.getElementById('code-output').innerHTML = `<span class="text-green-400">&gt; 已加载历史代码</span>\n\n${entry.output}`;
+                showToast('已加载历史代码', 'success');
+            }
+        }
+
+        function formatCode() {
+            const editor = document.getElementById('code-editor');
+            let code = editor.value;
+            
+            code = code.replace(/\t/g, '    ');
+            
+            const lines = code.split('\n');
+            let indent = 0;
+            const indentSize = 4;
+            const formattedLines = lines.map(line => {
+                const trimmed = line.trim();
+                if (!trimmed) return '';
+                
+                if (trimmed.startsWith('}') || trimmed.startsWith(')') || trimmed.startsWith(']')) {
+                    indent = Math.max(0, indent - 1);
+                }
+                
+                const formatted = ' '.repeat(indent * indentSize) + trimmed;
+                
+                if (trimmed.endsWith('{') || trimmed.endsWith('(') || trimmed.endsWith('[') ||
+                    trimmed.endsWith(':') || trimmed.includes('def ') || trimmed.includes('class ') ||
+                    trimmed.includes('if ') || trimmed.includes('for ') || trimmed.includes('while ')) {
+                    indent++;
+                }
+                
+                return formatted;
+            });
+            
+            editor.value = formattedLines.join('\n');
+            updateLineNumbers();
+            showToast('代码已格式化', 'success');
+            log('代码格式化');
+        }
+
+        function downloadOutput() {
+            const output = document.getElementById('code-output').textContent;
+            const blob = new Blob([output], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `output_${Date.now()}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('输出已下载', 'success');
+            log('下载输出文件');
+        }
+
+        const codeTemplates = {
+            1: `import pandas as pd
+import numpy as np
+
+data = {
+    'name': ['Alice', 'Bob', 'Charlie', 'David', 'Eve'],
+    'age': [25, np.nan, 30, 35, np.nan],
+    'gender': ['F', 'M', np.nan, 'M', 'F']
+}
+df = pd.DataFrame(data)
+
+print("原始数据:")
+print(df)
+
+# 请使用fillna()方法处理缺失值
+# 1. 用均值填充age列的缺失值
+# 2. 用'Unknown'填充gender列的缺失值
+
+print("\\n处理后数据:")
 print(df)`,
             2: `import pandas as pd
 
 data = {
-    'category': ['电子产品', '服装', '电子产品', '食品', '服装', '电子产品'],
-    'region': ['华北', '华北', '华东', '华北', '华东', '华南'],
-    'amount': [1000, 500, 1200, 300, 800, 1500]
+    'product': ['A', 'B', 'C', 'A', 'B'],
+    'price': [100, 200, 150, 100, 200],
+    'quantity': [2, 1, 3, 4, 2]
 }
 df = pd.DataFrame(data)
 
+print("原始数据:")
+print(df)
+
+# 请计算每行的总价 (price * quantity)
+# 并添加到新的列 'total_amount'
+
+print("\\n计算后数据:")
 print(df)`,
             3: `import pandas as pd
 
 data = {
-    'category': ['电子产品', '服装', '电子产品', '食品', '服装', '电子产品'],
-    'amount': [1000, 500, 1200, 300, 800, 1500]
+    'order_date': ['2023-01-15', '2023-02-20', '2023-03-10', '2023-01-25'],
+    'amount': [100, 200, 150, 300]
 }
 df = pd.DataFrame(data)
 
+print("原始数据:")
+print(df)
+
+# 请:
+# 1. 将order_date列转换为datetime类型
+# 2. 提取年份、月份到新列
+
+print("\\n处理后数据:")
+print(df)`,
+            4: `import pandas as pd
+import numpy as np
+
+data = {
+    'product': ['A', 'B', 'C', 'D', 'E', 'F'],
+    'amount': [100, 200, 50, 300, 25, 400]
+}
+df = pd.DataFrame(data)
+
+print("原始数据:")
+print(df)
+
+# 请使用IQR方法检测和处理异常值
+# 1. 计算Q1, Q3, IQR
+# 2. 用中位数替换超出范围的异常值
+
+print("\\n处理后数据:")
+print(df)`,
+            5: `import pandas as pd
+import numpy as np
+
+data = {
+    'name': ['Alice', 'Bob', None, 'David', 'Eve'],
+    'date': ['2023-01-15', '2023-02-20', '2023-03-10', '2023-01-25', '2023-02-15'],
+    'price': [100, 200, 50, 300, 150],
+    'quantity': [2, 1, 3, 4, 2]
+}
+df = pd.DataFrame(data)
+
+print("原始数据:")
+print(df)
+
+# 综合练习:
+# 1. 处理name列的缺失值
+# 2. 将date列转换为datetime并提取年月
+# 3. 计算总价
+# 4. 使用IQR方法处理异常值
+
+print("\\n清洗后数据:")
 print(df)`
         };
-        function updateCodeEditor(practiceNum) { document.getElementById('code-editor').value = codeTemplates[practiceNum]; document.getElementById('code-output').innerHTML = '<span class="text-green-400">&gt; 执行结果将显示在这里...</span>'; }
-        document.getElementById('run-code').addEventListener('click', function() {
-            const code = document.getElementById('code-editor').value;
-            const output = document.getElementById('code-output');
-            output.innerHTML = '<span class="text-green-400">&gt; 正在执行...</span>\n\n';
-            setTimeout(() => { output.innerHTML = '<span class="text-green-400">&gt; 执行完成</span>\n\n<span class="text-green-400">' + simulatePythonExecution(code) + '</span>'; }, 500);
-        });
-        function simulatePythonExecution(code) {
-            if (code.includes('groupby') && code.includes('sum') && !code.includes('[')) return `category\n电子产品    3700\n食品         300\n服装        1300\nName: amount, dtype: int64`;
-            else if (code.includes('groupby') && code.includes('[') && code.includes('region')) return `                     amount 订单数\nregion category             \n华北   电子产品    1000     1\n      食品         300     1\n华东   服装        800     1\n华南   电子产品    1500     1`;
-            else if (code.includes('agg')) return `         总销售额    平均金额    最大金额\ncategory                             \n电子产品       3700  1233.333333        1500\n食品            300   300.000000         300\n服装           1300   650.000000         800`;
-            else return '代码执行成功，但未检测到预期的操作。\n\n提示：请完成题目要求的代码。';
+
+        function updateCodeEditor(practiceNum) {
+            currentPractice = practiceNum;
+            const editor = document.getElementById('code-editor');
+            
+            if (!codeVersions[`project1_practice${practiceNum}`]) {
+                editor.value = codeTemplates[practiceNum];
+            } else {
+                editor.value = codeVersions[`project1_practice${practiceNum}`];
+            }
+            
+            document.getElementById('code-output').innerHTML = '<span class="text-cyan-400">&gt; 准备就绪，请输入代码后点击运行...</span>';
+            document.getElementById('unsaved-indicator').classList.add('hidden');
+            isModified = false;
+            updateLineNumbers();
+            log('切换到练习' + practiceNum);
         }
-        document.getElementById('reset-code').addEventListener('click', function() { const activeNav = document.querySelector('.practice-nav-btn.active'); const practiceNum = practiceNavButtons.indexOf(activeNav.id) + 1; updateCodeEditor(practiceNum); });
-        document.getElementById('show-answer').addEventListener('click', function() {
-            const activeNav = document.querySelector('.practice-nav-btn.active');
-            const practiceNum = practiceNavButtons.indexOf(activeNav.id) + 1;
-            const answers = {
-                1: `import pandas as pd
 
-data = {
-    'category': ['电子产品', '服装', '电子产品', '食品', '服装', '电子产品'],
-    'region': ['华北', '华北', '华东', '华北', '华东', '华南'],
-    'amount': [1000, 500, 1200, 300, 800, 1500]
-}
-df = pd.DataFrame(data)
+        function autoSave() {
+            const editor = document.getElementById('code-editor');
+            codeVersions[`project1_practice${currentPractice}`] = editor.value;
+            localStorage.setItem('codeVersions', JSON.stringify(codeVersions));
+            document.getElementById('unsaved-indicator').classList.add('hidden');
+            isModified = false;
+            showToast('代码已保存', 'success');
+        }
 
-result = df.groupby('category')['amount'].sum()
-print(result)`,
-                2: `import pandas as pd
+        function updateDailyChallenge() {
+            const challenges = [
+                '使用fillna()的高级用法处理多列缺失值',
+                '实现一个数据清洗函数，处理各种异常情况',
+                '使用method="bfill"进行后向填充',
+                '创建自定义的异常值检测器',
+                '实现数据验证和清洗的完整流程'
+            ];
+            const today = new Date().getDate();
+            const challenge = challenges[today % challenges.length];
+            document.getElementById('daily-challenge-text').textContent = challenge;
+            document.getElementById('daily-challenge').classList.remove('hidden');
+        }
 
-data = {
-    'category': ['电子产品', '服装', '电子产品', '食品', '服装', '电子产品'],
-    'region': ['华北', '华北', '华东', '华北', '华东', '华南'],
-    'amount': [1000, 500, 1200, 300, 800, 1500]
-}
-df = pd.DataFrame(data)
-
-result = df.groupby(['region', 'category']).agg({'amount': ['sum', 'count']}).reset_index()
-print(result)`,
-                3: `import pandas as pd
-
-data = {
-    'category': ['电子产品', '服装', '电子产品', '食品', '服装', '电子产品'],
-    'amount': [1000, 500, 1200, 300, 800, 1500]
-}
-df = pd.DataFrame(data)
-
-result = df.groupby('category')['amount'].agg(总销售额='sum', 平均金额='mean', 最大金额='max')
-print(result)`
-            };
-            document.getElementById('code-editor').value = answers[practiceNum];
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
         });
-        document.getElementById('start-test').addEventListener('click', function() { document.getElementById('content-practice').classList.add('hidden'); document.getElementById('content-test').classList.remove('hidden'); document.getElementById('tab-practice').classList.remove('active'); document.getElementById('tab-test').classList.add('active'); });
-        document.getElementById('auto-save').addEventListener('click', function() { localStorage.setItem('project2-practice-code', document.getElementById('code-editor').value); alert('代码已自动保存！'); });
-        const correctAnswers = { q1: 'B', q2: 'C', q3: 'B', q4: 'B', q5: 'C' };
+
+        const tabs = ['learn', 'practice', 'test', 'history'];
+        tabs.forEach(tab => {
+            document.getElementById(`tab-${tab}`).addEventListener('click', function() {
+                tabs.forEach(t => {
+                    document.getElementById(`content-${t}`).classList.add('hidden');
+                    document.getElementById(`tab-${t}`).classList.remove('active');
+                });
+                document.getElementById(`content-${tab}`).classList.remove('hidden');
+                document.getElementById(`tab-${tab}`).classList.add('active');
+                
+                if (tab === 'history') {
+                    updateHistoryDisplay();
+                }
+            });
+        });
+
+        document.getElementById('complete-learn').addEventListener('click', function() {
+            saveProgress('project1', 'learned');
+            showToast('已标记为已学习', 'success');
+            this.classList.add('completion-animation');
+            log('标记为已学习');
+        });
+
+        function saveProgress(projectId, type) {
+            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
+            if (!progress[projectId]) {
+                progress[projectId] = { learned: false, practiced: false, tested: false };
+            }
+            progress[projectId][type] = true;
+            localStorage.setItem('learningProgress', JSON.stringify(progress));
+        }
+
+        const practiceNavButtons = ['practice-nav-1', 'practice-nav-2', 'practice-nav-3', 'practice-nav-4', 'practice-nav-5'];
+        const practiceDetails = ['practice-detail-1', 'practice-detail-2', 'practice-detail-3', 'practice-detail-4', 'practice-detail-5'];
+        
+        practiceNavButtons.forEach((btn, index) => {
+            document.getElementById(btn).addEventListener('click', function() {
+                practiceNavButtons.forEach((b, i) => {
+                    document.getElementById(b).classList.remove('active');
+                    document.getElementById(practiceDetails[i]).classList.add('hidden');
+                });
+                this.classList.add('active');
+                document.getElementById(practiceDetails[index]).classList.remove('hidden');
+                
+                updateCodeEditor(index + 1);
+            });
+        });
+
+        document.getElementById('run-code').addEventListener('click', runCode);
+        
+        document.getElementById('reset-code').addEventListener('click', function() {
+            updateCodeEditor(currentPractice);
+            showToast('代码已重置', 'success');
+        });
+        
+        document.getElementById('format-code').addEventListener('click', formatCode);
+        document.getElementById('download-output').addEventListener('click', downloadOutput);
+        
+        document.getElementById('auto-save').addEventListener('click', autoSave);
+        
+        document.getElementById('start-test').addEventListener('click', function() {
+            document.getElementById('content-practice').classList.add('hidden');
+            document.getElementById('content-test').classList.remove('hidden');
+            document.getElementById('tab-practice').classList.remove('active');
+            document.getElementById('tab-test').classList.add('active');
+        });
+
+        document.getElementById('code-editor').addEventListener('input', function() {
+            document.getElementById('unsaved-indicator').classList.remove('hidden');
+            isModified = true;
+            updateLineNumbers();
+            document.getElementById('char-count').textContent = this.value.length + ' 字符';
+        });
+
+        document.getElementById('code-editor').addEventListener('keyup', updateCursorPosition);
+        document.getElementById('code-editor').addEventListener('click', updateCursorPosition);
+        document.getElementById('code-editor').addEventListener('scroll', function() {
+            document.getElementById('line-numbers').style.top = -this.scrollTop + 'px';
+        });
+
+        document.getElementById('code-editor').addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                e.preventDefault();
+                runCode();
+            } else if (e.ctrlKey && e.key === 'r') {
+                e.preventDefault();
+                updateCodeEditor(currentPractice);
+            } else if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                autoSave();
+            } else if (e.ctrlKey && e.key === 'Shift' && e.key === 'F') {
+                e.preventDefault();
+                formatCode();
+            } else if (e.key === 'Tab') {
+                e.preventDefault();
+                const start = this.selectionStart;
+                const end = this.selectionEnd;
+                this.value = this.value.substring(0, start) + '    ' + this.value.substring(end);
+                this.selectionStart = this.selectionEnd = start + 4;
+            }
+            
+            updateCursorPosition();
+        });
+
+        let autocompleteTimeout;
+        document.getElementById('code-editor').addEventListener('input', function(e) {
+            clearTimeout(autocompleteTimeout);
+            autocompleteTimeout = setTimeout(() => {
+                showAutocomplete(this.value, this.selectionStart);
+            }, 300);
+        });
+
+        const outputSplitter = document.getElementById('output-splitter');
+        const outputPanel = document.getElementById('output-panel');
+        let isResizing = false;
+
+        outputSplitter.addEventListener('mousedown', () => { isResizing = true; });
+        document.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+            const container = outputPanel.parentElement;
+            const containerRect = container.getBoundingClientRect();
+            const newHeight = ((e.clientY - containerRect.top - 140) / containerRect.height) * 100;
+            if (newHeight > 20 && newHeight < 80) {
+                outputPanel.style.height = newHeight + '%';
+            }
+        });
+        document.addEventListener('mouseup', () => { isResizing = false; });
+
+        const correctAnswers = { q1: 'C', q2: 'B', q3: 'A', q4: 'B', q5: 'B' };
+
         document.getElementById('submit-exam').addEventListener('click', function() {
-            let score = 0; const answers = {};
-            Object.keys(correctAnswers).forEach(q => { const selected = document.querySelector(`input[name="${q}"]:checked`); answers[q] = selected ? selected.value : null; if (answers[q] === correctAnswers[q]) score += 20; });
-            document.getElementById('exam-questions').classList.add('hidden'); document.getElementById('submit-exam').classList.add('hidden'); document.getElementById('exam-result').classList.remove('hidden');
-            const scoreCircle = document.getElementById('score-circle'); const scoreText = document.getElementById('score-text'); const resultText = document.getElementById('result-text'); const answerDetails = document.getElementById('answer-details');
+            let score = 0;
+            const answers = {};
+            
+            Object.keys(correctAnswers).forEach(q => {
+                const selected = document.querySelector(`input[name="${q}"]:checked`);
+                answers[q] = selected ? selected.value : null;
+                if (answers[q] === correctAnswers[q]) {
+                    score += 20;
+                }
+            });
+
+            document.getElementById('exam-questions').classList.add('hidden');
+            document.getElementById('submit-exam').classList.add('hidden');
+            document.getElementById('exam-result').classList.remove('hidden');
+
+            const scoreCircle = document.getElementById('score-circle');
+            const scoreText = document.getElementById('score-text');
+            const resultText = document.getElementById('result-text');
+            const answerDetails = document.getElementById('answer-details');
+
             scoreText.textContent = `得分：${score}/100`;
-            if (score >= 80) { scoreCircle.innerHTML = '<span class="text-4xl">🎉</span>'; resultText.textContent = '优秀！你已经掌握了分组聚合的基本知识。'; resultText.className = 'text-green-400'; saveProgress('project2', 'tested'); }
-            else if (score >= 60) { scoreCircle.innerHTML = '<span class="text-4xl">👍</span>'; resultText.textContent = '良好！继续努力，争取更高分数。'; resultText.className = 'text-yellow-400'; }
-            else { scoreCircle.innerHTML = '<span class="text-4xl">📚</span>'; resultText.textContent = '需要复习一下相关知识，加油！'; resultText.className = 'text-orange-400'; }
+            
+            if (score >= 80) {
+                scoreCircle.innerHTML = '<span class="text-4xl">🎉</span>';
+                resultText.textContent = '优秀！你已经掌握了数据清洗的基本知识。';
+                resultText.className = 'text-green-400';
+                saveProgress('project1', 'tested');
+            } else if (score >= 60) {
+                scoreCircle.innerHTML = '<span class="text-4xl">👍</span>';
+                resultText.textContent = '良好！继续努力，争取更高分数。';
+                resultText.className = 'text-yellow-400';
+            } else {
+                scoreCircle.innerHTML = '<span class="text-4xl">📚</span>';
+                resultText.textContent = '需要复习一下相关知识，加油！';
+                resultText.className = 'text-orange-400';
+            }
+
             let details = '<h4 class="font-bold text-gray-300 mb-4">答案详情</h4><div class="space-y-2">';
-            Object.keys(correctAnswers).forEach((q, i) => { const isCorrect = answers[q] === correctAnswers[q]; details += `<p class="${isCorrect ? 'text-green-400' : 'text-red-400'}">${i+1}. 你的答案: ${answers[q] || '未作答'} | 正确答案: ${correctAnswers[q]} ${isCorrect ? '✓' : '✗'}</p>`; });
-            details += '</div>'; answerDetails.innerHTML = details;
+            Object.keys(correctAnswers).forEach((q, i) => {
+                const isCorrect = answers[q] === correctAnswers[q];
+                details += `<p class="${isCorrect ? 'text-green-400' : 'text-red-400'}">
+                    ${i+1}. 你的答案: ${answers[q] || '未作答'} | 正确答案: ${correctAnswers[q]} ${isCorrect ? '✓' : '✗'}
+                </p>`;
+            });
+            details += '</div>';
+            answerDetails.innerHTML = details;
+            
+            log('完成考试，得分: ' + score);
         });
+
+        document.getElementById('answer-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        setInterval(() => {
+            if (isModified) {
+                autoSave();
+            }
+        }, 30000);
+
+        if (localStorage.getItem('theme') === 'light') {
+            document.body.classList.add('light-theme');
+            document.querySelectorAll('.theme-toggle').forEach(t => t.classList.add('active'));
+        }
+
+        if (favorites.includes('project1')) {
+            document.getElementById('favorite-btn').classList.add('active');
+            document.getElementById('favorite-btn').innerHTML = '<i class="fa fa-star text-xl text-yellow-400"></i>';
+        }
+
+        const savedHistory = localStorage.getItem('codeHistory_project1');
+        if (savedHistory) {
+            codeHistory = JSON.parse(savedHistory);
+        }
+
+        initPyodide();
+        updateDailyChallenge();
+        updateLineNumbers();
+        updateCodeEditor(1);
+        Prism.highlightAll();
+        log('项目1加载完成');
     </script>
 </body>
 </html>
