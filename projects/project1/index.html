@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>数据清洗实战 - TT's Learning</title>
+    <title>数据清洗实战 - Pandas 数据分析实战训练营</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -18,7 +19,6 @@
         
         .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
         
-        /* Header */
         header { 
             background: rgba(0, 0, 0, 0.3); 
             border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
@@ -57,7 +57,6 @@
         }
         header a:hover { color: #00d4ff; }
         
-        /* Project Header */
         .project-header { padding: 48px 0 32px; }
         .project-header .container { display: flex; justify-content: space-between; align-items: flex-start; gap: 32px; }
         .project-info { flex: 1; }
@@ -84,7 +83,6 @@
             color: #a0a0b8; 
             font-size: 16px; 
             margin-bottom: 20px;
-            max-width: 600px;
         }
         .project-meta { display: flex; gap: 12px; flex-wrap: wrap; }
         .badge { 
@@ -121,7 +119,6 @@
             font-family: 'Monaco', 'Consolas', monospace;
         }
         
-        /* Progress Card */
         .progress-card {
             background: linear-gradient(135deg, rgba(0, 212, 255, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -160,7 +157,6 @@
         .progress-stat-num { font-size: 20px; font-weight: 700; color: #ffffff; }
         .progress-stat-label { font-size: 12px; color: #707090; text-transform: uppercase; }
         
-        /* Tabs */
         .tabs-wrapper {
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -196,33 +192,12 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         
-        /* Content Cards */
-        .content-section { margin-bottom: 32px; }
-        .content-section-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: #8b5cf6;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .content-section-title::before {
-            content: '';
-            width: 24px;
-            height: 2px;
-            background: linear-gradient(90deg, #00d4ff, #8b5cf6);
-            border-radius: 2px;
-        }
-        
         .content-card { 
             background: rgba(255, 255, 255, 0.04); 
             border: 1px solid rgba(255, 255, 255, 0.08); 
             border-radius: 16px; 
             padding: 28px; 
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
         .content-card h3 { 
             font-size: 20px; 
@@ -236,42 +211,14 @@
             margin-bottom: 12px; 
         }
         .content-card ul { 
-            list-style: none; 
-            padding-left: 0; 
+            list-style: disc; 
+            padding-left: 20px; 
+            color: #c8c8d8; 
         }
         .content-card ul li { 
-            margin-bottom: 12px; 
-            color: #c8c8d8;
-            padding-left: 24px;
-            position: relative;
+            margin-bottom: 8px; 
         }
-        .content-card ul li::before {
-            content: '▸';
-            position: absolute;
-            left: 0;
-            color: #00d4ff;
-            font-weight: 700;
-        }
-        .content-card strong { color: #ffffff; font-weight: 600; }
         
-        .info-box {
-            background: rgba(0, 212, 255, 0.08);
-            border: 1px solid rgba(0, 212, 255, 0.2);
-            border-radius: 12px;
-            padding: 16px 20px;
-            margin: 16px 0;
-        }
-        .info-box p { margin: 0; color: #a0d4ff; }
-        .tip-box {
-            background: rgba(139, 92, 246, 0.08);
-            border: 1px solid rgba(139, 92, 246, 0.2);
-            border-radius: 12px;
-            padding: 16px 20px;
-            margin: 16px 0;
-        }
-        .tip-box p { margin: 0; color: #d4c4ff; }
-        
-        /* Code Box */
         .code-box { 
             background: #0d0d1a; 
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -287,34 +234,29 @@
             line-height: 1.7; 
             white-space: pre;
         }
-        .code-comment { color: #6a9955; }
-        .code-keyword { color: #569cd6; }
-        .code-string { color: #ce9178; }
-        .code-function { color: #dcdcaa; }
         
-        /* Question Box */
         .question-box { 
             background: rgba(255, 255, 255, 0.04); 
             border: 1px solid rgba(255, 255, 255, 0.08); 
             border-radius: 16px; 
-            padding: 24px; 
-            margin-bottom: 20px; 
+            padding: 20px; 
+            margin-bottom: 16px; 
         }
         .question-box h4 { 
             font-size: 16px; 
             font-weight: 600; 
             color: #ffffff; 
-            margin-bottom: 16px; 
+            margin-bottom: 12px; 
         }
         .question-box p { 
             color: #c8c8d8; 
-            margin-bottom: 16px; 
+            margin-bottom: 12px; 
         }
         
         .option-btn { 
             display: block; 
             width: 100%; 
-            padding: 14px 18px; 
+            padding: 14px 16px; 
             margin-bottom: 10px; 
             border: 1px solid rgba(255, 255, 255, 0.1); 
             border-radius: 10px; 
@@ -348,18 +290,16 @@
         .explanation { 
             background: rgba(251, 191, 36, 0.12); 
             border-left: 4px solid #fbbf24; 
-            padding: 16px 20px; 
+            padding: 16px; 
             margin-top: 16px; 
-            border-radius: 0 10px 10px 0; 
+            border-radius: 0 8px 8px 0; 
             display: none; 
         }
-        .explanation p { color: #fef3c7; margin: 0; }
+        .explanation p { color: #fef3c7; }
         .explanation strong { color: #fcd34d; }
         
-        /* Buttons */
-        .btn-group { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
         .btn { 
-            padding: 12px 28px; 
+            padding: 12px 24px; 
             border-radius: 12px; 
             font-weight: 600; 
             font-size: 14px; 
@@ -379,45 +319,41 @@
             transform: translateY(-2px); 
             box-shadow: 0 8px 24px rgba(0, 212, 255, 0.3); 
         }
-        .btn-secondary { 
+        .btn-outline { 
             background: rgba(255, 255, 255, 0.06); 
             color: #ffffff; 
             border: 1px solid rgba(255, 255, 255, 0.12); 
         }
-        .btn-secondary:hover { 
+        .btn-outline:hover { 
             background: rgba(255, 255, 255, 0.1); 
             border-color: rgba(255, 255, 255, 0.2); 
         }
         
-        /* Test Result */
         .test-result { 
             background: rgba(255, 255, 255, 0.04); 
             border: 1px solid rgba(255, 255, 255, 0.08); 
-            border-radius: 20px; 
-            padding: 40px; 
+            border-radius: 16px; 
+            padding: 32px; 
             text-align: center; 
             margin-top: 24px; 
             display: none; 
         }
-        .test-result-icon { font-size: 64px; margin-bottom: 20px; }
         .test-result h3 { 
-            font-size: 26px; 
+            font-size: 24px; 
             font-weight: 900; 
             color: #ffffff;
-            margin-bottom: 12px; 
+            margin-bottom: 16px; 
         }
         .test-result .score { 
-            font-size: 64px; 
+            font-size: 48px; 
             font-weight: 900; 
             background: linear-gradient(135deg, #00d4ff 0%, #8b5cf6 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 20px; 
+            margin-bottom: 24px; 
         }
-        .test-result p { color: #a0a0b8; margin-bottom: 24px; font-size: 15px; }
         
-        /* Footer */
         footer { 
             text-align: center; 
             padding: 40px 0; 
@@ -427,7 +363,6 @@
             margin-top: 60px;
         }
         
-        /* Responsive */
         @media (max-width: 968px) {
             .project-header .container { flex-direction: column; }
             .progress-card { width: 100%; }
@@ -439,8 +374,10 @@
             .project-title { font-size: 24px; }
         }
     </style>
+
 </head>
 <body>
+    
     <header>
         <div class="container">
             <div class="header-left">
@@ -456,7 +393,6 @@
             <div class="project-info">
                 <div class="project-icon-large">🧹</div>
                 <h1 class="project-title">数据清洗实战</h1>
-                <p class="project-description">掌握Pandas数据清洗的核心技能，包括处理缺失值、重复值、异常值等关键步骤，为后续分析打下坚实基础。</p>
                 <div class="project-meta">
                     <span class="badge badge-easy">入门</span>
                     <span class="badge badge-time">30分钟</span>
@@ -499,331 +435,223 @@
 
     <div class="container">
         <div class="tabs-wrapper">
+
             <button class="tab active" onclick="showTab('learn')">📚 学习</button>
             <button class="tab" onclick="showTab('practice')">✏️ 练习</button>
             <button class="tab" onclick="showTab('test')">📝 测试</button>
         </div>
 
         <div id="learn-tab" class="tab-content active">
-            <div class="content-section">
-                <div class="content-section-title">第一章 数据清洗基础</div>
-                
-                <div class="content-card">
-                    <h3>1.1 什么是数据清洗</h3>
-                    <p>数据清洗是数据分析过程中非常重要的一步。在实际工作中，我们获取到的原始数据往往存在各种问题：</p>
-                    <ul>
-                        <li><strong>缺失值</strong> - 某些字段没有记录数据</li>
-                        <li><strong>重复值</strong> - 相同的数据被记录了多次</li>
-                        <li><strong>异常值</strong> - 明显不符合常理的数据</li>
-                        <li><strong>格式不一致</strong> - 同一类型数据格式不统一</li>
-                    </ul>
-                    <div class="info-box">
-                        <p>💡 数据清洗通常占数据分析总时间的 60% - 80%，是数据科学工作中不可或缺的环节。</p>
-                    </div>
-                </div>
-
-                <div class="content-card">
-                    <h3>1.2 Pandas 读取数据</h3>
-                    <p>首先，让我们学习如何用 Pandas 读取 CSV 数据文件：</p>
-                    <div class="code-box">
-<pre><span class="code-keyword">import</span> pandas <span class="code-keyword">as</span> pd
-
-<span class="code-comment"># 读取 CSV 文件</span>
-df = pd.read_csv(<span class="code-string">'retail_orders.csv'</span>)
-
-<span class="code-comment"># 查看前 5 行数据</span>
-<span class="code-function">print</span>(df.head())</pre>
-                    </div>
-                    <div class="tip-box">
-                        <p>📝 <strong>提示：</strong> 使用 df.info() 可以快速查看数据的基本信息，包括每列的数据类型和非空值数量。</p>
-                    </div>
-                </div>
+            <div class="content-card">
+                <h3>📌 项目概述</h3>
+                <p>数据清洗是数据分析流程中的关键步骤，它直接影响后续分析结果的准确性。本项目将带你掌握Pandas数据清洗的核心技能。</p>
+                <ul>
+                    <li>处理缺失值（NaN值）</li>
+                    <li>识别和删除重复数据</li>
+                    <li>检测和处理异常值</li>
+                    <li>数据类型转换</li>
+                    <li>数据标准化和规范化</li>
+                </ul>
             </div>
 
-            <div class="content-section">
-                <div class="content-section-title">第二章 缺失值处理</div>
-                
-                <div class="content-card">
-                    <h3>2.1 查找缺失值</h3>
-                    <p>我们可以使用 isnull() 或 isna() 方法来检测缺失值：</p>
-                    <div class="code-box">
-<pre><span class="code-comment"># 查看每列缺失值数量</span>
-<span class="code-function">print</span>(df.isnull().sum())
+            <div class="content-card">
+                <h3>🔧 核心代码</h3>
+                <p>以下是数据清洗常用的Pandas操作：</p>
+                <div class="code-box">
+                    <pre>import pandas as pd
 
-<span class="code-comment"># 查看包含缺失值的行</span>
-missing_rows = df[df.isnull().any(axis=<span class="code-keyword">1</span>)]</pre>
-                    </div>
-                </div>
+# 读取数据
+df = pd.read_csv('retail_orders.csv')
 
-                <div class="content-card">
-                    <h3>2.2 处理缺失值</h3>
-                    <p>常见的处理方式有两种：删除和填充：</p>
-                    <div class="code-box">
-<pre><span class="code-comment"># 方式 1：删除含有缺失值的行</span>
+# 查看数据基本信息
+print(df.info())
+print(df.head())
+
+# 1. 处理缺失值
+# 删除包含缺失值的行
 df_clean = df.dropna()
+# 或者填充缺失值
+df['age'] = df['age'].fillna(df['age'].mean())
 
-<span class="code-comment"># 方式 2：用均值填充数值型列</span>
-df[<span class="code-string">'price'</span>] = df[<span class="code-string">'price'</span>].fillna(df[<span class="code-string">'price'</span>].mean())
+# 2. 处理重复值
+df_clean = df.drop_duplicates()
 
-<span class="code-comment"># 方式 3：用众数填充类别型列</span>
-df[<span class="code-string">'category'</span>] = df[<span class="code-string">'category'</span>].fillna(df[<span class="code-string">'category'</span>].mode()[<span class="code-keyword">0</span>])</pre>
-                    </div>
+# 3. 检测异常值（使用IQR方法）
+Q1 = df['price'].quantile(0.25)
+Q3 = df['price'].quantile(0.75)
+IQR = Q3 - Q1
+lower_bound = Q1 - 1.5 * IQR
+upper_bound = Q3 + 1.5 * IQR
+df_clean = df[(df['price'] >= lower_bound) & (df['price'] <= upper_bound)]
+
+# 4. 数据类型转换
+df['order_date'] = pd.to_datetime(df['order_date'])
+df['amount'] = df['amount'].astype(float)</pre>
                 </div>
             </div>
 
-            <div class="content-section">
-                <div class="content-section-title">第三章 重复值与异常值</div>
-                
-                <div class="content-card">
-                    <h3>3.1 处理重复值</h3>
-                    <div class="code-box">
-<pre><span class="code-comment"># 检查重复值</span>
-<span class="code-function">print</span>(<span class="code-string">"重复行数:"</span>, df.duplicated().sum())
-
-<span class="code-comment"># 删除重复值</span>
-df = df.drop_duplicates()</pre>
-                    </div>
-                </div>
-
-                <div class="content-card">
-                    <h3>3.2 检测异常值</h3>
-                    <p>常用方法是使用 IQR (四分位距) 来检测异常值：</p>
-                    <div class="code-box">
-<pre>Q1 = df[<span class="code-string">'amount'</span>].quantile(<span class="code-keyword">0.25</span>)
-Q3 = df[<span class="code-string">'amount'</span>].quantile(<span class="code-keyword">0.75</span>)
-IQR = Q3 - Q1
-
-lower_bound = Q1 - <span class="code-keyword">1.5</span> * IQR
-upper_bound = Q3 + <span class="code-keyword">1.5</span> * IQR
-
-<span class="code-comment"># 筛选出正常范围的数据</span>
-df_clean = df[(df[<span class="code-string">'amount'</span>] >= lower_bound) & (df[<span class="code-string">'amount'</span>] <= upper_bound)]</pre>
-                    </div>
-                </div>
+            <div class="content-card">
+                <h3>💡 学习要点</h3>
+                <ul>
+                    <li><strong>dropna() vs fillna()</strong>: 根据业务需求选择删除还是填充缺失值</li>
+                    <li><strong>重复值检测</strong>: 使用duplicated()查看重复行，drop_duplicates()删除</li>
+                    <li><strong>异常值处理</strong>: IQR方法是常用的异常值检测手段</li>
+                    <li><strong>数据类型</strong>: 日期字段必须转换为datetime类型才能进行时间分析</li>
+                </ul>
             </div>
         </div>
 
         <div id="practice-tab" class="tab-content">
-            <div class="content-section">
-                <div class="content-section-title">练习题</div>
+            <div class="content-card">
+                <h3>✏️ 编程练习</h3>
                 
                 <div class="question-box">
-                    <h4>练习 1</h4>
-                    <p>如果你想查看 DataFrame 中每列有多少缺失值，应该使用哪个方法？</p>
-                    <div class="options">
-                        <button class="option-btn" onclick="selectOption(this, 1, 'A', false)">A. df.na()</button>
-                        <button class="option-btn" onclick="selectOption(this, 1, 'B', true)">B. df.isnull().sum()</button>
-                        <button class="option-btn" onclick="selectOption(this, 1, 'C', false)">C. df.count()</button>
-                        <button class="option-btn" onclick="selectOption(this, 1, 'D', false)">D. df.missing()</button>
+                    <h4>练习1：处理缺失值</h4>
+                    <p>请编写代码，使用中位数填充数值列的缺失值：</p>
+                    <div class="code-box">
+                        <pre>import pandas as pd
+
+def fill_missing_with_median(df):
+    """使用中位数填充数值列的缺失值"""
+    # 请在此处编写代码
+    
+    return df</pre>
                     </div>
-                    <div class="explanation" id="explanation-1">
-                        <p><strong>正确！</strong> df.isnull() 返回一个布尔矩阵，然后用 sum() 就可以统计每列的缺失值数量。</p>
-                    </div>
+                    <button class="btn btn-primary" onclick="showAnswer(1)">查看答案</button>
                 </div>
 
                 <div class="question-box">
-                    <h4>练习 2</h4>
-                    <p>下列哪个方法可以删除 DataFrame 中的重复行？</p>
-                    <div class="options">
-                        <button class="option-btn" onclick="selectOption(this, 2, 'A', false)">A. df.remove_duplicates()</button>
-                        <button class="option-btn" onclick="selectOption(this, 2, 'B', true)">B. df.drop_duplicates()</button>
-                        <button class="option-btn" onclick="selectOption(this, 2, 'C', false)">C. df.delete_duplicates()</button>
-                        <button class="option-btn" onclick="selectOption(this, 2, 'D', false)">D. df.clear_duplicates()</button>
-                    </div>
-                    <div class="explanation" id="explanation-2">
-                        <p><strong>正确！</strong> drop_duplicates() 是 Pandas 专门用来删除重复行的方法。</p>
-                    </div>
-                </div>
+                    <h4>练习2：数据类型转换</h4>
+                    <p>请编写代码，将字符串日期转换为datetime类型：</p>
+                    <div class="code-box">
+                        <pre>import pandas as pd
 
-                <div class="question-box">
-                    <h4>练习 3</h4>
-                    <p>用均值填充缺失值时，使用哪个方法？</p>
-                    <div class="options">
-                        <button class="option-btn" onclick="selectOption(this, 3, 'A', true)">A. df.fillna(df.mean())</button>
-                        <button class="option-btn" onclick="selectOption(this, 3, 'B', false)">B. df.replace.nan(df.mean())</button>
-                        <button class="option-btn" onclick="selectOption(this, 3, 'C', false)">C. df.fill.mean()</button>
-                        <button class="option-btn" onclick="selectOption(this, 3, 'D', false)">D. df.na.fill(df.mean())</button>
+def convert_date_format(df, date_column):
+    """将字符串日期转换为datetime类型"""
+    # 请在此处编写代码
+    
+    return df</pre>
                     </div>
-                    <div class="explanation" id="explanation-3">
-                        <p><strong>正确！</strong> fillna() 方法用于填充缺失值，可以接受均值、中位数等统计值作为参数。</p>
-                    </div>
+                    <button class="btn btn-primary" onclick="showAnswer(2)">查看答案</button>
                 </div>
             </div>
         </div>
 
         <div id="test-tab" class="tab-content">
-            <div class="content-section">
-                <div class="content-section-title">测试题（共 5 题，满分 100 分）</div>
+            <div class="content-card">
+                <h3>📝 知识测试</h3>
                 
                 <div class="question-box">
-                    <h4>问题 1 / 5</h4>
-                    <p>数据清洗通常占数据分析总时间的比例约为？</p>
-                    <div class="options">
-                        <button class="option-btn" onclick="selectTestOption(this, 1, 'A', false)">A. 10% - 20%</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 1, 'B', false)">B. 30% - 40%</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 1, 'C', true)">C. 60% - 80%</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 1, 'D', false)">D. 90% - 100%</button>
+                    <h4>问题1：以下哪个方法用于删除包含缺失值的行？</h4>
+                    <button class="option-btn" onclick="selectOption(1, 'A')">A. fillna()</button>
+                    <button class="option-btn" onclick="selectOption(1, 'B')">B. dropna()</button>
+                    <button class="option-btn" onclick="selectOption(1, 'C')">C. drop_duplicates()</button>
+                    <button class="option-btn" onclick="selectOption(1, 'D')">D. isnull()</button>
+                    <div class="explanation" id="exp1">
+                        <p><strong>正确答案：B</strong></p>
+                        <p>dropna() 用于删除包含缺失值的行或列。fillna() 用于填充缺失值，drop_duplicates() 用于删除重复行，isnull() 用于检测缺失值。</p>
                     </div>
                 </div>
 
                 <div class="question-box">
-                    <h4>问题 2 / 5</h4>
-                    <p>下列哪个方法可以删除含有缺失值的行？</p>
-                    <div class="options">
-                        <button class="option-btn" onclick="selectTestOption(this, 2, 'A', true)">A. df.dropna()</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 2, 'B', false)">B. df.delete.na()</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 2, 'C', false)">C. df.remove.na()</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 2, 'D', false)">D. df.na.drop()</button>
+                    <h4>问题2：以下哪个方法可以将字符串转换为日期类型？</h4>
+                    <button class="option-btn" onclick="selectOption(2, 'A')">A. pd.to_numeric()</button>
+                    <button class="option-btn" onclick="selectOption(2, 'B')">B. pd.to_datetime()</button>
+                    <button class="option-btn" onclick="selectOption(2, 'C')">C. pd.astype()</button>
+                    <button class="option-btn" onclick="selectOption(2, 'D')">D. pd.str()</button>
+                    <div class="explanation" id="exp2">
+                        <p><strong>正确答案：B</strong></p>
+                        <p>pd.to_datetime() 专门用于将字符串转换为datetime类型，是处理日期数据的首选方法。</p>
                     </div>
                 </div>
 
                 <div class="question-box">
-                    <h4>问题 3 / 5</h4>
-                    <p>IQR 是什么的缩写？</p>
-                    <div class="options">
-                        <button class="option-btn" onclick="selectTestOption(this, 3, 'A', false)">A. Inner Quantity Range</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 3, 'B', true)">B. Interquartile Range</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 3, 'C', false)">C. Integer Quarter Range</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 3, 'D', false)">D. Internal Quick Range</button>
+                    <h4>问题3：IQR方法中，异常值的判断标准是？</h4>
+                    <button class="option-btn" onclick="selectOption(3, 'A')">A. 超出均值±1倍标准差</button>
+                    <button class="option-btn" onclick="selectOption(3, 'B')">B. 超出Q1-1.5*IQR或Q3+1.5*IQR</button>
+                    <button class="option-btn" onclick="selectOption(3, 'C')">C. 超出中位数±1倍IQR</button>
+                    <button class="option-btn" onclick="selectOption(3, 'D')">D. 超出最大值或最小值</button>
+                    <div class="explanation" id="exp3">
+                        <p><strong>正确答案：B</strong></p>
+                        <p>IQR方法中，异常值定义为小于Q1-1.5*IQR或大于Q3+1.5*IQR的值，这是统计学中常用的异常值检测标准。</p>
                     </div>
                 </div>
 
-                <div class="question-box">
-                    <h4>问题 4 / 5</h4>
-                    <p>计算 IQR 时，Q1 和 Q3 分别代表什么？</p>
-                    <div class="options">
-                        <button class="option-btn" onclick="selectTestOption(this, 4, 'A', false)">A. 最小值和最大值</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 4, 'B', false)">B. 均值和中位数</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 4, 'C', true)">C. 下四分位数和上四分位数</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 4, 'D', false)">D. 方差和标准差</button>
-                    </div>
+                <div style="text-align: center; margin-top: 24px;">
+                    <button class="btn btn-primary" onclick="checkAnswers()">提交答案</button>
                 </div>
 
-                <div class="question-box">
-                    <h4>问题 5 / 5</h4>
-                    <p>用众数填充缺失值最适合什么类型的数据？</p>
-                    <div class="options">
-                        <button class="option-btn" onclick="selectTestOption(this, 5, 'A', false)">A. 数值型数据</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 5, 'B', true)">B. 类别型数据</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 5, 'C', false)">C. 时间序列数据</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 5, 'D', false)">D. 二进制数据</button>
-                    </div>
-                </div>
-
-                <div class="btn-group">
-                    <button class="btn btn-primary" onclick="submitTest()">📤 提交答案</button>
-                    <button class="btn btn-secondary" onclick="resetTest()">🔄 重新开始</button>
-                </div>
-
-                <div class="test-result" id="test-result">
-                    <div class="test-result-icon">🎉</div>
-                    <h3>测试完成！</h3>
-                    <div class="score" id="final-score">0分</div>
-                    <p id="result-message">太棒了！继续努力！</p>
-                    <div class="btn-group" style="justify-content: center;">
-                        <button class="btn btn-secondary" onclick="resetTest()">再来一次</button>
-                        <a href="../../index.html" class="btn btn-primary">返回首页 →</a>
-                    </div>
+                <div class="test-result" id="result">
+                    <h3 id="result-title"></h3>
+                    <div class="score" id="score"></div>
+                    <button class="btn btn-outline" onclick="resetTest()">重新测试</button>
                 </div>
             </div>
         </div>
     </div>
 
     <footer>
-        <div class="container">
-            <p>© 2024 TT's Learning Space · Pandas 数据分析实战训练营</p>
-        </div>
+        <p>© 2024 TT's Learning Space · Pandas 数据分析实战训练营</p>
     </footer>
 
     <script>
-        let testAnswers = {};
-        let totalQuestions = 5;
-        
+        const correctAnswers = {1: 'B', 2: 'B', 3: 'B'};
+        const userAnswers = {};
+
         function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.getElementById(tabName + '-tab').classList.add('active');
-            event.target.classList.add('active');
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelector(`button[onclick="showTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(`${tabName}-tab`).classList.add('active');
         }
-        
-        function selectOption(btn, questionId, option, isCorrect) {
-            const questionBox = btn.closest('.question-box');
-            const allOptions = questionBox.querySelectorAll('.option-btn');
-            allOptions.forEach(opt => opt.classList.remove('selected', 'correct', 'wrong'));
-            btn.classList.add('selected');
-            
-            const explanation = document.getElementById('explanation-' + questionId);
-            if (explanation) {
-                explanation.style.display = 'block';
-                if (isCorrect) {
-                    btn.classList.add('correct');
-                } else {
-                    btn.classList.add('wrong');
-                }
-            }
+
+        function showAnswer(num) {
+            const answers = {
+                1: `def fill_missing_with_median(df):
+    numeric_cols = df.select_dtypes(include=['int64', 'float64']).columns
+    df[numeric_cols] = df[numeric_cols].fillna(df[numeric_cols].median())
+    return df`,
+                2: `def convert_date_format(df, date_column):
+    df[date_column] = pd.to_datetime(df[date_column])
+    return df`
+            };
+            alert(`练习${num}答案：\n\n${answers[num]}`);
         }
-        
-        function selectTestOption(btn, questionId, option, isCorrect) {
-            const questionBox = btn.closest('.question-box');
-            const allOptions = questionBox.querySelectorAll('.option-btn');
-            allOptions.forEach(opt => opt.classList.remove('selected'));
-            btn.classList.add('selected');
-            testAnswers[questionId] = isCorrect;
+
+        function selectOption(qNum, answer) {
+            const options = document.querySelectorAll(`#test-tab .question-box:nth-child(${qNum+1}) .option-btn`);
+            options.forEach(o => o.classList.remove('selected'));
+            event.target.classList.add('selected');
+            userAnswers[qNum] = answer;
         }
-        
-        function submitTest() {
-            if (Object.keys(testAnswers).length < totalQuestions) {
-                alert('请先回答所有问题！');
-                return;
-            }
-            
-            const questionBoxes = document.querySelectorAll('#test-tab .question-box');
-            questionBoxes.forEach((box, i) => {
-                const options = box.querySelectorAll('.option-btn');
+
+        function checkAnswers() {
+            let correct = 0;
+            Object.keys(correctAnswers).forEach(q => {
+                const options = document.querySelectorAll(`#test-tab .question-box:nth-child(${parseInt(q)+1}) .option-btn`);
                 options.forEach(opt => {
-                    if (opt.classList.contains('selected')) {
-                        const questionNum = i + 1;
-                        const isCorrect = testAnswers[questionNum];
-                        if (isCorrect) {
-                            opt.classList.remove('selected');
-                            opt.classList.add('correct');
-                        } else {
-                            opt.classList.remove('selected');
-                            opt.classList.add('wrong');
-                        }
+                    const optAnswer = opt.textContent.trim()[0];
+                    if (optAnswer === correctAnswers[q]) {
+                        opt.classList.add('correct');
+                    } else if (opt.classList.contains('selected') && optAnswer !== correctAnswers[q]) {
+                        opt.classList.add('wrong');
                     }
                 });
+                document.getElementById(`exp${q}`).style.display = 'block';
+                if (userAnswers[q] === correctAnswers[q]) correct++;
             });
             
-            let correctCount = Object.values(testAnswers).filter(v => v).length;
-            let score = Math.round((correctCount / totalQuestions) * 100);
-            
-            document.getElementById('final-score').textContent = score + '分';
-            
-            let message = '';
-            let icon = '';
-            if (score >= 80) {
-                message = '太棒了！你是数据清洗高手！';
-                icon = '🎉';
-            } else if (score >= 60) {
-                message = '不错！继续加油！';
-                icon = '💪';
-            } else {
-                message = '再去复习一下吧！';
-                icon = '📚';
-            }
-            
-            document.getElementById('result-message').textContent = message;
-            document.querySelector('.test-result-icon').textContent = icon;
-            document.getElementById('test-result').style.display = 'block';
+            const score = Math.round((correct / Object.keys(correctAnswers).length) * 100);
+            document.getElementById('score').textContent = `${score}分`;
+            document.getElementById('result-title').textContent = score >= 60 ? '🎉 测试通过！' : '💪 继续加油！';
+            document.getElementById('result').style.display = 'block';
         }
-        
+
         function resetTest() {
-            testAnswers = {};
-            document.querySelectorAll('#test-tab .option-btn').forEach(opt => {
-                opt.classList.remove('selected', 'correct', 'wrong');
-            });
-            document.getElementById('test-result').style.display = 'none';
+            document.querySelectorAll('.option-btn').forEach(o => o.classList.remove('selected', 'correct', 'wrong'));
+            document.querySelectorAll('.explanation').forEach(e => e.style.display = 'none');
+            document.getElementById('result').style.display = 'none';
+            Object.keys(userAnswers).forEach(k => delete userAnswers[k]);
         }
     </script>
 </body>
