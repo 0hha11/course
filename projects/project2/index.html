@@ -3,371 +3,313 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>项目2 - 销售数据分析报告</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>分组聚合分析 - Pandas 数据分析实战训练营</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0c1929 0%, #1a1a2e 50%, #16213e 100%);
-            min-height: 100vh;
-            color: #ffffff;
-        }
-        .glass {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
-        }
-        .gradient-text {
-            background: linear-gradient(90deg, #00d4ff, #7c3aed);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .btn-gradient {
-            background: linear-gradient(90deg, #00d4ff, #7c3aed);
-            transition: all 0.3s ease;
-        }
-        .btn-gradient:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
-        }
-        .tab-active {
-            background: rgba(0, 212, 255, 0.2);
-            border-color: rgba(0, 212, 255, 0.5);
-        }
-        .code-box {
-            background: #1e1e1e;
-            border-radius: 8px;
-            padding: 16px;
-            font-family: 'Monaco', 'Consolas', monospace;
-            font-size: 14px;
-            overflow-x: auto;
-        }
-        .question-box {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 20px;
-        }
-        .option-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            padding: 12px 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: block;
-            width: 100%;
-            text-align: left;
-            margin-bottom: 10px;
-        }
-        .option-btn:hover {
-            background: rgba(0, 212, 255, 0.1);
-            border-color: rgba(0, 212, 255, 0.5);
-        }
-        .option-btn.selected {
-            background: rgba(0, 212, 255, 0.2);
-            border-color: rgba(0, 212, 255, 0.8);
-        }
-        .option-btn.correct {
-            background: rgba(34, 197, 94, 0.2);
-            border-color: rgba(34, 197, 94, 0.8);
-        }
-        .option-btn.wrong {
-            background: rgba(239, 68, 68, 0.2);
-            border-color: rgba(239, 68, 68, 0.8);
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        
+        header { background: white; border-bottom: 1px solid #e2e8f0; padding: 16px 0; }
+        header .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: 700; color: #3b82f6; font-size: 18px; }
+        header a { color: #64748b; text-decoration: none; font-size: 14px; }
+        header a:hover { color: #3b82f6; }
+        
+        .project-header { padding: 40px 0; }
+        .project-title { font-size: 32px; font-weight: 700; color: #0f172a; margin-bottom: 12px; }
+        .project-meta { display: flex; gap: 16px; color: #64748b; font-size: 14px; }
+        .badge { padding: 4px 12px; border-radius: 10px; font-size: 12px; font-weight: 600; }
+        .badge-easy { background: #dcfce7; color: #16a34a; }
+        .badge-time { background: #f1f5f9; color: #64748b; }
+        
+        .tabs { display: flex; gap: 8px; margin-bottom: 24px; background: #f1f5f9; padding: 6px; border-radius: 12px; }
+        .tab { padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: #64748b; }
+        .tab.active { background: white; color: #3b82f6; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        .content-card { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 28px; margin-bottom: 24px; }
+        .content-card h3 { font-size: 20px; font-weight: 600; color: #0f172a; margin-bottom: 16px; }
+        .content-card p { color: #64748b; line-height: 1.6; margin-bottom: 12px; }
+        .content-card ul { list-style: disc; padding-left: 20px; color: #64748b; }
+        .content-card ul li { margin-bottom: 8px; }
+        
+        .code-box { background: #1e1e1e; border-radius: 12px; padding: 20px; overflow-x: auto; margin: 16px 0; }
+        .code-box pre { color: #d4d4d4; font-family: 'Monaco', 'Consolas', monospace; font-size: 14px; line-height: 1.6; white-space: pre; }
+        
+        .question-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+        .question-box h4 { font-size: 16px; font-weight: 600; color: #0f172a; margin-bottom: 12px; }
+        .question-box p { color: #64748b; margin-bottom: 12px; }
+        
+        .option-btn { display: block; width: 100%; padding: 14px 16px; margin-bottom: 10px; border: 1px solid #e2e8f0; border-radius: 10px; background: white; cursor: pointer; text-align: left; font-size: 14px; color: #334155; transition: all 0.2s; }
+        .option-btn:hover { border-color: #3b82f6; background: #eff6ff; }
+        .option-btn.selected { border-color: #3b82f6; background: #eff6ff; }
+        .option-btn.correct { border-color: #16a34a; background: #ecfdf5; color: #16a34a; }
+        .option-btn.wrong { border-color: #ef4444; background: #fef2f2; color: #ef4444; }
+        
+        .explanation { background: #fefce8; border-left: 4px solid #eab308; padding: 16px; margin-top: 16px; border-radius: 0 8px 8px 0; display: none; }
+        .explanation p { color: #854d0e; }
+        .explanation strong { color: #a16207; }
+        
+        .btn { padding: 12px 24px; border-radius: 10px; font-weight: 600; font-size: 14px; text-decoration: none; transition: all 0.2s; }
+        .btn-primary { background: #3b82f6; color: white; }
+        .btn-primary:hover { background: #2563eb; }
+        .btn-outline { border: 1px solid #e2e8f0; color: #64748b; background: white; }
+        .btn-outline:hover { border-color: #3b82f6; color: #3b82f6; }
+        
+        .test-result { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 32px; text-align: center; margin-top: 24px; display: none; }
+        .test-result h3 { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+        .test-result .score { font-size: 48px; font-weight: 700; color: #3b82f6; margin-bottom: 24px; }
+        
+        footer { text-align: center; padding: 32px 0; border-top: 1px solid #e2e8f0; color: #94a3b8; font-size: 14px; margin-top: 60px; }
+        
+        @media (max-width: 768px) {
+            .project-title { font-size: 24px; }
+            .project-meta { flex-wrap: wrap; }
+            .tabs { flex-wrap: wrap; }
         }
     </style>
 </head>
 <body>
-    <nav class="fixed top-0 left-0 right-0 z-50 glass">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <i class="fas fa-code text-2xl text-cyan-400"></i>
-                <span class="text-xl font-bold gradient-text">Python学习平台</span>
+    <header>
+        <div class="container">
+            <div class="logo">TT's Learning</div>
+            <a href="../../index.html">← 返回首页</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="project-header">
+            <h1 class="project-title">分组聚合分析</h1>
+            <div class="project-meta">
+                <span class="badge badge-easy">入门</span>
+                <span class="badge badge-time">30分钟</span>
+                <span>📁 retail_orders.csv</span>
             </div>
-            <a href="../../index.html" class="text-gray-300 hover:text-cyan-400 transition">返回首页</a>
-        </div>
-    </nav>
-
-    <div class="max-w-7xl mx-auto px-4 py-20">
-        <div class="glass p-6 mb-6">
-            <h1 class="text-2xl font-bold mb-2">项目2：销售数据分析报告</h1>
-            <p class="text-gray-400">学习使用Pandas进行销售数据的清洗、分析和可视化，生成专业的销售分析报告。</p>
         </div>
 
-        <div class="flex gap-4 mb-6">
-            <button class="tab-btn tab-active px-6 py-2 rounded-lg" onclick="showTab('learn')">
-                <i class="fas fa-book-open mr-2"></i>学习
-            </button>
-            <button class="tab-btn px-6 py-2 rounded-lg" onclick="showTab('practice')">
-                <i class="fas fa-code mr-2"></i>练习
-            </button>
-            <button class="tab-btn px-6 py-2 rounded-lg" onclick="showTab('test')">
-                <i class="fas fa-file-check mr-2"></i>测试
-            </button>
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('learn')">📚 学习</button>
+            <button class="tab" onclick="showTab('practice')">✏️ 练习</button>
+            <button class="tab" onclick="showTab('test')">📝 测试</button>
         </div>
 
-        <div id="learn-tab" class="tab-content">
-            <div class="glass p-6 mb-6">
-                <h2 class="text-xl font-semibold mb-4">📚 项目概述</h2>
-                <p class="text-gray-300 mb-4">销售数据分析报告项目帮助企业分析销售数据，发现业务趋势和问题。通过这个项目，你将学习：</p>
-                <ul class="list-disc list-inside text-gray-400 mb-6">
-                    <li>Pandas数据读取和清洗</li>
-                    <li>数据透视表和聚合分析</li>
-                    <li>Matplotlib数据可视化</li>
-                    <li>报告自动生成</li>
+        <div id="learn-tab" class="tab-content active">
+            <div class="content-card">
+                <h3>📌 项目概述</h3>
+                <p>分组聚合是数据分析中最常用的技术之一，通过 groupby 操作可以将数据按照某个或多个特征分组，然后对每个组进行聚合计算，如求和、平均值、计数等。</p>
+                <ul>
+                    <li>掌握 groupby 分组操作</li>
+                    <li>学习常用聚合函数（sum, mean, count, max, min）</li>
+                    <li>多维度分组分析</li>
+                    <li>透视表和交叉表的使用</li>
                 </ul>
             </div>
 
-            <div class="glass p-6 mb-6">
-                <h2 class="text-xl font-semibold mb-4">💡 核心功能</h2>
-                <div class="grid md:grid-cols-2 gap-4">
-                    <div class="bg-white/5 p-4 rounded-lg">
-                        <h3 class="font-semibold mb-2">📊 销售趋势分析</h3>
-                        <p class="text-gray-400 text-sm">分析月度、季度销售变化趋势</p>
-                    </div>
-                    <div class="bg-white/5 p-4 rounded-lg">
-                        <h3 class="font-semibold mb-2">🏆 产品排名</h3>
-                        <p class="text-gray-400 text-sm">按销售额、销量对产品进行排名</p>
-                    </div>
-                    <div class="bg-white/5 p-4 rounded-lg">
-                        <h3 class="font-semibold mb-2">👥 客户分析</h3>
-                        <p class="text-gray-400 text-sm">分析客户购买行为和忠诚度</p>
-                    </div>
-                    <div class="bg-white/5 p-4 rounded-lg">
-                        <h3 class="font-semibold mb-2">📈 区域对比</h3>
-                        <p class="text-gray-400 text-sm">不同区域销售业绩对比分析</p>
-                    </div>
+            <div class="content-card">
+                <h3>🔧 核心代码</h3>
+                <p>以下是分组聚合分析常用的 Pandas 操作：</p>
+                <div class="code-box">
+                    <pre>import pandas as pd
+
+# 读取数据
+df = pd.read_csv('retail_orders.csv')
+
+# 1. 基本分组聚合
+# 按产品类别分组，计算销售额总和
+category_sales = df.groupby('category')['amount'].sum()
+
+# 按地区分组，计算多个统计量
+region_stats = df.groupby('region').agg({
+    'amount': ['sum', 'mean', 'count'],
+    'quantity': ['sum', 'max']
+})
+
+# 2. 多列分组
+# 按地区和产品类别分组
+multi_group = df.groupby(['region', 'category'])['amount'].sum().unstack()
+
+# 3. 使用聚合函数
+agg_result = df.groupby('category').agg(
+    total_sales=('amount', 'sum'),
+    avg_sales=('amount', 'mean'),
+    order_count=('order_id', 'nunique'),
+    max_quantity=('quantity', 'max')
+)
+
+# 4. 透视表
+pivot_table = pd.pivot_table(
+    df, 
+    values='amount', 
+    index='category', 
+    columns='region', 
+    aggfunc='sum'
+)
+
+print('分组聚合分析完成！')</pre>
                 </div>
             </div>
 
-            <div class="glass p-6">
-                <h2 class="text-xl font-semibold mb-4">🔧 代码示例</h2>
-                <div class="code-box text-green-400">
-                    <pre># 销售数据分析
-import pandas as pd
-import matplotlib.pyplot as plt
-
-def load_sales_data(filepath):
-    """加载销售数据"""
-    df = pd.read_csv(filepath)
-    return df
-
-def clean_data(df):
-    """数据清洗"""
-    df['date'] = pd.to_datetime(df['date'])
-    df['total_amount'] = df['quantity'] * df['price']
-    return df
-
-def monthly_sales_trend(df):
-    """月度销售趋势"""
-    monthly = df.resample('M', on='date')['total_amount'].sum()
-    monthly.plot(kind='line', figsize=(12, 6))
-    plt.title('月度销售趋势')
-    plt.xlabel('日期')
-    plt.ylabel('销售额')
-    plt.show()
-
-def top_products(df, n=10):
-    """TOP10产品"""
-    top = df.groupby('product')['total_amount'].sum().sort_values(ascending=False).head(n)
-    return top</pre>
-                </div>
+            <div class="content-card">
+                <h3>💡 学习要点</h3>
+                <ul>
+                    <li><strong>groupby 原理</strong>：分组 → 应用 → 合并 (Split-Apply-Combine)</li>
+                    <li><strong>agg 方法</strong>：可以同时对不同列应用不同的聚合函数</li>
+                    <li><strong>命名聚合</strong>：使用 agg 函数时可以自定义结果列名</li>
+                    <li><strong>透视表</strong>：pivot_table 是交互式分析的利器</li>
+                </ul>
             </div>
         </div>
 
-        <div id="practice-tab" class="tab-content hidden">
-            <div class="glass p-6">
-                <h2 class="text-xl font-semibold mb-4">✏️ 编程练习</h2>
-                <p class="text-gray-400 mb-6">请完成以下代码练习：</p>
+        <div id="practice-tab" class="tab-content">
+            <div class="content-card">
+                <h3>✏️ 编程练习</h3>
                 
-                <div class="question-box mb-6">
-                    <h3 class="font-semibold mb-3">练习1：计算客户复购率</h3>
-                    <p class="text-gray-300 mb-4">请编写一个函数，计算客户复购率（购买次数大于1的客户比例）。</p>
-                    <div class="code-box text-gray-300 mb-4">
-                        <pre>def calculate_repurchase_rate(df):
+                <div class="question-box">
+                    <h4>练习1：计算各品类销售额</h4>
+                    <p>请编写代码，计算每个产品类别的销售总额：</p>
+                    <div class="code-box">
+                        <pre>import pandas as pd
+
+def calculate_category_sales(df):
     """
-    计算客户复购率
-    :param df: 包含user_id和order_id的DataFrame
-    :return: 复购率（0-1之间）
+    计算各品类销售额
+    
+    Args:
+        df: 包含销售数据的DataFrame，需要有'category'和'amount'列
+    
+    Returns:
+        各品类销售额的Series
     """
     # 请在此处编写代码
     
-    return repurchase_rate</pre>
+    return category_sales</pre>
                     </div>
-                    <button class="btn-gradient px-6 py-2 rounded-lg text-white" onclick="showPracticeAnswer(1)">查看答案</button>
+                    <button class="btn btn-primary" onclick="showAnswer(1)">查看答案</button>
                 </div>
 
                 <div class="question-box">
-                    <h3 class="font-semibold mb-3">练习2：计算各区域销售占比</h3>
-                    <p class="text-gray-300 mb-4">请编写一个函数，计算各区域销售额占总销售额的比例。</p>
-                    <div class="code-box text-gray-300 mb-4">
-                        <pre>def calculate_region_share(df):
+                    <h4>练习2：多维度统计</h4>
+                    <p>请编写代码，按地区分组，计算销售总额、平均订单金额和订单数：</p>
+                    <div class="code-box">
+                        <pre>import pandas as pd
+
+def region_analysis(df):
     """
-    计算各区域销售占比
-    :param df: 包含region和total_amount的DataFrame
-    :return: 各区域销售占比的Series
+    按地区进行多维度统计分析
+    
+    Args:
+        df: 包含销售数据的DataFrame
+    
+    Returns:
+        包含统计结果的DataFrame
     """
     # 请在此处编写代码
     
-    return region_share</pre>
+    return result</pre>
                     </div>
-                    <button class="btn-gradient px-6 py-2 rounded-lg text-white" onclick="showPracticeAnswer(2)">查看答案</button>
+                    <button class="btn btn-primary" onclick="showAnswer(2)">查看答案</button>
                 </div>
             </div>
         </div>
 
-        <div id="test-tab" class="tab-content hidden">
-            <div class="glass p-6">
-                <h2 class="text-xl font-semibold mb-4">📝 知识测试</h2>
-                <p class="text-gray-400 mb-6">完成以下选择题，测试你的学习成果。</p>
+        <div id="test-tab" class="tab-content">
+            <div class="content-card">
+                <h3>📝 知识测试</h3>
                 
-                <div id="test-container">
-                    <div class="question-box mb-6">
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-cyan-400 font-semibold">第1题</span>
-                            <span class="text-sm text-gray-500">单选题</span>
-                        </div>
-                        <p class="text-gray-300 mb-4">在Pandas中，以下哪个方法可以将字符串转换为日期时间类型？</p>
-                        <div>
-                            <button class="option-btn" onclick="selectAnswer(1, 'A')">
-                                <span class="font-semibold mr-2">A.</span> pd.to_date()
-                            </button>
-                            <button class="option-btn" onclick="selectAnswer(1, 'B')">
-                                <span class="font-semibold mr-2">B.</span> pd.to_datetime()
-                            </button>
-                            <button class="option-btn" onclick="selectAnswer(1, 'C')">
-                                <span class="font-semibold mr-2">C.</span> pd.date_parse()
-                            </button>
-                            <button class="option-btn" onclick="selectAnswer(1, 'D')">
-                                <span class="font-semibold mr-2">D.</span> pd.datetime()
-                            </button>
-                        </div>
-                        <div id="explanation-1" class="mt-4 p-3 bg-yellow-500/10 rounded-lg hidden">
-                            <p class="text-yellow-300"><strong>正确答案：B</strong></p>
-                            <p class="text-gray-400 text-sm">pd.to_datetime()是Pandas中将字符串转换为日期时间类型的标准方法。</p>
-                        </div>
-                    </div>
-
-                    <div class="question-box mb-6">
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-cyan-400 font-semibold">第2题</span>
-                            <span class="text-sm text-gray-500">单选题</span>
-                        </div>
-                        <p class="text-gray-300 mb-4">以下哪个方法可以按日期进行重采样？</p>
-                        <div>
-                            <button class="option-btn" onclick="selectAnswer(2, 'A')">
-                                <span class="font-semibold mr-2">A.</span> groupby()
-                            </button>
-                            <button class="option-btn" onclick="selectAnswer(2, 'B')">
-                                <span class="font-semibold mr-2">B.</span> resample()
-                            </button>
-                            <button class="option-btn" onclick="selectAnswer(2, 'C')">
-                                <span class="font-semibold mr-2">C.</span> pivot()
-                            </button>
-                            <button class="option-btn" onclick="selectAnswer(2, 'D')">
-                                <span class="font-semibold mr-2">D.</span> merge()
-                            </button>
-                        </div>
-                        <div id="explanation-2" class="mt-4 p-3 bg-yellow-500/10 rounded-lg hidden">
-                            <p class="text-yellow-300"><strong>正确答案：B</strong></p>
-                            <p class="text-gray-400 text-sm">resample()方法专门用于时间序列数据的重采样，可以按不同时间频率聚合数据。</p>
-                        </div>
-                    </div>
-
-                    <div class="question-box">
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-cyan-400 font-semibold">第3题</span>
-                            <span class="text-sm text-gray-500">单选题</span>
-                        </div>
-                        <p class="text-gray-300 mb-4">在Pandas中，使用哪个方法可以创建透视表？</p>
-                        <div>
-                            <button class="option-btn" onclick="selectAnswer(3, 'A')">
-                                <span class="font-semibold mr-2">A.</span> pivot_table()
-                            </button>
-                            <button class="option-btn" onclick="selectAnswer(3, 'B')">
-                                <span class="font-semibold mr-2">B.</span> table()
-                            </button>
-                            <button class="option-btn" onclick="selectAnswer(3, 'C')">
-                                <span class="font-semibold mr-2">C.</span> cross_table()
-                            </button>
-                            <button class="option-btn" onclick="selectAnswer(3, 'D')">
-                                <span class="font-semibold mr-2">D.</span> matrix()
-                            </button>
-                        </div>
-                        <div id="explanation-3" class="mt-4 p-3 bg-yellow-500/10 rounded-lg hidden">
-                            <p class="text-yellow-300"><strong>正确答案：A</strong></p>
-                            <p class="text-gray-400 text-sm">pivot_table()是Pandas中创建透视表的标准方法，可以灵活地进行数据聚合分析。</p>
-                        </div>
+                <div class="question-box">
+                    <h4>问题1：在 Pandas 中，用于分组的方法是？</h4>
+                    <button class="option-btn" onclick="selectOption(1, 'A')">A. group()</button>
+                    <button class="option-btn" onclick="selectOption(1, 'B')">B. groupby()</button>
+                    <button class="option-btn" onclick="selectOption(1, 'C')">C. aggregate()</button>
+                    <button class="option-btn" onclick="selectOption(1, 'D')">D. split()</button>
+                    <div class="explanation" id="exp1">
+                        <p><strong>正确答案：B</strong></p>
+                        <p>groupby() 是 Pandas 中用于分组的核心方法，它实现了 Split-Apply-Combine 模式。</p>
                     </div>
                 </div>
 
-                <div class="mt-6 flex justify-center">
-                    <button class="btn-gradient px-8 py-3 rounded-lg text-white font-semibold" onclick="checkTest()">
-                        提交答案
-                    </button>
+                <div class="question-box">
+                    <h4>问题2：以下哪个不是常用的聚合函数？</h4>
+                    <button class="option-btn" onclick="selectOption(2, 'A')">A. sum()</button>
+                    <button class="option-btn" onclick="selectOption(2, 'B')">B. mean()</button>
+                    <button class="option-btn" onclick="selectOption(2, 'C')">C. sort()</button>
+                    <button class="option-btn" onclick="selectOption(2, 'D')">D. count()</button>
+                    <div class="explanation" id="exp2">
+                        <p><strong>正确答案：C</strong></p>
+                        <p>sort() 是排序方法，不是聚合函数。常用的聚合函数有 sum, mean, count, max, min 等。</p>
+                    </div>
                 </div>
 
-                <div id="test-result" class="mt-6 glass p-6 hidden">
-                    <h3 class="text-xl font-semibold mb-4 text-center" id="result-title"></h3>
-                    <p class="text-center text-3xl font-bold mb-4" id="score"></p>
-                    <div class="text-center">
-                        <button class="btn-gradient px-6 py-2 rounded-lg text-white" onclick="resetTest()">
-                            重新测试
-                        </button>
+                <div class="question-box">
+                    <h4>问题3：创建透视表的函数是？</h4>
+                    <button class="option-btn" onclick="selectOption(3, 'A')">A. pivot_table()</button>
+                    <button class="option-btn" onclick="selectOption(3, 'B')">B. table()</button>
+                    <button class="option-btn" onclick="selectOption(3, 'C')">C. pivot()</button>
+                    <button class="option-btn" onclick="selectOption(3, 'D')">D. cross_tab()</button>
+                    <div class="explanation" id="exp3">
+                        <p><strong>正确答案：A</strong></p>
+                        <p>pivot_table() 是 Pandas 提供的创建透视表的函数，功能强大且灵活。</p>
                     </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 24px;">
+                    <button class="btn btn-primary" onclick="checkAnswers()">提交答案</button>
+                </div>
+
+                <div class="test-result" id="result">
+                    <h3 id="result-title"></h3>
+                    <div class="score" id="score"></div>
+                    <button class="btn btn-outline" onclick="resetTest()">重新测试</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <footer>
+        <p>© 2024 TT's Learning Space · Pandas 数据分析实战训练营</p>
+    </footer>
+
     <script>
-        const tabs = ['learn', 'practice', 'test'];
-        const correctAnswers = {1: 'B', 2: 'B', 3: 'A'};
+        const correctAnswers = {1: 'B', 2: 'C', 3: 'A'};
         const userAnswers = {};
 
         function showTab(tabName) {
-            tabs.forEach(tab => {
-                document.getElementById(`${tab}-tab`).classList.add('hidden');
-                document.querySelector(`button[onclick="showTab('${tab}')"]`).classList.remove('tab-active');
-            });
-            document.getElementById(`${tabName}-tab`).classList.remove('hidden');
-            document.querySelector(`button[onclick="showTab('${tabName}')"]`).classList.add('tab-active');
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelector(`button[onclick="showTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(`${tabName}-tab`).classList.add('active');
         }
 
-        function showPracticeAnswer(num) {
+        function showAnswer(num) {
             const answers = {
-                1: `def calculate_repurchase_rate(df):
-    customer_orders = df.groupby('user_id')['order_id'].nunique()
-    repeat_customers = (customer_orders > 1).sum()
-    total_customers = len(customer_orders)
-    repurchase_rate = repeat_customers / total_customers
-    return repurchase_rate`,
-                2: `def calculate_region_share(df):
-    total_sales = df['total_amount'].sum()
-    region_share = df.groupby('region')['total_amount'].sum() / total_sales
-    return region_share`
+                1: `def calculate_category_sales(df):
+    category_sales = df.groupby('category')['amount'].sum()
+    return category_sales`,
+                2: `def region_analysis(df):
+    result = df.groupby('region').agg(
+        total_sales=('amount', 'sum'),
+        avg_amount=('amount', 'mean'),
+        order_count=('order_id', 'nunique')
+    )
+    return result`
             };
-            alert(`练习${num}答案：\n\n${answers[num]}`);
+            alert(`练习${num}答案：\\n\\n${answers[num]}`);
         }
 
-        function selectAnswer(questionNum, answer) {
-            const options = document.querySelectorAll(`#test-container .question-box:nth-child(${questionNum}) .option-btn`);
-            options.forEach(opt => opt.classList.remove('selected'));
+        function selectOption(qNum, answer) {
+            const options = document.querySelectorAll(`#test-tab .question-box:nth-child(${qNum+1}) .option-btn`);
+            options.forEach(o => o.classList.remove('selected'));
             event.target.classList.add('selected');
-            userAnswers[questionNum] = answer;
+            userAnswers[qNum] = answer;
         }
 
-        function checkTest() {
+        function checkAnswers() {
             let correct = 0;
             Object.keys(correctAnswers).forEach(q => {
-                if (userAnswers[q] === correctAnswers[q]) {
-                    correct++;
-                }
-                const options = document.querySelectorAll(`#test-container .question-box:nth-child(${q}) .option-btn`);
+                const options = document.querySelectorAll(`#test-tab .question-box:nth-child(${parseInt(q)+1}) .option-btn`);
                 options.forEach(opt => {
                     const optAnswer = opt.textContent.trim()[0];
                     if (optAnswer === correctAnswers[q]) {
@@ -376,23 +318,20 @@ def top_products(df, n=10):
                         opt.classList.add('wrong');
                     }
                 });
-                document.getElementById(`explanation-${q}`).classList.remove('hidden');
+                document.getElementById(`exp${q}`).style.display = 'block';
+                if (userAnswers[q] === correctAnswers[q]) correct++;
             });
             
-            document.getElementById('test-result').classList.remove('hidden');
             const score = Math.round((correct / Object.keys(correctAnswers).length) * 100);
             document.getElementById('score').textContent = `${score}分`;
             document.getElementById('result-title').textContent = score >= 60 ? '🎉 测试通过！' : '💪 继续加油！';
+            document.getElementById('result').style.display = 'block';
         }
 
         function resetTest() {
-            document.querySelectorAll('.option-btn').forEach(opt => {
-                opt.classList.remove('selected', 'correct', 'wrong');
-            });
-            document.querySelectorAll('[id^="explanation-"]').forEach(exp => {
-                exp.classList.add('hidden');
-            });
-            document.getElementById('test-result').classList.add('hidden');
+            document.querySelectorAll('.option-btn').forEach(o => o.classList.remove('selected', 'correct', 'wrong'));
+            document.querySelectorAll('.explanation').forEach(e => e.style.display = 'none');
+            document.getElementById('result').style.display = 'none';
             Object.keys(userAnswers).forEach(k => delete userAnswers[k]);
         }
     </script>

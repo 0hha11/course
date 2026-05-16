@@ -3,374 +3,352 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>项目4 - 股票数据分析可视化</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>客户聚类分析 - Pandas 数据分析实战训练营</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0c1929 0%, #1a1a2e 50%, #16213e 100%);
-            min-height: 100vh;
-            color: #ffffff;
-        }
-        .glass {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
-        }
-        .gradient-text {
-            background: linear-gradient(90deg, #00d4ff, #7c3aed);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .btn-gradient {
-            background: linear-gradient(90deg, #00d4ff, #7c3aed);
-            transition: all 0.3s ease;
-        }
-        .btn-gradient:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
-        }
-        .tab-active {
-            background: rgba(0, 212, 255, 0.2);
-            border-color: rgba(0, 212, 255, 0.5);
-        }
-        .code-box {
-            background: #1e1e1e;
-            border-radius: 8px;
-            padding: 16px;
-            font-family: 'Monaco', 'Consolas', monospace;
-            font-size: 14px;
-            overflow-x: auto;
-        }
-        .question-box {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 20px;
-        }
-        .option-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            padding: 12px 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: block;
-            width: 100%;
-            text-align: left;
-            margin-bottom: 10px;
-        }
-        .option-btn:hover {
-            background: rgba(0, 212, 255, 0.1);
-            border-color: rgba(0, 212, 255, 0.5);
-        }
-        .option-btn.selected {
-            background: rgba(0, 212, 255, 0.2);
-            border-color: rgba(0, 212, 255, 0.8);
-        }
-        .option-btn.correct {
-            background: rgba(34, 197, 94, 0.2);
-            border-color: rgba(34, 197, 94, 0.8);
-        }
-        .option-btn.wrong {
-            background: rgba(239, 68, 68, 0.2);
-            border-color: rgba(239, 68, 68, 0.8);
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        
+        header { background: white; border-bottom: 1px solid #e2e8f0; padding: 16px 0; }
+        header .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: 700; color: #3b82f6; font-size: 18px; }
+        header a { color: #64748b; text-decoration: none; font-size: 14px; }
+        header a:hover { color: #3b82f6; }
+        
+        .project-header { padding: 40px 0; }
+        .project-title { font-size: 32px; font-weight: 700; color: #0f172a; margin-bottom: 12px; }
+        .project-meta { display: flex; gap: 16px; color: #64748b; font-size: 14px; }
+        .badge { padding: 4px 12px; border-radius: 10px; font-size: 12px; font-weight: 600; }
+        .badge-medium { background: #dbeafe; color: #2563eb; }
+        .badge-time { background: #f1f5f9; color: #64748b; }
+        
+        .tabs { display: flex; gap: 8px; margin-bottom: 24px; background: #f1f5f9; padding: 6px; border-radius: 12px; }
+        .tab { padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: #64748b; }
+        .tab.active { background: white; color: #3b82f6; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        .content-card { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 28px; margin-bottom: 24px; }
+        .content-card h3 { font-size: 20px; font-weight: 600; color: #0f172a; margin-bottom: 16px; }
+        .content-card p { color: #64748b; line-height: 1.6; margin-bottom: 12px; }
+        .content-card ul { list-style: disc; padding-left: 20px; color: #64748b; }
+        .content-card ul li { margin-bottom: 8px; }
+        
+        .code-box { background: #1e1e1e; border-radius: 12px; padding: 20px; overflow-x: auto; margin: 16px 0; }
+        .code-box pre { color: #d4d4d4; font-family: 'Monaco', 'Consolas', monospace; font-size: 14px; line-height: 1.6; white-space: pre; }
+        
+        .question-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+        .question-box h4 { font-size: 16px; font-weight: 600; color: #0f172a; margin-bottom: 12px; }
+        .question-box p { color: #64748b; margin-bottom: 12px; }
+        
+        .option-btn { display: block; width: 100%; padding: 14px 16px; margin-bottom: 10px; border: 1px solid #e2e8f0; border-radius: 10px; background: white; cursor: pointer; text-align: left; font-size: 14px; color: #334155; transition: all 0.2s; }
+        .option-btn:hover { border-color: #3b82f6; background: #eff6ff; }
+        .option-btn.selected { border-color: #3b82f6; background: #eff6ff; }
+        .option-btn.correct { border-color: #16a34a; background: #ecfdf5; color: #16a34a; }
+        .option-btn.wrong { border-color: #ef4444; background: #fef2f2; color: #ef4444; }
+        
+        .explanation { background: #fefce8; border-left: 4px solid #eab308; padding: 16px; margin-top: 16px; border-radius: 0 8px 8px 0; display: none; }
+        .explanation p { color: #854d0e; }
+        .explanation strong { color: #a16207; }
+        
+        .btn { padding: 12px 24px; border-radius: 10px; font-weight: 600; font-size: 14px; text-decoration: none; transition: all 0.2s; }
+        .btn-primary { background: #3b82f6; color: white; }
+        .btn-primary:hover { background: #2563eb; }
+        .btn-outline { border: 1px solid #e2e8f0; color: #64748b; background: white; }
+        .btn-outline:hover { border-color: #3b82f6; color: #3b82f6; }
+        
+        .test-result { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 32px; text-align: center; margin-top: 24px; display: none; }
+        .test-result h3 { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+        .test-result .score { font-size: 48px; font-weight: 700; color: #3b82f6; margin-bottom: 24px; }
+        
+        footer { text-align: center; padding: 32px 0; border-top: 1px solid #e2e8f0; color: #94a3b8; font-size: 14px; margin-top: 60px; }
+        
+        @media (max-width: 768px) {
+            .project-title { font-size: 24px; }
+            .project-meta { flex-wrap: wrap; }
+            .tabs { flex-wrap: wrap; }
         }
     </style>
 </head>
 <body>
-    <nav class="fixed top-0 left-0 right-0 z-50 glass">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <i class="fas fa-code text-2xl text-cyan-400"></i>
-                <span class="text-xl font-bold gradient-text">Python学习平台</span>
+    <header>
+        <div class="container">
+            <div class="logo">TT's Learning</div>
+            <a href="../../index.html">← 返回首页</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="project-header">
+            <h1 class="project-title">客户聚类分析</h1>
+            <div class="project-meta">
+                <span class="badge badge-medium">进阶</span>
+                <span class="badge badge-time">45分钟</span>
+                <span>📁 customer_features.csv</span>
             </div>
-            <a href="../../index.html" class="text-gray-300 hover:text-cyan-400 transition">返回首页</a>
-        </div>
-    </nav>
-
-    <div class="max-w-7xl mx-auto px-4 py-20">
-        <div class="glass p-6 mb-6">
-            <h1 class="text-2xl font-bold mb-2">项目4：股票数据分析可视化</h1>
-            <p class="text-gray-400">学习使用Python获取股票数据，进行技术分析，并创建可视化图表展示股票走势。</p>
         </div>
 
-        <div class="flex gap-4 mb-6">
-            <button class="tab-btn tab-active px-6 py-2 rounded-lg" onclick="showTab('learn')">
-                <i class="fas fa-book-open mr-2"></i>学习
-            </button>
-            <button class="tab-btn px-6 py-2 rounded-lg" onclick="showTab('practice')">
-                <i class="fas fa-code mr-2"></i>练习
-            </button>
-            <button class="tab-btn px-6 py-2 rounded-lg" onclick="showTab('test')">
-                <i class="fas fa-file-check mr-2"></i>测试
-            </button>
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('learn')">📚 学习</button>
+            <button class="tab" onclick="showTab('practice')">✏️ 练习</button>
+            <button class="tab" onclick="showTab('test')">📝 测试</button>
         </div>
 
-        <div id="learn-tab" class="tab-content">
-            <div class="glass p-6 mb-6">
-                <h2 class="text-xl font-semibold mb-4">📚 项目概述</h2>
-                <p class="text-gray-300 mb-4">股票数据分析可视化项目帮助你分析股票市场数据。通过这个项目，你将学习：</p>
-                <ul class="list-disc list-inside text-gray-400 mb-6">
-                    <li>使用yfinance获取股票数据</li>
-                    <li>计算技术指标（MA、MACD、RSI）</li>
-                    <li>使用Matplotlib/Plotly绘制图表</li>
-                    <li>创建交互式可视化仪表板</li>
+        <div id="learn-tab" class="tab-content active">
+            <div class="content-card">
+                <h3>📌 项目概述</h3>
+                <p>客户聚类分析是将具有相似特征的客户分组的过程，通过聚类可以识别不同的客户群体，为每个群体制定差异化的营销策略。</p>
+                <ul>
+                    <li>理解聚类分析的基本概念</li>
+                    <li>学习 K-Means 聚类算法</li>
+                    <li>掌握 RFM 客户价值分析模型</li>
+                    <li>学会客户画像和群体特征分析</li>
                 </ul>
             </div>
 
-            <div class="glass p-6 mb-6">
-                <h2 class="text-xl font-semibold mb-4">💡 核心功能</h2>
-                <div class="grid md:grid-cols-2 gap-4">
-                    <div class="bg-white/5 p-4 rounded-lg">
-                        <h3 class="font-semibold mb-2">📈 股价走势</h3>
-                        <p class="text-gray-400 text-sm">绘制K线图和价格趋势</p>
-                    </div>
-                    <div class="bg-white/5 p-4 rounded-lg">
-                        <h3 class="font-semibold mb-2">📊 技术指标</h3>
-                        <p class="text-gray-400 text-sm">计算并展示MA、MACD、RSI等指标</p>
-                    </div>
-                    <div class="bg-white/5 p-4 rounded-lg">
-                        <h3 class="font-semibold mb-2">💰 收益分析</h3>
-                        <p class="text-gray-400 text-sm">计算收益率和风险指标</p>
-                    </div>
-                    <div class="bg-white/5 p-4 rounded-lg">
-                        <h3 class="font-semibold mb-2">📉 对比分析</h3>
-                        <p class="text-gray-400 text-sm">多只股票对比分析</p>
-                    </div>
+            <div class="content-card">
+                <h3>🔧 核心代码</h3>
+                <p>以下是客户聚类分析常用的代码示例：</p>
+                <div class="code-box">
+                    <pre>import pandas as pd
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
+import numpy as np
+
+# 读取数据
+df = pd.read_csv('customer_features.csv')
+
+# 1. RFM 分析
+def calculate_rfm(df, reference_date):
+    """
+    计算 RFM 指标
+    R - Recency: 最近一次购买距今天数
+    F - Frequency: 购买频次
+    M - Monetary: 购买金额
+    """
+    rfm = df.groupby('customer_id').agg({
+        'order_date': lambda x: (reference_date - pd.to_datetime(x.max())).days,
+        'order_id': 'nunique',
+        'amount': 'sum'
+    }).rename(columns={
+        'order_date': 'Recency',
+        'order_id': 'Frequency',
+        'amount': 'Monetary'
+    })
+    return rfm
+
+# 2. 数据标准化
+scaler = StandardScaler()
+rfm_scaled = scaler.fit_transform(rfm)
+
+# 3. K-Means 聚类
+def kmeans_clustering(data, n_clusters=4):
+    """执行 K-Means 聚类"""
+    kmeans = KMeans(n_clusters=n_clusters, random_state=42, n_init=10)
+    clusters = kmeans.fit_predict(data)
+    return clusters, kmeans
+
+# 4. 确定最佳聚类数（肘部法则）
+def find_optimal_clusters(data, max_clusters=10):
+    """使用肘部法则确定最佳聚类数"""
+    inertias = []
+    for k in range(1, max_clusters + 1):
+        kmeans = KMeans(n_clusters=k, random_state=42, n_init=10)
+        kmeans.fit(data)
+        inertias.append(kmeans.inertia_)
+    return inertias
+
+# 5. 分析聚类结果
+def analyze_clusters(rfm_data, clusters):
+    """分析每个聚类的特征"""
+    rfm_data['Cluster'] = clusters
+    cluster_analysis = rfm_data.groupby('Cluster').agg({
+        'Recency': ['mean', 'min', 'max'],
+        'Frequency': ['mean', 'min', 'max'],
+        'Monetary': ['mean', 'min', 'max', 'count']
+    }).round(2)
+    return cluster_analysis
+
+print('客户聚类分析完成！')</pre>
                 </div>
             </div>
 
-            <div class="glass p-6">
-                <h2 class="text-xl font-semibold mb-4">🔧 代码示例</h2>
-                <div class="code-box text-green-400">
-                    <pre># 股票数据分析
-import yfinance as yf
-import matplotlib.pyplot as plt
-
-def get_stock_data(ticker, start_date, end_date):
-    """获取股票数据"""
-    data = yf.download(ticker, start=start_date, end=end_date)
-    return data
-
-def calculate_moving_average(data, window=20):
-    """计算移动平均线"""
-    data['MA'] = data['Close'].rolling(window=window).mean()
-    return data
-
-def calculate_rsi(data, window=14):
-    """计算相对强弱指数RSI"""
-    delta = data['Close'].diff()
-    gain = delta.where(delta > 0, 0)
-    loss = -delta.where(delta < 0, 0)
-    avg_gain = gain.rolling(window=window).mean()
-    avg_loss = loss.rolling(window=window).mean()
-    rs = avg_gain / avg_loss
-    data['RSI'] = 100 - (100 / (1 + rs))
-    return data
-
-def plot_stock(data, ticker):
-    """绘制股票走势图"""
-    fig, ax = plt.subplots(figsize=(12, 6))
-    ax.plot(data['Close'], label='收盘价')
-    ax.plot(data['MA'], label='20日均线')
-    ax.set_title(f'{ticker} 股价走势')
-    ax.legend()
-    plt.show()</pre>
-                </div>
+            <div class="content-card">
+                <h3>💡 学习要点</h3>
+                <ul>
+                    <li><strong>RFM 模型</strong>：Recency(新鲜度)、Frequency(频次)、Monetary(金额)是评估客户价值的核心指标</li>
+                    <li><strong>数据标准化</strong>：聚类前必须标准化，避免量纲影响结果</li>
+                    <li><strong>肘部法则</strong>：帮助确定最佳聚类数量的方法</li>
+                    <li><strong>聚类解释</strong>：每个聚类需要有业务含义，如"高价值客户"、"流失风险客户"</li>
+                </ul>
             </div>
         </div>
 
-        <div id="practice-tab" class="tab-content hidden">
-            <div class="glass p-6">
-                <h2 class="text-xl font-semibold mb-4">✏️ 编程练习</h2>
-                <p class="text-gray-400 mb-6">请完成以下代码练习：</p>
+        <div id="practice-tab" class="tab-content">
+            <div class="content-card">
+                <h3>✏️ 编程练习</h3>
                 
-                <div class="question-box mb-6">
-                    <h3 class="font-semibold mb-3">练习1：计算股票收益率</h3>
-                    <p class="text-gray-300 mb-4">请编写一个函数，计算股票的日收益率。</p>
-                    <div class="code-box text-gray-300 mb-4">
-                        <pre>def calculate_daily_return(data):
+                <div class="question-box">
+                    <h4>练习1：计算 RFM 指标</h4>
+                    <p>请编写代码，计算客户的 RFM 指标：</p>
+                    <div class="code-box">
+                        <pre>import pandas as pd
+
+def calculate_rfm_metrics(df, reference_date):
     """
-    计算日收益率
-    :param data: 包含Close列的DataFrame
-    :return: 添加了日收益率列的DataFrame
+    计算客户 RFM 指标
+    
+    Args:
+        df: 包含客户交易数据的DataFrame
+        reference_date: 参考日期
+    
+    Returns:
+        包含 RFM 指标的DataFrame
     """
     # 请在此处编写代码
     
-    return data</pre>
+    return rfm</pre>
                     </div>
-                    <button class="btn-gradient px-6 py-2 rounded-lg text-white" onclick="showPracticeAnswer(1)">查看答案</button>
+                    <button class="btn btn-primary" onclick="showAnswer(1)">查看答案</button>
                 </div>
 
                 <div class="question-box">
-                    <h3 class="font-semibold mb-3">练习2：计算最大回撤</h3>
-                    <p class="text-gray-300 mb-4">请编写一个函数，计算股票的最大回撤（从最高点到最低点的跌幅）。</p>
-                    <div class="code-box text-gray-300 mb-4">
-                        <pre>def calculate_max_drawdown(data):
+                    <h4>练习2：客户分群标签</h4>
+                    <p>请编写代码，为每个客户群赋予业务含义的标签：</p>
+                    <div class="code-box">
+                        <pre>import pandas as pd
+
+def assign_cluster_labels(cluster_analysis):
     """
-    计算最大回撤
-    :param data: 包含Close列的DataFrame
-    :return: 最大回撤值
+    为聚类结果分配业务标签
+    
+    Args:
+        cluster_analysis: 聚类分析结果
+    
+    Returns:
+        聚类标签映射
     """
     # 请在此处编写代码
     
-    return max_drawdown</pre>
+    return labels</pre>
                     </div>
-                    <button class="btn-gradient px-6 py-2 rounded-lg text-white" onclick="showPracticeAnswer(2)">查看答案</button>
+                    <button class="btn btn-primary" onclick="showAnswer(2)">查看答案</button>
                 </div>
             </div>
         </div>
 
-        <div id="test-tab" class="tab-content hidden">
-            <div class="glass p-6">
-                <h2 class="text-xl font-semibold mb-4">📝 知识测试</h2>
-                <p class="text-gray-400 mb-6">完成以下选择题，测试你的学习成果。</p>
+        <div id="test-tab" class="tab-content">
+            <div class="content-card">
+                <h3>📝 知识测试</h3>
                 
-                <div id="test-container">
-                    <div class="question-box mb-6">
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-cyan-400 font-semibold">第1题</span>
-                            <span class="text-sm text-gray-500">单选题</span>
-                        </div>
-                        <p class="text-gray-300 mb-4">以下哪个Python库常用于获取股票数据？</p>
-                        <div>
-                            <button class="option-btn" onclick="selectAnswer(1, 'A')">
-                                <span class="font-semibold mr-2">A.</span> pandas
-                            </button>
-                            <button class="option-btn" onclick="selectAnswer(1, 'B')">
-                                <span class="font-semibold mr-2">B.</span> yfinance
-                            </button>
-                            <button class="option-btn" onclick="selectAnswer(1, 'C')">
-                                <span class="font-semibold mr-2">C.</span> matplotlib
-                            </button>
-                            <button class="option-btn" onclick="selectAnswer(1, 'D')">
-                                <span class="font-semibold mr-2">D.</span> numpy
-                            </button>
-                        </div>
-                        <div id="explanation-1" class="mt-4 p-3 bg-yellow-500/10 rounded-lg hidden">
-                            <p class="text-yellow-300"><strong>正确答案：B</strong></p>
-                            <p class="text-gray-400 text-sm">yfinance是专门用于从Yahoo Finance获取股票数据的Python库。</p>
-                        </div>
-                    </div>
-
-                    <div class="question-box mb-6">
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-cyan-400 font-semibold">第2题</span>
-                            <span class="text-sm text-gray-500">单选题</span>
-                        </div>
-                        <p class="text-gray-300 mb-4">RSI指标的取值范围是？</p>
-                        <div>
-                            <button class="option-btn" onclick="selectAnswer(2, 'A')">
-                                <span class="font-semibold mr-2">A.</span> 0-50
-                            </button>
-                            <button class="option-btn" onclick="selectAnswer(2, 'B')">
-                                <span class="font-semibold mr-2">B.</span> 0-100
-                            </button>
-                            <button class="option-btn" onclick="selectAnswer(2, 'C')">
-                                <span class="font-semibold mr-2">C.</span> -1到1
-                            </button>
-                            <button class="option-btn" onclick="selectAnswer(2, 'D')">
-                                <span class="font-semibold mr-2">D.</span> 1-1000
-                            </button>
-                        </div>
-                        <div id="explanation-2" class="mt-4 p-3 bg-yellow-500/10 rounded-lg hidden">
-                            <p class="text-yellow-300"><strong>正确答案：B</strong></p>
-                            <p class="text-gray-400 text-sm">RSI（相对强弱指数）的取值范围是0-100，通常RSI>70表示超买，RSI<30表示超卖。</p>
-                        </div>
-                    </div>
-
-                    <div class="question-box">
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-cyan-400 font-semibold">第3题</span>
-                            <span class="text-sm text-gray-500">单选题</span>
-                        </div>
-                        <p class="text-gray-300 mb-4">以下哪个不是常见的技术分析指标？</p>
-                        <div>
-                            <button class="option-btn" onclick="selectAnswer(3, 'A')">
-                                <span class="font-semibold mr-2">A.</span> MACD
-                            </button>
-                            <button class="option-btn" onclick="selectAnswer(3, 'B')">
-                                <span class="font-semibold mr-2">B.</span> GDP
-                            </button>
-                            <button class="option-btn" onclick="selectAnswer(3, 'C')">
-                                <span class="font-semibold mr-2">C.</span> RSI
-                            </button>
-                            <button class="option-btn" onclick="selectAnswer(3, 'D')">
-                                <span class="font-semibold mr-2">D.</span> MA
-                            </button>
-                        </div>
-                        <div id="explanation-3" class="mt-4 p-3 bg-yellow-500/10 rounded-lg hidden">
-                            <p class="text-yellow-300"><strong>正确答案：B</strong></p>
-                            <p class="text-gray-400 text-sm">GDP是国内生产总值，是宏观经济指标，不是技术分析指标。MACD、RSI、MA都是常见的技术分析指标。</p>
-                        </div>
+                <div class="question-box">
+                    <h4>问题1：RFM 模型中的 M 代表什么？</h4>
+                    <button class="option-btn" onclick="selectOption(1, 'A')">A. 最近购买时间</button>
+                    <button class="option-btn" onclick="selectOption(1, 'B')">B. 购买频率</button>
+                    <button class="option-btn" onclick="selectOption(1, 'C')">C. 购买金额</button>
+                    <button class="option-btn" onclick="selectOption(1, 'D')">D. 客户年龄</button>
+                    <div class="explanation" id="exp1">
+                        <p><strong>正确答案：C</strong></p>
+                        <p>RFM 模型中：R 是 Recency(最近购买时间)，F 是 Frequency(购买频率)，M 是 Monetary(购买金额)。</p>
                     </div>
                 </div>
 
-                <div class="mt-6 flex justify-center">
-                    <button class="btn-gradient px-8 py-3 rounded-lg text-white font-semibold" onclick="checkTest()">
-                        提交答案
-                    </button>
+                <div class="question-box">
+                    <h4>问题2：K-Means 聚类前为什么要标准化数据？</h4>
+                    <button class="option-btn" onclick="selectOption(2, 'A')">A. 提高计算速度</button>
+                    <button class="option-btn" onclick="selectOption(2, 'B')">B. 避免不同量纲影响结果</button>
+                    <button class="option-btn" onclick="selectOption(2, 'C')">C. 增加数据准确性</button>
+                    <button class="option-btn" onclick="selectOption(2, 'D')">D. 减少内存使用</button>
+                    <div class="explanation" id="exp2">
+                        <p><strong>正确答案：B</strong></p>
+                        <p>标准化是为了消除不同特征间的量纲差异，确保每个特征在聚类中具有同等重要性。</p>
+                    </div>
                 </div>
 
-                <div id="test-result" class="mt-6 glass p-6 hidden">
-                    <h3 class="text-xl font-semibold mb-4 text-center" id="result-title"></h3>
-                    <p class="text-center text-3xl font-bold mb-4" id="score"></p>
-                    <div class="text-center">
-                        <button class="btn-gradient px-6 py-2 rounded-lg text-white" onclick="resetTest()">
-                            重新测试
-                        </button>
+                <div class="question-box">
+                    <h4>问题3：肘部法则用于确定什么？</h4>
+                    <button class="option-btn" onclick="selectOption(3, 'A')">A. 最佳聚类数</button>
+                    <button class="option-btn" onclick="selectOption(3, 'B')">B. 最佳迭代次数</button>
+                    <button class="option-btn" onclick="selectOption(3, 'C')">C. 最佳特征数</button>
+                    <button class="option-btn" onclick="selectOption(3, 'D')">D. 最佳样本数</button>
+                    <div class="explanation" id="exp3">
+                        <p><strong>正确答案：A</strong></p>
+                        <p>肘部法则通过绘制不同聚类数下的误差变化，帮助确定最佳的聚类数量。</p>
                     </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 24px;">
+                    <button class="btn btn-primary" onclick="checkAnswers()">提交答案</button>
+                </div>
+
+                <div class="test-result" id="result">
+                    <h3 id="result-title"></h3>
+                    <div class="score" id="score"></div>
+                    <button class="btn btn-outline" onclick="resetTest()">重新测试</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <footer>
+        <p>© 2024 TT's Learning Space · Pandas 数据分析实战训练营</p>
+    </footer>
+
     <script>
-        const tabs = ['learn', 'practice', 'test'];
-        const correctAnswers = {1: 'B', 2: 'B', 3: 'B'};
+        const correctAnswers = {1: 'C', 2: 'B', 3: 'A'};
         const userAnswers = {};
 
         function showTab(tabName) {
-            tabs.forEach(tab => {
-                document.getElementById(`${tab}-tab`).classList.add('hidden');
-                document.querySelector(`button[onclick="showTab('${tab}')"]`).classList.remove('tab-active');
-            });
-            document.getElementById(`${tabName}-tab`).classList.remove('hidden');
-            document.querySelector(`button[onclick="showTab('${tabName}')"]`).classList.add('tab-active');
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelector(`button[onclick="showTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(`${tabName}-tab`).classList.add('active');
         }
 
-        function showPracticeAnswer(num) {
+        function showAnswer(num) {
             const answers = {
-                1: `def calculate_daily_return(data):
-    data['daily_return'] = data['Close'].pct_change()
-    return data`,
-                2: `def calculate_max_drawdown(data):
-    rolling_max = data['Close'].cummax()
-    drawdown = (data['Close'] - rolling_max) / rolling_max
-    max_drawdown = drawdown.min()
-    return max_drawdown`
+                1: `def calculate_rfm_metrics(df, reference_date):
+    df['order_date'] = pd.to_datetime(df['order_date'])
+    rfm = df.groupby('customer_id').agg({
+        'order_date': lambda x: (reference_date - x.max()).days,
+        'order_id': 'nunique',
+        'amount': 'sum'
+    }).rename(columns={
+        'order_date': 'Recency',
+        'order_id': 'Frequency',
+        'amount': 'Monetary'
+    })
+    return rfm`,
+                2: `def assign_cluster_labels(cluster_analysis):
+    labels = {}
+    for cluster in cluster_analysis.index:
+        r = cluster_analysis.loc[cluster, ('Recency', 'mean')]
+        f = cluster_analysis.loc[cluster, ('Frequency', 'mean')]
+        m = cluster_analysis.loc[cluster, ('Monetary', 'mean')]
+        if r < 30 and f > 5 and m > 1000:
+            labels[cluster] = '高价值活跃客户'
+        elif r > 90:
+            labels[cluster] = '流失风险客户'
+        else:
+            labels[cluster] = '普通客户'
+    return labels`
             };
-            alert(`练习${num}答案：\n\n${answers[num]}`);
+            alert(`练习${num}答案：\\n\\n${answers[num]}`);
         }
 
-        function selectAnswer(questionNum, answer) {
-            const options = document.querySelectorAll(`#test-container .question-box:nth-child(${questionNum}) .option-btn`);
-            options.forEach(opt => opt.classList.remove('selected'));
+        function selectOption(qNum, answer) {
+            const options = document.querySelectorAll(`#test-tab .question-box:nth-child(${qNum+1}) .option-btn`);
+            options.forEach(o => o.classList.remove('selected'));
             event.target.classList.add('selected');
-            userAnswers[questionNum] = answer;
+            userAnswers[qNum] = answer;
         }
 
-        function checkTest() {
+        function checkAnswers() {
             let correct = 0;
             Object.keys(correctAnswers).forEach(q => {
-                if (userAnswers[q] === correctAnswers[q]) {
-                    correct++;
-                }
-                const options = document.querySelectorAll(`#test-container .question-box:nth-child(${q}) .option-btn`);
+                const options = document.querySelectorAll(`#test-tab .question-box:nth-child(${parseInt(q)+1}) .option-btn`);
                 options.forEach(opt => {
                     const optAnswer = opt.textContent.trim()[0];
                     if (optAnswer === correctAnswers[q]) {
@@ -379,23 +357,20 @@ def plot_stock(data, ticker):
                         opt.classList.add('wrong');
                     }
                 });
-                document.getElementById(`explanation-${q}`).classList.remove('hidden');
+                document.getElementById(`exp${q}`).style.display = 'block';
+                if (userAnswers[q] === correctAnswers[q]) correct++;
             });
             
-            document.getElementById('test-result').classList.remove('hidden');
             const score = Math.round((correct / Object.keys(correctAnswers).length) * 100);
             document.getElementById('score').textContent = `${score}分`;
             document.getElementById('result-title').textContent = score >= 60 ? '🎉 测试通过！' : '💪 继续加油！';
+            document.getElementById('result').style.display = 'block';
         }
 
         function resetTest() {
-            document.querySelectorAll('.option-btn').forEach(opt => {
-                opt.classList.remove('selected', 'correct', 'wrong');
-            });
-            document.querySelectorAll('[id^="explanation-"]').forEach(exp => {
-                exp.classList.add('hidden');
-            });
-            document.getElementById('test-result').classList.add('hidden');
+            document.querySelectorAll('.option-btn').forEach(o => o.classList.remove('selected', 'correct', 'wrong'));
+            document.querySelectorAll('.explanation').forEach(e => e.style.display = 'none');
+            document.getElementById('result').style.display = 'none';
             Object.keys(userAnswers).forEach(k => delete userAnswers[k]);
         }
     </script>

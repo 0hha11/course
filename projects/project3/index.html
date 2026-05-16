@@ -3,388 +3,338 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>项目3 - 电商商品数据爬取</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>购物篮分析 - Pandas 数据分析实战训练营</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0c1929 0%, #1a1a2e 50%, #16213e 100%);
-            min-height: 100vh;
-            color: #ffffff;
-        }
-        .glass {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
-        }
-        .gradient-text {
-            background: linear-gradient(90deg, #00d4ff, #7c3aed);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .btn-gradient {
-            background: linear-gradient(90deg, #00d4ff, #7c3aed);
-            transition: all 0.3s ease;
-        }
-        .btn-gradient:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
-        }
-        .tab-active {
-            background: rgba(0, 212, 255, 0.2);
-            border-color: rgba(0, 212, 255, 0.5);
-        }
-        .code-box {
-            background: #1e1e1e;
-            border-radius: 8px;
-            padding: 16px;
-            font-family: 'Monaco', 'Consolas', monospace;
-            font-size: 14px;
-            overflow-x: auto;
-        }
-        .question-box {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 20px;
-        }
-        .option-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            padding: 12px 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: block;
-            width: 100%;
-            text-align: left;
-            margin-bottom: 10px;
-        }
-        .option-btn:hover {
-            background: rgba(0, 212, 255, 0.1);
-            border-color: rgba(0, 212, 255, 0.5);
-        }
-        .option-btn.selected {
-            background: rgba(0, 212, 255, 0.2);
-            border-color: rgba(0, 212, 255, 0.8);
-        }
-        .option-btn.correct {
-            background: rgba(34, 197, 94, 0.2);
-            border-color: rgba(34, 197, 94, 0.8);
-        }
-        .option-btn.wrong {
-            background: rgba(239, 68, 68, 0.2);
-            border-color: rgba(239, 68, 68, 0.8);
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        
+        header { background: white; border-bottom: 1px solid #e2e8f0; padding: 16px 0; }
+        header .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: 700; color: #3b82f6; font-size: 18px; }
+        header a { color: #64748b; text-decoration: none; font-size: 14px; }
+        header a:hover { color: #3b82f6; }
+        
+        .project-header { padding: 40px 0; }
+        .project-title { font-size: 32px; font-weight: 700; color: #0f172a; margin-bottom: 12px; }
+        .project-meta { display: flex; gap: 16px; color: #64748b; font-size: 14px; }
+        .badge { padding: 4px 12px; border-radius: 10px; font-size: 12px; font-weight: 600; }
+        .badge-medium { background: #dbeafe; color: #2563eb; }
+        .badge-time { background: #f1f5f9; color: #64748b; }
+        
+        .tabs { display: flex; gap: 8px; margin-bottom: 24px; background: #f1f5f9; padding: 6px; border-radius: 12px; }
+        .tab { padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: #64748b; }
+        .tab.active { background: white; color: #3b82f6; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        .content-card { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 28px; margin-bottom: 24px; }
+        .content-card h3 { font-size: 20px; font-weight: 600; color: #0f172a; margin-bottom: 16px; }
+        .content-card p { color: #64748b; line-height: 1.6; margin-bottom: 12px; }
+        .content-card ul { list-style: disc; padding-left: 20px; color: #64748b; }
+        .content-card ul li { margin-bottom: 8px; }
+        
+        .code-box { background: #1e1e1e; border-radius: 12px; padding: 20px; overflow-x: auto; margin: 16px 0; }
+        .code-box pre { color: #d4d4d4; font-family: 'Monaco', 'Consolas', monospace; font-size: 14px; line-height: 1.6; white-space: pre; }
+        
+        .question-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+        .question-box h4 { font-size: 16px; font-weight: 600; color: #0f172a; margin-bottom: 12px; }
+        .question-box p { color: #64748b; margin-bottom: 12px; }
+        
+        .option-btn { display: block; width: 100%; padding: 14px 16px; margin-bottom: 10px; border: 1px solid #e2e8f0; border-radius: 10px; background: white; cursor: pointer; text-align: left; font-size: 14px; color: #334155; transition: all 0.2s; }
+        .option-btn:hover { border-color: #3b82f6; background: #eff6ff; }
+        .option-btn.selected { border-color: #3b82f6; background: #eff6ff; }
+        .option-btn.correct { border-color: #16a34a; background: #ecfdf5; color: #16a34a; }
+        .option-btn.wrong { border-color: #ef4444; background: #fef2f2; color: #ef4444; }
+        
+        .explanation { background: #fefce8; border-left: 4px solid #eab308; padding: 16px; margin-top: 16px; border-radius: 0 8px 8px 0; display: none; }
+        .explanation p { color: #854d0e; }
+        .explanation strong { color: #a16207; }
+        
+        .btn { padding: 12px 24px; border-radius: 10px; font-weight: 600; font-size: 14px; text-decoration: none; transition: all 0.2s; }
+        .btn-primary { background: #3b82f6; color: white; }
+        .btn-primary:hover { background: #2563eb; }
+        .btn-outline { border: 1px solid #e2e8f0; color: #64748b; background: white; }
+        .btn-outline:hover { border-color: #3b82f6; color: #3b82f6; }
+        
+        .test-result { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 32px; text-align: center; margin-top: 24px; display: none; }
+        .test-result h3 { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+        .test-result .score { font-size: 48px; font-weight: 700; color: #3b82f6; margin-bottom: 24px; }
+        
+        footer { text-align: center; padding: 32px 0; border-top: 1px solid #e2e8f0; color: #94a3b8; font-size: 14px; margin-top: 60px; }
+        
+        @media (max-width: 768px) {
+            .project-title { font-size: 24px; }
+            .project-meta { flex-wrap: wrap; }
+            .tabs { flex-wrap: wrap; }
         }
     </style>
 </head>
 <body>
-    <nav class="fixed top-0 left-0 right-0 z-50 glass">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <i class="fas fa-code text-2xl text-cyan-400"></i>
-                <span class="text-xl font-bold gradient-text">Python学习平台</span>
+    <header>
+        <div class="container">
+            <div class="logo">TT's Learning</div>
+            <a href="../../index.html">← 返回首页</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="project-header">
+            <h1 class="project-title">购物篮分析</h1>
+            <div class="project-meta">
+                <span class="badge badge-medium">进阶</span>
+                <span class="badge badge-time">45分钟</span>
+                <span>📁 market_basket.csv</span>
             </div>
-            <a href="../../index.html" class="text-gray-300 hover:text-cyan-400 transition">返回首页</a>
-        </div>
-    </nav>
-
-    <div class="max-w-7xl mx-auto px-4 py-20">
-        <div class="glass p-6 mb-6">
-            <h1 class="text-2xl font-bold mb-2">项目3：电商商品数据爬取</h1>
-            <p class="text-gray-400">学习使用Python爬虫技术从电商网站获取商品数据，包括价格、销量、评价等信息。</p>
         </div>
 
-        <div class="flex gap-4 mb-6">
-            <button class="tab-btn tab-active px-6 py-2 rounded-lg" onclick="showTab('learn')">
-                <i class="fas fa-book-open mr-2"></i>学习
-            </button>
-            <button class="tab-btn px-6 py-2 rounded-lg" onclick="showTab('practice')">
-                <i class="fas fa-code mr-2"></i>练习
-            </button>
-            <button class="tab-btn px-6 py-2 rounded-lg" onclick="showTab('test')">
-                <i class="fas fa-file-check mr-2"></i>测试
-            </button>
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('learn')">📚 学习</button>
+            <button class="tab" onclick="showTab('practice')">✏️ 练习</button>
+            <button class="tab" onclick="showTab('test')">📝 测试</button>
         </div>
 
-        <div id="learn-tab" class="tab-content">
-            <div class="glass p-6 mb-6">
-                <h2 class="text-xl font-semibold mb-4">📚 项目概述</h2>
-                <p class="text-gray-300 mb-4">电商商品数据爬取项目帮助你从各大电商平台获取商品信息。通过这个项目，你将学习：</p>
-                <ul class="list-disc list-inside text-gray-400 mb-6">
-                    <li>Requests发送HTTP请求</li>
-                    <li>BeautifulSoup解析HTML</li>
-                    <li>反爬虫策略应对</li>
-                    <li>数据存储和导出</li>
+        <div id="learn-tab" class="tab-content active">
+            <div class="content-card">
+                <h3>📌 项目概述</h3>
+                <p>购物篮分析（Market Basket Analysis）是一种发现顾客购买模式的数据挖掘技术，通过分析顾客同时购买的商品组合，可以发现商品之间的关联关系，用于商品推荐和货架布局优化。</p>
+                <ul>
+                    <li>理解关联规则挖掘概念</li>
+                    <li>学习支持度、置信度、提升度指标</li>
+                    <li>掌握 Apriori 算法原理</li>
+                    <li>应用购物篮分析解决实际问题</li>
                 </ul>
             </div>
 
-            <div class="glass p-6 mb-6">
-                <h2 class="text-xl font-semibold mb-4">💡 核心功能</h2>
-                <div class="grid md:grid-cols-2 gap-4">
-                    <div class="bg-white/5 p-4 rounded-lg">
-                        <h3 class="font-semibold mb-2">🌐 网页抓取</h3>
-                        <p class="text-gray-400 text-sm">获取电商网站商品列表页面</p>
-                    </div>
-                    <div class="bg-white/5 p-4 rounded-lg">
-                        <h3 class="font-semibold mb-2">📄 内容解析</h3>
-                        <p class="text-gray-400 text-sm">提取商品名称、价格、销量等信息</p>
-                    </div>
-                    <div class="bg-white/5 p-4 rounded-lg">
-                        <h3 class="font-semibold mb-2">📦 数据存储</h3>
-                        <p class="text-gray-400 text-sm">保存到CSV、JSON或数据库</p>
-                    </div>
-                    <div class="bg-white/5 p-4 rounded-lg">
-                        <h3 class="font-semibold mb-2">🔄 自动翻页</h3>
-                        <p class="text-gray-400 text-sm">自动遍历多页商品数据</p>
-                    </div>
+            <div class="content-card">
+                <h3>🔧 核心代码</h3>
+                <p>以下是购物篮分析常用的代码示例：</p>
+                <div class="code-box">
+                    <pre>import pandas as pd
+from itertools import combinations
+
+# 读取数据
+df = pd.read_csv('market_basket.csv')
+
+# 1. 数据准备
+# 将数据转换为交易列表格式
+transactions = df.groupby('order_id')['product'].apply(list).tolist()
+
+# 2. 计算商品频率
+product_counts = df['product'].value_counts()
+
+# 3. 计算支持度
+def calculate_support(itemset, transactions):
+    """计算项集的支持度"""
+    count = 0
+    for transaction in transactions:
+        if set(itemset).issubset(set(transaction)):
+            count += 1
+    return count / len(transactions)
+
+# 4. 计算置信度
+def calculate_confidence(antecedent, consequent, transactions):
+    """计算规则的置信度"""
+    support_both = calculate_support(antecedent + consequent, transactions)
+    support_antecedent = calculate_support(antecedent, transactions)
+    return support_both / support_antecedent if support_antecedent > 0 else 0
+
+# 5. 计算提升度
+def calculate_lift(antecedent, consequent, transactions):
+    """计算规则的提升度"""
+    confidence = calculate_confidence(antecedent, consequent, transactions)
+    support_consequent = calculate_support(consequent, transactions)
+    return confidence / support_consequent if support_consequent > 0 else 0
+
+# 6. 发现频繁项集（简化版Apriori）
+def find_frequent_itemsets(transactions, min_support=0.01):
+    """发现频繁项集"""
+    # 获取所有唯一商品
+    all_products = list(set([item for sublist in transactions for item in sublist]))
+    
+    # 单个商品的频繁项集
+    frequent_itemsets = []
+    for product in all_products:
+        support = calculate_support([product], transactions)
+        if support >= min_support:
+            frequent_itemsets.append(([product], support))
+    
+    return frequent_itemsets
+
+print('购物篮分析完成！')</pre>
                 </div>
             </div>
 
-            <div class="glass p-6">
-                <h2 class="text-xl font-semibold mb-4">🔧 代码示例</h2>
-                <div class="code-box text-green-400">
-                    <pre># 电商商品数据爬取
-import requests
-from bs4 import BeautifulSoup
-import csv
-
-def get_page(url):
-    """获取页面内容"""
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-    }
-    response = requests.get(url, headers=headers)
-    response.encoding = 'utf-8'
-    return response.text
-
-def parse_page(html):
-    """解析页面提取商品信息"""
-    soup = BeautifulSoup(html, 'html.parser')
-    items = []
-    for item in soup.select('.product-item'):
-        name = item.select_one('.name').get_text(strip=True)
-        price = float(item.select_one('.price').get_text(strip=True))
-        sales = item.select_one('.sales').get_text(strip=True)
-        items.append({'name': name, 'price': price, 'sales': sales})
-    return items
-
-def save_to_csv(items, filename):
-    """保存到CSV文件"""
-    with open(filename, 'w', encoding='utf-8-sig', newline='') as f:
-        writer = csv.DictWriter(f, fieldnames=['name', 'price', 'sales'])
-        writer.writeheader()
-        writer.writerows(items)</pre>
-                </div>
+            <div class="content-card">
+                <h3>💡 学习要点</h3>
+                <ul>
+                    <li><strong>支持度(Support)</strong>：商品组合在所有交易中出现的频率</li>
+                    <li><strong>置信度(Confidence)</strong>：购买A的顾客同时购买B的概率</li>
+                    <li><strong>提升度(Lift)</strong>：购买A对购买B的提升程度，>1表示正相关</li>
+                    <li><strong>关联规则</strong>：形式为 A → B，表示购买A后可能购买B</li>
+                </ul>
             </div>
         </div>
 
-        <div id="practice-tab" class="tab-content hidden">
-            <div class="glass p-6">
-                <h2 class="text-xl font-semibold mb-4">✏️ 编程练习</h2>
-                <p class="text-gray-400 mb-6">请完成以下代码练习：</p>
+        <div id="practice-tab" class="tab-content">
+            <div class="content-card">
+                <h3>✏️ 编程练习</h3>
                 
-                <div class="question-box mb-6">
-                    <h3 class="font-semibold mb-3">练习1：实现带随机延迟的请求函数</h3>
-                    <p class="text-gray-300 mb-4">请编写一个函数，在发送请求前随机延迟一段时间，避免被反爬虫识别。</p>
-                    <div class="code-box text-gray-300 mb-4">
-                        <pre>import time
-import random
-import requests
+                <div class="question-box">
+                    <h4>练习1：计算商品支持度</h4>
+                    <p>请编写代码，计算每个商品的支持度：</p>
+                    <div class="code-box">
+                        <pre>import pandas as pd
 
-def get_page_with_delay(url, min_delay=1, max_delay=3):
+def calculate_product_support(df):
     """
-    带随机延迟的页面请求
-    :param url: 请求URL
-    :param min_delay: 最小延迟（秒）
-    :param max_delay: 最大延迟（秒）
-    :return: 页面HTML内容
+    计算每个商品的支持度
+    
+    Args:
+        df: 包含交易数据的DataFrame，需要有'order_id'和'product'列
+    
+    Returns:
+        包含商品和对应支持度的DataFrame
     """
     # 请在此处编写代码
     
-    return response.text</pre>
+    return result</pre>
                     </div>
-                    <button class="btn-gradient px-6 py-2 rounded-lg text-white" onclick="showPracticeAnswer(1)">查看答案</button>
+                    <button class="btn btn-primary" onclick="showAnswer(1)">查看答案</button>
                 </div>
 
                 <div class="question-box">
-                    <h3 class="font-semibold mb-3">练习2：解析商品评价数量</h3>
-                    <p class="text-gray-300 mb-4">请编写一个函数，从HTML中提取商品评价数量（可能包含"万"、"千"等单位）。</p>
-                    <div class="code-box text-gray-300 mb-4">
-                        <pre>def parse_review_count(text):
+                    <h4>练习2：分析商品共现</h4>
+                    <p>请编写代码，统计商品组合的共现次数：</p>
+                    <div class="code-box">
+                        <pre>import pandas as pd
+from itertools import combinations
+
+def analyze_product_cooccurrence(df, min_count=10):
     """
-    解析评价数量
-    :param text: 包含评价数量的文本，如"1000+"、"2.5万"
-    :return: 评价数量（整数）
+    分析商品组合的共现情况
+    
+    Args:
+        df: 包含交易数据的DataFrame
+        min_count: 最小共现次数
+    
+    Returns:
+        商品共现统计结果
     """
     # 请在此处编写代码
     
-    return count</pre>
+    return result</pre>
                     </div>
-                    <button class="btn-gradient px-6 py-2 rounded-lg text-white" onclick="showPracticeAnswer(2)">查看答案</button>
+                    <button class="btn btn-primary" onclick="showAnswer(2)">查看答案</button>
                 </div>
             </div>
         </div>
 
-        <div id="test-tab" class="tab-content hidden">
-            <div class="glass p-6">
-                <h2 class="text-xl font-semibold mb-4">📝 知识测试</h2>
-                <p class="text-gray-400 mb-6">完成以下选择题，测试你的学习成果。</p>
+        <div id="test-tab" class="tab-content">
+            <div class="content-card">
+                <h3>📝 知识测试</h3>
                 
-                <div id="test-container">
-                    <div class="question-box mb-6">
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-cyan-400 font-semibold">第1题</span>
-                            <span class="text-sm text-gray-500">单选题</span>
-                        </div>
-                        <p class="text-gray-300 mb-4">在Python中，以下哪个库常用于发送HTTP请求？</p>
-                        <div>
-                            <button class="option-btn" onclick="selectAnswer(1, 'A')">
-                                <span class="font-semibold mr-2">A.</span> beautifulsoup4
-                            </button>
-                            <button class="option-btn" onclick="selectAnswer(1, 'B')">
-                                <span class="font-semibold mr-2">B.</span> requests
-                            </button>
-                            <button class="option-btn" onclick="selectAnswer(1, 'C')">
-                                <span class="font-semibold mr-2">C.</span> pandas
-                            </button>
-                            <button class="option-btn" onclick="selectAnswer(1, 'D')">
-                                <span class="font-semibold mr-2">D.</span> numpy
-                            </button>
-                        </div>
-                        <div id="explanation-1" class="mt-4 p-3 bg-yellow-500/10 rounded-lg hidden">
-                            <p class="text-yellow-300"><strong>正确答案：B</strong></p>
-                            <p class="text-gray-400 text-sm">requests是Python中最常用的HTTP请求库，用于发送GET、POST等请求。</p>
-                        </div>
-                    </div>
-
-                    <div class="question-box mb-6">
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-cyan-400 font-semibold">第2题</span>
-                            <span class="text-sm text-gray-500">单选题</span>
-                        </div>
-                        <p class="text-gray-300 mb-4">以下哪个不是常见的反爬虫策略？</p>
-                        <div>
-                            <button class="option-btn" onclick="selectAnswer(2, 'A')">
-                                <span class="font-semibold mr-2">A.</span> User-Agent验证
-                            </button>
-                            <button class="option-btn" onclick="selectAnswer(2, 'B')">
-                                <span class="font-semibold mr-2">B.</span> IP封禁
-                            </button>
-                            <button class="option-btn" onclick="selectAnswer(2, 'C')">
-                                <span class="font-semibold mr-2">C.</span> 数据加密
-                            </button>
-                            <button class="option-btn" onclick="selectAnswer(2, 'D')">
-                                <span class="font-semibold mr-2">D.</span> 增加页面加载速度
-                            </button>
-                        </div>
-                        <div id="explanation-2" class="mt-4 p-3 bg-yellow-500/10 rounded-lg hidden">
-                            <p class="text-yellow-300"><strong>正确答案：D</strong></p>
-                            <p class="text-gray-400 text-sm">增加页面加载速度是网站优化策略，不是反爬虫策略。常见反爬虫策略包括User-Agent验证、IP封禁、验证码等。</p>
-                        </div>
-                    </div>
-
-                    <div class="question-box">
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-cyan-400 font-semibold">第3题</span>
-                            <span class="text-sm text-gray-500">单选题</span>
-                        </div>
-                        <p class="text-gray-300 mb-4">在BeautifulSoup中，以下哪个方法可以通过CSS选择器查找元素？</p>
-                        <div>
-                            <button class="option-btn" onclick="selectAnswer(3, 'A')">
-                                <span class="font-semibold mr-2">A.</span> find()
-                            </button>
-                            <button class="option-btn" onclick="selectAnswer(3, 'B')">
-                                <span class="font-semibold mr-2">B.</span> find_all()
-                            </button>
-                            <button class="option-btn" onclick="selectAnswer(3, 'C')">
-                                <span class="font-semibold mr-2">C.</span> select()
-                            </button>
-                            <button class="option-btn" onclick="selectAnswer(3, 'D')">
-                                <span class="font-semibold mr-2">D.</span> get()
-                            </button>
-                        </div>
-                        <div id="explanation-3" class="mt-4 p-3 bg-yellow-500/10 rounded-lg hidden">
-                            <p class="text-yellow-300"><strong>正确答案：C</strong></p>
-                            <p class="text-gray-400 text-sm">select()方法支持CSS选择器语法，是最灵活的查找方式。find()和find_all()主要使用标签名和属性查找。</p>
-                        </div>
+                <div class="question-box">
+                    <h4>问题1：在购物篮分析中，支持度衡量的是？</h4>
+                    <button class="option-btn" onclick="selectOption(1, 'A')">A. 商品组合出现的频率</button>
+                    <button class="option-btn" onclick="selectOption(1, 'B')">B. 购买A后购买B的概率</button>
+                    <button class="option-btn" onclick="selectOption(1, 'C')">C. 购买A对购买B的提升程度</button>
+                    <button class="option-btn" onclick="selectOption(1, 'D')">D. 商品的价格相关性</button>
+                    <div class="explanation" id="exp1">
+                        <p><strong>正确答案：A</strong></p>
+                        <p>支持度(Support)衡量的是商品组合在所有交易中出现的频率，表示商品组合的普遍性。</p>
                     </div>
                 </div>
 
-                <div class="mt-6 flex justify-center">
-                    <button class="btn-gradient px-8 py-3 rounded-lg text-white font-semibold" onclick="checkTest()">
-                        提交答案
-                    </button>
+                <div class="question-box">
+                    <h4>问题2：提升度(Lift)大于1表示？</h4>
+                    <button class="option-btn" onclick="selectOption(2, 'A')">A. 商品A和B负相关</button>
+                    <button class="option-btn" onclick="selectOption(2, 'B')">B. 商品A和B正相关</button>
+                    <button class="option-btn" onclick="selectOption(2, 'C')">C. 商品A和B无关</button>
+                    <button class="option-btn" onclick="selectOption(2, 'D')">D. 无法判断</button>
+                    <div class="explanation" id="exp2">
+                        <p><strong>正确答案：B</strong></p>
+                        <p>提升度(Lift)大于1表示购买A会增加购买B的概率，两者正相关；等于1表示无关；小于1表示负相关。</p>
+                    </div>
                 </div>
 
-                <div id="test-result" class="mt-6 glass p-6 hidden">
-                    <h3 class="text-xl font-semibold mb-4 text-center" id="result-title"></h3>
-                    <p class="text-center text-3xl font-bold mb-4" id="score"></p>
-                    <div class="text-center">
-                        <button class="btn-gradient px-6 py-2 rounded-lg text-white" onclick="resetTest()">
-                            重新测试
-                        </button>
+                <div class="question-box">
+                    <h4>问题3：经典的关联规则挖掘算法是？</h4>
+                    <button class="option-btn" onclick="selectOption(3, 'A')">A. K-Means</button>
+                    <button class="option-btn" onclick="selectOption(3, 'B')">B. Apriori</button>
+                    <button class="option-btn" onclick="selectOption(3, 'C')">C. Decision Tree</button>
+                    <button class="option-btn" onclick="selectOption(3, 'D')">D. SVM</button>
+                    <div class="explanation" id="exp3">
+                        <p><strong>正确答案：B</strong></p>
+                        <p>Apriori 算法是最经典的关联规则挖掘算法，用于发现频繁项集和关联规则。</p>
                     </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 24px;">
+                    <button class="btn btn-primary" onclick="checkAnswers()">提交答案</button>
+                </div>
+
+                <div class="test-result" id="result">
+                    <h3 id="result-title"></h3>
+                    <div class="score" id="score"></div>
+                    <button class="btn btn-outline" onclick="resetTest()">重新测试</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <footer>
+        <p>© 2024 TT's Learning Space · Pandas 数据分析实战训练营</p>
+    </footer>
+
     <script>
-        const tabs = ['learn', 'practice', 'test'];
-        const correctAnswers = {1: 'B', 2: 'D', 3: 'C'};
+        const correctAnswers = {1: 'A', 2: 'B', 3: 'B'};
         const userAnswers = {};
 
         function showTab(tabName) {
-            tabs.forEach(tab => {
-                document.getElementById(`${tab}-tab`).classList.add('hidden');
-                document.querySelector(`button[onclick="showTab('${tab}')"]`).classList.remove('tab-active');
-            });
-            document.getElementById(`${tabName}-tab`).classList.remove('hidden');
-            document.querySelector(`button[onclick="showTab('${tabName}')"]`).classList.add('tab-active');
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelector(`button[onclick="showTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(`${tabName}-tab`).classList.add('active');
         }
 
-        function showPracticeAnswer(num) {
+        function showAnswer(num) {
             const answers = {
-                1: `def get_page_with_delay(url, min_delay=1, max_delay=3):
-    delay = random.uniform(min_delay, max_delay)
-    time.sleep(delay)
-    headers = {'User-Agent': 'Mozilla/5.0'}
-    response = requests.get(url, headers=headers)
-    response.encoding = 'utf-8'
-    return response.text`,
-                2: `def parse_review_count(text):
-    text = text.strip()
-    if '万' in text:
-        count = float(text.replace('万', '')) * 10000
-    elif '千' in text:
-        count = float(text.replace('千', '')) * 1000
-    elif '+' in text:
-        count = int(text.replace('+', ''))
-    else:
-        count = int(text)
-    return int(count)`
+                1: `def calculate_product_support(df):
+    total_orders = df['order_id'].nunique()
+    product_orders = df.groupby('product')['order_id'].nunique()
+    support = product_orders / total_orders
+    result = pd.DataFrame({
+        'product': support.index,
+        'support': support.values
+    }).sort_values('support', ascending=False)
+    return result`,
+                2: `def analyze_product_cooccurrence(df, min_count=10):
+    transactions = df.groupby('order_id')['product'].apply(list).tolist()
+    pairs = []
+    for transaction in transactions:
+        for pair in combinations(sorted(transaction), 2):
+            pairs.append(pair)
+    result = pd.Series(pairs).value_counts()
+    result = result[result >= min_count]
+    return result`
             };
-            alert(`练习${num}答案：\n\n${answers[num]}`);
+            alert(`练习${num}答案：\\n\\n${answers[num]}`);
         }
 
-        function selectAnswer(questionNum, answer) {
-            const options = document.querySelectorAll(`#test-container .question-box:nth-child(${questionNum}) .option-btn`);
-            options.forEach(opt => opt.classList.remove('selected'));
+        function selectOption(qNum, answer) {
+            const options = document.querySelectorAll(`#test-tab .question-box:nth-child(${qNum+1}) .option-btn`);
+            options.forEach(o => o.classList.remove('selected'));
             event.target.classList.add('selected');
-            userAnswers[questionNum] = answer;
+            userAnswers[qNum] = answer;
         }
 
-        function checkTest() {
+        function checkAnswers() {
             let correct = 0;
             Object.keys(correctAnswers).forEach(q => {
-                if (userAnswers[q] === correctAnswers[q]) {
-                    correct++;
-                }
-                const options = document.querySelectorAll(`#test-container .question-box:nth-child(${q}) .option-btn`);
+                const options = document.querySelectorAll(`#test-tab .question-box:nth-child(${parseInt(q)+1}) .option-btn`);
                 options.forEach(opt => {
                     const optAnswer = opt.textContent.trim()[0];
                     if (optAnswer === correctAnswers[q]) {
@@ -393,23 +343,20 @@ def get_page_with_delay(url, min_delay=1, max_delay=3):
                         opt.classList.add('wrong');
                     }
                 });
-                document.getElementById(`explanation-${q}`).classList.remove('hidden');
+                document.getElementById(`exp${q}`).style.display = 'block';
+                if (userAnswers[q] === correctAnswers[q]) correct++;
             });
             
-            document.getElementById('test-result').classList.remove('hidden');
             const score = Math.round((correct / Object.keys(correctAnswers).length) * 100);
             document.getElementById('score').textContent = `${score}分`;
             document.getElementById('result-title').textContent = score >= 60 ? '🎉 测试通过！' : '💪 继续加油！';
+            document.getElementById('result').style.display = 'block';
         }
 
         function resetTest() {
-            document.querySelectorAll('.option-btn').forEach(opt => {
-                opt.classList.remove('selected', 'correct', 'wrong');
-            });
-            document.querySelectorAll('[id^="explanation-"]').forEach(exp => {
-                exp.classList.add('hidden');
-            });
-            document.getElementById('test-result').classList.add('hidden');
+            document.querySelectorAll('.option-btn').forEach(o => o.classList.remove('selected', 'correct', 'wrong'));
+            document.querySelectorAll('.explanation').forEach(e => e.style.display = 'none');
+            document.getElementById('result').style.display = 'none';
             Object.keys(userAnswers).forEach(k => delete userAnswers[k]);
         }
     </script>

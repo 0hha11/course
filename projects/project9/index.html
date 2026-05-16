@@ -3,209 +3,319 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>项目9 - 超市销售预测</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>异常值检测 - Pandas 数据分析实战训练营</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #0c1929 0%, #1a1a2e 50%, #16213e 100%); min-height: 100vh; color: #ffffff; }
-        .glass { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); border-radius: 16px; }
-        .gradient-text { background: linear-gradient(90deg, #00d4ff, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .btn-gradient { background: linear-gradient(90deg, #00d4ff, #7c3aed); transition: all 0.3s ease; }
-        .btn-gradient:hover { transform: scale(1.05); box-shadow: 0 10px 30px rgba(0,212,255,0.4); }
-        .tab-active { background: rgba(0,212,255,0.2); border-color: rgba(0,212,255,0.5); }
-        .code-box { background: #1e1e1e; border-radius: 8px; padding: 16px; font-family: 'Monaco', 'Consolas', monospace; font-size: 14px; overflow-x: auto; }
-        .question-box { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; }
-        .option-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 12px 20px; cursor: pointer; transition: all 0.3s ease; display: block; width: 100%; text-align: left; margin-bottom: 10px; }
-        .option-btn:hover { background: rgba(0,212,255,0.1); border-color: rgba(0,212,255,0.5); }
-        .option-btn.selected { background: rgba(0,212,255,0.2); border-color: rgba(0,212,255,0.8); }
-        .option-btn.correct { background: rgba(34,197,94,0.2); border-color: rgba(34,197,94,0.8); }
-        .option-btn.wrong { background: rgba(239,68,68,0.2); border-color: rgba(239,68,68,0.8); }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        
+        header { background: white; border-bottom: 1px solid #e2e8f0; padding: 16px 0; }
+        header .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: 700; color: #3b82f6; font-size: 18px; }
+        header a { color: #64748b; text-decoration: none; font-size: 14px; }
+        header a:hover { color: #3b82f6; }
+        
+        .project-header { padding: 40px 0; }
+        .project-title { font-size: 32px; font-weight: 700; color: #0f172a; margin-bottom: 12px; }
+        .project-meta { display: flex; gap: 16px; color: #64748b; font-size: 14px; }
+        .badge { padding: 4px 12px; border-radius: 10px; font-size: 12px; font-weight: 600; }
+        .badge-advanced { background: #fef3c7; color: #d97706; }
+        .badge-time { background: #f1f5f9; color: #64748b; }
+        
+        .tabs { display: flex; gap: 8px; margin-bottom: 24px; background: #f1f5f9; padding: 6px; border-radius: 12px; }
+        .tab { padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: #64748b; }
+        .tab.active { background: white; color: #3b82f6; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        .content-card { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 28px; margin-bottom: 24px; }
+        .content-card h3 { font-size: 20px; font-weight: 600; color: #0f172a; margin-bottom: 16px; }
+        .content-card p { color: #64748b; line-height: 1.6; margin-bottom: 12px; }
+        .content-card ul { list-style: disc; padding-left: 20px; color: #64748b; }
+        .content-card ul li { margin-bottom: 8px; }
+        
+        .code-box { background: #1e1e1e; border-radius: 12px; padding: 20px; overflow-x: auto; margin: 16px 0; }
+        .code-box pre { color: #d4d4d4; font-family: 'Monaco', 'Consolas', monospace; font-size: 14px; line-height: 1.6; white-space: pre; }
+        
+        .question-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+        .question-box h4 { font-size: 16px; font-weight: 600; color: #0f172a; margin-bottom: 12px; }
+        .question-box p { color: #64748b; margin-bottom: 12px; }
+        
+        .option-btn { display: block; width: 100%; padding: 14px 16px; margin-bottom: 10px; border: 1px solid #e2e8f0; border-radius: 10px; background: white; cursor: pointer; text-align: left; font-size: 14px; color: #334155; transition: all 0.2s; }
+        .option-btn:hover { border-color: #3b82f6; background: #eff6ff; }
+        .option-btn.selected { border-color: #3b82f6; background: #eff6ff; }
+        .option-btn.correct { border-color: #16a34a; background: #ecfdf5; color: #16a34a; }
+        .option-btn.wrong { border-color: #ef4444; background: #fef2f2; color: #ef4444; }
+        
+        .explanation { background: #fefce8; border-left: 4px solid #eab308; padding: 16px; margin-top: 16px; border-radius: 0 8px 8px 0; display: none; }
+        .explanation p { color: #854d0e; }
+        .explanation strong { color: #a16207; }
+        
+        .btn { padding: 12px 24px; border-radius: 10px; font-weight: 600; font-size: 14px; text-decoration: none; transition: all 0.2s; }
+        .btn-primary { background: #3b82f6; color: white; }
+        .btn-primary:hover { background: #2563eb; }
+        .btn-outline { border: 1px solid #e2e8f0; color: #64748b; background: white; }
+        .btn-outline:hover { border-color: #3b82f6; color: #3b82f6; }
+        
+        .test-result { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 32px; text-align: center; margin-top: 24px; display: none; }
+        .test-result h3 { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+        .test-result .score { font-size: 48px; font-weight: 700; color: #3b82f6; margin-bottom: 24px; }
+        
+        footer { text-align: center; padding: 32px 0; border-top: 1px solid #e2e8f0; color: #94a3b8; font-size: 14px; }
+        
+        @media (max-width: 768px) {
+            .project-title { font-size: 24px; }
+            .project-meta { flex-wrap: wrap; }
+            .tabs { flex-wrap: wrap; }
+        }
     </style>
 </head>
 <body>
-    <nav class="fixed top-0 left-0 right-0 z-50 glass">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <i class="fas fa-code text-2xl text-cyan-400"></i>
-                <span class="text-xl font-bold gradient-text">Python学习平台</span>
+    <header>
+        <div class="container">
+            <div class="logo">TT's Learning</div>
+            <a href="../../index.html">← 返回首页</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="project-header">
+            <h1 class="project-title">异常值检测</h1>
+            <div class="project-meta">
+                <span class="badge badge-advanced">高级</span>
+                <span class="badge badge-time">45分钟</span>
+                <span>📁 customer_features.csv</span>
             </div>
-            <a href="../../index.html" class="text-gray-300 hover:text-cyan-400 transition">返回首页</a>
-        </div>
-    </nav>
-
-    <div class="max-w-7xl mx-auto px-4 py-20">
-        <div class="glass p-6 mb-6">
-            <h1 class="text-2xl font-bold mb-2">项目9：超市销售预测</h1>
-            <p class="text-gray-400">学习使用Python进行时间序列分析和销售预测，帮助超市优化库存和补货策略。</p>
         </div>
 
-        <div class="flex gap-4 mb-6">
-            <button class="tab-btn tab-active px-6 py-2 rounded-lg" onclick="showTab('learn')"><i class="fas fa-book-open mr-2"></i>学习</button>
-            <button class="tab-btn px-6 py-2 rounded-lg" onclick="showTab('practice')"><i class="fas fa-code mr-2"></i>练习</button>
-            <button class="tab-btn px-6 py-2 rounded-lg" onclick="showTab('test')"><i class="fas fa-file-check mr-2"></i>测试</button>
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('learn')">📚 学习</button>
+            <button class="tab" onclick="showTab('practice')">✏️ 练习</button>
+            <button class="tab" onclick="showTab('test')">📝 测试</button>
         </div>
 
-        <div id="learn-tab" class="tab-content">
-            <div class="glass p-6 mb-6">
-                <h2 class="text-xl font-semibold mb-4">📚 项目概述</h2>
-                <p class="text-gray-300 mb-4">超市销售预测项目帮助你预测未来销售趋势。通过这个项目，你将学习：</p>
-                <ul class="list-disc list-inside text-gray-400 mb-6">
-                    <li>时间序列数据分析</li>
-                    <li>ARIMA/SARIMA模型</li>
-                    <li>机器学习预测算法</li>
-                    <li>预测结果可视化</li>
+        <div id="learn-tab" class="tab-content active">
+            <div class="content-card">
+                <h3>📌 项目概述</h3>
+                <p>异常值检测是数据预处理中的关键环节，异常值会严重影响统计分析和机器学习模型的性能。本项目将带你掌握多种异常值检测技术。</p>
+                <ul>
+                    <li>IQR方法检测异常值</li>
+                    <li>Z-score方法检测异常值</li>
+                    <li>箱线图可视化异常值</li>
+                    <li>异常值处理策略</li>
+                    <li>多变量异常值检测</li>
                 </ul>
             </div>
 
-            <div class="glass p-6 mb-6">
-                <h2 class="text-xl font-semibold mb-4">💡 核心功能</h2>
-                <div class="grid md:grid-cols-2 gap-4">
-                    <div class="bg-white/5 p-4 rounded-lg"><h3 class="font-semibold mb-2">📈 趋势预测</h3><p class="text-gray-400 text-sm">预测未来销售趋势</p></div>
-                    <div class="bg-white/5 p-4 rounded-lg"><h3 class="font-semibold mb-2">📦 库存优化</h3><p class="text-gray-400 text-sm">基于预测优化库存</p></div>
-                    <div class="bg-white/5 p-4 rounded-lg"><h3 class="font-semibold mb-2">🎯 促销效果</h3><p class="text-gray-400 text-sm">分析促销活动效果</p></div>
-                    <div class="bg-white/5 p-4 rounded-lg"><h3 class="font-semibold mb-2">📊 需求分析</h3><p class="text-gray-400 text-sm">分析商品需求规律</p></div>
+            <div class="content-card">
+                <h3>🔧 核心代码</h3>
+                <p>以下是异常值检测常用的Pandas操作：</p>
+                <div class="code-box">
+                    <pre>import pandas as pd
+import numpy as np
+
+# 读取数据
+df = pd.read_csv('customer_features.csv')
+
+# 1. IQR方法
+def detect_outliers_iqr(df, column):
+    """使用IQR方法检测异常值"""
+    Q1 = df[column].quantile(0.25)
+    Q3 = df[column].quantile(0.75)
+    IQR = Q3 - Q1
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
+    outliers = df[(df[column] < lower_bound) | (df[column] > upper_bound)]
+    return outliers, lower_bound, upper_bound
+
+# 2. Z-score方法
+def detect_outliers_zscore(df, column, threshold=3):
+    """使用Z-score方法检测异常值"""
+    z_scores = np.abs((df[column] - df[column].mean()) / df[column].std())
+    outliers = df[z_scores > threshold]
+    return outliers
+
+# 3. 处理异常值
+outliers, lower, upper = detect_outliers_iqr(df, 'age')
+# 删除异常值
+df_clean = df[(df['age'] >= lower) & (df['age'] <= upper)]
+# 或者截断异常值
+df['age'] = df['age'].clip(lower=lower, upper=upper)</pre>
                 </div>
             </div>
 
-            <div class="glass p-6">
-                <h2 class="text-xl font-semibold mb-4">🔧 代码示例</h2>
-                <div class="code-box text-green-400">
-                    <pre># 销售预测
-import pandas as pd
-from statsmodels.tsa.arima.model import ARIMA
-
-def load_sales_data(filepath):
-    """加载销售数据"""
-    df = pd.read_csv(filepath)
-    df['date'] = pd.to_datetime(df['date'])
-    df = df.set_index('date')
-    return df
-
-def arima_forecast(df, steps=30):
-    """使用ARIMA进行预测"""
-    model = ARIMA(df['sales'], order=(5, 1, 0))
-    model_fit = model.fit()
-    forecast = model_fit.forecast(steps=steps)
-    return forecast
-
-def calculate_mape(actual, predicted):
-    """计算平均绝对百分比误差"""
-    return ((abs(actual - predicted) / actual).mean()) * 100</pre>
-                </div>
+            <div class="content-card">
+                <h3>💡 学习要点</h3>
+                <ul>
+                    <li><strong>IQR方法</strong>: 适合偏态分布数据，是最常用的异常值检测方法</li>
+                    <li><strong>Z-score方法</strong>: 适合正态分布数据，阈值通常设为3</li>
+                    <li><strong>异常值处理</strong>: 根据业务场景选择删除、截断或保留</li>
+                    <li><strong>可视化</strong>: 使用箱线图可以直观地识别异常值</li>
+                </ul>
             </div>
         </div>
 
-        <div id="practice-tab" class="tab-content hidden">
-            <div class="glass p-6">
-                <h2 class="text-xl font-semibold mb-4">✏️ 编程练习</h2>
-                <p class="text-gray-400 mb-6">请完成以下代码练习：</p>
+        <div id="practice-tab" class="tab-content">
+            <div class="content-card">
+                <h3>✏️ 编程练习</h3>
                 
-                <div class="question-box mb-6">
-                    <h3 class="font-semibold mb-3">练习1：实现移动平均预测</h3>
-                    <p class="text-gray-300 mb-4">请编写一个函数，使用移动平均法进行预测。</p>
-                    <div class="code-box text-gray-300 mb-4">
-                        <pre>def moving_average_forecast(data, window=7):
-    """
-    使用移动平均法预测
-    :param data: 时间序列数据
-    :param window: 窗口大小
-    :return: 预测值
-    """
+                <div class="question-box">
+                    <h4>练习1：使用IQR方法检测异常值</h4>
+                    <p>请编写代码，使用IQR方法检测指定列的异常值：</p>
+                    <div class="code-box">
+                        <pre>import pandas as pd
+
+def remove_outliers_iqr(df, column):
+    """使用IQR方法删除异常值"""
     # 请在此处编写代码
-    return forecast</pre>
+    
+    return df_clean</pre>
                     </div>
-                    <button class="btn-gradient px-6 py-2 rounded-lg text-white" onclick="showPracticeAnswer(1)">查看答案</button>
+                    <button class="btn btn-primary" onclick="showAnswer(1)">查看答案</button>
+                </div>
+
+                <div class="question-box">
+                    <h4>练习2：使用Z-score方法检测异常值</h4>
+                    <p>请编写代码，使用Z-score方法检测异常值：</p>
+                    <div class="code-box">
+                        <pre>import pandas as pd
+import numpy as np
+
+def cap_outliers_zscore(df, column, threshold=3):
+    """使用Z-score方法截断异常值"""
+    # 请在此处编写代码
+    
+    return df</pre>
+                    </div>
+                    <button class="btn btn-primary" onclick="showAnswer(2)">查看答案</button>
                 </div>
             </div>
         </div>
 
-        <div id="test-tab" class="tab-content hidden">
-            <div class="glass p-6">
-                <h2 class="text-xl font-semibold mb-4">📝 知识测试</h2>
-                <p class="text-gray-400 mb-6">完成以下选择题：</p>
-                <div id="test-container">
-                    <div class="question-box mb-6">
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-cyan-400 font-semibold">第1题</span>
-                            <span class="text-sm text-gray-500">单选题</span>
-                        </div>
-                        <p class="text-gray-300 mb-4">ARIMA模型中的I代表什么？</p>
-                        <div>
-                            <button class="option-btn" onclick="selectAnswer(1, 'A')"><span class="font-semibold mr-2">A.</span> 自回归</button>
-                            <button class="option-btn" onclick="selectAnswer(1, 'B')"><span class="font-semibold mr-2">B.</span> 差分</button>
-                            <button class="option-btn" onclick="selectAnswer(1, 'C')"><span class="font-semibold mr-2">C.</span> 移动平均</button>
-                            <button class="option-btn" onclick="selectAnswer(1, 'D')"><span class="font-semibold mr-2">D.</span> 整合</button>
-                        </div>
-                        <div id="explanation-1" class="mt-4 p-3 bg-yellow-500/10 rounded-lg hidden">
-                            <p class="text-yellow-300"><strong>正确答案：D</strong></p>
-                            <p class="text-gray-400 text-sm">ARIMA中的I代表Integrated（整合），表示对时间序列进行差分使其平稳。</p>
-                        </div>
+        <div id="test-tab" class="tab-content">
+            <div class="content-card">
+                <h3>📝 知识测试</h3>
+                
+                <div class="question-box">
+                    <h4>问题1：IQR方法中，Q1和Q3分别代表什么？</h4>
+                    <button class="option-btn" onclick="selectOption(1, 'A')">A. 最小值和最大值</button>
+                    <button class="option-btn" onclick="selectOption(1, 'B')">B. 25%分位数和75%分位数</button>
+                    <button class="option-btn" onclick="selectOption(1, 'C')">C. 均值和中位数</button>
+                    <button class="option-btn" onclick="selectOption(1, 'D')">D. 标准差和方差</button>
+                    <div class="explanation" id="exp1">
+                        <p><strong>正确答案：B</strong></p>
+                        <p>Q1是25%分位数，Q3是75%分位数，IQR是Q3-Q1。</p>
                     </div>
                 </div>
-                <div class="mt-6 flex justify-center">
-                    <button class="btn-gradient px-8 py-3 rounded-lg text-white font-semibold" onclick="checkTest()">提交答案</button>
+
+                <div class="question-box">
+                    <h4>问题2：Z-score方法中，常用的阈值是多少？</h4>
+                    <button class="option-btn" onclick="selectOption(2, 'A')">A. 1</button>
+                    <button class="option-btn" onclick="selectOption(2, 'B')">B. 2</button>
+                    <button class="option-btn" onclick="selectOption(2, 'C')">C. 3</button>
+                    <button class="option-btn" onclick="selectOption(2, 'D')">D. 4</button>
+                    <div class="explanation" id="exp2">
+                        <p><strong>正确答案：C</strong></p>
+                        <p>常用的Z-score阈值是3，意味着超出均值±3倍标准差的数据被视为异常值。</p>
+                    </div>
                 </div>
-                <div id="test-result" class="mt-6 glass p-6 hidden">
-                    <h3 class="text-xl font-semibold mb-4 text-center" id="result-title"></h3>
-                    <p class="text-center text-3xl font-bold mb-4" id="score"></p>
-                    <button class="btn-gradient px-6 py-2 rounded-lg text-white mx-auto block" onclick="resetTest()">重新测试</button>
+
+                <div class="question-box">
+                    <h4>问题3：以下哪种方法适合处理偏态分布数据的异常值？</h4>
+                    <button class="option-btn" onclick="selectOption(3, 'A')">A. Z-score方法</button>
+                    <button class="option-btn" onclick="selectOption(3, 'B')">B. IQR方法</button>
+                    <button class="option-btn" onclick="selectOption(3, 'C')">C. 均值方法</button>
+                    <button class="option-btn" onclick="selectOption(3, 'D')">D. 方差方法</button>
+                    <div class="explanation" id="exp3">
+                        <p><strong>正确答案：B</strong></p>
+                        <p>IQR方法基于分位数，不受极端值影响，适合偏态分布数据；Z-score方法适合正态分布数据。</p>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 24px;">
+                    <button class="btn btn-primary" onclick="checkAnswers()">提交答案</button>
+                </div>
+
+                <div class="test-result" id="result">
+                    <h3 id="result-title"></h3>
+                    <div class="score" id="score"></div>
+                    <button class="btn btn-outline" onclick="resetTest()">重新测试</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <footer>
+        <p>© 2024 TT's Learning Space · Pandas 数据分析实战训练营</p>
+    </footer>
+
     <script>
-        const tabs = ['learn', 'practice', 'test'];
-        const correctAnswers = {1: 'D'};
+        const correctAnswers = {1: 'B', 2: 'C', 3: 'B'};
         const userAnswers = {};
 
         function showTab(tabName) {
-            tabs.forEach(tab => {
-                document.getElementById(`${tab}-tab`).classList.add('hidden');
-                document.querySelector(`button[onclick="showTab('${tab}')"]`).classList.remove('tab-active');
-            });
-            document.getElementById(`${tabName}-tab`).classList.remove('hidden');
-            document.querySelector(`button[onclick="showTab('${tabName}')"]`).classList.add('tab-active');
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelector(`button[onclick="showTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(`${tabName}-tab`).classList.add('active');
         }
 
-        function showPracticeAnswer(num) {
+        function showAnswer(num) {
             const answers = {
-                1: `def moving_average_forecast(data, window=7):
-    forecast = data.rolling(window=window).mean()
-    return forecast.iloc[-1]`
+                1: `def remove_outliers_iqr(df, column):
+    Q1 = df[column].quantile(0.25)
+    Q3 = df[column].quantile(0.75)
+    IQR = Q3 - Q1
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
+    df_clean = df[(df[column] >= lower_bound) & (df[column] <= upper_bound)]
+    return df_clean`,
+                2: `def cap_outliers_zscore(df, column, threshold=3):
+    mean = df[column].mean()
+    std = df[column].std()
+    lower_bound = mean - threshold * std
+    upper_bound = mean + threshold * std
+    df[column] = df[column].clip(lower=lower_bound, upper=upper_bound)
+    return df`
             };
             alert(`练习${num}答案：\n\n${answers[num]}`);
         }
 
-        function selectAnswer(questionNum, answer) {
-            const options = document.querySelectorAll(`#test-container .question-box:nth-child(${questionNum}) .option-btn`);
-            options.forEach(opt => opt.classList.remove('selected'));
+        function selectOption(qNum, answer) {
+            const options = document.querySelectorAll(`#test-tab .question-box:nth-child(${qNum+1}) .option-btn`);
+            options.forEach(o => o.classList.remove('selected'));
             event.target.classList.add('selected');
-            userAnswers[questionNum] = answer;
+            userAnswers[qNum] = answer;
         }
 
-        function checkTest() {
+        function checkAnswers() {
             let correct = 0;
             Object.keys(correctAnswers).forEach(q => {
-                if (userAnswers[q] === correctAnswers[q]) correct++;
-                const options = document.querySelectorAll(`#test-container .question-box:nth-child(${q}) .option-btn`);
+                const options = document.querySelectorAll(`#test-tab .question-box:nth-child(${parseInt(q)+1}) .option-btn`);
                 options.forEach(opt => {
                     const optAnswer = opt.textContent.trim()[0];
-                    if (optAnswer === correctAnswers[q]) opt.classList.add('correct');
-                    else if (opt.classList.contains('selected') && optAnswer !== correctAnswers[q]) opt.classList.add('wrong');
+                    if (optAnswer === correctAnswers[q]) {
+                        opt.classList.add('correct');
+                    } else if (opt.classList.contains('selected') && optAnswer !== correctAnswers[q]) {
+                        opt.classList.add('wrong');
+                    }
                 });
-                document.getElementById(`explanation-${q}`).classList.remove('hidden');
+                document.getElementById(`exp${q}`).style.display = 'block';
+                if (userAnswers[q] === correctAnswers[q]) correct++;
             });
-            document.getElementById('test-result').classList.remove('hidden');
+            
             const score = Math.round((correct / Object.keys(correctAnswers).length) * 100);
             document.getElementById('score').textContent = `${score}分`;
             document.getElementById('result-title').textContent = score >= 60 ? '🎉 测试通过！' : '💪 继续加油！';
+            document.getElementById('result').style.display = 'block';
         }
 
         function resetTest() {
-            document.querySelectorAll('.option-btn').forEach(opt => opt.classList.remove('selected', 'correct', 'wrong'));
-            document.querySelectorAll('[id^="explanation-"]').forEach(exp => exp.classList.add('hidden'));
-            document.getElementById('test-result').classList.add('hidden');
+            document.querySelectorAll('.option-btn').forEach(o => o.classList.remove('selected', 'correct', 'wrong'));
+            document.querySelectorAll('.explanation').forEach(e => e.style.display = 'none');
+            document.getElementById('result').style.display = 'none';
             Object.keys(userAnswers).forEach(k => delete userAnswers[k]);
         }
     </script>
