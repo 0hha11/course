@@ -434,6 +434,17 @@
     </div>
 
     <div class="container">
+        
+        <!-- 搜索功能 -->
+        <div class="search-container">
+            <div class="search-box">
+                <span class="search-icon" aria-hidden="true">🔍</span>
+                <input type="search" class="search-input" placeholder="搜索本项目内容... (按 / 键快速搜索)" 
+                       aria-label="搜索项目内容" id="search-input" accesskey="/">
+            </div>
+            <div class="search-results" id="search-results" aria-live="polite"></div>
+        </div>
+
         <div class="tabs-wrapper">
 
             <button class="tab active" onclick="showTab('learn')">📚 学习</button>
@@ -728,5 +739,343 @@ def standardize_features(df):
             Object.keys(userAnswers).forEach(k => delete userAnswers[k]);
         }
     </script>
+
+    const DATA_PLACEHOLDER = [
+                    { title: '特征工程', section: '特征处理', content: '归一化 标准化 编码' },
+                    { title: '特征选择', section: '特征提取', content: 'PCA 主成分分析' }
+        ];
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+    
+    <script>
+        // 全局变量
+        let pyodide = null;
+        let isLoading = false;
+        let testAnswers = {};
+        let totalQuestions = 5;
+        let currentProgress = { chapters: 0, exercises: 0, score: 0 };
+        
+        // 初始化 Pyodide
+        async function initPyodide() {
+            if (pyodide || isLoading) return;
+            isLoading = true;
+            
+            const btn = document.getElementById('run-btn');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<span class="loading-spinner"></span> 加载中...';
+            }
+            
+            try {
+                pyodide = await loadPyodide({
+                    indexURL: "https://cdn.jsdelivr.net/pyodide/v0.24.1/full/"
+                });
+                console.log('Pyodide 加载成功！');
+            } catch (error) {
+                console.error('Pyodide 加载失败:', error);
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '▶️ 运行代码';
+                }
+                isLoading = false;
+            }
+        }
+        
+        // 运行代码
+        async function runCode() {
+            const code = document.getElementById('code-input')?.value || document.querySelector('.code-textarea')?.value;
+            if (!code) return;
+            
+            const outputBox = document.getElementById('output-box') || document.querySelector('.output-box');
+            const outputContent = document.getElementById('output-content') || document.querySelector('.output-content');
+            const btn = document.getElementById('run-btn');
+            
+            if (outputBox) outputBox.style.display = 'block';
+            if (outputContent) {
+                outputContent.textContent = '正在执行...';
+                outputContent.className = 'output-content';
+            }
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<span class="loading-spinner"></span> 运行中...';
+            }
+            
+            try {
+                await initPyodide();
+                if (!pyodide) throw new Error('Pyodide 未初始化');
+                
+                pyodide.runPython(`
+import sys
+from io import StringIO
+sys.stdout = StringIO()
+sys.stderr = StringIO()
+                `);
+                
+                await pyodide.runPythonAsync(code);
+                
+                const stdout = pyodide.runPython('sys.stdout.getvalue()');
+                const stderr = pyodide.runPython('sys.stderr.getvalue()');
+                
+                if (stderr?.trim()) {
+                    if (outputContent) {
+                        outputContent.textContent = stderr;
+                        outputContent.className = 'output-content error';
+                    }
+                } else {
+                    if (outputContent) {
+                        outputContent.textContent = stdout || '(代码执行完成，无输出)';
+                        outputContent.className = 'output-content success';
+                    }
+                }
+            } catch (error) {
+                if (outputContent) {
+                    outputContent.textContent = '错误: ' + error.message;
+                    outputContent.className = 'output-content error';
+                }
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '▶️ 运行代码';
+                }
+            }
+        }
+        
+        // 重置代码
+        function resetCode() {
+            const textarea = document.getElementById('code-input') || document.querySelector('.code-textarea');
+            if (textarea && textarea.dataset.original) {
+                textarea.value = textarea.dataset.original;
+            }
+            const outputBox = document.getElementById('output-box') || document.querySelector('.output-box');
+            if (outputBox) outputBox.style.display = 'none';
+        }
+        
+        // 复制代码
+        function copyCode() {
+            const code = document.getElementById('code-input')?.value || document.querySelector('.code-textarea')?.value;
+            if (code) {
+                navigator.clipboard.writeText(code).then(() => {
+                    alert('代码已复制到剪贴板！');
+                });
+            }
+        }
+        
+        // 标签切换
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+                tab.setAttribute('aria-selected', 'false');
+            });
+            
+            const targetTab = document.getElementById(tabName + '-tab');
+            const targetBtn = document.getElementById('tab-' + tabName);
+            
+            if (targetTab) targetTab.classList.add('active');
+            if (targetBtn) {
+                targetBtn.classList.add('active');
+                targetBtn.setAttribute('aria-selected', 'true');
+            }
+        }
+        
+        // 选择练习选项
+        function selectOption(btn, questionId, option, isCorrect) {
+            const questionBox = btn.closest('.question-box');
+            const allOptions = questionBox.querySelectorAll('.option-btn');
+            allOptions.forEach(opt => opt.classList.remove('selected'));
+            btn.classList.add('selected');
+            
+            const explanation = document.getElementById('explanation-' + questionId);
+            if (explanation) {
+                explanation.style.display = 'block';
+                if (isCorrect) {
+                    btn.classList.add('correct');
+                    saveProgress('exercise', questionId);
+                } else {
+                    btn.classList.add('wrong');
+                }
+            }
+        }
+        
+        // 测试选项
+        function selectTestOption(btn, questionId, option, isCorrect) {
+            const questionBox = btn.closest('.question-box');
+            const allOptions = questionBox.querySelectorAll('.option-btn');
+            allOptions.forEach(opt => opt.classList.remove('selected'));
+            btn.classList.add('selected');
+            testAnswers[questionId] = isCorrect;
+        }
+        
+        // 提交测试
+        function submitTest() {
+            if (Object.keys(testAnswers).length < totalQuestions) {
+                alert('请先回答所有问题！');
+                return;
+            }
+            
+            const questionBoxes = document.querySelectorAll('#test-tab .question-box');
+            questionBoxes.forEach((box, i) => {
+                const options = box.querySelectorAll('.option-btn');
+                options.forEach(opt => {
+                    if (opt.classList.contains('selected')) {
+                        const questionNum = i + 1;
+                        const isCorrect = testAnswers[questionNum];
+                        if (isCorrect) {
+                            opt.classList.remove('selected');
+                            opt.classList.add('correct');
+                        } else {
+                            opt.classList.remove('selected');
+                            opt.classList.add('wrong');
+                        }
+                    }
+                });
+            });
+            
+            let correctCount = Object.values(testAnswers).filter(v => v).length;
+            let score = Math.round((correctCount / totalQuestions) * 100);
+            
+            const scoreEl = document.getElementById('final-score');
+            if (scoreEl) scoreEl.textContent = score + '分';
+            
+            let message = '';
+            let icon = '';
+            if (score >= 80) {
+                message = '太棒了！你已经掌握了这个项目！';
+                icon = '🎉';
+            } else if (score >= 60) {
+                message = '不错！继续加油！';
+                icon = '💪';
+            } else {
+                message = '再去复习一下吧！';
+                icon = '📚';
+            }
+            
+            const msgEl = document.getElementById('result-message');
+            const iconEl = document.getElementById('result-icon');
+            if (msgEl) msgEl.textContent = message;
+            if (iconEl) iconEl.textContent = icon;
+            
+            const resultEl = document.getElementById('test-result');
+            if (resultEl) resultEl.style.display = 'block';
+            
+            saveProgress('test', score);
+        }
+        
+        // 重置测试
+        function resetTest() {
+            testAnswers = {};
+            document.querySelectorAll('#test-tab .option-btn').forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'wrong');
+            });
+            const resultEl = document.getElementById('test-result');
+            if (resultEl) resultEl.style.display = 'none';
+        }
+        
+        // 本地存储 - 保存进度
+        function saveProgress(type, value) {
+            const projectId = 'project' + window.location.pathname.match(/project(\d+)/)?.[1] || '1';
+            let progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
+            
+            if (!progress[projectId]) {
+                progress[projectId] = { chapters: 0, exercises: 0, score: 0 };
+            }
+            
+            if (type === 'chapter') {
+                progress[projectId].chapters = Math.max(progress[projectId].chapters, value);
+            } else if (type === 'exercise') {
+                progress[projectId].exercises = Math.max(progress[projectId].exercises, value);
+            } else if (type === 'test') {
+                progress[projectId].score = Math.max(progress[projectId].score, value);
+            }
+            
+            localStorage.setItem('learningProgress', JSON.stringify(progress));
+            updateProgressDisplay();
+        }
+        
+        // 更新进度显示
+        function updateProgressDisplay() {
+            const projectId = 'project' + window.location.pathname.match(/project(\d+)/)?.[1] || '1';
+            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}')[projectId] || { chapters: 0, exercises: 0, score: 0 };
+            
+            const chaptersEl = document.getElementById('chapters-learned');
+            const exercisesEl = document.getElementById('exercises-done');
+            const scoreEl = document.getElementById('test-score');
+            
+            if (chaptersEl) chaptersEl.textContent = progress.chapters + '/4';
+            if (exercisesEl) exercisesEl.textContent = progress.exercises + '/3';
+            if (scoreEl) scoreEl.textContent = progress.score;
+            
+            const percentage = Math.round((progress.chapters / 4) * 100);
+            const percentEl = document.getElementById('progress-percentage');
+            const circleEl = document.getElementById('progress-circle-inner');
+            
+            if (percentEl) percentEl.textContent = percentage + '%';
+            if (circleEl) circleEl.style.strokeDashoffset = 283 - (283 * percentage / 100);
+        }
+        
+        // 搜索功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search-input');
+            const searchResults = document.getElementById('search-results');
+            
+            // 键盘快捷键
+            document.addEventListener('keydown', function(e) {
+                if (e.key === '/' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+                    e.preventDefault();
+                    if (searchInput) searchInput.focus();
+                }
+            });
+            
+            // 搜索
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    const query = this.value.toLowerCase().trim();
+                    if (query.length < 2) {
+                        if (searchResults) searchResults.innerHTML = '';
+                        return;
+                    }
+                    
+                    const projectId = 'project' + window.location.pathname.match(/project(\d+)/)?.[1] || '1';
+                    const searchData = getSearchData(projectId);
+                    const results = searchData.filter(item => 
+                        item.title.toLowerCase().includes(query) ||
+                        item.content.toLowerCase().includes(query)
+                    );
+                    
+                    if (results.length === 0) {
+                        if (searchResults) searchResults.innerHTML = '<p style="color: #a0a0b8;">未找到相关结果</p>';
+                    } else {
+                        if (searchResults) {
+                            searchResults.innerHTML = results.map(r => 
+                                `<div class="search-result-item" tabindex="0">
+                                    <strong>${r.title}</strong><br>
+                                    <small style="color: #8080a0;">${r.section}</small>
+                                </div>`
+                            ).join('');
+                        }
+                    }
+                });
+            }
+            
+            // 加载保存的进度
+            updateProgressDisplay();
+            
+            // 预加载 Pyodide
+            initPyodide();
+        });
+        
+        function getSearchData(projectId) {
+            const dataMap = DATA_PLACEHOLDER;
+            return dataMap;
+        }
+        
+        // Service Worker 注册
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                console.log('Service Worker 支持可用');
+            });
+        }
+    </script>
+
 </body>
 </html>
