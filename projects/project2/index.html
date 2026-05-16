@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>分组聚合分析 - Pandas 数据分析实战训练营</title>
+    <title>分组聚合分析 - Pandas数据分析实战训练营</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
@@ -19,6 +19,23 @@
         
         .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
         
+        /* Skip link */
+        .skip-link {
+            position: absolute;
+            top: -100px;
+            left: 20px;
+            background: #00d4ff;
+            color: #1a1a2e;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            z-index: 1000;
+            transition: top 0.3s;
+        }
+        .skip-link:focus { top: 20px; }
+        
+        /* Header */
         header { 
             background: rgba(0, 0, 0, 0.3); 
             border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
@@ -53,10 +70,18 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            transition: color 0.2s;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.2s;
         }
-        header a:hover { color: #00d4ff; }
+        header a:hover, header a:focus { 
+            color: #00d4ff; 
+            background: rgba(0, 212, 255, 0.1);
+            outline: 2px solid #00d4ff;
+            outline-offset: 2px;
+        }
         
+        /* Project Header */
         .project-header { padding: 48px 0 32px; }
         .project-header .container { display: flex; justify-content: space-between; align-items: flex-start; gap: 32px; }
         .project-info { flex: 1; }
@@ -119,6 +144,7 @@
             font-family: 'Monaco', 'Consolas', monospace;
         }
         
+        /* Progress Card */
         .progress-card {
             background: linear-gradient(135deg, rgba(0, 212, 255, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -133,9 +159,7 @@
             height: 100px;
             margin: 0 auto 16px;
         }
-        .progress-circle-svg {
-            transform: rotate(-90deg);
-        }
+        .progress-circle-svg { transform: rotate(-90deg); }
         .progress-text {
             position: absolute;
             top: 50%;
@@ -157,6 +181,7 @@
         .progress-stat-num { font-size: 20px; font-weight: 700; color: #ffffff; }
         .progress-stat-label { font-size: 12px; color: #707090; text-transform: uppercase; }
         
+        /* Tabs */
         .tabs-wrapper {
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -182,7 +207,11 @@
             justify-content: center;
             gap: 8px;
         }
-        .tab:hover { color: #ffffff; }
+        .tab:hover, .tab:focus { 
+            color: #ffffff; 
+            outline: 2px solid #00d4ff;
+            outline-offset: -2px;
+        }
         .tab.active { 
             background: linear-gradient(135deg, rgba(0, 212, 255, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%); 
             color: #ffffff;
@@ -191,6 +220,73 @@
         
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+        
+        /* Search */
+        .search-container {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+        .search-box { position: relative; }
+        .search-input {
+            width: 100%;
+            padding: 14px 20px 14px 48px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .search-input:focus {
+            border-color: #00d4ff;
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+        }
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a0a0b8;
+        }
+        .search-results { margin-top: 16px; }
+        .search-result-item {
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .search-result-item:hover, .search-result-item:focus {
+            background: rgba(0, 212, 255, 0.08);
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+        
+        /* Content Cards */
+        .content-section { margin-bottom: 32px; }
+        .content-section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #8b5cf6;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .content-section-title::before {
+            content: '';
+            width: 24px;
+            height: 2px;
+            background: linear-gradient(90deg, #00d4ff, #8b5cf6);
+            border-radius: 2px;
+        }
         
         .content-card { 
             background: rgba(255, 255, 255, 0.04); 
@@ -211,14 +307,43 @@
             margin-bottom: 12px; 
         }
         .content-card ul { 
-            list-style: disc; 
-            padding-left: 20px; 
-            color: #c8c8d8; 
+            list-style: none; 
+            padding-left: 0; 
         }
         .content-card ul li { 
-            margin-bottom: 8px; 
+            margin-bottom: 12px; 
+            color: #c8c8d8;
+            padding-left: 24px;
+            position: relative;
         }
+        .content-card ul li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #00d4ff;
+            font-weight: 700;
+        }
+        .content-card strong { color: #ffffff; font-weight: 600; }
         
+        /* Info Boxes */
+        .info-box {
+            background: rgba(0, 212, 255, 0.08);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin: 16px 0;
+        }
+        .info-box p { margin: 0; color: #a0d4ff; }
+        .tip-box {
+            background: rgba(139, 92, 246, 0.08);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin: 16px 0;
+        }
+        .tip-box p { margin: 0; color: #d4c4ff; }
+        
+        /* Code Box */
         .code-box { 
             background: #0d0d1a; 
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -235,28 +360,149 @@
             white-space: pre;
         }
         
+        /* Code Editor */
+        .code-editor-container {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 24px;
+            margin: 20px 0;
+        }
+        .code-editor-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .code-editor {
+            background: #0d0d1a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .code-textarea {
+            width: 100%;
+            min-height: 200px;
+            background: transparent;
+            border: none;
+            color: #d4d4d4;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.7;
+            resize: vertical;
+            outline: none;
+        }
+        .code-textarea:focus {
+            outline: 2px solid #00d4ff;
+            outline-offset: 2px;
+        }
+        .editor-controls {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .btn { 
+            padding: 12px 24px; 
+            border-radius: 12px; 
+            font-weight: 600; 
+            font-size: 14px; 
+            text-decoration: none; 
+            transition: all 0.2s; 
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-primary { 
+            background: linear-gradient(135deg, #00d4ff 0%, #8b5cf6 100%); 
+            color: white; 
+        }
+        .btn-primary:hover, .btn-primary:focus { 
+            transform: translateY(-2px); 
+            box-shadow: 0 8px 24px rgba(0, 212, 255, 0.3);
+            outline: 2px solid #00d4ff;
+            outline-offset: 2px;
+        }
+        .btn-secondary { 
+            background: rgba(255, 255, 255, 0.06); 
+            color: #ffffff; 
+            border: 1px solid rgba(255, 255, 255, 0.12); 
+        }
+        .btn-secondary:hover, .btn-secondary:focus { 
+            background: rgba(255, 255, 255, 0.1); 
+            border-color: rgba(255, 255, 255, 0.2);
+            outline: 2px solid #ffffff;
+            outline-offset: 2px;
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .output-box {
+            background: #050510;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 16px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .output-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #00d4ff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+        .output-content {
+            color: #a0a0b8;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+        .output-content.error { color: #f87171; }
+        .output-content.success { color: #4ade80; }
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        /* Question Boxes */
         .question-box { 
             background: rgba(255, 255, 255, 0.04); 
             border: 1px solid rgba(255, 255, 255, 0.08); 
             border-radius: 16px; 
-            padding: 20px; 
-            margin-bottom: 16px; 
+            padding: 24px; 
+            margin-bottom: 20px; 
         }
         .question-box h4 { 
             font-size: 16px; 
             font-weight: 600; 
             color: #ffffff; 
-            margin-bottom: 12px; 
+            margin-bottom: 16px; 
         }
         .question-box p { 
             color: #c8c8d8; 
-            margin-bottom: 12px; 
+            margin-bottom: 16px; 
         }
         
         .option-btn { 
             display: block; 
             width: 100%; 
-            padding: 14px 16px; 
+            padding: 14px 18px; 
             margin-bottom: 10px; 
             border: 1px solid rgba(255, 255, 255, 0.1); 
             border-radius: 10px; 
@@ -267,9 +513,10 @@
             color: #c8c8d8; 
             transition: all 0.2s; 
         }
-        .option-btn:hover { 
+        .option-btn:hover, .option-btn:focus { 
             border-color: rgba(0, 212, 255, 0.4); 
-            background: rgba(0, 212, 255, 0.08); 
+            background: rgba(0, 212, 255, 0.08);
+            outline: none;
         }
         .option-btn.selected { 
             border-color: rgba(0, 212, 255, 0.6); 
@@ -290,70 +537,99 @@
         .explanation { 
             background: rgba(251, 191, 36, 0.12); 
             border-left: 4px solid #fbbf24; 
-            padding: 16px; 
+            padding: 16px 20px; 
             margin-top: 16px; 
-            border-radius: 0 8px 8px 0; 
+            border-radius: 0 10px 10px 0; 
             display: none; 
         }
-        .explanation p { color: #fef3c7; }
+        .explanation p { color: #fef3c7; margin: 0; }
         .explanation strong { color: #fcd34d; }
         
-        .btn { 
-            padding: 12px 24px; 
-            border-radius: 12px; 
-            font-weight: 600; 
-            font-size: 14px; 
-            text-decoration: none; 
-            transition: all 0.2s; 
-            border: none;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .btn-primary { 
-            background: linear-gradient(135deg, #00d4ff 0%, #8b5cf6 100%); 
-            color: white; 
-        }
-        .btn-primary:hover { 
-            transform: translateY(-2px); 
-            box-shadow: 0 8px 24px rgba(0, 212, 255, 0.3); 
-        }
-        .btn-outline { 
-            background: rgba(255, 255, 255, 0.06); 
-            color: #ffffff; 
-            border: 1px solid rgba(255, 255, 255, 0.12); 
-        }
-        .btn-outline:hover { 
-            background: rgba(255, 255, 255, 0.1); 
-            border-color: rgba(255, 255, 255, 0.2); 
-        }
+        .btn-group { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
         
+        /* Test Result */
         .test-result { 
             background: rgba(255, 255, 255, 0.04); 
             border: 1px solid rgba(255, 255, 255, 0.08); 
-            border-radius: 16px; 
-            padding: 32px; 
+            border-radius: 20px; 
+            padding: 40px; 
             text-align: center; 
             margin-top: 24px; 
             display: none; 
         }
+        .test-result-icon { font-size: 64px; margin-bottom: 20px; }
         .test-result h3 { 
-            font-size: 24px; 
+            font-size: 26px; 
             font-weight: 900; 
             color: #ffffff;
-            margin-bottom: 16px; 
+            margin-bottom: 12px; 
         }
         .test-result .score { 
-            font-size: 48px; 
+            font-size: 64px; 
             font-weight: 900; 
             background: linear-gradient(135deg, #00d4ff 0%, #8b5cf6 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 24px; 
+            margin-bottom: 20px; 
+        }
+        .test-result p { color: #a0a0b8; margin-bottom: 24px; font-size: 15px; }
+        
+        /* Homework Section */
+        .homework-section {
+            background: rgba(139, 92, 246, 0.08);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 24px;
+        }
+        .homework-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #a78bfa;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .homework-submit-area { margin-top: 16px; }
+        .homework-textarea {
+            width: 100%;
+            min-height: 150px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #ffffff;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            padding: 16px;
+            resize: vertical;
+            outline: none;
+        }
+        .homework-textarea:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+        .submit-status {
+            margin-top: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            display: none;
+        }
+        .submit-status.success {
+            display: block;
+            background: rgba(34, 197, 94, 0.15);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+        .submit-status.error {
+            display: block;
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
         }
         
+        /* Footer */
         footer { 
             text-align: center; 
             padding: 40px 0; 
@@ -363,6 +639,7 @@
             margin-top: 60px;
         }
         
+        /* Responsive */
         @media (max-width: 968px) {
             .project-header .container { flex-direction: column; }
             .progress-card { width: 100%; }
@@ -373,36 +650,50 @@
             .tab { flex: 1 1 calc(50% - 3px); }
             .project-title { font-size: 24px; }
         }
+        
+        /* Screen reader only */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
     </style>
-
 </head>
 <body>
+    <a href="#main-content" class="skip-link">跳转到主要内容</a>
     
-    <header>
+    <header role="navigation" aria-label="主导航">
         <div class="container">
             <div class="header-left">
-                <div class="logo-circle">📊</div>
+                <div class="logo-circle" role="img" aria-label="网站标志">📊</div>
                 <div class="logo-text">TT's Learning</div>
             </div>
-            <a href="../../index.html">← 返回首页</a>
+            <a href="../../index.html" aria-label="返回首页">← 返回首页</a>
         </div>
     </header>
 
     <div class="project-header">
         <div class="container">
             <div class="project-info">
-                <div class="project-icon-large">📊</div>
+                <div class="project-icon-large" role="img" aria-label="数据清洗图标">📊</div>
                 <h1 class="project-title">分组聚合分析</h1>
-                <div class="project-meta">
-                    <span class="badge badge-easy">入门</span>
-                    <span class="badge badge-time">30分钟</span>
-                    <span class="badge badge-dataset">📁 retail_orders.csv</span>
+                <p class="project-description">掌握Pandas数据清洗的核心技能，包括处理缺失值、重复值、异常值等关键步骤，为后续分析打下坚实基础。</p>
+                <div class="project-meta" role="group" aria-label="项目标签">
+                    <span class="badge badge-easy" aria-label="难度等级：入门">入门</span>
+                    <span class="badge badge-time" aria-label="预计学习时间：30分钟">30分钟</span>
+                    <span class="badge badge-dataset" aria-label="数据集：retail_orders.csv">📁 retail_orders.csv</span>
                 </div>
             </div>
-            <div class="progress-card">
+            <div class="progress-card" role="region" aria-label="学习进度">
                 <div class="progress-title">学习进度</div>
                 <div class="progress-circle">
-                    <svg class="progress-circle-svg" width="100" height="100">
+                    <svg class="progress-circle-svg" width="100" height="100" role="img" aria-label="进度：0%">
                         <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8"/>
                         <circle cx="50" cy="50" r="45" fill="none" stroke="url(#gradient)" stroke-width="8" 
                                 stroke-dasharray="283" stroke-dashoffset="283" stroke-linecap="round" id="progress-circle-inner"/>
@@ -413,19 +704,19 @@
                             </linearGradient>
                         </defs>
                     </svg>
-                    <div class="progress-text">0%</div>
+                    <div class="progress-text" id="progress-percentage">0%</div>
                 </div>
-                <div class="progress-stats">
-                    <div class="progress-stat">
-                        <div class="progress-stat-num">0/4</div>
+                <div class="progress-stats" role="list" aria-label="统计数据">
+                    <div class="progress-stat" role="listitem">
+                        <div class="progress-stat-num" id="chapters-learned">0/4</div>
                         <div class="progress-stat-label">已学习</div>
                     </div>
-                    <div class="progress-stat">
-                        <div class="progress-stat-num">0/3</div>
+                    <div class="progress-stat" role="listitem">
+                        <div class="progress-stat-num" id="exercises-done">0/5</div>
                         <div class="progress-stat-label">练习</div>
                     </div>
-                    <div class="progress-stat">
-                        <div class="progress-stat-num">0</div>
+                    <div class="progress-stat" role="listitem">
+                        <div class="progress-stat-num" id="test-score">0</div>
                         <div class="progress-stat-label">得分</div>
                     </div>
                 </div>
@@ -433,9 +724,7 @@
         </div>
     </div>
 
-    <div class="container">
-        
-        <!-- 搜索功能 -->
+    <main id="main-content" class="container">
         <div class="search-container">
             <div class="search-box">
                 <span class="search-icon" aria-hidden="true">🔍</span>
@@ -445,269 +734,428 @@
             <div class="search-results" id="search-results" aria-live="polite"></div>
         </div>
 
-        <div class="tabs-wrapper">
-
-            <button class="tab active" onclick="showTab('learn')">📚 学习</button>
-            <button class="tab" onclick="showTab('practice')">✏️ 练习</button>
-            <button class="tab" onclick="showTab('test')">📝 测试</button>
+        <div class="tabs-wrapper" role="tablist" aria-label="学习模块">
+            <button class="tab active" role="tab" aria-selected="true" aria-controls="learn-tab" id="tab-learn" onclick="showTab('learn')">📚 学习</button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="practice-tab" id="tab-practice" onclick="showTab('practice')">✏️ 练习</button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="test-tab" id="tab-test" onclick="showTab('test')">📝 测试</button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="homework-tab" id="tab-homework" onclick="showTab('homework')">📤 作业</button>
         </div>
 
-        <div id="learn-tab" class="tab-content active">
-            <div class="content-card">
-                <h3>📌 项目概述</h3>
-                <p>分组聚合是数据分析中最常用的技术之一，通过 groupby 操作可以将数据按照某个或多个特征分组，然后对每个组进行聚合计算，如求和、平均值、计数等。</p>
-                <ul>
-                    <li>掌握 groupby 分组操作</li>
-                    <li>学习常用聚合函数（sum, mean, count, max, min）</li>
-                    <li>多维度分组分析</li>
-                    <li>透视表和交叉表的使用</li>
-                </ul>
-            </div>
+        <div id="learn-tab" class="tab-content active" role="tabpanel" aria-labelledby="tab-learn">
+            <div class="content-section">
+                <div class="content-section-title">第一章 数据清洗基础</div>
+                
+                <div class="content-card">
+                    <h3>1.1 什么是数据清洗</h3>
+                    <p>数据清洗是数据分析过程中非常重要的一步。在实际工作中，我们获取到的原始数据往往存在各种问题：</p>
+                    <ul>
+                        <li><strong>缺失值</strong> - 某些字段没有记录数据</li>
+                        <li><strong>重复值</strong> - 相同的数据被记录了多次</li>
+                        <li><strong>异常值</strong> - 明显不符合常理的数据</li>
+                        <li><strong>格式不一致</strong> - 同一类型数据格式不统一</li>
+                    </ul>
+                    <div class="info-box" role="note">
+                        <p>💡 数据清洗通常占数据分析总时间的 60% - 80%，是数据科学工作中不可或缺的环节。</p>
+                    </div>
+                </div>
 
-            <div class="content-card">
-                <h3>🔧 核心代码</h3>
-                <p>以下是分组聚合分析常用的 Pandas 操作：</p>
-                <div class="code-box">
-                    <pre>import pandas as pd
+                <div class="content-card">
+                    <h3>1.2 Pandas 读取数据</h3>
+                    <p>首先，让我们学习如何用 Pandas 读取 CSV 数据文件：</p>
+                    <div class="code-box">
+<pre>import pandas as pd
 
-# 读取数据
+# 读取 CSV 文件
 df = pd.read_csv('retail_orders.csv')
 
-# 1. 基本分组聚合
-# 按产品类别分组，计算销售额总和
-category_sales = df.groupby('category')['amount'].sum()
+# 查看前 5 行数据
+print(df.head())</pre>
+                    </div>
+                    
+                    <div class="code-editor-container">
+                        <div class="code-editor-title">
+                            <span>💻</span> 在线代码编辑器
+                        </div>
+                        <div class="code-editor">
+                            <label for="code-input" class="sr-only">Python 代码输入</label>
+                            <textarea id="code-input" class="code-textarea" 
+                                    placeholder="在这里输入 Python 代码..." 
+                                    spellcheck="false"
+                                    aria-describedby="code-help">import pandas as pd
 
-# 按地区分组，计算多个统计量
-region_stats = df.groupby('region').agg({
-    'amount': ['sum', 'mean', 'count'],
-    'quantity': ['sum', 'max']
-})
+# 创建示例数据
+data = {'name': ['Alice', 'Bob', 'Charlie', 'David'],
+        'age': [25, 30, None, 35],
+        'city': ['Beijing', 'Shanghai', 'Guangzhou', None]}
+df = pd.DataFrame(data)
 
-# 2. 多列分组
-# 按地区和产品类别分组
-multi_group = df.groupby(['region', 'category'])['amount'].sum().unstack()
-
-# 3. 使用聚合函数
-agg_result = df.groupby('category').agg(
-    total_sales=('amount', 'sum'),
-    avg_sales=('amount', 'mean'),
-    order_count=('order_id', 'nunique'),
-    max_quantity=('quantity', 'max')
-)
-
-# 4. 透视表
-pivot_table = pd.pivot_table(
-    df, 
-    values='amount', 
-    index='category', 
-    columns='region', 
-    aggfunc='sum'
-)
-
-print('分组聚合分析完成！')</pre>
+# 显示数据
+print("数据预览:")
+print(df.head())
+print("\n数据信息:")
+print(df.info())</textarea>
+                        </div>
+                        <div class="editor-controls">
+                            <button class="btn btn-primary" onclick="runCode()" id="run-btn" aria-describedby="code-help">
+                                ▶️ 运行代码
+                            </button>
+                            <button class="btn btn-secondary" onclick="resetCode()" aria-label="重置代码">
+                                🔄 重置
+                            </button>
+                            <button class="btn btn-secondary" onclick="copyCode()" aria-label="复制代码">
+                                📋 复制
+                            </button>
+                        </div>
+                        <div id="code-help" class="sr-only">输入 Python 代码后点击运行按钮执行</div>
+                        <div class="output-box" id="output-box" style="display: none;">
+                            <div class="output-title">📤 输出结果</div>
+                            <pre class="output-content" id="output-content"></pre>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="content-card">
-                <h3>💡 学习要点</h3>
-                <ul>
-                    <li><strong>groupby 原理</strong>：分组 → 应用 → 合并 (Split-Apply-Combine)</li>
-                    <li><strong>agg 方法</strong>：可以同时对不同列应用不同的聚合函数</li>
-                    <li><strong>命名聚合</strong>：使用 agg 函数时可以自定义结果列名</li>
-                    <li><strong>透视表</strong>：pivot_table 是交互式分析的利器</li>
-                </ul>
+            <div class="content-section">
+                <div class="content-section-title">第二章 缺失值处理</div>
+                
+                <div class="content-card">
+                    <h3>2.1 查找缺失值</h3>
+                    <p>我们可以使用 isnull() 或 isna() 方法来检测缺失值：</p>
+                    <div class="code-box">
+<pre># 查看每列缺失值数量
+print(df.isnull().sum())
+
+# 查看包含缺失值的行
+missing_rows = df[df.isnull().any(axis=1)]</pre>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h3>2.2 处理缺失值</h3>
+                    <p>常见的处理方式有两种：删除和填充：</p>
+                    <div class="code-box">
+<pre># 方式 1：删除含有缺失值的行
+df_clean = df.dropna()
+
+# 方式 2：用均值填充数值型列
+df['price'] = df['price'].fillna(df['price'].mean())
+
+# 方式 3：用众数填充类别型列
+df['category'] = df['category'].fillna(df['category'].mode()[0])
+
+# 方式 4：用前向填充
+df['sales'] = df['sales'].fillna(method='ffill')</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <div class="content-section-title">第三章 重复值与异常值</div>
+                
+                <div class="content-card">
+                    <h3>3.1 处理重复值</h3>
+                    <div class="code-box">
+<pre># 检查重复值
+print("重复行数:", df.duplicated().sum())
+
+# 删除重复值
+df = df.drop_duplicates()
+
+# 基于特定列检查重复
+df = df.drop_duplicates(subset=['name', 'email'])</pre>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h3>3.2 检测异常值</h3>
+                    <p>常用方法是使用 IQR (四分位距) 来检测异常值：</p>
+                    <div class="code-box">
+<pre># 计算四分位数
+Q1 = df['amount'].quantile(0.25)
+Q3 = df['amount'].quantile(0.75)
+IQR = Q3 - Q1
+
+# 计算边界
+lower_bound = Q1 - 1.5 * IQR
+upper_bound = Q3 + 1.5 * IQR
+
+# 筛选出正常范围的数据
+df_clean = df[(df['amount'] >= lower_bound) & (df['amount'] <= upper_bound)]</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <div class="content-section-title">第四章 数据类型转换与格式统一</div>
+                
+                <div class="content-card">
+                    <h3>4.1 数据类型转换</h3>
+                    <div class="code-box">
+<pre># 查看数据类型
+print(df.dtypes)
+
+# 转换数据类型
+df['price'] = df['price'].astype(float)
+df['date'] = pd.to_datetime(df['date'])
+df['is_active'] = df['is_active'].astype(bool)</pre>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h3>4.2 字符串处理</h3>
+                    <div class="code-box">
+<pre># 字符串操作
+df['name'] = df['name'].str.strip()
+df['name'] = df['name'].str.lower()
+df['name'] = df['name'].str.replace('_', ' ')
+
+# 提取子字符串
+df['category'] = df['product_code'].str[:2]</pre>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div id="practice-tab" class="tab-content">
-            <div class="content-card">
-                <h3>✏️ 编程练习</h3>
+        <div id="practice-tab" class="tab-content" role="tabpanel" aria-labelledby="tab-practice">
+            <div class="content-section">
+                <div class="content-section-title">练习题（共5题）</div>
                 
                 <div class="question-box">
-                    <h4>练习1：计算各品类销售额</h4>
-                    <p>请编写代码，计算每个产品类别的销售总额：</p>
-                    <div class="code-box">
-                        <pre>import pandas as pd
-
-def calculate_category_sales(df):
-    """
-    计算各品类销售额
-    
-    Args:
-        df: 包含销售数据的DataFrame，需要有'category'和'amount'列
-    
-    Returns:
-        各品类销售额的Series
-    """
-    # 请在此处编写代码
-    
-    return category_sales</pre>
+                    <h4>练习 1：检测缺失值</h4>
+                    <p>如果你想查看 DataFrame 中每列有多少缺失值，应该使用哪个方法？</p>
+                    <div class="options" role="radiogroup" aria-label="练习1选项">
+                        <button class="option-btn" onclick="selectOption(this, 1, 'A', false)">A. df.na()</button>
+                        <button class="option-btn" onclick="selectOption(this, 1, 'B', true)">B. df.isnull().sum()</button>
+                        <button class="option-btn" onclick="selectOption(this, 1, 'C', false)">C. df.count()</button>
+                        <button class="option-btn" onclick="selectOption(this, 1, 'D', false)">D. df.missing()</button>
                     </div>
-                    <button class="btn btn-primary" onclick="showAnswer(1)">查看答案</button>
+                    <div class="explanation" id="explanation-1" role="alert">
+                        <p><strong>正确！</strong> df.isnull() 返回一个布尔矩阵，然后用 sum() 就可以统计每列的缺失值数量。</p>
+                    </div>
                 </div>
 
                 <div class="question-box">
-                    <h4>练习2：多维度统计</h4>
-                    <p>请编写代码，按地区分组，计算销售总额、平均订单金额和订单数：</p>
-                    <div class="code-box">
-                        <pre>import pandas as pd
-
-def region_analysis(df):
-    """
-    按地区进行多维度统计分析
-    
-    Args:
-        df: 包含销售数据的DataFrame
-    
-    Returns:
-        包含统计结果的DataFrame
-    """
-    # 请在此处编写代码
-    
-    return result</pre>
+                    <h4>练习 2：删除重复值</h4>
+                    <p>下列哪个方法可以删除 DataFrame 中的重复行？</p>
+                    <div class="options" role="radiogroup" aria-label="练习2选项">
+                        <button class="option-btn" onclick="selectOption(this, 2, 'A', false)">A. df.remove_duplicates()</button>
+                        <button class="option-btn" onclick="selectOption(this, 2, 'B', true)">B. df.drop_duplicates()</button>
+                        <button class="option-btn" onclick="selectOption(this, 2, 'C', false)">C. df.delete_duplicates()</button>
+                        <button class="option-btn" onclick="selectOption(this, 2, 'D', false)">D. df.clear_duplicates()</button>
                     </div>
-                    <button class="btn btn-primary" onclick="showAnswer(2)">查看答案</button>
+                    <div class="explanation" id="explanation-2" role="alert">
+                        <p><strong>正确！</strong> drop_duplicates() 是 Pandas 专门用来删除重复行的方法。</p>
+                    </div>
+                </div>
+
+                <div class="question-box">
+                    <h4>练习 3：填充缺失值</h4>
+                    <p>用均值填充缺失值时，使用哪个方法？</p>
+                    <div class="options" role="radiogroup" aria-label="练习3选项">
+                        <button class="option-btn" onclick="selectOption(this, 3, 'A', true)">A. df.fillna(df.mean())</button>
+                        <button class="option-btn" onclick="selectOption(this, 3, 'B', false)">B. df.replace.nan(df.mean())</button>
+                        <button class="option-btn" onclick="selectOption(this, 3, 'C', false)">C. df.fill.mean()</button>
+                        <button class="option-btn" onclick="selectOption(this, 3, 'D', false)">D. df.na.fill(df.mean())</button>
+                    </div>
+                    <div class="explanation" id="explanation-3" role="alert">
+                        <p><strong>正确！</strong> fillna() 方法用于填充缺失值，可以接受均值、中位数等统计值作为参数。</p>
+                    </div>
+                </div>
+
+                <div class="question-box">
+                    <h4>练习 4：数据类型转换</h4>
+                    <p>将字符串列转换为日期类型应该使用哪个方法？</p>
+                    <div class="options" role="radiogroup" aria-label="练习4选项">
+                        <button class="option-btn" onclick="selectOption(this, 4, 'A', false)">A. df.astype('datetime')</button>
+                        <button class="option-btn" onclick="selectOption(this, 4, 'B', true)">B. pd.to_datetime(df['date'])</button>
+                        <button class="option-btn" onclick="selectOption(this, 4, 'C', false)">C. df['date'].to_date()</button>
+                        <button class="option-btn" onclick="selectOption(this, 4, 'D', false)">D. df.convert_date()</button>
+                    </div>
+                    <div class="explanation" id="explanation-4" role="alert">
+                        <p><strong>正确！</strong> pd.to_datetime() 是 Pandas 中专门用于日期转换的函数。</p>
+                    </div>
+                </div>
+
+                <div class="question-box">
+                    <h4>练习 5：异常值检测</h4>
+                    <p>IQR 方法中，异常值的判断标准是什么？</p>
+                    <div class="options" role="radiogroup" aria-label="练习5选项">
+                        <button class="option-btn" onclick="selectOption(this, 5, 'A', false)">A. 值 > Q3 或 值 < Q1</button>
+                        <button class="option-btn" onclick="selectOption(this, 5, 'B', false)">B. 值 > Q3+IQR 或 值 < Q1-IQR</button>
+                        <button class="option-btn" onclick="selectOption(this, 5, 'C', true)">C. 值 > Q3+1.5*IQR 或 值 < Q1-1.5*IQR</button>
+                        <button class="option-btn" onclick="selectOption(this, 5, 'D', false)">D. 值 > mean+std 或 值 < mean-std</button>
+                    </div>
+                    <div class="explanation" id="explanation-5" role="alert">
+                        <p><strong>正确！</strong> IQR方法使用 1.5 倍的四分位距作为异常值判断标准。</p>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div id="test-tab" class="tab-content">
-            <div class="content-card">
-                <h3>📝 知识测试</h3>
+        <div id="test-tab" class="tab-content" role="tabpanel" aria-labelledby="tab-test">
+            <div class="content-section">
+                <div class="content-section-title">测试题（共 5 题，满分 100 分）</div>
                 
                 <div class="question-box">
-                    <h4>问题1：在 Pandas 中，用于分组的方法是？</h4>
-                    <button class="option-btn" onclick="selectOption(1, 'A')">A. group()</button>
-                    <button class="option-btn" onclick="selectOption(1, 'B')">B. groupby()</button>
-                    <button class="option-btn" onclick="selectOption(1, 'C')">C. aggregate()</button>
-                    <button class="option-btn" onclick="selectOption(1, 'D')">D. split()</button>
-                    <div class="explanation" id="exp1">
-                        <p><strong>正确答案：B</strong></p>
-                        <p>groupby() 是 Pandas 中用于分组的核心方法，它实现了 Split-Apply-Combine 模式。</p>
+                    <h4>问题 1 / 5</h4>
+                    <p>数据清洗通常占数据分析总时间的比例约为？</p>
+                    <div class="options" role="radiogroup" aria-label="测试题1选项">
+                        <button class="option-btn" onclick="selectTestOption(this, 1, 'A', false)">A. 10% - 20%</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 1, 'B', false)">B. 30% - 40%</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 1, 'C', true)">C. 60% - 80%</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 1, 'D', false)">D. 90% - 100%</button>
                     </div>
                 </div>
 
                 <div class="question-box">
-                    <h4>问题2：以下哪个不是常用的聚合函数？</h4>
-                    <button class="option-btn" onclick="selectOption(2, 'A')">A. sum()</button>
-                    <button class="option-btn" onclick="selectOption(2, 'B')">B. mean()</button>
-                    <button class="option-btn" onclick="selectOption(2, 'C')">C. sort()</button>
-                    <button class="option-btn" onclick="selectOption(2, 'D')">D. count()</button>
-                    <div class="explanation" id="exp2">
-                        <p><strong>正确答案：C</strong></p>
-                        <p>sort() 是排序方法，不是聚合函数。常用的聚合函数有 sum, mean, count, max, min 等。</p>
+                    <h4>问题 2 / 5</h4>
+                    <p>下列哪个方法可以删除含有缺失值的行？</p>
+                    <div class="options" role="radiogroup" aria-label="测试题2选项">
+                        <button class="option-btn" onclick="selectTestOption(this, 2, 'A', true)">A. df.dropna()</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 2, 'B', false)">B. df.delete.na()</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 2, 'C', false)">C. df.remove.na()</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 2, 'D', false)">D. df.na.drop()</button>
                     </div>
                 </div>
 
                 <div class="question-box">
-                    <h4>问题3：创建透视表的函数是？</h4>
-                    <button class="option-btn" onclick="selectOption(3, 'A')">A. pivot_table()</button>
-                    <button class="option-btn" onclick="selectOption(3, 'B')">B. table()</button>
-                    <button class="option-btn" onclick="selectOption(3, 'C')">C. pivot()</button>
-                    <button class="option-btn" onclick="selectOption(3, 'D')">D. cross_tab()</button>
-                    <div class="explanation" id="exp3">
-                        <p><strong>正确答案：A</strong></p>
-                        <p>pivot_table() 是 Pandas 提供的创建透视表的函数，功能强大且灵活。</p>
+                    <h4>问题 3 / 5</h4>
+                    <p>IQR 是什么的缩写？</p>
+                    <div class="options" role="radiogroup" aria-label="测试题3选项">
+                        <button class="option-btn" onclick="selectTestOption(this, 3, 'A', false)">A. Inner Quantity Range</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 3, 'B', true)">B. Interquartile Range</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 3, 'C', false)">C. Integer Quarter Range</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 3, 'D', false)">D. Internal Quick Range</button>
                     </div>
                 </div>
 
-                <div style="text-align: center; margin-top: 24px;">
-                    <button class="btn btn-primary" onclick="checkAnswers()">提交答案</button>
+                <div class="question-box">
+                    <h4>问题 4 / 5</h4>
+                    <p>计算 IQR 时，Q1 和 Q3 分别代表什么？</p>
+                    <div class="options" role="radiogroup" aria-label="测试题4选项">
+                        <button class="option-btn" onclick="selectTestOption(this, 4, 'A', false)">A. 最小值和最大值</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 4, 'B', false)">B. 均值和中位数</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 4, 'C', true)">C. 下四分位数和上四分位数</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 4, 'D', false)">D. 方差和标准差</button>
+                    </div>
                 </div>
 
-                <div class="test-result" id="result">
-                    <h3 id="result-title"></h3>
-                    <div class="score" id="score"></div>
-                    <button class="btn btn-outline" onclick="resetTest()">重新测试</button>
+                <div class="question-box">
+                    <h4>问题 5 / 5</h4>
+                    <p>用众数填充缺失值最适合什么类型的数据？</p>
+                    <div class="options" role="radiogroup" aria-label="测试题5选项">
+                        <button class="option-btn" onclick="selectTestOption(this, 5, 'A', false)">A. 数值型数据</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 5, 'B', true)">B. 类别型数据</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 5, 'C', false)">C. 时间序列数据</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 5, 'D', false)">D. 二进制数据</button>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="submitTest()" aria-label="提交测试答案">
+                        📤 提交答案
+                    </button>
+                    <button class="btn btn-secondary" onclick="resetTest()" aria-label="重新开始测试">
+                        🔄 重新开始
+                    </button>
+                </div>
+
+                <div class="test-result" id="test-result" role="alert" aria-live="assertive">
+                    <div class="test-result-icon" id="result-icon">🎉</div>
+                    <h3>测试完成！</h3>
+                    <div class="score" id="final-score">0分</div>
+                    <p id="result-message">太棒了！继续努力！</p>
+                    <div class="btn-group" style="justify-content: center;">
+                        <button class="btn btn-secondary" onclick="resetTest()">再来一次</button>
+                        <a href="../../index.html" class="btn btn-primary" aria-label="返回首页">返回首页 →</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <footer>
-        <p>© 2024 TT's Learning Space · Pandas 数据分析实战训练营</p>
+        <div id="homework-tab" class="tab-content" role="tabpanel" aria-labelledby="tab-homework">
+            <div class="content-section">
+                <div class="content-section-title">作业提交</div>
+                
+                <div class="content-card">
+                    <h3>📝 分组聚合分析作业</h3>
+                    <p>请完成以下数据清洗任务：</p>
+                    <ul>
+                        <li>1. 创建一个包含缺失值和重复值的 DataFrame</li>
+                        <li>2. 使用至少两种方法处理缺失值</li>
+                        <li>3. 删除重复行</li>
+                        <li>4. 输出处理后的数据</li>
+                    </ul>
+                </div>
+
+                <div class="homework-section">
+                    <div class="homework-title">
+                        <span>💻</span> 作业代码提交
+                    </div>
+                    <div class="homework-submit-area">
+                        <textarea id="homework-code" class="homework-textarea" placeholder="请在此输入你的代码...">import pandas as pd
+
+# 创建包含缺失值和重复值的DataFrame
+data = {
+    'name': ['Alice', 'Bob', 'Charlie', 'Alice', None, 'David'],
+    'age': [25, None, 30, 25, 35, None],
+    'city': ['Beijing', 'Shanghai', None, 'Beijing', 'Guangzhou', 'Shenzhen']
+}
+df = pd.DataFrame(data)
+
+print("原始数据:")
+print(df)
+
+# 在此处编写你的数据清洗代码
+
+
+# 输出处理后的数据
+print("\n清洗后的数据:")
+print(df)</textarea>
+                        <div class="btn-group" style="margin-top: 16px;">
+                            <button class="btn btn-primary" onclick="submitHomework()" aria-label="提交作业">
+                                📤 提交作业
+                            </button>
+                            <button class="btn btn-secondary" onclick="runHomeworkCode()" aria-label="运行代码">
+                                ▶️ 运行代码
+                            </button>
+                        </div>
+                        <div class="submit-status" id="submit-status"></div>
+                    </div>
+                </div>
+
+                <div class="output-box" id="homework-output" style="display: none;">
+                    <div class="output-title">📤 代码运行结果</div>
+                    <pre class="output-content" id="homework-output-content"></pre>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer role="contentinfo">
+        <div class="container">
+            <p>© 2024 TT's Learning Space · Pandas数据分析实战训练营</p>
+        </div>
     </footer>
 
-    <script>
-        const correctAnswers = {1: 'B', 2: 'C', 3: 'A'};
-        const userAnswers = {};
-
-        function showTab(tabName) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            document.querySelector(`button[onclick="showTab('${tabName}')"]`).classList.add('active');
-            document.getElementById(`${tabName}-tab`).classList.add('active');
-        }
-
-        function showAnswer(num) {
-            const answers = {
-                1: `def calculate_category_sales(df):
-    category_sales = df.groupby('category')['amount'].sum()
-    return category_sales`,
-                2: `def region_analysis(df):
-    result = df.groupby('region').agg(
-        total_sales=('amount', 'sum'),
-        avg_amount=('amount', 'mean'),
-        order_count=('order_id', 'nunique')
-    )
-    return result`
-            };
-            alert(`练习${num}答案：\\n\\n${answers[num]}`);
-        }
-
-        function selectOption(qNum, answer) {
-            const options = document.querySelectorAll(`#test-tab .question-box:nth-child(${qNum+1}) .option-btn`);
-            options.forEach(o => o.classList.remove('selected'));
-            event.target.classList.add('selected');
-            userAnswers[qNum] = answer;
-        }
-
-        function checkAnswers() {
-            let correct = 0;
-            Object.keys(correctAnswers).forEach(q => {
-                const options = document.querySelectorAll(`#test-tab .question-box:nth-child(${parseInt(q)+1}) .option-btn`);
-                options.forEach(opt => {
-                    const optAnswer = opt.textContent.trim()[0];
-                    if (optAnswer === correctAnswers[q]) {
-                        opt.classList.add('correct');
-                    } else if (opt.classList.contains('selected') && optAnswer !== correctAnswers[q]) {
-                        opt.classList.add('wrong');
-                    }
-                });
-                document.getElementById(`exp${q}`).style.display = 'block';
-                if (userAnswers[q] === correctAnswers[q]) correct++;
-            });
-            
-            const score = Math.round((correct / Object.keys(correctAnswers).length) * 100);
-            document.getElementById('score').textContent = `${score}分`;
-            document.getElementById('result-title').textContent = score >= 60 ? '🎉 测试通过！' : '💪 继续加油！';
-            document.getElementById('result').style.display = 'block';
-        }
-
-        function resetTest() {
-            document.querySelectorAll('.option-btn').forEach(o => o.classList.remove('selected', 'correct', 'wrong'));
-            document.querySelectorAll('.explanation').forEach(e => e.style.display = 'none');
-            document.getElementById('result').style.display = 'none';
-            Object.keys(userAnswers).forEach(k => delete userAnswers[k]);
-        }
-    </script>
-
-    const DATA_PLACEHOLDER = [
-                    { title: '分组聚合', section: '分组聚合基础', content: 'groupby sum mean count' },
-                    { title: '聚合函数', section: '常用聚合函数', content: 'agg pivot_table unstack' },
-                    { title: '多维度分组', section: '多列分组', content: '多维度分析' }
-        ];
     <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
     
     <script>
-        // 全局变量
         let pyodide = null;
         let isLoading = false;
         let testAnswers = {};
         let totalQuestions = 5;
-        let currentProgress = { chapters: 0, exercises: 0, score: 0 };
         
-        // 初始化 Pyodide
+        const searchData = [
+            { title: '数据清洗', section: '1.1 什么是数据清洗', content: '缺失值、重复值、异常值、格式不一致' },
+            { title: 'Pandas 读取数据', section: '1.2 Pandas 读取数据', content: 'pd.read_csv() df.head()' },
+            { title: '缺失值处理', section: '2.1 查找缺失值', content: 'isnull() isna() dropna() fillna()' },
+            { title: '重复值', section: '3.1 处理重复值', content: 'duplicated() drop_duplicates()' },
+            { title: '异常值', section: '3.2 检测异常值', content: 'IQR 四分位距 quantile()' },
+            { title: '数据类型转换', section: '4.1 数据类型转换', content: 'astype() to_datetime()' },
+            { title: '字符串处理', section: '4.2 字符串处理', content: 'str.strip() str.lower() str.replace()' }
+        ];
+        
         async function initPyodide() {
             if (pyodide || isLoading) return;
             isLoading = true;
@@ -734,24 +1182,22 @@ def region_analysis(df):
             }
         }
         
-        // 运行代码
         async function runCode() {
-            const code = document.getElementById('code-input')?.value || document.querySelector('.code-textarea')?.value;
-            if (!code) return;
-            
-            const outputBox = document.getElementById('output-box') || document.querySelector('.output-box');
-            const outputContent = document.getElementById('output-content') || document.querySelector('.output-content');
+            const code = document.getElementById('code-input').value;
+            const outputBox = document.getElementById('output-box');
+            const outputContent = document.getElementById('output-content');
             const btn = document.getElementById('run-btn');
             
-            if (outputBox) outputBox.style.display = 'block';
-            if (outputContent) {
-                outputContent.textContent = '正在执行...';
-                outputContent.className = 'output-content';
+            if (!code.trim()) {
+                alert('请先输入代码！');
+                return;
             }
-            if (btn) {
-                btn.disabled = true;
-                btn.innerHTML = '<span class="loading-spinner"></span> 运行中...';
-            }
+            
+            outputBox.style.display = 'block';
+            outputContent.textContent = '正在执行...';
+            outputContent.className = 'output-content';
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading-spinner"></span> 运行中...';
             
             try {
                 await initPyodide();
@@ -770,50 +1216,88 @@ sys.stderr = StringIO()
                 const stderr = pyodide.runPython('sys.stderr.getvalue()');
                 
                 if (stderr?.trim()) {
-                    if (outputContent) {
-                        outputContent.textContent = stderr;
-                        outputContent.className = 'output-content error';
-                    }
+                    outputContent.textContent = stderr;
+                    outputContent.className = 'output-content error';
                 } else {
-                    if (outputContent) {
-                        outputContent.textContent = stdout || '(代码执行完成，无输出)';
-                        outputContent.className = 'output-content success';
-                    }
+                    outputContent.textContent = stdout || '(代码执行完成，无输出)';
+                    outputContent.className = 'output-content success';
                 }
             } catch (error) {
-                if (outputContent) {
-                    outputContent.textContent = '错误: ' + error.message;
-                    outputContent.className = 'output-content error';
-                }
+                outputContent.textContent = '错误: ' + error.message;
+                outputContent.className = 'output-content error';
             } finally {
-                if (btn) {
-                    btn.disabled = false;
-                    btn.innerHTML = '▶️ 运行代码';
+                btn.disabled = false;
+                btn.innerHTML = '▶️ 运行代码';
+            }
+        }
+        
+        async function runHomeworkCode() {
+            const code = document.getElementById('homework-code').value;
+            const outputBox = document.getElementById('homework-output');
+            const outputContent = document.getElementById('homework-output-content');
+            
+            if (!code.trim()) {
+                alert('请先输入代码！');
+                return;
+            }
+            
+            outputBox.style.display = 'block';
+            outputContent.textContent = '正在执行...';
+            outputContent.className = 'output-content';
+            
+            try {
+                await initPyodide();
+                if (!pyodide) throw new Error('Pyodide 未初始化');
+                
+                pyodide.runPython(`
+import sys
+from io import StringIO
+sys.stdout = StringIO()
+sys.stderr = StringIO()
+                `);
+                
+                await pyodide.runPythonAsync(code);
+                
+                const stdout = pyodide.runPython('sys.stdout.getvalue()');
+                const stderr = pyodide.runPython('sys.stderr.getvalue()');
+                
+                if (stderr?.trim()) {
+                    outputContent.textContent = stderr;
+                    outputContent.className = 'output-content error';
+                } else {
+                    outputContent.textContent = stdout || '(代码执行完成，无输出)';
+                    outputContent.className = 'output-content success';
                 }
+            } catch (error) {
+                outputContent.textContent = '错误: ' + error.message;
+                outputContent.className = 'output-content error';
             }
         }
         
-        // 重置代码
         function resetCode() {
-            const textarea = document.getElementById('code-input') || document.querySelector('.code-textarea');
-            if (textarea && textarea.dataset.original) {
-                textarea.value = textarea.dataset.original;
-            }
-            const outputBox = document.getElementById('output-box') || document.querySelector('.output-box');
-            if (outputBox) outputBox.style.display = 'none';
+            document.getElementById('code-input').value = `import pandas as pd
+
+# 创建示例数据
+data = {'name': ['Alice', 'Bob', 'Charlie', 'David'],
+        'age': [25, 30, None, 35],
+        'city': ['Beijing', 'Shanghai', 'Guangzhou', None]}
+df = pd.DataFrame(data)
+
+# 显示数据
+print("数据预览:")
+print(df.head())
+print("\n数据信息:")
+print(df.info())`;
+            document.getElementById('output-box').style.display = 'none';
         }
         
-        // 复制代码
         function copyCode() {
-            const code = document.getElementById('code-input')?.value || document.querySelector('.code-textarea')?.value;
-            if (code) {
-                navigator.clipboard.writeText(code).then(() => {
-                    alert('代码已复制到剪贴板！');
-                });
-            }
+            const code = document.getElementById('code-input').value;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('代码已复制到剪贴板！');
+            });
         }
         
-        // 标签切换
         function showTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab').forEach(tab => {
@@ -831,26 +1315,22 @@ sys.stderr = StringIO()
             }
         }
         
-        // 选择练习选项
         function selectOption(btn, questionId, option, isCorrect) {
             const questionBox = btn.closest('.question-box');
             const allOptions = questionBox.querySelectorAll('.option-btn');
-            allOptions.forEach(opt => opt.classList.remove('selected'));
-            btn.classList.add('selected');
+            allOptions.forEach(opt => opt.classList.remove('selected', 'correct', 'wrong'));
+            
+            if (isCorrect) {
+                btn.classList.add('selected', 'correct');
+                saveProgress('exercise', questionId);
+            } else {
+                btn.classList.add('selected', 'wrong');
+            }
             
             const explanation = document.getElementById('explanation-' + questionId);
-            if (explanation) {
-                explanation.style.display = 'block';
-                if (isCorrect) {
-                    btn.classList.add('correct');
-                    saveProgress('exercise', questionId);
-                } else {
-                    btn.classList.add('wrong');
-                }
-            }
+            if (explanation) explanation.style.display = 'block';
         }
         
-        // 测试选项
         function selectTestOption(btn, questionId, option, isCorrect) {
             const questionBox = btn.closest('.question-box');
             const allOptions = questionBox.querySelectorAll('.option-btn');
@@ -859,7 +1339,6 @@ sys.stderr = StringIO()
             testAnswers[questionId] = isCorrect;
         }
         
-        // 提交测试
         function submitTest() {
             if (Object.keys(testAnswers).length < totalQuestions) {
                 alert('请先回答所有问题！');
@@ -873,13 +1352,8 @@ sys.stderr = StringIO()
                     if (opt.classList.contains('selected')) {
                         const questionNum = i + 1;
                         const isCorrect = testAnswers[questionNum];
-                        if (isCorrect) {
-                            opt.classList.remove('selected');
-                            opt.classList.add('correct');
-                        } else {
-                            opt.classList.remove('selected');
-                            opt.classList.add('wrong');
-                        }
+                        opt.classList.remove('selected');
+                        opt.classList.add(isCorrect ? 'correct' : 'wrong');
                     }
                 });
             });
@@ -887,13 +1361,12 @@ sys.stderr = StringIO()
             let correctCount = Object.values(testAnswers).filter(v => v).length;
             let score = Math.round((correctCount / totalQuestions) * 100);
             
-            const scoreEl = document.getElementById('final-score');
-            if (scoreEl) scoreEl.textContent = score + '分';
+            document.getElementById('final-score').textContent = score + '分';
             
             let message = '';
             let icon = '';
             if (score >= 80) {
-                message = '太棒了！你已经掌握了这个项目！';
+                message = '太棒了！你是数据清洗高手！';
                 icon = '🎉';
             } else if (score >= 60) {
                 message = '不错！继续加油！';
@@ -903,34 +1376,41 @@ sys.stderr = StringIO()
                 icon = '📚';
             }
             
-            const msgEl = document.getElementById('result-message');
-            const iconEl = document.getElementById('result-icon');
-            if (msgEl) msgEl.textContent = message;
-            if (iconEl) iconEl.textContent = icon;
-            
-            const resultEl = document.getElementById('test-result');
-            if (resultEl) resultEl.style.display = 'block';
+            document.getElementById('result-message').textContent = message;
+            document.getElementById('result-icon').textContent = icon;
+            document.getElementById('test-result').style.display = 'block';
             
             saveProgress('test', score);
         }
         
-        // 重置测试
         function resetTest() {
             testAnswers = {};
             document.querySelectorAll('#test-tab .option-btn').forEach(opt => {
                 opt.classList.remove('selected', 'correct', 'wrong');
             });
-            const resultEl = document.getElementById('test-result');
-            if (resultEl) resultEl.style.display = 'none';
+            document.getElementById('test-result').style.display = 'none';
         }
         
-        // 本地存储 - 保存进度
+        function submitHomework() {
+            const code = document.getElementById('homework-code').value;
+            if (!code.trim()) {
+                document.getElementById('submit-status').textContent = '请先输入代码！';
+                document.getElementById('submit-status').className = 'submit-status error';
+                return;
+            }
+            
+            localStorage.setItem('homework_project2', code);
+            document.getElementById('submit-status').textContent = '作业提交成功！代码已保存。';
+            document.getElementById('submit-status').className = 'submit-status success';
+            saveProgress('homework', 1);
+        }
+        
         function saveProgress(type, value) {
-            const projectId = 'project' + window.location.pathname.match(/project(\d+)/)?.[1] || '1';
+            const projectId = 'project2';
             let progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
             
             if (!progress[projectId]) {
-                progress[projectId] = { chapters: 0, exercises: 0, score: 0 };
+                progress[projectId] = { chapters: 0, exercises: 0, score: 0, homework: 0 };
             }
             
             if (type === 'chapter') {
@@ -939,39 +1419,31 @@ sys.stderr = StringIO()
                 progress[projectId].exercises = Math.max(progress[projectId].exercises, value);
             } else if (type === 'test') {
                 progress[projectId].score = Math.max(progress[projectId].score, value);
+            } else if (type === 'homework') {
+                progress[projectId].homework = 1;
             }
             
             localStorage.setItem('learningProgress', JSON.stringify(progress));
             updateProgressDisplay();
         }
         
-        // 更新进度显示
         function updateProgressDisplay() {
-            const projectId = 'project' + window.location.pathname.match(/project(\d+)/)?.[1] || '1';
+            const projectId = 'project2';
             const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}')[projectId] || { chapters: 0, exercises: 0, score: 0 };
             
-            const chaptersEl = document.getElementById('chapters-learned');
-            const exercisesEl = document.getElementById('exercises-done');
-            const scoreEl = document.getElementById('test-score');
+            document.getElementById('chapters-learned').textContent = progress.chapters + '/4';
+            document.getElementById('exercises-done').textContent = progress.exercises + '/5';
+            document.getElementById('test-score').textContent = progress.score;
             
-            if (chaptersEl) chaptersEl.textContent = progress.chapters + '/4';
-            if (exercisesEl) exercisesEl.textContent = progress.exercises + '/3';
-            if (scoreEl) scoreEl.textContent = progress.score;
-            
-            const percentage = Math.round((progress.chapters / 4) * 100);
-            const percentEl = document.getElementById('progress-percentage');
-            const circleEl = document.getElementById('progress-circle-inner');
-            
-            if (percentEl) percentEl.textContent = percentage + '%';
-            if (circleEl) circleEl.style.strokeDashoffset = 283 - (283 * percentage / 100);
+            const percentage = Math.round(((progress.chapters * 25) + (progress.exercises * 4)) / 1.4);
+            document.getElementById('progress-percentage').textContent = Math.min(percentage, 100) + '%';
+            document.getElementById('progress-circle-inner').style.strokeDashoffset = 283 - (283 * Math.min(percentage, 100) / 100);
         }
         
-        // 搜索功能
         document.addEventListener('DOMContentLoaded', function() {
             const searchInput = document.getElementById('search-input');
             const searchResults = document.getElementById('search-results');
             
-            // 键盘快捷键
             document.addEventListener('keydown', function(e) {
                 if (e.key === '/' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
                     e.preventDefault();
@@ -979,7 +1451,6 @@ sys.stderr = StringIO()
                 }
             });
             
-            // 搜索
             if (searchInput) {
                 searchInput.addEventListener('input', function() {
                     const query = this.value.toLowerCase().trim();
@@ -988,8 +1459,6 @@ sys.stderr = StringIO()
                         return;
                     }
                     
-                    const projectId = 'project' + window.location.pathname.match(/project(\d+)/)?.[1] || '1';
-                    const searchData = getSearchData(projectId);
                     const results = searchData.filter(item => 
                         item.title.toLowerCase().includes(query) ||
                         item.content.toLowerCase().includes(query)
@@ -1010,25 +1479,9 @@ sys.stderr = StringIO()
                 });
             }
             
-            // 加载保存的进度
             updateProgressDisplay();
-            
-            // 预加载 Pyodide
             initPyodide();
         });
-        
-        function getSearchData(projectId) {
-            const dataMap = DATA_PLACEHOLDER;
-            return dataMap;
-        }
-        
-        // Service Worker 注册
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                console.log('Service Worker 支持可用');
-            });
-        }
     </script>
-
 </body>
 </html>
