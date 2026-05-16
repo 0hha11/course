@@ -3,216 +3,339 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>项目7 - 简单聊天机器人</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>时间序列分析 - Pandas 数据分析实战训练营</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #0c1929 0%, #1a1a2e 50%, #16213e 100%); min-height: 100vh; color: #ffffff; }
-        .glass { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); border-radius: 16px; }
-        .gradient-text { background: linear-gradient(90deg, #00d4ff, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .btn-gradient { background: linear-gradient(90deg, #00d4ff, #7c3aed); transition: all 0.3s ease; }
-        .btn-gradient:hover { transform: scale(1.05); box-shadow: 0 10px 30px rgba(0,212,255,0.4); }
-        .tab-active { background: rgba(0,212,255,0.2); border-color: rgba(0,212,255,0.5); }
-        .code-box { background: #1e1e1e; border-radius: 8px; padding: 16px; font-family: 'Monaco', 'Consolas', monospace; font-size: 14px; overflow-x: auto; }
-        .question-box { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; }
-        .option-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 12px 20px; cursor: pointer; transition: all 0.3s ease; display: block; width: 100%; text-align: left; margin-bottom: 10px; }
-        .option-btn:hover { background: rgba(0,212,255,0.1); border-color: rgba(0,212,255,0.5); }
-        .option-btn.selected { background: rgba(0,212,255,0.2); border-color: rgba(0,212,255,0.8); }
-        .option-btn.correct { background: rgba(34,197,94,0.2); border-color: rgba(34,197,94,0.8); }
-        .option-btn.wrong { background: rgba(239,68,68,0.2); border-color: rgba(239,68,68,0.8); }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        
+        header { background: white; border-bottom: 1px solid #e2e8f0; padding: 16px 0; }
+        header .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: 700; color: #3b82f6; font-size: 18px; }
+        header a { color: #64748b; text-decoration: none; font-size: 14px; }
+        header a:hover { color: #3b82f6; }
+        
+        .project-header { padding: 40px 0; }
+        .project-title { font-size: 32px; font-weight: 700; color: #0f172a; margin-bottom: 12px; }
+        .project-meta { display: flex; gap: 16px; color: #64748b; font-size: 14px; }
+        .badge { padding: 4px 12px; border-radius: 10px; font-size: 12px; font-weight: 600; }
+        .badge-medium { background: #dbeafe; color: #2563eb; }
+        .badge-time { background: #f1f5f9; color: #64748b; }
+        
+        .tabs { display: flex; gap: 8px; margin-bottom: 24px; background: #f1f5f9; padding: 6px; border-radius: 12px; }
+        .tab { padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: #64748b; }
+        .tab.active { background: white; color: #3b82f6; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        .content-card { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 28px; margin-bottom: 24px; }
+        .content-card h3 { font-size: 20px; font-weight: 600; color: #0f172a; margin-bottom: 16px; }
+        .content-card p { color: #64748b; line-height: 1.6; margin-bottom: 12px; }
+        .content-card ul { list-style: disc; padding-left: 20px; color: #64748b; }
+        .content-card ul li { margin-bottom: 8px; }
+        
+        .code-box { background: #1e1e1e; border-radius: 12px; padding: 20px; overflow-x: auto; margin: 16px 0; }
+        .code-box pre { color: #d4d4d4; font-family: 'Monaco', 'Consolas', monospace; font-size: 14px; line-height: 1.6; white-space: pre; }
+        
+        .question-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+        .question-box h4 { font-size: 16px; font-weight: 600; color: #0f172a; margin-bottom: 12px; }
+        .question-box p { color: #64748b; margin-bottom: 12px; }
+        
+        .option-btn { display: block; width: 100%; padding: 14px 16px; margin-bottom: 10px; border: 1px solid #e2e8f0; border-radius: 10px; background: white; cursor: pointer; text-align: left; font-size: 14px; color: #334155; transition: all 0.2s; }
+        .option-btn:hover { border-color: #3b82f6; background: #eff6ff; }
+        .option-btn.selected { border-color: #3b82f6; background: #eff6ff; }
+        .option-btn.correct { border-color: #16a34a; background: #ecfdf5; color: #16a34a; }
+        .option-btn.wrong { border-color: #ef4444; background: #fef2f2; color: #ef4444; }
+        
+        .explanation { background: #fefce8; border-left: 4px solid #eab308; padding: 16px; margin-top: 16px; border-radius: 0 8px 8px 0; display: none; }
+        .explanation p { color: #854d0e; }
+        .explanation strong { color: #a16207; }
+        
+        .btn { padding: 12px 24px; border-radius: 10px; font-weight: 600; font-size: 14px; text-decoration: none; transition: all 0.2s; }
+        .btn-primary { background: #3b82f6; color: white; }
+        .btn-primary:hover { background: #2563eb; }
+        .btn-outline { border: 1px solid #e2e8f0; color: #64748b; background: white; }
+        .btn-outline:hover { border-color: #3b82f6; color: #3b82f6; }
+        
+        .test-result { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 32px; text-align: center; margin-top: 24px; display: none; }
+        .test-result h3 { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+        .test-result .score { font-size: 48px; font-weight: 700; color: #3b82f6; margin-bottom: 24px; }
+        
+        footer { text-align: center; padding: 32px 0; border-top: 1px solid #e2e8f0; color: #94a3b8; font-size: 14px; }
+        
+        @media (max-width: 768px) {
+            .project-title { font-size: 24px; }
+            .project-meta { flex-wrap: wrap; }
+            .tabs { flex-wrap: wrap; }
+        }
     </style>
 </head>
 <body>
-    <nav class="fixed top-0 left-0 right-0 z-50 glass">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <i class="fas fa-code text-2xl text-cyan-400"></i>
-                <span class="text-xl font-bold gradient-text">Python学习平台</span>
+    <header>
+        <div class="container">
+            <div class="logo">TT's Learning</div>
+            <a href="../../index.html">← 返回首页</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="project-header">
+            <h1 class="project-title">时间序列分析</h1>
+            <div class="project-meta">
+                <span class="badge badge-medium">进阶</span>
+                <span class="badge badge-time">45分钟</span>
+                <span>📁 time_series_sales.csv</span>
             </div>
-            <a href="../../index.html" class="text-gray-300 hover:text-cyan-400 transition">返回首页</a>
-        </div>
-    </nav>
-
-    <div class="max-w-7xl mx-auto px-4 py-20">
-        <div class="glass p-6 mb-6">
-            <h1 class="text-2xl font-bold mb-2">项目7：简单聊天机器人</h1>
-            <p class="text-gray-400">学习使用Python创建简单的聊天机器人，实现对话交互和自然语言处理。</p>
         </div>
 
-        <div class="flex gap-4 mb-6">
-            <button class="tab-btn tab-active px-6 py-2 rounded-lg" onclick="showTab('learn')"><i class="fas fa-book-open mr-2"></i>学习</button>
-            <button class="tab-btn px-6 py-2 rounded-lg" onclick="showTab('practice')"><i class="fas fa-code mr-2"></i>练习</button>
-            <button class="tab-btn px-6 py-2 rounded-lg" onclick="showTab('test')"><i class="fas fa-file-check mr-2"></i>测试</button>
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('learn')">📚 学习</button>
+            <button class="tab" onclick="showTab('practice')">✏️ 练习</button>
+            <button class="tab" onclick="showTab('test')">📝 测试</button>
         </div>
 
-        <div id="learn-tab" class="tab-content">
-            <div class="glass p-6 mb-6">
-                <h2 class="text-xl font-semibold mb-4">📚 项目概述</h2>
-                <p class="text-gray-300 mb-4">聊天机器人项目帮助你创建智能对话系统。通过这个项目，你将学习：</p>
-                <ul class="list-disc list-inside text-gray-400 mb-6">
-                    <li>正则表达式匹配</li>
-                    <li>关键词提取</li>
-                    <li>对话流程管理</li>
-                    <li>简单的自然语言理解</li>
+        <div id="learn-tab" class="tab-content active">
+            <div class="content-card">
+                <h3>📌 项目概述</h3>
+                <p>时间序列分析是数据分析中的重要领域，用于分析随时间变化的数据。本项目将带你掌握时间序列分析的基本方法。</p>
+                <ul>
+                    <li>时间序列数据预处理</li>
+                    <li>趋势和季节性分解</li>
+                    <li>移动平均和指数平滑</li>
+                    <li>时间序列可视化</li>
+                    <li>简单的预测方法</li>
                 </ul>
             </div>
 
-            <div class="glass p-6 mb-6">
-                <h2 class="text-xl font-semibold mb-4">💡 核心功能</h2>
-                <div class="grid md:grid-cols-2 gap-4">
-                    <div class="bg-white/5 p-4 rounded-lg"><h3 class="font-semibold mb-2">💬 文本交互</h3><p class="text-gray-400 text-sm">接收和响应文本消息</p></div>
-                    <div class="bg-white/5 p-4 rounded-lg"><h3 class="font-semibold mb-2">🔍 意图识别</h3><p class="text-gray-400 text-sm">识别用户意图</p></div>
-                    <div class="bg-white/5 p-4 rounded-lg"><h3 class="font-semibold mb-2">📋 命令处理</h3><p class="text-gray-400 text-sm">执行预设命令</p></div>
-                    <div class="bg-white/5 p-4 rounded-lg"><h3 class="font-semibold mb-2">🤔 问答系统</h3><p class="text-gray-400 text-sm">回答常见问题</p></div>
+            <div class="content-card">
+                <h3>🔧 核心代码</h3>
+                <p>以下是时间序列分析常用的操作：</p>
+                <div class="code-box">
+                    <pre>import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 读取数据
+df = pd.read_csv('time_series_sales.csv')
+
+# 将日期列转换为datetime类型
+df['date'] = pd.to_datetime(df['date'])
+df = df.set_index('date')
+
+# 1. 时间序列可视化
+plt.figure(figsize=(12, 6))
+plt.plot(df['sales'])
+plt.title('销售趋势图')
+plt.xlabel('日期')
+plt.ylabel('销售额')
+plt.show()
+
+# 2. 移动平均（Moving Average）
+df['MA7'] = df['sales'].rolling(window=7).mean()
+df['MA30'] = df['sales'].rolling(window=30).mean()
+
+# 3. 指数平滑（Exponential Smoothing）
+df['ES'] = df['sales'].ewm(alpha=0.3).mean()
+
+# 4. 计算增长率
+df['growth_rate'] = df['sales'].pct_change() * 100
+
+# 5. 按月份汇总
+df['month'] = df.index.month
+monthly_sales = df.groupby('month')['sales'].mean()
+
+# 6. 检测异常值
+Q1 = df['sales'].quantile(0.25)
+Q3 = df['sales'].quantile(0.75)
+IQR = Q3 - Q1
+df['outlier'] = (df['sales'] < Q1 - 1.5 * IQR) | (df['sales'] > Q3 + 1.5 * IQR)
+
+print('时间序列分析完成！')</pre>
                 </div>
             </div>
 
-            <div class="glass p-6">
-                <h2 class="text-xl font-semibold mb-4">🔧 代码示例</h2>
-                <div class="code-box text-green-400">
-                    <pre># 简单聊天机器人
-import re
-
-class ChatBot:
-    def __init__(self):
-        self.responses = {
-            'hello': ['你好！', '您好！', '嗨！'],
-            'bye': ['再见！', '下次见！', '拜拜！'],
-            'name': ['我是聊天机器人小助手。', '你可以叫我小助手。']
-        }
-    
-    def match_intent(self, message):
-        """匹配用户意图"""
-        message = message.lower()
-        if re.search(r'你好|hello|hi', message):
-            return 'hello'
-        elif re.search(r'再见|bye|goodbye', message):
-            return 'bye'
-        elif re.search(r'名字|叫什么', message):
-            return 'name'
-        return None
-    
-    def respond(self, message):
-        """生成响应"""
-        intent = self.match_intent(message)
-        if intent in self.responses:
-            return self.responses[intent][0]
-        return '我不太明白你的意思。'</pre>
-                </div>
+            <div class="content-card">
+                <h3>💡 学习要点</h3>
+                <ul>
+                    <li><strong>日期类型</strong>：必须将日期列转换为datetime类型，并设置为索引</li>
+                    <li><strong>移动平均</strong>：用于平滑数据，去除短期波动，显示长期趋势</li>
+                    <li><strong>指数平滑</strong>：对近期数据赋予更高权重，适合预测</li>
+                    <li><strong>季节性</strong>：按月份/季度分析数据，发现季节性模式</li>
+                    <li><strong>异常值检测</strong>：使用IQR方法识别和处理异常数据</li>
+                </ul>
             </div>
         </div>
 
-        <div id="practice-tab" class="tab-content hidden">
-            <div class="glass p-6">
-                <h2 class="text-xl font-semibold mb-4">✏️ 编程练习</h2>
-                <p class="text-gray-400 mb-6">请完成以下代码练习：</p>
+        <div id="practice-tab" class="tab-content">
+            <div class="content-card">
+                <h3>✏️ 编程练习</h3>
                 
-                <div class="question-box mb-6">
-                    <h3 class="font-semibold mb-3">练习1：添加天气查询功能</h3>
-                    <p class="text-gray-300 mb-4">请扩展聊天机器人，添加天气查询功能。</p>
-                    <div class="code-box text-gray-300 mb-4">
-                        <pre>def match_intent(self, message):
-    """扩展意图匹配"""
-    message = message.lower()
-    # 请在此处添加天气查询意图匹配
+                <div class="question-box">
+                    <h4>练习1：计算移动平均</h4>
+                    <p>请编写代码，计算7天和30天的移动平均：</p>
+                    <div class="code-box">
+                        <pre>import pandas as pd
+
+def calculate_moving_average(df, windows=[7, 30]):
+    """
+    计算移动平均
     
-    return None</pre>
+    Args:
+        df: 包含'sales'列的DataFrame
+        windows: 移动窗口大小列表
+    
+    Returns:
+        添加移动平均列的DataFrame
+    """
+    # 请在此处编写代码
+    
+    return df</pre>
                     </div>
-                    <button class="btn-gradient px-6 py-2 rounded-lg text-white" onclick="showPracticeAnswer(1)">查看答案</button>
+                    <button class="btn btn-primary" onclick="showAnswer(1)">查看答案</button>
+                </div>
+
+                <div class="question-box">
+                    <h4>练习2：按月份汇总</h4>
+                    <p>请编写代码，按月份计算平均销售额：</p>
+                    <div class="code-box">
+                        <pre>import pandas as pd
+
+def calculate_monthly_average(df):
+    """
+    按月份计算平均销售额
+    
+    Args:
+        df: 包含'date'和'sales'列的DataFrame
+    
+    Returns:
+        按月份汇总的平均销售额
+    """
+    # 请在此处编写代码
+    
+    return monthly_avg</pre>
+                    </div>
+                    <button class="btn btn-primary" onclick="showAnswer(2)">查看答案</button>
                 </div>
             </div>
         </div>
 
-        <div id="test-tab" class="tab-content hidden">
-            <div class="glass p-6">
-                <h2 class="text-xl font-semibold mb-4">📝 知识测试</h2>
-                <p class="text-gray-400 mb-6">完成以下选择题：</p>
-                <div id="test-container">
-                    <div class="question-box mb-6">
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-cyan-400 font-semibold">第1题</span>
-                            <span class="text-sm text-gray-500">单选题</span>
-                        </div>
-                        <p class="text-gray-300 mb-4">以下哪个库常用于自然语言处理？</p>
-                        <div>
-                            <button class="option-btn" onclick="selectAnswer(1, 'A')"><span class="font-semibold mr-2">A.</span> requests</button>
-                            <button class="option-btn" onclick="selectAnswer(1, 'B')"><span class="font-semibold mr-2">B.</span> nltk</button>
-                            <button class="option-btn" onclick="selectAnswer(1, 'C')"><span class="font-semibold mr-2">C.</span> matplotlib</button>
-                            <button class="option-btn" onclick="selectAnswer(1, 'D')"><span class="font-semibold mr-2">D.</span> pandas</button>
-                        </div>
-                        <div id="explanation-1" class="mt-4 p-3 bg-yellow-500/10 rounded-lg hidden">
-                            <p class="text-yellow-300"><strong>正确答案：B</strong></p>
-                            <p class="text-gray-400 text-sm">NLTK（Natural Language Toolkit）是Python中常用的自然语言处理库。</p>
-                        </div>
+        <div id="test-tab" class="tab-content">
+            <div class="content-card">
+                <h3>📝 知识测试</h3>
+                
+                <div class="question-box">
+                    <h4>问题1：时间序列数据中，日期列应该转换为哪种类型？</h4>
+                    <button class="option-btn" onclick="selectOption(1, 'A')">A. string</button>
+                    <button class="option-btn" onclick="selectOption(1, 'B')">B. datetime</button>
+                    <button class="option-btn" onclick="selectOption(1, 'C')">C. int</button>
+                    <button class="option-btn" onclick="selectOption(1, 'D')">D. float</button>
+                    <div class="explanation" id="exp1">
+                        <p><strong>正确答案：B</strong></p>
+                        <p>时间序列分析需要将日期列转换为datetime类型，这样才能方便地进行时间索引、重采样等操作。</p>
                     </div>
                 </div>
-                <div class="mt-6 flex justify-center">
-                    <button class="btn-gradient px-8 py-3 rounded-lg text-white font-semibold" onclick="checkTest()">提交答案</button>
+
+                <div class="question-box">
+                    <h4>问题2：以下哪个方法用于计算移动平均？</h4>
+                    <button class="option-btn" onclick="selectOption(2, 'A')">A. .expanding()</button>
+                    <button class="option-btn" onclick="selectOption(2, 'B')">B. .rolling()</button>
+                    <button class="option-btn" onclick="selectOption(2, 'C')">C. .ewm()</button>
+                    <button class="option-btn" onclick="selectOption(2, 'D')">D. .pct_change()</button>
+                    <div class="explanation" id="exp2">
+                        <p><strong>正确答案：B</strong></p>
+                        <p>.rolling() 方法用于计算滚动窗口统计量，包括移动平均。.ewm() 用于指数加权，.pct_change() 用于计算变化率。</p>
+                    </div>
                 </div>
-                <div id="test-result" class="mt-6 glass p-6 hidden">
-                    <h3 class="text-xl font-semibold mb-4 text-center" id="result-title"></h3>
-                    <p class="text-center text-3xl font-bold mb-4" id="score"></p>
-                    <button class="btn-gradient px-6 py-2 rounded-lg text-white mx-auto block" onclick="resetTest()">重新测试</button>
+
+                <div class="question-box">
+                    <h4>问题3：指数平滑中，alpha参数的作用是？</h4>
+                    <button class="option-btn" onclick="selectOption(3, 'A')">A. 平滑因子，控制近期数据的权重</button>
+                    <button class="option-btn" onclick="selectOption(3, 'B')">B. 窗口大小</button>
+                    <button class="option-btn" onclick="selectOption(3, 'C')">C. 预测步数</button>
+                    <button class="option-btn" onclick="selectOption(3, 'D')">D. 季节周期</button>
+                    <div class="explanation" id="exp3">
+                        <p><strong>正确答案：A</strong></p>
+                        <p>alpha是平滑因子，取值范围0-1。alpha越大，近期数据的权重越高，对新数据的响应越快；alpha越小，平滑效果越强。</p>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 24px;">
+                    <button class="btn btn-primary" onclick="checkAnswers()">提交答案</button>
+                </div>
+
+                <div class="test-result" id="result">
+                    <h3 id="result-title"></h3>
+                    <div class="score" id="score"></div>
+                    <button class="btn btn-outline" onclick="resetTest()">重新测试</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <footer>
+        <p>© 2024 TT's Learning Space · Pandas 数据分析实战训练营</p>
+    </footer>
+
     <script>
-        const tabs = ['learn', 'practice', 'test'];
-        const correctAnswers = {1: 'B'};
+        const correctAnswers = {1: 'B', 2: 'B', 3: 'A'};
         const userAnswers = {};
 
         function showTab(tabName) {
-            tabs.forEach(tab => {
-                document.getElementById(`${tab}-tab`).classList.add('hidden');
-                document.querySelector(`button[onclick="showTab('${tab}')"]`).classList.remove('tab-active');
-            });
-            document.getElementById(`${tabName}-tab`).classList.remove('hidden');
-            document.querySelector(`button[onclick="showTab('${tabName}')"]`).classList.add('tab-active');
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelector(`button[onclick="showTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(`${tabName}-tab`).classList.add('active');
         }
 
-        function showPracticeAnswer(num) {
+        function showAnswer(num) {
             const answers = {
-                1: `def match_intent(self, message):
-    message = message.lower()
-    if re.search(r'天气|temperature', message):
-        return 'weather'
-    # 其他意图匹配...
-    return None`
+                1: `def calculate_moving_average(df, windows=[7, 30]):
+    for w in windows:
+        df[f'MA{w}'] = df['sales'].rolling(window=w).mean()
+    return df`,
+                2: `def calculate_monthly_average(df):
+    df['month'] = df.index.month
+    monthly_avg = df.groupby('month')['sales'].mean()
+    return monthly_avg`
             };
-            alert(`练习${num}答案：\n\n${answers[num]}`);
+            alert(`练习${num}答案：\\n\\n${answers[num]}`);
         }
 
-        function selectAnswer(questionNum, answer) {
-            const options = document.querySelectorAll(`#test-container .question-box:nth-child(${questionNum}) .option-btn`);
-            options.forEach(opt => opt.classList.remove('selected'));
+        function selectOption(qNum, answer) {
+            const options = document.querySelectorAll(`#test-tab .question-box:nth-child(${qNum+1}) .option-btn`);
+            options.forEach(o => o.classList.remove('selected'));
             event.target.classList.add('selected');
-            userAnswers[questionNum] = answer;
+            userAnswers[qNum] = answer;
         }
 
-        function checkTest() {
+        function checkAnswers() {
             let correct = 0;
             Object.keys(correctAnswers).forEach(q => {
-                if (userAnswers[q] === correctAnswers[q]) correct++;
-                const options = document.querySelectorAll(`#test-container .question-box:nth-child(${q}) .option-btn`);
+                const options = document.querySelectorAll(`#test-tab .question-box:nth-child(${parseInt(q)+1}) .option-btn`);
                 options.forEach(opt => {
                     const optAnswer = opt.textContent.trim()[0];
-                    if (optAnswer === correctAnswers[q]) opt.classList.add('correct');
-                    else if (opt.classList.contains('selected') && optAnswer !== correctAnswers[q]) opt.classList.add('wrong');
+                    if (optAnswer === correctAnswers[q]) {
+                        opt.classList.add('correct');
+                    } else if (opt.classList.contains('selected') && optAnswer !== correctAnswers[q]) {
+                        opt.classList.add('wrong');
+                    }
                 });
-                document.getElementById(`explanation-${q}`).classList.remove('hidden');
+                document.getElementById(`exp${q}`).style.display = 'block';
+                if (userAnswers[q] === correctAnswers[q]) correct++;
             });
-            document.getElementById('test-result').classList.remove('hidden');
+            
             const score = Math.round((correct / Object.keys(correctAnswers).length) * 100);
             document.getElementById('score').textContent = `${score}分`;
             document.getElementById('result-title').textContent = score >= 60 ? '🎉 测试通过！' : '💪 继续加油！';
+            document.getElementById('result').style.display = 'block';
         }
 
         function resetTest() {
-            document.querySelectorAll('.option-btn').forEach(opt => opt.classList.remove('selected', 'correct', 'wrong'));
-            document.querySelectorAll('[id^="explanation-"]').forEach(exp => exp.classList.add('hidden'));
-            document.getElementById('test-result').classList.add('hidden');
+            document.querySelectorAll('.option-btn').forEach(o => o.classList.remove('selected', 'correct', 'wrong'));
+            document.querySelectorAll('.explanation').forEach(e => e.style.display = 'none');
+            document.getElementById('result').style.display = 'none';
             Object.keys(userAnswers).forEach(k => delete userAnswers[k]);
         }
     </script>
