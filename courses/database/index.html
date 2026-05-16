@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据库原理与应用 - TT's Learning</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        
+        header { background: white; border-bottom: 1px solid #e2e8f0; padding: 16px 0; }
+        header .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: 700; color: #3b82f6; font-size: 20px; text-decoration: none; }
+        nav { display: flex; gap: 24px; }
+        nav a { color: #64748b; text-decoration: none; font-size: 14px; font-weight: 500; }
+        nav a:hover { color: #3b82f6; }
+        
+        .course-header { padding: 60px 0; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; }
+        .course-badge { display: inline-block; background: rgba(255,255,255,0.2); padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-bottom: 16px; }
+        .course-title { font-size: 42px; font-weight: 700; margin-bottom: 16px; }
+        .course-description { font-size: 18px; opacity: 0.95; max-width: 700px; margin-bottom: 24px; line-height: 1.7; }
+        .course-meta { display: flex; gap: 16px; flex-wrap: wrap; }
+        .meta-item { background: rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 10px; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+        
+        .content { padding: 60px 0; }
+        .section-title { font-size: 28px; font-weight: 700; color: #0f172a; margin-bottom: 24px; }
+        .content-card { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 32px; margin-bottom: 24px; }
+        .content-card h3 { font-size: 20px; font-weight: 600; color: #0f172a; margin-bottom: 16px; }
+        .content-card p { color: #64748b; line-height: 1.7; margin-bottom: 12px; }
+        
+        .outline { list-style: none; }
+        .outline li { padding: 16px 0; border-bottom: 1px solid #e2e8f0; display: flex; align-items: flex-start; gap: 16px; }
+        .outline li:last-child { border-bottom: none; }
+        .chapter-num { width: 40px; height: 40px; background: #4facfe; color: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 600; flex-shrink: 0; }
+        .chapter-info h4 { font-size: 16px; font-weight: 600; color: #0f172a; margin-bottom: 6px; }
+        .chapter-info p { font-size: 14px; color: #64748b; }
+        
+        .placeholder { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 20px; border-radius: 0 12px 12px 0; margin-top: 20px; }
+        .placeholder h4 { color: #92400e; font-weight: 600; margin-bottom: 8px; }
+        .placeholder p { color: #a16207; font-size: 14px; }
+        
+        footer { text-align: center; padding: 48px 0; border-top: 1px solid #e2e8f0; color: #94a3b8; font-size: 14px; }
+        
+        @media (max-width: 768px) {
+            .course-title { font-size: 28px; }
+            .course-meta { flex-direction: column; }
+            .content-card { padding: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="../../index.html" class="logo">TT's Learning</a>
+            <nav>
+                <a href="../../index.html">首页</a>
+                <a href="#outline">课程大纲</a>
+                <a href="#resources">学习资源</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="course-header">
+        <div class="container">
+            <div class="course-badge">💾 数据库课程</div>
+            <h1 class="course-title">数据库原理与应用</h1>
+            <p class="course-description">
+                数据库是数据管理的核心技术。本课程从数据库基础理论出发，学习关系型数据库的原理、
+                SQL查询语言、数据库设计与规范化，以及MySQL等主流数据库的实践应用。
+                学完本课程后，你将能够独立设计和实现中小型数据库系统。
+            </p>
+            <div class="course-meta">
+                <div class="meta-item"><span>📚</span> 44课时</div>
+                <div class="meta-item"><span>⏱️</span> 约55小时</div>
+                <div class="meta-item"><span>📖</span> 中级难度</div>
+                <div class="meta-item"><span>🔄</span> 持续更新中</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content">
+        <div class="container">
+            <h2 class="section-title" id="outline">📚 课程大纲</h2>
+            
+            <div class="content-card">
+                <h3>第一章：数据库基础</h3>
+                <ul class="outline">
+                    <li>
+                        <div class="chapter-num">1.1</div>
+                        <div class="chapter-info">
+                            <h4>数据库概述</h4>
+                            <p>数据库的概念、发展历史和应用场景</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">1.2</div>
+                        <div class="chapter-info">
+                            <h4>数据模型</h4>
+                            <p>层次模型、网状模型、关系模型、面向对象模型</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">1.3</div>
+                        <div class="chapter-info">
+                            <h4>关系数据库基础</h4>
+                            <p>关系、属性、元组、键的概念</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="placeholder">
+                    <h4>📝 内容待补充</h4>
+                    <p>详细的章节内容正在整理中。</p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>第二章：SQL基础</h3>
+                <ul class="outline">
+                    <li>
+                        <div class="chapter-num">2.1</div>
+                        <div class="chapter-info">
+                            <h4>SQL概述</h4>
+                            <p>SQL的发展历史和分类（DDL、DML、DCL、TCL）</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">2.2</div>
+                        <div class="chapter-info">
+                            <h4>数据定义语言（DDL）</h4>
+                            <p>CREATE、ALTER、DROP语句的使用</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">2.3</div>
+                        <div class="chapter-info">
+                            <h4>数据查询语言（DQL）</h4>
+                            <p>SELECT语句、条件查询、排序、分页</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="placeholder">
+                    <h4>📝 内容待补充</h4>
+                    <p>详细的SQL语法和示例正在整理中。</p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>第三章：SQL高级查询</h3>
+                <ul class="outline">
+                    <li>
+                        <div class="chapter-num">3.1</div>
+                        <div class="chapter-info">
+                            <h4>多表查询</h4>
+                            <p>内连接、外连接、交叉连接、自连接</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">3.2</div>
+                        <div class="chapter-info">
+                            <h4>子查询</h4>
+                            <p>标量子查询、表子查询、相关子查询</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">3.3</div>
+                        <div class="chapter-info">
+                            <h4>聚合函数与分组</h4>
+                            <p>COUNT、SUM、AVG、MAX、MIN，GROUP BY、HAVING</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="placeholder">
+                    <h4>📝 内容待补充</h4>
+                    <p>详细的SQL语法和示例正在整理中。</p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>第四章：数据库设计</h3>
+                <ul class="outline">
+                    <li>
+                        <div class="chapter-num">4.1</div>
+                        <div class="chapter-info">
+                            <h4>需求分析</h4>
+                            <p>理解业务需求，确定实体和关系</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">4.2</div>
+                        <div class="chapter-info">
+                            <h4>概念设计</h4>
+                            <p>E-R图绘制，实体、属性、联系的确定</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">4.3</div>
+                        <div class="chapter-info">
+                            <h4>逻辑设计</h4>
+                            <p>E-R图转换为关系模型</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">4.4</div>
+                        <div class="chapter-info">
+                            <h4>规范化理论</h4>
+                            <p>第一范式、第二范式、第三范式、BC范式</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="placeholder">
+                    <h4>📝 内容待补充</h4>
+                    <p>详细的数据库设计方法和案例正在整理中。</p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>第五章：数据库高级特性</h3>
+                <ul class="outline">
+                    <li>
+                        <div class="chapter-num">5.1</div>
+                        <div class="chapter-info">
+                            <h4>索引</h4>
+                            <p>索引的类型、创建索引的原则、B+树索引</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">5.2</div>
+                        <div class="chapter-info">
+                            <h4>视图</h4>
+                            <p>视图的创建、使用场景、优缺点</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">5.3</div>
+                        <div class="chapter-info">
+                            <h4>存储过程与触发器</h4>
+                            <p>自动化业务逻辑的实现</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">5.4</div>
+                        <div class="chapter-info">
+                            <h4>事务与并发控制</h4>
+                            <p>ACID特性、隔离级别、锁机制</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="placeholder">
+                    <h4>📝 内容待补充</h4>
+                    <p>详细的高级特性内容正在整理中。</p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>第六章：MySQL实践</h3>
+                <ul class="outline">
+                    <li>
+                        <div class="chapter-num">6.1</div>
+                        <div class="chapter-info">
+                            <h4>MySQL安装与配置</h4>
+                            <p>Windows和Linux下的安装配置</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">6.2</div>
+                        <div class="chapter-info">
+                            <h4>MySQL Workbench使用</h4>
+                            <p>可视化工具进行数据库管理</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">6.3</div>
+                        <div class="chapter-info">
+                            <h4>性能优化</h4>
+                            <p>查询优化、索引优化、配置优化</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="placeholder">
+                    <h4>📝 内容待补充</h4>
+                    <p>详细的MySQL实践内容正在整理中。</p>
+                </div>
+            </div>
+
+            <h2 class="section-title" id="resources" style="margin-top: 48px;">📖 学习资源</h2>
+            
+            <div class="content-card">
+                <h3>推荐学习资料</h3>
+                <ul style="list-style: disc; padding-left: 20px; color: #64748b; line-height: 2;">
+                    <li>《数据库系统概论》- 王珊、萨师煊</li>
+                    <li>《SQL必知必会》- Ben Forta</li>
+                    <li>《高性能MySQL》- Baron Schwartz</li>
+                    <li>MySQL官方文档：https://dev.mysql.com/doc/</li>
+                </ul>
+                <div class="placeholder">
+                    <h4>🔧 实践项目</h4>
+                    <p>数据库设计实践项目正在准备中。</p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>我的学习笔记</h3>
+                <div class="placeholder">
+                    <h4>📓 笔记区域</h4>
+                    <p>在这里记录学习过程中的心得、SQL代码和项目经验。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© 2024 TT's Learning Space · 广东科学技术职业学院</p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>供应链数据分析 - TT's Learning</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        
+        header { background: white; border-bottom: 1px solid #e2e8f0; padding: 16px 0; }
+        header .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: 700; color: #3b82f6; font-size: 20px; text-decoration: none; }
+        nav { display: flex; gap: 24px; }
+        nav a { color: #64748b; text-decoration: none; font-size: 14px; font-weight: 500; }
+        nav a:hover { color: #3b82f6; }
+        
+        .course-header { padding: 60px 0; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white; }
+        .course-badge { display: inline-block; background: rgba(255,255,255,0.2); padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-bottom: 16px; }
+        .course-title { font-size: 42px; font-weight: 700; margin-bottom: 16px; }
+        .course-description { font-size: 18px; opacity: 0.95; max-width: 700px; margin-bottom: 24px; line-height: 1.7; }
+        .course-meta { display: flex; gap: 16px; flex-wrap: wrap; }
+        .meta-item { background: rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 10px; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+        
+        .content { padding: 60px 0; }
+        .section-title { font-size: 28px; font-weight: 700; color: #0f172a; margin-bottom: 24px; }
+        .content-card { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 32px; margin-bottom: 24px; }
+        .content-card h3 { font-size: 20px; font-weight: 600; color: #0f172a; margin-bottom: 16px; }
+        .content-card p { color: #64748b; line-height: 1.7; margin-bottom: 12px; }
+        
+        .outline { list-style: none; }
+        .outline li { padding: 16px 0; border-bottom: 1px solid #e2e8f0; display: flex; align-items: flex-start; gap: 16px; }
+        .outline li:last-child { border-bottom: none; }
+        .chapter-num { width: 40px; height: 40px; background: #fa709a; color: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 600; flex-shrink: 0; }
+        .chapter-info h4 { font-size: 16px; font-weight: 600; color: #0f172a; margin-bottom: 6px; }
+        .chapter-info p { font-size: 14px; color: #64748b; }
+        
+        .placeholder { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 20px; border-radius: 0 12px 12px 0; margin-top: 20px; }
+        .placeholder h4 { color: #92400e; font-weight: 600; margin-bottom: 8px; }
+        .placeholder p { color: #a16207; font-size: 14px; }
+        
+        footer { text-align: center; padding: 48px 0; border-top: 1px solid #e2e8f0; color: #94a3b8; font-size: 14px; }
+        
+        @media (max-width: 768px) {
+            .course-title { font-size: 28px; }
+            .course-meta { flex-direction: column; }
+            .content-card { padding: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="../../index.html" class="logo">TT's Learning</a>
+            <nav>
+                <a href="../../index.html">首页</a>
+                <a href="#outline">课程大纲</a>
+                <a href="#resources">学习资源</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="course-header">
+        <div class="container">
+            <div class="course-badge">🚚 行业应用课程</div>
+            <h1 class="course-title">供应链数据分析</h1>
+            <p class="course-description">
+                供应链数据分析是将数据分析技术应用于供应链管理的实践课程。学习本课程后，
+                你将能够使用数据分析方法解决库存管理、需求预测、物流优化等实际问题，
+                为企业降本增效提供数据支持。
+            </p>
+            <div class="course-meta">
+                <div class="meta-item"><span>📚</span> 40课时</div>
+                <div class="meta-item"><span>⏱️</span> 约50小时</div>
+                <div class="meta-item"><span>📖</span> 中高级难度</div>
+                <div class="meta-item"><span>🔄</span> 持续更新中</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content">
+        <div class="container">
+            <h2 class="section-title" id="outline">📚 课程大纲</h2>
+            
+            <div class="content-card">
+                <h3>第一章：供应链管理基础</h3>
+                <ul class="outline">
+                    <li>
+                        <div class="chapter-num">1.1</div>
+                        <div class="chapter-info">
+                            <h4>供应链概述</h4>
+                            <p>理解供应链的概念、组成要素和核心流程</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">1.2</div>
+                        <div class="chapter-info">
+                            <h4>供应链数据分析的价值</h4>
+                            <p>数据分析在供应链管理中的应用场景</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">1.3</div>
+                        <div class="chapter-info">
+                            <h4>供应链数据来源</h4>
+                            <p>ERP系统、WMS系统、POS系统的数据</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="placeholder">
+                    <h4>📝 内容待补充</h4>
+                    <p>详细的章节内容、案例分析正在整理中。</p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>第二章：库存数据分析</h3>
+                <ul class="outline">
+                    <li>
+                        <div class="chapter-num">2.1</div>
+                        <div class="chapter-info">
+                            <h4>库存指标体系</h4>
+                            <p>库存周转率、呆滞库存、库存覆盖率等指标</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">2.2</div>
+                        <div class="chapter-info">
+                            <h4>ABC分类法</h4>
+                            <p>基于帕累托原理的库存分类方法</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">2.3</div>
+                        <div class="chapter-info">
+                            <h4>安全库存计算</h4>
+                            <p>使用统计方法计算最优安全库存</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="placeholder">
+                    <h4>📝 内容待补充</h4>
+                    <p>详细的章节内容、代码示例正在整理中。</p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>第三章：需求预测</h3>
+                <ul class="outline">
+                    <li>
+                        <div class="chapter-num">3.1</div>
+                        <div class="chapter-info">
+                            <h4>需求预测基础</h4>
+                            <p>定性预测与定量预测的区别</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">3.2</div>
+                        <div class="chapter-info">
+                            <h4>时间序列预测</h4>
+                            <p>移动平均、指数平滑、ARIMA模型</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">3.3</div>
+                        <div class="chapter-info">
+                            <h4>机器学习预测</h4>
+                            <p>使用回归模型进行需求预测</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="placeholder">
+                    <h4>📝 内容待补充</h4>
+                    <p>详细的章节内容、代码示例正在整理中。</p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>第四章：物流数据分析</h3>
+                <ul class="outline">
+                    <li>
+                        <div class="chapter-num">4.1</div>
+                        <div class="chapter-info">
+                            <h4>物流KPI分析</h4>
+                            <p>配送时效、车辆利用率、配送成本</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">4.2</div>
+                        <div class="chapter-info">
+                            <h4>路径优化</h4>
+                            <p>车辆路径问题的基本概念和优化方法</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">4.3</div>
+                        <div class="chapter-info">
+                            <h4>仓储效率分析</h4>
+                            <p>仓库吞吐量、人效、空间利用率</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="placeholder">
+                    <h4>📝 内容待补充</h4>
+                    <p>详细的章节内容、代码示例正在整理中。</p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>第五章：供应商分析</h3>
+                <ul class="outline">
+                    <li>
+                        <div class="chapter-num">5.1</div>
+                        <div class="chapter-info">
+                            <h4>供应商绩效评估</h4>
+                            <p>质量、交期、成本、服务维度</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">5.2</div>
+                        <div class="chapter-info">
+                            <h4>采购数据分析</h4>
+                            <p>采购价格趋势、采购占比分析</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">5.3</div>
+                        <div class="chapter-info">
+                            <h4>供应商关系管理</h4>
+                            <p>数据驱动的供应商管理策略</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="placeholder">
+                    <h4>📝 内容待补充</h4>
+                    <p>详细的章节内容、案例分析正在整理中。</p>
+                </div>
+            </div>
+
+            <h2 class="section-title" id="resources" style="margin-top: 48px;">📖 学习资源</h2>
+            
+            <div class="content-card">
+                <h3>推荐学习资料</h3>
+                <ul style="list-style: disc; padding-left: 20px; color: #64748b; line-height: 2;">
+                    <li>《供应链管理：战略、规划与运作》- Sunil Chopra</li>
+                    <li>《数据化决策》- Douglas W. Hubbard</li>
+                    <li>SAP供应链管理文档</li>
+                    <li>Oracle供应链分析解决方案</li>
+                </ul>
+                <div class="placeholder">
+                    <h4>🔧 实践项目</h4>
+                    <p>供应链分析实战项目正在准备中。</p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>我的学习笔记</h3>
+                <div class="placeholder">
+                    <h4>📓 笔记区域</h4>
+                    <p>在这里记录学习过程中的心得、案例分析、代码实现等。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© 2024 TT's Learning Space · 广东科学技术职业学院</p>
+        </div>
+    </footer>
+</body>
+</html>

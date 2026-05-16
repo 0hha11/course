@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pandas 数据分析实战训练营 - TT's Learning</title>
+    <title>TT's Learning - 广东科学技术职业学院</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -26,16 +26,59 @@
             padding: 0 24px;
         }
 
+        /* Header */
+        header {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 16px 0;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 700;
+            color: #3b82f6;
+            font-size: 20px;
+            text-decoration: none;
+        }
+
+        nav {
+            display: flex;
+            gap: 24px;
+        }
+
+        nav a {
+            color: #64748b;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: #3b82f6;
+        }
+
         /* Hero Section */
         .hero {
-            padding: 60px 0;
+            padding: 80px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
             text-align: center;
         }
 
         .hero-badge {
             display: inline-block;
-            background: rgba(59, 130, 246, 0.1);
-            color: #3b82f6;
+            background: rgba(255, 255, 255, 0.2);
             padding: 8px 20px;
             border-radius: 24px;
             font-size: 14px;
@@ -46,209 +89,203 @@
         .hero h1 {
             font-size: 48px;
             font-weight: 700;
-            color: #0f172a;
             margin-bottom: 20px;
         }
 
         .hero-description {
             font-size: 18px;
-            color: #64748b;
+            opacity: 0.95;
             max-width: 700px;
             margin: 0 auto 32px;
+            line-height: 1.7;
         }
 
-        .hero-features {
-            display: flex;
-            gap: 32px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .feature {
-            display: flex;
+        .school-info {
+            display: inline-flex;
             align-items: center;
             gap: 8px;
-            color: #64748b;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 12px 24px;
+            border-radius: 12px;
             font-size: 14px;
         }
 
-        .feature-icon {
-            font-size: 20px;
+        .school-info span {
+            opacity: 0.9;
         }
 
-        /* Projects Section */
-        .projects-section {
-            padding: 60px 0 80px;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 48px;
+        /* About Section */
+        .about {
+            padding: 80px 0;
+            background: white;
         }
 
         .section-title {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 700;
             color: #0f172a;
-            margin-bottom: 12px;
+            text-align: center;
+            margin-bottom: 16px;
         }
 
         .section-subtitle {
             color: #64748b;
             font-size: 16px;
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 48px;
         }
 
-        .projects-grid {
+        .about-content {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-            gap: 24px;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            max-width: 1000px;
+            margin: 0 auto;
         }
 
-        .project-card {
-            background: #ffffff;
+        .about-card {
+            background: #f8fafc;
             border: 1px solid #e2e8f0;
             border-radius: 16px;
-            padding: 24px;
+            padding: 32px;
+        }
+
+        .about-card h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .about-card p {
+            color: #64748b;
+            line-height: 1.7;
+        }
+
+        .skills-list {
+            list-style: none;
+            margin-top: 16px;
+        }
+
+        .skills-list li {
+            padding: 8px 0;
+            color: #475569;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .skills-list li::before {
+            content: "✓";
+            color: #3b82f6;
+            font-weight: bold;
+        }
+
+        /* Courses Section */
+        .courses {
+            padding: 80px 0;
+            background: #f8fafc;
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 24px;
+            margin-top: 48px;
+        }
+
+        .course-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 28px;
             transition: all 0.3s ease;
             cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
         }
 
-        .project-card:hover {
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-            border-color: #cbd5e1;
+        .course-card:hover {
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+            border-color: #3b82f6;
+            transform: translateY(-4px);
         }
 
-        .project-header {
-            display: flex;
-            align-items: flex-start;
-            gap: 16px;
-            margin-bottom: 12px;
-        }
-
-        .project-icon {
-            width: 48px;
-            height: 48px;
-            background: #e0e7ff;
-            border-radius: 12px;
+        .course-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            flex-shrink: 0;
+            font-size: 28px;
+            margin-bottom: 20px;
         }
 
-        .project-info {
-            flex: 1;
-        }
-
-        .project-badges {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 6px;
-        }
-
-        .badge {
-            padding: 3px 10px;
-            border-radius: 10px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .badge-easy {
-            background: #dcfce7;
-            color: #16a34a;
-        }
-
-        .badge-medium {
-            background: #dbeafe;
-            color: #2563eb;
-        }
-
-        .badge-hard {
-            background: #fce7f3;
-            color: #db2777;
-        }
-
-        .badge-time {
-            background: #f1f5f9;
-            color: #64748b;
-            font-weight: 500;
-        }
-
-        .project-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #0f172a;
-            margin-bottom: 6px;
-        }
-
-        .project-description {
-            color: #64748b;
-            font-size: 14px;
-            line-height: 1.5;
-            margin-bottom: 16px;
-        }
-
-        .project-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 12px;
-            border-top: 1px solid #f1f5f9;
-        }
-
-        .dataset {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            color: #94a3b8;
-            font-size: 13px;
-            font-family: 'Monaco', 'Consolas', monospace;
-        }
-
-        .start-btn {
-            color: #3b82f6;
-            font-size: 14px;
-            font-weight: 600;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            transition: color 0.2s;
-        }
-
-        .start-btn:hover {
-            color: #2563eb;
-        }
-
-        /* CTA Section */
-        .cta-section {
-            text-align: center;
-            padding: 60px 0 80px;
-        }
-
-        .cta-title {
-            font-size: 22px;
+        .course-card h3 {
+            font-size: 20px;
             font-weight: 600;
             color: #0f172a;
             margin-bottom: 12px;
         }
 
-        .cta-description {
+        .course-card p {
             color: #64748b;
-            font-size: 16px;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .course-meta {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .course-tag {
+            background: #f1f5f9;
+            color: #64748b;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .course-status {
+            background: #fef3c7;
+            color: #d97706;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
         }
 
         /* Footer */
         footer {
-            text-align: center;
-            padding: 32px 0;
+            background: white;
             border-top: 1px solid #e2e8f0;
+            padding: 48px 0;
+            text-align: center;
         }
 
         footer p {
             color: #94a3b8;
             font-size: 14px;
+        }
+
+        footer a {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
         }
 
         /* Responsive */
@@ -261,249 +298,185 @@
                 font-size: 16px;
             }
 
-            .projects-grid {
+            .about-content {
                 grid-template-columns: 1fr;
             }
 
-            .hero-features {
-                flex-direction: column;
-                gap: 12px;
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+
+            nav {
+                gap: 16px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="hero">
+    <header>
         <div class="container">
-            <div class="hero-badge">实战课程 · 无需安装</div>
-            <h1>Pandas 数据分析实战训练营</h1>
-            <p class="hero-description">
-                10个精选实战项目，从入门到进阶，完全在浏览器中运行代码<br>
-                让你从零开始掌握数据分析核心技能
-            </p>
-            <div class="hero-features">
-                <div class="feature">
-                    <span class="feature-icon">📊</span>
-                    <span>真实数据集</span>
-                </div>
-                <div class="feature">
-                    <span class="feature-icon">⚡</span>
-                    <span>实时运行代码</span>
-                </div>
-                <div class="feature">
-                    <span class="feature-icon">📈</span>
-                    <span>循序渐进</span>
-                </div>
-                <div class="feature">
-                    <span class="feature-icon">🏆</span>
-                    <span>徽章认证</span>
-                </div>
-            </div>
+            <a href="index.html" class="logo">TT's Learning</a>
+            <nav>
+                <a href="#about">关于我</a>
+                <a href="#courses">课程列表</a>
+                <a href="https://github.com/0hha11" target="_blank">GitHub</a>
+            </nav>
         </div>
-    </div>
+    </header>
 
-    <section class="projects-section">
+    <section class="hero">
         <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">精选项目</h2>
-                <p class="section-subtitle">选择一个项目开始你的学习之旅 · 共 10 个项目</p>
-            </div>
-
-            <div class="projects-grid">
-                <div class="project-card" onclick="location.href='projects/project1/index.html'">
-                    <div class="project-header">
-                        <div class="project-icon">🧹</div>
-                        <div class="project-info">
-                            <div class="project-badges">
-                                <span class="badge badge-easy">入门</span>
-                                <span class="badge badge-time">30分钟</span>
-                            </div>
-                            <h3 class="project-title">数据清洗实战</h3>
-                        </div>
-                    </div>
-                    <p class="project-description">掌握Pandas数据清洗的核心技能，包括处理缺失值、重复值、异常值等关键步骤。</p>
-                    <div class="project-footer">
-                        <div class="dataset">📁 retail_orders.csv</div>
-                        <a href="projects/project1/index.html" class="start-btn">开始学习 →</a>
-                    </div>
-                </div>
-
-                <div class="project-card" onclick="location.href='projects/project2/index.html'">
-                    <div class="project-header">
-                        <div class="project-icon">📊</div>
-                        <div class="project-info">
-                            <div class="project-badges">
-                                <span class="badge badge-easy">入门</span>
-                                <span class="badge badge-time">30分钟</span>
-                            </div>
-                            <h3 class="project-title">分组聚合分析</h3>
-                        </div>
-                    </div>
-                    <p class="project-description">学习使用Pandas进行数据分组和聚合操作，从多个维度分析数据。</p>
-                    <div class="project-footer">
-                        <div class="dataset">📁 retail_orders.csv</div>
-                        <a href="projects/project2/index.html" class="start-btn">开始学习 →</a>
-                    </div>
-                </div>
-
-                <div class="project-card" onclick="location.href='projects/project3/index.html'">
-                    <div class="project-header">
-                        <div class="project-icon">🛒</div>
-                        <div class="project-info">
-                            <div class="project-badges">
-                                <span class="badge badge-medium">进阶</span>
-                                <span class="badge badge-time">45分钟</span>
-                            </div>
-                            <h3 class="project-title">购物篮分析</h3>
-                        </div>
-                    </div>
-                    <p class="project-description">通过分析顾客的购买行为，发现商品之间的关联关系。</p>
-                    <div class="project-footer">
-                        <div class="dataset">📁 market_basket.csv</div>
-                        <a href="projects/project3/index.html" class="start-btn">开始学习 →</a>
-                    </div>
-                </div>
-
-                <div class="project-card" onclick="location.href='projects/project4/index.html'">
-                    <div class="project-header">
-                        <div class="project-icon">👥</div>
-                        <div class="project-info">
-                            <div class="project-badges">
-                                <span class="badge badge-medium">进阶</span>
-                                <span class="badge badge-time">45分钟</span>
-                            </div>
-                            <h3 class="project-title">客户聚类分析</h3>
-                        </div>
-                    </div>
-                    <p class="project-description">使用聚类分析将客户分成不同的群体，制定差异化营销策略。</p>
-                    <div class="project-footer">
-                        <div class="dataset">📁 customer_features.csv</div>
-                        <a href="projects/project4/index.html" class="start-btn">开始学习 →</a>
-                    </div>
-                </div>
-
-                <div class="project-card" onclick="location.href='projects/project5/index.html'">
-                    <div class="project-header">
-                        <div class="project-icon">📈</div>
-                        <div class="project-info">
-                            <div class="project-badges">
-                                <span class="badge badge-medium">进阶</span>
-                                <span class="badge badge-time">45分钟</span>
-                            </div>
-                            <h3 class="project-title">数据可视化</h3>
-                        </div>
-                    </div>
-                    <p class="project-description">学习使用Matplotlib进行数据可视化。</p>
-                    <div class="project-footer">
-                        <div class="dataset">📁 retail_orders.csv</div>
-                        <a href="projects/project5/index.html" class="start-btn">开始学习 →</a>
-                    </div>
-                </div>
-
-                <div class="project-card" onclick="location.href='projects/project6/index.html'">
-                    <div class="project-header">
-                        <div class="project-icon">🔬</div>
-                        <div class="project-info">
-                            <div class="project-badges">
-                                <span class="badge badge-medium">进阶</span>
-                                <span class="badge badge-time">45分钟</span>
-                            </div>
-                            <h3 class="project-title">A/B测试分析</h3>
-                        </div>
-                    </div>
-                    <p class="project-description">学习如何进行A/B测试分析，评估不同方案的效果差异。</p>
-                    <div class="project-footer">
-                        <div class="dataset">📁 ab_test.csv</div>
-                        <a href="projects/project6/index.html" class="start-btn">开始学习 →</a>
-                    </div>
-                </div>
-
-                <div class="project-card" onclick="location.href='projects/project7/index.html'">
-                    <div class="project-header">
-                        <div class="project-icon">⏰</div>
-                        <div class="project-info">
-                            <div class="project-badges">
-                                <span class="badge badge-medium">进阶</span>
-                                <span class="badge badge-time">45分钟</span>
-                            </div>
-                            <h3 class="project-title">时间序列分析</h3>
-                        </div>
-                    </div>
-                    <p class="project-description">学习时间序列分析的基本方法，发现数据的趋势和季节性模式。</p>
-                    <div class="project-footer">
-                        <div class="dataset">📁 time_series_sales.csv</div>
-                        <a href="projects/project7/index.html" class="start-btn">开始学习 →</a>
-                    </div>
-                </div>
-
-                <div class="project-card" onclick="location.href='projects/project8/index.html'">
-                    <div class="project-header">
-                        <div class="project-icon">🔧</div>
-                        <div class="project-info">
-                            <div class="project-badges">
-                                <span class="badge badge-hard">高级</span>
-                                <span class="badge badge-time">60分钟</span>
-                            </div>
-                            <h3 class="project-title">特征工程</h3>
-                        </div>
-                    </div>
-                    <p class="project-description">学习特征工程的核心技术，提高机器学习模型的性能。</p>
-                    <div class="project-footer">
-                        <div class="dataset">📁 customer_features.csv</div>
-                        <a href="projects/project8/index.html" class="start-btn">开始学习 →</a>
-                    </div>
-                </div>
-
-                <div class="project-card" onclick="location.href='projects/project9/index.html'">
-                    <div class="project-header">
-                        <div class="project-icon">🎯</div>
-                        <div class="project-info">
-                            <div class="project-badges">
-                                <span class="badge badge-hard">高级</span>
-                                <span class="badge badge-time">45分钟</span>
-                            </div>
-                            <h3 class="project-title">异常值检测</h3>
-                        </div>
-                    </div>
-                    <p class="project-description">学习异常值检测的方法，保证数据质量。</p>
-                    <div class="project-footer">
-                        <div class="dataset">📁 customer_features.csv</div>
-                        <a href="projects/project9/index.html" class="start-btn">开始学习 →</a>
-                    </div>
-                </div>
-
-                <div class="project-card" onclick="location.href='projects/project10/index.html'">
-                    <div class="project-header">
-                        <div class="project-icon">🔗</div>
-                        <div class="project-info">
-                            <div class="project-badges">
-                                <span class="badge badge-medium">进阶</span>
-                                <span class="badge badge-time">45分钟</span>
-                            </div>
-                            <h3 class="project-title">多数据集合并</h3>
-                        </div>
-                    </div>
-                    <p class="project-description">学习如何合并多个数据集，整合不同来源的信息。</p>
-                    <div class="project-footer">
-                        <div class="dataset">📁 retail_orders.csv</div>
-                        <a href="projects/project10/index.html" class="start-btn">开始学习 →</a>
-                    </div>
+            <div class="hero-content">
+                <div class="hero-badge">👋 欢迎来到我的学习空间</div>
+                <h1>你好，我是 TT</h1>
+                <p class="hero-description">
+                    我是广东科学技术职业学院、商学院、商务数据分析与应用专业的学生。
+                    这里展示了我学习的所有课程内容和学习笔记，期待与大家共同进步！
+                </p>
+                <div class="school-info">
+                    <span>📚 广东科学技术职业学院 · 商学院 · 商务数据分析与应用专业</span>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="cta-section">
+    <section class="about" id="about">
         <div class="container">
-            <h2 class="cta-title">开始你的数据分析之旅</h2>
-            <p class="cta-description">无需任何安装，点击上方项目卡片即可开始练习</p>
+            <h2 class="section-title">关于我</h2>
+            <p class="section-subtitle">了解我的学习背景和技能</p>
+            
+            <div class="about-content">
+                <div class="about-card">
+                    <h3>🎓 学习背景</h3>
+                    <p>
+                        我正在广东科学技术职业学院学习商务数据分析与应用专业。
+                        我的学习方向涵盖数据分析、Python编程、数据采集、数据库管理等多个领域。
+                        我热爱数据科学，相信数据驱动决策的力量。
+                    </p>
+                    <ul class="skills-list">
+                        <li>Python 编程</li>
+                        <li>数据分析与可视化</li>
+                        <li>数据采集与处理</li>
+                        <li>数据库管理</li>
+                        <li>供应链分析</li>
+                    </ul>
+                </div>
+
+                <div class="about-card">
+                    <h3>📖 学习理念</h3>
+                    <p>
+                        我相信最好的学习方式是理论与实践相结合。在学习每门课程时，
+                        我都会认真做好笔记，记录学习心得和代码实践。这个网站就是我的学习记录本，
+                        我会持续更新和完善各个课程的内容。
+                    </p>
+                    <ul class="skills-list">
+                        <li>笔记完整详尽</li>
+                        <li>代码示例丰富</li>
+                        <li>持续更新迭代</li>
+                        <li>实践导向学习</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="courses" id="courses">
+        <div class="container">
+            <h2 class="section-title">我的课程</h2>
+            <p class="section-subtitle">以下是我在学校学习的专业课程，点击即可查看详细内容</p>
+            
+            <div class="courses-grid">
+                <a href="courses/python-basics/index.html" class="course-card">
+                    <div class="course-icon">🐍</div>
+                    <h3>Python基础</h3>
+                    <p>Python编程语言入门，学习变量、数据类型、控制结构、函数等核心概念，为后续数据分析打下坚实基础。</p>
+                    <div class="course-meta">
+                        <span class="course-tag">编程基础</span>
+                        <span class="course-tag">32课时</span>
+                        <span class="course-status">📝 持续更新中</span>
+                    </div>
+                </a>
+
+                <a href="courses/data-analysis/index.html" class="course-card">
+                    <div class="course-icon">📊</div>
+                    <h3>数据分析技术</h3>
+                    <p>学习使用Pandas、NumPy等库进行数据处理、分析和可视化，掌握数据分析的核心技能和方法论。</p>
+                    <div class="course-meta">
+                        <span class="course-tag">数据分析</span>
+                        <span class="course-tag">48课时</span>
+                        <span class="course-status">📝 持续更新中</span>
+                    </div>
+                </a>
+
+                <a href="courses/data-collection/index.html" class="course-card">
+                    <div class="course-icon">🕷️</div>
+                    <h3>数据采集与处理</h3>
+                    <p>学习网络爬虫技术、数据清洗与预处理，包括Requests、BeautifulSoup、Scrapy等工具的使用。</p>
+                    <div class="course-meta">
+                        <span class="course-tag">爬虫技术</span>
+                        <span class="course-tag">36课时</span>
+                        <span class="course-status">📝 持续更新中</span>
+                    </div>
+                </a>
+
+                <a href="courses/supply-chain/index.html" class="course-card">
+                    <div class="course-icon">🚚</div>
+                    <h3>供应链数据分析</h3>
+                    <p>应用数据分析技术解决供应链管理问题，包括库存优化、需求预测、物流分析等实际案例。</p>
+                    <div class="course-meta">
+                        <span class="course-tag">行业应用</span>
+                        <span class="course-tag">40课时</span>
+                        <span class="course-status">📝 持续更新中</span>
+                    </div>
+                </a>
+
+                <a href="courses/database/index.html" class="course-card">
+                    <div class="course-icon">💾</div>
+                    <h3>数据库原理与应用</h3>
+                    <p>学习数据库系统原理、SQL查询语言、数据库设计与优化，掌握MySQL等主流数据库的使用。</p>
+                    <div class="course-meta">
+                        <span class="course-tag">数据库</span>
+                        <span class="course-tag">44课时</span>
+                        <span class="course-status">📝 持续更新中</span>
+                    </div>
+                </a>
+
+                <a href="courses/python-basics/index.html" class="course-card">
+                    <div class="course-icon">🔧</div>
+                    <h3>更多课程...</h3>
+                    <p>更多专业课程内容正在整理中，我会陆续添加和完善。敬请期待！</p>
+                    <div class="course-meta">
+                        <span class="course-tag">待补充</span>
+                        <span class="course-status">🚧 规划中</span>
+                    </div>
+                </a>
+            </div>
         </div>
     </section>
 
     <footer>
         <div class="container">
-            <p>© 2024 TT's Learning Space · Pandas 数据分析实战训练营</p>
+            <p>
+                © 2024 TT's Learning Space · 广东科学技术职业学院 · 
+                <a href="https://github.com/0hha11" target="_blank">访问我的 GitHub</a>
+            </p>
         </div>
     </footer>
+
+    <script>
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>

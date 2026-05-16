@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python基础 - TT's Learning</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        
+        header { background: white; border-bottom: 1px solid #e2e8f0; padding: 16px 0; }
+        header .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: 700; color: #3b82f6; font-size: 20px; text-decoration: none; }
+        nav { display: flex; gap: 24px; }
+        nav a { color: #64748b; text-decoration: none; font-size: 14px; font-weight: 500; }
+        nav a:hover { color: #3b82f6; }
+        
+        .course-header { padding: 60px 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .course-badge { display: inline-block; background: rgba(255,255,255,0.2); padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-bottom: 16px; }
+        .course-title { font-size: 42px; font-weight: 700; margin-bottom: 16px; }
+        .course-description { font-size: 18px; opacity: 0.95; max-width: 700px; margin-bottom: 24px; line-height: 1.7; }
+        .course-meta { display: flex; gap: 16px; flex-wrap: wrap; }
+        .meta-item { background: rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 10px; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+        
+        .content { padding: 60px 0; }
+        .section-title { font-size: 28px; font-weight: 700; color: #0f172a; margin-bottom: 24px; }
+        .content-card { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 32px; margin-bottom: 24px; }
+        .content-card h3 { font-size: 20px; font-weight: 600; color: #0f172a; margin-bottom: 16px; }
+        .content-card p { color: #64748b; line-height: 1.7; margin-bottom: 12px; }
+        
+        .outline { list-style: none; }
+        .outline li { padding: 16px 0; border-bottom: 1px solid #e2e8f0; display: flex; align-items: flex-start; gap: 16px; }
+        .outline li:last-child { border-bottom: none; }
+        .chapter-num { width: 40px; height: 40px; background: #3b82f6; color: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 600; flex-shrink: 0; }
+        .chapter-info h4 { font-size: 16px; font-weight: 600; color: #0f172a; margin-bottom: 6px; }
+        .chapter-info p { font-size: 14px; color: #64748b; }
+        
+        .placeholder { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 20px; border-radius: 0 12px 12px 0; margin-top: 20px; }
+        .placeholder h4 { color: #92400e; font-weight: 600; margin-bottom: 8px; }
+        .placeholder p { color: #a16207; font-size: 14px; }
+        
+        .code-box { background: #1e1e1e; border-radius: 12px; padding: 20px; margin: 16px 0; overflow-x: auto; }
+        .code-box pre { color: #d4d4d4; font-family: 'Monaco', 'Consolas', monospace; font-size: 14px; line-height: 1.6; }
+        
+        footer { text-align: center; padding: 48px 0; border-top: 1px solid #e2e8f0; color: #94a3b8; font-size: 14px; }
+        
+        @media (max-width: 768px) {
+            .course-title { font-size: 28px; }
+            .course-meta { flex-direction: column; }
+            .content-card { padding: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="../../index.html" class="logo">TT's Learning</a>
+            <nav>
+                <a href="../../index.html">首页</a>
+                <a href="#outline">课程大纲</a>
+                <a href="#resources">学习资源</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="course-header">
+        <div class="container">
+            <div class="course-badge">🐍 编程基础课程</div>
+            <h1 class="course-title">Python基础</h1>
+            <p class="course-description">
+                Python是一门简单易学且功能强大的编程语言。本课程将带你从零开始学习Python编程，
+                掌握基本语法、数据结构、函数和面向对象编程等核心知识，为后续的数据分析和开发工作打下坚实基础。
+            </p>
+            <div class="course-meta">
+                <div class="meta-item"><span>📚</span> 32课时</div>
+                <div class="meta-item"><span>⏱️</span> 约40小时</div>
+                <div class="meta-item"><span>📖</span> 初级难度</div>
+                <div class="meta-item"><span>🔄</span> 持续更新中</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content">
+        <div class="container">
+            <h2 class="section-title" id="outline">📚 课程大纲</h2>
+            
+            <div class="content-card">
+                <h3>第一章：Python入门</h3>
+                <ul class="outline">
+                    <li>
+                        <div class="chapter-num">1.1</div>
+                        <div class="chapter-info">
+                            <h4>Python简介与环境搭建</h4>
+                            <p>了解Python的发展历史、应用领域，以及如何安装Python和配置开发环境</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">1.2</div>
+                        <div class="chapter-info">
+                            <h4>第一个Python程序</h4>
+                            <p>编写并运行你的第一个Python程序，了解基本的输入输出操作</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">1.3</div>
+                        <div class="chapter-info">
+                            <h4>注释与基本语法规则</h4>
+                            <p>学习Python中的注释写法、基本缩进规则和编码规范</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="placeholder">
+                    <h4>📝 内容待补充</h4>
+                    <p>详细的章节内容、代码示例和练习题正在整理中。</p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>第二章：变量与数据类型</h3>
+                <ul class="outline">
+                    <li>
+                        <div class="chapter-num">2.1</div>
+                        <div class="chapter-info">
+                            <h4>变量与赋值</h4>
+                            <p>理解变量的概念、命名规则，以及基本的赋值操作</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">2.2</div>
+                        <div class="chapter-info">
+                            <h4>基本数据类型</h4>
+                            <p>学习整数、浮点数、字符串、布尔值等基本数据类型及其转换</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">2.3</div>
+                        <div class="chapter-info">
+                            <h4>运算符与表达式</h4>
+                            <p>算术运算符、比较运算符、逻辑运算符的使用</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="placeholder">
+                    <h4>📝 内容待补充</h4>
+                    <p>详细的章节内容、代码示例和练习题正在整理中。</p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>第三章：控制流程</h3>
+                <ul class="outline">
+                    <li>
+                        <div class="chapter-num">3.1</div>
+                        <div class="chapter-info">
+                            <h4>条件语句</h4>
+                            <p>if、elif、else语句的使用，实现程序的分支逻辑</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">3.2</div>
+                        <div class="chapter-info">
+                            <h4>循环语句</h4>
+                            <p>for循环和while循环的使用，以及break和continue控制语句</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">3.3</div>
+                        <div class="chapter-info">
+                            <h4>循环的高级用法</h4>
+                            <p>range函数、列表推导式、enumerate和zip等高级用法</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="placeholder">
+                    <h4>📝 内容待补充</h4>
+                    <p>详细的章节内容、代码示例和练习题正在整理中。</p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>第四章：数据结构</h3>
+                <ul class="outline">
+                    <li>
+                        <div class="chapter-num">4.1</div>
+                        <div class="chapter-info">
+                            <h4>列表（List）</h4>
+                            <p>列表的创建、索引、切片、追加、删除等基本操作</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">4.2</div>
+                        <div class="chapter-info">
+                            <h4>元组（Tuple）</h4>
+                            <p>元组的特性、与列表的区别以及适用场景</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">4.3</div>
+                        <div class="chapter-info">
+                            <h4>字典（Dictionary）</h4>
+                            <p>字典的创建、键值对操作、常用方法</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">4.4</div>
+                        <div class="chapter-info">
+                            <h4>集合（Set）</h4>
+                            <p>集合的特性、交集、并集、差集等操作</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="placeholder">
+                    <h4>📝 内容待补充</h4>
+                    <p>详细的章节内容、代码示例和练习题正在整理中。</p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>第五章：函数</h3>
+                <ul class="outline">
+                    <li>
+                        <div class="chapter-num">5.1</div>
+                        <div class="chapter-info">
+                            <h4>函数的定义与调用</h4>
+                            <p>函数的创建、参数传递、返回值</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">5.2</div>
+                        <div class="chapter-info">
+                            <h4>参数类型</h4>
+                            <p>位置参数、默认参数、关键字参数、可变参数</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">5.3</div>
+                        <div class="chapter-info">
+                            <h4>作用域与命名空间</h4>
+                            <p>局部变量、全局变量、global和nonlocal关键字</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">5.4</div>
+                        <div class="chapter-info">
+                            <h4>匿名函数与高阶函数</h4>
+                            <p>lambda表达式、map、filter、reduce函数</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="placeholder">
+                    <h4>📝 内容待补充</h4>
+                    <p>详细的章节内容、代码示例和练习题正在整理中。</p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>第六章：面向对象编程</h3>
+                <ul class="outline">
+                    <li>
+                        <div class="chapter-num">6.1</div>
+                        <div class="chapter-info">
+                            <h4>类和对象</h4>
+                            <p>类的定义、对象的创建、self关键字的使用</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">6.2</div>
+                        <div class="chapter-info">
+                            <h4>继承与多态</h4>
+                            <p>类的继承、方法重写、多态的实现</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">6.3</div>
+                        <div class="chapter-info">
+                            <h4>特殊方法</h4>
+                            <p>__init__、__str__、__repr__等特殊方法的实现</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="placeholder">
+                    <h4>📝 内容待补充</h4>
+                    <p>详细的章节内容、代码示例和练习题正在整理中。</p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>第七章：文件操作与异常处理</h3>
+                <ul class="outline">
+                    <li>
+                        <div class="chapter-num">7.1</div>
+                        <div class="chapter-info">
+                            <h4>文件读写</h4>
+                            <p>文本文件和二进制文件的读取与写入操作</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">7.2</div>
+                        <div class="chapter-info">
+                            <h4>异常处理</h4>
+                            <p>try-except语句、自定义异常、finally子句</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="placeholder">
+                    <h4>📝 内容待补充</h4>
+                    <p>详细的章节内容、代码示例和练习题正在整理中。</p>
+                </div>
+            </div>
+
+            <h2 class="section-title" id="resources" style="margin-top: 48px;">📖 学习资源</h2>
+            
+            <div class="content-card">
+                <h3>推荐学习资料</h3>
+                <ul style="list-style: disc; padding-left: 20px; color: #64748b; line-height: 2;">
+                    <li>《Python编程：从入门到实践》- Eric Matthes</li>
+                    <li>《Python基础教程》- Magnus Lie Hetland</li>
+                    <li>Python官方文档：https://docs.python.org/zh-cn/3/</li>
+                    <li>廖雪峰的Python教程：https://www.liaoxuefeng.com/wiki/1016959663602400</li>
+                </ul>
+                <div class="placeholder">
+                    <h4>🔧 实践项目</h4>
+                    <p>每个章节配套的练习题和实践项目正在准备中。</p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>我的学习笔记</h3>
+                <div class="placeholder">
+                    <h4>📓 笔记区域</h4>
+                    <p>在这里记录学习过程中的心得、代码片段和问题总结。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© 2024 TT's Learning Space · 广东科学技术职业学院</p>
+        </div>
+    </footer>
+</body>
+</html>

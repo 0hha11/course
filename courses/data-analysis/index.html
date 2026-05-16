@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据分析技术 - TT's Learning</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        
+        header { background: white; border-bottom: 1px solid #e2e8f0; padding: 16px 0; }
+        header .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: 700; color: #3b82f6; font-size: 20px; text-decoration: none; }
+        nav { display: flex; gap: 24px; }
+        nav a { color: #64748b; text-decoration: none; font-size: 14px; font-weight: 500; }
+        nav a:hover { color: #3b82f6; }
+        
+        .course-header { padding: 60px 0; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; }
+        .course-badge { display: inline-block; background: rgba(255,255,255,0.2); padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-bottom: 16px; }
+        .course-title { font-size: 42px; font-weight: 700; margin-bottom: 16px; }
+        .course-description { font-size: 18px; opacity: 0.95; max-width: 700px; margin-bottom: 24px; line-height: 1.7; }
+        .course-meta { display: flex; gap: 16px; flex-wrap: wrap; }
+        .meta-item { background: rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 10px; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+        
+        .content { padding: 60px 0; }
+        .section-title { font-size: 28px; font-weight: 700; color: #0f172a; margin-bottom: 24px; }
+        .content-card { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 32px; margin-bottom: 24px; }
+        .content-card h3 { font-size: 20px; font-weight: 600; color: #0f172a; margin-bottom: 16px; }
+        .content-card p { color: #64748b; line-height: 1.7; margin-bottom: 12px; }
+        
+        .outline { list-style: none; }
+        .outline li { padding: 16px 0; border-bottom: 1px solid #e2e8f0; display: flex; align-items: flex-start; gap: 16px; }
+        .outline li:last-child { border-bottom: none; }
+        .chapter-num { width: 40px; height: 40px; background: #11998e; color: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 600; flex-shrink: 0; }
+        .chapter-info h4 { font-size: 16px; font-weight: 600; color: #0f172a; margin-bottom: 6px; }
+        .chapter-info p { font-size: 14px; color: #64748b; }
+        
+        .placeholder { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 20px; border-radius: 0 12px 12px 0; margin-top: 20px; }
+        .placeholder h4 { color: #92400e; font-weight: 600; margin-bottom: 8px; }
+        .placeholder p { color: #a16207; font-size: 14px; }
+        
+        .code-box { background: #1e1e1e; border-radius: 12px; padding: 20px; margin: 16px 0; overflow-x: auto; }
+        .code-box pre { color: #d4d4d4; font-family: 'Monaco', 'Consolas', monospace; font-size: 14px; line-height: 1.6; }
+        
+        footer { text-align: center; padding: 48px 0; border-top: 1px solid #e2e8f0; color: #94a3b8; font-size: 14px; }
+        
+        @media (max-width: 768px) {
+            .course-title { font-size: 28px; }
+            .course-meta { flex-direction: column; }
+            .content-card { padding: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="../../index.html" class="logo">TT's Learning</a>
+            <nav>
+                <a href="../../index.html">首页</a>
+                <a href="#outline">课程大纲</a>
+                <a href="#resources">学习资源</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="course-header">
+        <div class="container">
+            <div class="course-badge">📊 数据分析课程</div>
+            <h1 class="course-title">数据分析技术</h1>
+            <p class="course-description">
+                数据分析是现代商业决策的核心技能。本课程涵盖数据分析的理论基础和实战技能，
+                包括数据清洗、Pandas数据处理、NumPy数值计算、数据可视化，以及统计分析等核心内容，
+                帮助你成为合格的数据分析师。
+            </p>
+            <div class="course-meta">
+                <div class="meta-item"><span>📚</span> 48课时</div>
+                <div class="meta-item"><span>⏱️</span> 约60小时</div>
+                <div class="meta-item"><span>📖</span> 中级难度</div>
+                <div class="meta-item"><span>🔄</span> 持续更新中</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content">
+        <div class="container">
+            <h2 class="section-title" id="outline">📚 课程大纲</h2>
+            
+            <div class="content-card">
+                <h3>第一章：数据分析概述</h3>
+                <ul class="outline">
+                    <li>
+                        <div class="chapter-num">1.1</div>
+                        <div class="chapter-info">
+                            <h4>数据分析的定义与价值</h4>
+                            <p>理解数据分析在现代企业中的重要性和应用场景</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">1.2</div>
+                        <div class="chapter-info">
+                            <h4>数据分析流程</h4>
+                            <p>学习数据分析的标准流程：收集、清洗、分析、可视化、报告</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">1.3</div>
+                        <div class="chapter-info">
+                            <h4>数据分析工具生态</h4>
+                            <p>了解Python数据分析工具链：Jupyter、Pandas、NumPy、Matplotlib</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="placeholder">
+                    <h4>📝 内容待补充</h4>
+                    <p>详细的章节内容、代码示例和练习题正在整理中。</p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>第二章：NumPy数值计算基础</h3>
+                <ul class="outline">
+                    <li>
+                        <div class="chapter-num">2.1</div>
+                        <div class="chapter-info">
+                            <h4>NumPy数组基础</h4>
+                            <p>创建数组、数组属性、数组索引与切片</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">2.2</div>
+                        <div class="chapter-info">
+                            <h4>数组运算与广播</h4>
+                            <p>数组的数学运算、统计计算、广播机制</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">2.3</div>
+                        <div class="chapter-info">
+                            <h4>数组的形状操作</h4>
+                            <p>reshape、transpose、concatenate等形状操作</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="placeholder">
+                    <h4>📝 内容待补充</h4>
+                    <p>详细的章节内容、代码示例和练习题正在整理中。</p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>第三章：Pandas数据处理</h3>
+                <ul class="outline">
+                    <li>
+                        <div class="chapter-num">3.1</div>
+                        <div class="chapter-info">
+                            <h4>Pandas数据结构</h4>
+                            <p>Series和DataFrame的创建与基本操作</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">3.2</div>
+                        <div class="chapter-info">
+                            <h4>数据读取与存储</h4>
+                            <p>读取CSV、Excel、JSON文件，保存数据</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">3.3</div>
+                        <div class="chapter-info">
+                            <h4>数据选择与过滤</h4>
+                            <p>标签选择、位置选择、条件过滤</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">3.4</div>
+                        <div class="chapter-info">
+                            <h4>数据清洗</h4>
+                            <p>处理缺失值、重复值、数据类型转换</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="placeholder">
+                    <h4>📝 内容待补充</h4>
+                    <p>详细的章节内容、代码示例和练习题正在整理中。</p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>第四章：数据聚合与变换</h3>
+                <ul class="outline">
+                    <li>
+                        <div class="chapter-num">4.1</div>
+                        <div class="chapter-info">
+                            <h4>分组操作</h4>
+                            <p>groupby的原理与使用方法</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">4.2</div>
+                        <div class="chapter-info">
+                            <h4>聚合函数</h4>
+                            <p>常用聚合函数：sum、mean、count、min、max等</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">4.3</div>
+                        <div class="chapter-info">
+                            <h4>数据透视表</h4>
+                            <p>pivot_table的创建与高级用法</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">4.4</div>
+                        <div class="chapter-info">
+                            <h4>数据合并</h4>
+                            <p>merge、concat、join的用法与区别</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="placeholder">
+                    <h4>📝 内容待补充</h4>
+                    <p>详细的章节内容、代码示例和练习题正在整理中。</p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>第五章：数据可视化</h3>
+                <ul class="outline">
+                    <li>
+                        <div class="chapter-num">5.1</div>
+                        <div class="chapter-info">
+                            <h4>Matplotlib基础</h4>
+                            <p>图表的基本组成、线图、柱状图、散点图</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">5.2</div>
+                        <div class="chapter-info">
+                            <h4>Seaborn统计图表</h4>
+                            <p>分布图、关系图、分类图的绘制</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">5.3</div>
+                        <div class="chapter-info">
+                            <h4>图表优化与美化</h4>
+                            <p>配色方案、图例、标注、主题设置</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="placeholder">
+                    <h4>📝 内容待补充</h4>
+                    <p>详细的章节内容、代码示例和练习题正在整理中。</p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>第六章：统计分析基础</h3>
+                <ul class="outline">
+                    <li>
+                        <div class="chapter-num">6.1</div>
+                        <div class="chapter-info">
+                            <h4>描述性统计</h4>
+                            <p>均值、中位数、众数、标准差、方差</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">6.2</div>
+                        <div class="chapter-info">
+                            <h4>相关性分析</h4>
+                            <p>Pearson相关系数、Spearman等级相关</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">6.3</div>
+                        <div class="chapter-info">
+                            <h4>假设检验入门</h4>
+                            <p>t检验、卡方检验的基本原理</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="placeholder">
+                    <h4>📝 内容待补充</h4>
+                    <p>详细的章节内容、代码示例和练习题正在整理中。</p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>第七章：实战项目</h3>
+                <ul class="outline">
+                    <li>
+                        <div class="chapter-num">7.1</div>
+                        <div class="chapter-info">
+                            <h4>零售数据分析案例</h4>
+                            <p>使用真实零售数据进行综合分析</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">7.2</div>
+                        <div class="chapter-info">
+                            <h4>用户行为分析</h4>
+                            <p>分析用户行为数据，提取有价值的信息</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="chapter-num">7.3</div>
+                        <div class="chapter-info">
+                            <h4>销售数据报告</h4>
+                            <p>制作完整的数据分析报告</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="placeholder">
+                    <h4>📝 内容待补充</h4>
+                    <p>详细的实战项目内容和数据正在准备中。</p>
+                </div>
+            </div>
+
+            <h2 class="section-title" id="resources" style="margin-top: 48px;">📖 学习资源</h2>
+            
+            <div class="content-card">
+                <h3>推荐学习资料</h3>
+                <ul style="list-style: disc; padding-left: 20px; color: #64748b; line-height: 2;">
+                    <li>《Python数据分析》- Wes McKinney（Pandas创始人）</li>
+                    <li>《利用Python进行数据分析》- Pandas官方指南</li>
+                    <li>Pandas官方文档：https://pandas.pydata.org/docs/</li>
+                    <li>Matplotlib官方文档：https://matplotlib.org/stable/contents.html</li>
+                </ul>
+                <div class="placeholder">
+                    <h4>🔧 实践项目</h4>
+                    <p>每个章节配套的练习题和实践项目正在准备中。</p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>我的学习笔记</h3>
+                <div class="placeholder">
+                    <h4>📓 笔记区域</h4>
+                    <p>在这里记录学习过程中的心得、代码片段和问题总结。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© 2024 TT's Learning Space · 广东科学技术职业学院</p>
+        </div>
+    </footer>
+</body>
+</html>
