@@ -19,6 +19,21 @@
         
         .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
         
+        .skip-link {
+            position: absolute;
+            top: -100px;
+            left: 20px;
+            background: #00d4ff;
+            color: #1a1a2e;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            z-index: 1000;
+            transition: top 0.3s;
+        }
+        .skip-link:focus { top: 20px; }
+        
         header { 
             background: rgba(0, 0, 0, 0.3); 
             border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
@@ -50,11 +65,19 @@
             text-decoration: none; 
             font-size: 14px; 
             font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
             padding: 8px 12px;
             border-radius: 8px;
             transition: all 0.2s;
         }
-        header a:hover { color: #00d4ff; background: rgba(0, 212, 255, 0.1); }
+        header a:hover, header a:focus { 
+            color: #00d4ff; 
+            background: rgba(0, 212, 255, 0.1);
+            outline: 2px solid #00d4ff;
+            outline-offset: 2px;
+        }
         
         .project-header { padding: 48px 0 32px; }
         .project-header .container { display: flex; justify-content: space-between; align-items: flex-start; gap: 32px; }
@@ -71,13 +94,52 @@
             font-size: 32px;
             margin-bottom: 20px;
         }
-        .project-title { font-size: 36px; font-weight: 900; color: #ffffff; margin-bottom: 12px; }
-        .project-description { color: #a0a0b8; font-size: 16px; margin-bottom: 20px; }
+        .project-title { 
+            font-size: 36px; 
+            font-weight: 900; 
+            color: #ffffff; 
+            margin-bottom: 12px;
+            line-height: 1.2;
+        }
+        .project-description { 
+            color: #a0a0b8; 
+            font-size: 16px; 
+            margin-bottom: 20px;
+        }
         .project-meta { display: flex; gap: 12px; flex-wrap: wrap; }
-        .badge { padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; }
-        .badge-easy { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
-        .badge-time { background: rgba(255, 255, 255, 0.08); color: #a0a0b8; font-weight: 500; }
-        .badge-dataset { background: rgba(139, 92, 246, 0.15); color: #a78bfa; font-family: monospace; }
+        .badge { 
+            padding: 6px 14px; 
+            border-radius: 20px; 
+            font-size: 12px; 
+            font-weight: 700; 
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .badge-easy { 
+            background: rgba(34, 197, 94, 0.15); 
+            color: #4ade80; 
+            border: 1px solid rgba(34, 197, 94, 0.3); 
+        }
+        .badge-medium { 
+            background: rgba(251, 191, 36, 0.15); 
+            color: #fbbf24; 
+            border: 1px solid rgba(251, 191, 36, 0.3); 
+        }
+        .badge-hard { 
+            background: rgba(239, 68, 68, 0.15); 
+            color: #f87171; 
+            border: 1px solid rgba(239, 68, 68, 0.3); 
+        }
+        .badge-time { 
+            background: rgba(255, 255, 255, 0.08); 
+            color: #a0a0b8; 
+            font-weight: 500; 
+        }
+        .badge-dataset { 
+            background: rgba(139, 92, 246, 0.15); 
+            color: #a78bfa; 
+            font-family: 'Monaco', 'Consolas', monospace;
+        }
         
         .progress-card {
             background: linear-gradient(135deg, rgba(0, 212, 255, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%);
@@ -87,7 +149,12 @@
             min-width: 280px;
         }
         .progress-title { font-size: 14px; color: #8080a0; margin-bottom: 12px; }
-        .progress-circle { position: relative; width: 100px; height: 100px; margin: 0 auto 16px; }
+        .progress-circle {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 16px;
+        }
         .progress-circle-svg { transform: rotate(-90deg); }
         .progress-text {
             position: absolute;
@@ -99,11 +166,16 @@
             background: linear-gradient(135deg, #00d4ff 0%, #8b5cf6 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        .progress-stats { display: flex; justify-content: space-between; text-align: center; }
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            text-align: center;
+        }
         .progress-stat { flex: 1; }
         .progress-stat-num { font-size: 20px; font-weight: 700; color: #ffffff; }
-        .progress-stat-label { font-size: 12px; color: #707090; }
+        .progress-stat-label { font-size: 12px; color: #707090; text-transform: uppercase; }
         
         .tabs-wrapper {
             background: rgba(255, 255, 255, 0.04);
@@ -130,7 +202,11 @@
             justify-content: center;
             gap: 8px;
         }
-        .tab:hover { color: #ffffff; }
+        .tab:hover, .tab:focus { 
+            color: #ffffff; 
+            outline: 2px solid #00d4ff;
+            outline-offset: -2px;
+        }
         .tab.active { 
             background: linear-gradient(135deg, rgba(0, 212, 255, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%); 
             color: #ffffff;
@@ -139,6 +215,37 @@
         
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+        
+        .search-container {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+        .search-box { position: relative; }
+        .search-input {
+            width: 100%;
+            padding: 14px 20px 14px 48px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .search-input:focus {
+            border-color: #00d4ff;
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+        }
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a0a0b8;
+        }
         
         .content-section { margin-bottom: 32px; }
         .content-section-title {
@@ -167,9 +274,21 @@
             padding: 28px; 
             margin-bottom: 24px;
         }
-        .content-card h3 { font-size: 20px; font-weight: 700; color: #ffffff; margin-bottom: 16px; }
-        .content-card p { color: #c8c8d8; line-height: 1.8; margin-bottom: 12px; }
-        .content-card ul { list-style: none; padding-left: 0; }
+        .content-card h3 { 
+            font-size: 20px; 
+            font-weight: 700; 
+            color: #ffffff; 
+            margin-bottom: 16px; 
+        }
+        .content-card p { 
+            color: #c8c8d8; 
+            line-height: 1.8; 
+            margin-bottom: 12px; 
+        }
+        .content-card ul { 
+            list-style: none; 
+            padding-left: 0; 
+        }
         .content-card ul li { 
             margin-bottom: 12px; 
             color: #c8c8d8;
@@ -193,6 +312,14 @@
             margin: 16px 0;
         }
         .info-box p { margin: 0; color: #a0d4ff; }
+        .tip-box {
+            background: rgba(139, 92, 246, 0.08);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin: 16px 0;
+        }
+        .tip-box p { margin: 0; color: #d4c4ff; }
         
         .code-box { 
             background: #0d0d1a; 
@@ -207,6 +334,7 @@
             font-family: 'Monaco', 'Consolas', monospace; 
             font-size: 14px; 
             line-height: 1.7; 
+            white-space: pre;
         }
         
         .code-editor-container {
@@ -244,7 +372,15 @@
             resize: vertical;
             outline: none;
         }
-        .editor-controls { display: flex; gap: 12px; flex-wrap: wrap; }
+        .code-textarea:focus {
+            outline: 2px solid #00d4ff;
+            outline-offset: 2px;
+        }
+        .editor-controls {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
         .btn { 
             padding: 12px 24px; 
             border-radius: 12px; 
@@ -262,14 +398,27 @@
             background: linear-gradient(135deg, #00d4ff 0%, #8b5cf6 100%); 
             color: white; 
         }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0, 212, 255, 0.3); }
+        .btn-primary:hover, .btn-primary:focus { 
+            transform: translateY(-2px); 
+            box-shadow: 0 8px 24px rgba(0, 212, 255, 0.3);
+            outline: 2px solid #00d4ff;
+            outline-offset: 2px;
+        }
         .btn-secondary { 
             background: rgba(255, 255, 255, 0.06); 
             color: #ffffff; 
             border: 1px solid rgba(255, 255, 255, 0.12); 
         }
-        .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); }
-        
+        .btn-secondary:hover, .btn-secondary:focus { 
+            background: rgba(255, 255, 255, 0.1); 
+            border-color: rgba(255, 255, 255, 0.2);
+            outline: 2px solid #ffffff;
+            outline-offset: 2px;
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
         .output-box {
             background: #050510;
             border: 1px solid rgba(0, 212, 255, 0.2);
@@ -296,6 +445,16 @@
         }
         .output-content.error { color: #f87171; }
         .output-content.success { color: #4ade80; }
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
         
         .question-box { 
             background: rgba(255, 255, 255, 0.04); 
@@ -304,7 +463,16 @@
             padding: 24px; 
             margin-bottom: 20px; 
         }
-        .question-box h4 { font-size: 16px; font-weight: 600; color: #ffffff; margin-bottom: 16px; }
+        .question-box h4 { 
+            font-size: 16px; 
+            font-weight: 600; 
+            color: #ffffff; 
+            margin-bottom: 16px; 
+        }
+        .question-box p { 
+            color: #c8c8d8; 
+            margin-bottom: 16px; 
+        }
         
         .option-btn { 
             display: block; 
@@ -320,8 +488,37 @@
             color: #c8c8d8; 
             transition: all 0.2s; 
         }
-        .option-btn:hover { border-color: rgba(0, 212, 255, 0.4); background: rgba(0, 212, 255, 0.08); }
-        .option-btn.selected { border-color: rgba(0, 212, 255, 0.6); background: rgba(0, 212, 255, 0.12); color: #ffffff; }
+        .option-btn:hover, .option-btn:focus { 
+            border-color: rgba(0, 212, 255, 0.4); 
+            background: rgba(0, 212, 255, 0.08);
+            outline: none;
+        }
+        .option-btn.selected { 
+            border-color: rgba(0, 212, 255, 0.6); 
+            background: rgba(0, 212, 255, 0.12); 
+            color: #ffffff;
+        }
+        .option-btn.correct { 
+            border-color: rgba(34, 197, 94, 0.6); 
+            background: rgba(34, 197, 94, 0.15); 
+            color: #86efac; 
+        }
+        .option-btn.wrong { 
+            border-color: rgba(239, 68, 68, 0.6); 
+            background: rgba(239, 68, 68, 0.15); 
+            color: #fca5a5; 
+        }
+        
+        .explanation { 
+            background: rgba(251, 191, 36, 0.12); 
+            border-left: 4px solid #fbbf24; 
+            padding: 16px 20px; 
+            margin-top: 16px; 
+            border-radius: 0 10px 10px 0; 
+            display: none; 
+        }
+        .explanation p { color: #fef3c7; margin: 0; }
+        .explanation strong { color: #fcd34d; }
         
         .btn-group { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
         
@@ -335,15 +532,22 @@
             display: none; 
         }
         .test-result-icon { font-size: 64px; margin-bottom: 20px; }
-        .test-result h3 { font-size: 26px; font-weight: 900; color: #ffffff; margin-bottom: 12px; }
+        .test-result h3 { 
+            font-size: 26px; 
+            font-weight: 900; 
+            color: #ffffff;
+            margin-bottom: 12px; 
+        }
         .test-result .score { 
             font-size: 64px; 
             font-weight: 900; 
             background: linear-gradient(135deg, #00d4ff 0%, #8b5cf6 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 20px; 
         }
+        .test-result p { color: #a0a0b8; margin-bottom: 24px; font-size: 15px; }
         
         .homework-section {
             background: rgba(139, 92, 246, 0.08);
@@ -361,6 +565,7 @@
             align-items: center;
             gap: 8px;
         }
+        .homework-submit-area { margin-top: 16px; }
         .homework-textarea {
             width: 100%;
             min-height: 150px;
@@ -368,11 +573,15 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
             color: #ffffff;
-            font-family: monospace;
+            font-family: 'Monaco', 'Consolas', monospace;
             font-size: 14px;
             padding: 16px;
             resize: vertical;
             outline: none;
+        }
+        .homework-textarea:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
         }
         .submit-status {
             margin-top: 12px;
@@ -386,42 +595,75 @@
             color: #4ade80;
             border: 1px solid rgba(34, 197, 94, 0.3);
         }
+        .submit-status.error {
+            display: block;
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
         
-        footer { text-align: center; padding: 40px 0; border-top: 1px solid rgba(255, 255, 255, 0.08); color: #505070; font-size: 13px; margin-top: 60px; }
+        footer { 
+            text-align: center; 
+            padding: 40px 0; 
+            border-top: 1px solid rgba(255, 255, 255, 0.08); 
+            color: #505070; 
+            font-size: 13px; 
+            margin-top: 60px;
+        }
         
         @media (max-width: 968px) {
             .project-header .container { flex-direction: column; }
             .progress-card { width: 100%; }
+            .project-title { font-size: 28px; }
+        }
+        @media (max-width: 640px) {
+            .tabs-wrapper { flex-wrap: wrap; }
+            .tab { flex: 1 1 calc(50% - 3px); }
+            .project-title { font-size: 24px; }
+        }
+        
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
         }
     </style>
 </head>
 <body>
-    <header>
+    <a href="#main-content" class="skip-link">跳转到主要内容</a>
+    
+    <header role="navigation" aria-label="主导航">
         <div class="container">
             <div class="header-left">
-                <div class="logo-circle">🔗</div>
+                <div class="logo-circle" role="img" aria-label="网站标志">🔗</div>
                 <div class="logo-text">TT's Learning</div>
             </div>
-            <a href="../../index.html">← 返回首页</a>
+            <a href="../../index.html" aria-label="返回首页">← 返回首页</a>
         </div>
     </header>
 
     <div class="project-header">
         <div class="container">
             <div class="project-info">
-                <div class="project-icon-large">🔗</div>
+                <div class="project-icon-large" role="img" aria-label="多数据集合并图标">🔗</div>
                 <h1 class="project-title">多数据集合并</h1>
                 <p class="project-description">学习使用Pandas进行多数据集的合并操作，包括merge、concat、join等方法。</p>
-                <div class="project-meta">
-                    <span class="badge badge-easy">基础</span>
-                    <span class="badge badge-time">30分钟</span>
-                    <span class="badge badge-dataset">📁 merged_data.csv</span>
+                <div class="project-meta" role="group" aria-label="项目标签">
+                    <span class="badge badge-easy" aria-label="难度等级：基础">基础</span>
+                    <span class="badge badge-time" aria-label="预计学习时间：30分钟">30分钟</span>
+                    <span class="badge badge-dataset" aria-label="数据集：merged_data.csv">📁 merged_data.csv</span>
                 </div>
             </div>
-            <div class="progress-card">
+            <div class="progress-card" role="region" aria-label="学习进度">
                 <div class="progress-title">学习进度</div>
                 <div class="progress-circle">
-                    <svg class="progress-circle-svg" width="100" height="100">
+                    <svg class="progress-circle-svg" width="100" height="100" role="img" aria-label="进度：0%">
                         <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8"/>
                         <circle cx="50" cy="50" r="45" fill="none" stroke="url(#gradient)" stroke-width="8" 
                                 stroke-dasharray="283" stroke-dashoffset="283" stroke-linecap="round" id="progress-circle-inner"/>
@@ -434,16 +676,16 @@
                     </svg>
                     <div class="progress-text" id="progress-percentage">0%</div>
                 </div>
-                <div class="progress-stats">
-                    <div class="progress-stat">
+                <div class="progress-stats" role="list" aria-label="统计数据">
+                    <div class="progress-stat" role="listitem">
                         <div class="progress-stat-num" id="chapters-learned">0/4</div>
                         <div class="progress-stat-label">已学习</div>
                     </div>
-                    <div class="progress-stat">
+                    <div class="progress-stat" role="listitem">
                         <div class="progress-stat-num" id="exercises-done">0/5</div>
                         <div class="progress-stat-label">练习</div>
                     </div>
-                    <div class="progress-stat">
+                    <div class="progress-stat" role="listitem">
                         <div class="progress-stat-num" id="test-score">0</div>
                         <div class="progress-stat-label">得分</div>
                     </div>
@@ -452,45 +694,71 @@
         </div>
     </div>
 
-    <main class="container">
-        <div class="tabs-wrapper">
-            <button class="tab active" onclick="showTab('learn')">📚 学习</button>
-            <button class="tab" onclick="showTab('practice')">✏️ 练习</button>
-            <button class="tab" onclick="showTab('test')">📝 测试</button>
-            <button class="tab" onclick="showTab('homework')">📤 作业</button>
+    <main id="main-content" class="container">
+        <div class="search-container">
+            <div class="search-box">
+                <span class="search-icon" aria-hidden="true">🔍</span>
+                <input type="search" class="search-input" placeholder="搜索本项目内容... (按 / 键快速搜索)" 
+                       aria-label="搜索项目内容" id="search-input" accesskey="/">
+            </div>
         </div>
 
-        <div id="learn-tab" class="tab-content active">
+        <div class="tabs-wrapper" role="tablist" aria-label="学习模块">
+            <button class="tab active" role="tab" aria-selected="true" aria-controls="learn-tab" id="tab-learn" onclick="showTab('learn')">📚 学习</button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="practice-tab" id="tab-practice" onclick="showTab('practice')">✏️ 练习</button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="test-tab" id="tab-test" onclick="showTab('test')">📝 测试</button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="homework-tab" id="tab-homework" onclick="showTab('homework')">📤 作业</button>
+        </div>
+
+        <div id="learn-tab" class="tab-content active" role="tabpanel" aria-labelledby="tab-learn">
             <div class="content-section">
                 <div class="content-section-title">第一章 数据合并基础</div>
                 
                 <div class="content-card">
-                    <h3>1.1 为什么需要数据合并</h3>
-                    <p>在数据分析中，数据通常分散在多个表中，需要将它们合并在一起进行分析。</p>
+                    <h3>1.1 什么是数据合并</h3>
+                    <p>数据合并是将多个数据集按照某种规则组合成一个新数据集的过程。在数据分析中，我们经常需要从多个数据源获取信息并将它们合并在一起进行分析。</p>
                     <ul>
-                        <li><strong>关系型数据</strong>：数据存储在不同表中，通过关联键连接</li>
-                        <li><strong>数据整合</strong>：将多个数据源整合成一个完整的数据集</li>
-                        <li><strong>数据分析</strong>：合并后才能进行全面的分析</li>
+                        <li><strong>merge</strong>：基于共同列进行合并（类似SQL的JOIN操作）</li>
+                        <li><strong>concat</strong>：沿着指定轴进行连接</li>
+                        <li><strong>join</strong>：基于索引进行合并</li>
                     </ul>
-                    <div class="info-box">
-                        <p>💡 Pandas提供了强大的数据合并功能，是数据处理的核心技能之一。</p>
+                    <div class="info-box" role="note">
+                        <p>💡 数据合并是数据处理中非常重要的操作，掌握它可以让你灵活处理来自不同数据源的数据。</p>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h3>1.2 合并类型</h3>
+                    <p>常见的合并类型包括：</p>
+                    <div class="code-box">
+<pre># 内连接 - 只保留两个表都有的行
+pd.merge(df1, df2, on='key', how='inner')
+
+# 左连接 - 保留左表所有行
+pd.merge(df1, df2, on='key', how='left')
+
+# 右连接 - 保留右表所有行
+pd.merge(df1, df2, on='key', how='right')
+
+# 外连接 - 保留两个表的所有行
+pd.merge(df1, df2, on='key', how='outer')</pre>
                     </div>
                 </div>
             </div>
 
             <div class="content-section">
-                <div class="content-section-title">第二章 merge方法</div>
+                <div class="content-section-title">第二章 merge操作</div>
                 
                 <div class="content-card">
-                    <h3>2.1 merge基础</h3>
-                    <p>merge方法用于根据一个或多个键将DataFrame合并在一起。</p>
+                    <h3>2.1 基础merge</h3>
+                    <p>merge是最常用的数据合并方法，可以根据一个或多个键将DataFrame连接在一起。</p>
                     <div class="code-box">
 <pre>import pandas as pd
 
 # 创建两个DataFrame
 df1 = pd.DataFrame({
     'id': [1, 2, 3, 4],
-    'name': ['Alice', 'Bob', 'Charlie', 'David'],
+    'name': ['张三', '李四', '王五', '赵六'],
     'age': [25, 30, 35, 40]
 })
 
@@ -500,53 +768,54 @@ df2 = pd.DataFrame({
     'salary': [8000, 10000, 9000, 12000]
 })
 
-# 内连接（默认）
-merged_inner = pd.merge(df1, df2, on='id')
-print("内连接:")
-print(merged_inner)</pre>
+# 内连接
+result = pd.merge(df1, df2, on='id')
+print(result)</pre>
                     </div>
                 </div>
 
                 <div class="content-card">
-                    <h3>2.2 不同类型的连接</h3>
+                    <h3>2.2 不同键名的合并</h3>
+                    <p>当两个DataFrame的键名不同时，可以分别指定左右键：</p>
                     <div class="code-box">
-<pre># 左连接
-merged_left = pd.merge(df1, df2, on='id', how='left')
-print("左连接:")
-print(merged_left)
+<pre># 键名不同时的合并
+df1 = pd.DataFrame({
+    'user_id': [1, 2, 3],
+    'name': ['张三', '李四', '王五']
+})
 
-# 右连接
-merged_right = pd.merge(df1, df2, on='id', how='right')
-print("\n右连接:")
-print(merged_right)
+df2 = pd.DataFrame({
+    'id': [1, 2, 4],
+    'score': [85, 90, 78]
+})
 
-# 外连接
-merged_outer = pd.merge(df1, df2, on='id', how='outer')
-print("\n外连接:")
-print(merged_outer)</pre>
+result = pd.merge(df1, df2, left_on='user_id', right_on='id')
+print(result)</pre>
                     </div>
                 </div>
             </div>
 
             <div class="content-section">
-                <div class="content-section-title">第三章 concat方法</div>
+                <div class="content-section-title">第三章 concat操作</div>
                 
                 <div class="content-card">
                     <h3>3.1 concat基础</h3>
-                    <p>concat方法用于沿着某个轴将多个DataFrame堆叠在一起。</p>
+                    <p>concat用于沿着指定轴连接多个DataFrame。</p>
                     <div class="code-box">
-<pre># 创建两个结构相同的DataFrame
+<pre>import pandas as pd
+
+# 创建两个DataFrame
 df_a = pd.DataFrame({
-    'name': ['Alice', 'Bob'],
-    'age': [25, 30]
+    'A': ['A0', 'A1', 'A2'],
+    'B': ['B0', 'B1', 'B2']
 })
 
 df_b = pd.DataFrame({
-    'name': ['Charlie', 'David'],
-    'age': [35, 40]
+    'A': ['A3', 'A4', 'A5'],
+    'B': ['B3', 'B4', 'B5']
 })
 
-# 纵向合并（行方向）
+# 纵向合并
 result = pd.concat([df_a, df_b], ignore_index=True)
 print("纵向合并:")
 print(result)
@@ -624,10 +893,17 @@ print("\n客户统计:")
 print(customer_stats)</textarea>
                         </div>
                         <div class="editor-controls">
-                            <button class="btn btn-primary" onclick="runCode()" id="run-btn">▶️ 运行代码</button>
-                            <button class="btn btn-secondary" onclick="resetCode()">🔄 重置</button>
-                            <button class="btn btn-secondary" onclick="copyCode()">📋 复制</button>
+                            <button class="btn btn-primary" onclick="runCode()" id="run-btn" aria-describedby="code-help">
+                                ▶️ 运行代码
+                            </button>
+                            <button class="btn btn-secondary" onclick="resetCode()" aria-label="重置代码">
+                                🔄 重置
+                            </button>
+                            <button class="btn btn-secondary" onclick="copyCode()" aria-label="复制代码">
+                                📋 复制
+                            </button>
                         </div>
+                        <div id="code-help" class="sr-only">输入 Python 代码后点击运行按钮执行</div>
                         <div class="output-box" id="output-box" style="display: none;">
                             <div class="output-title">📤 输出结果</div>
                             <pre class="output-content" id="output-content"></pre>
@@ -637,7 +913,7 @@ print(customer_stats)</textarea>
             </div>
         </div>
 
-        <div id="practice-tab" class="tab-content">
+        <div id="practice-tab" class="tab-content" role="tabpanel" aria-labelledby="tab-practice">
             <div class="content-section">
                 <div class="content-section-title">练习题（共5题）</div>
                 
@@ -668,8 +944,8 @@ print("合并结果:")
 print(merged)</textarea>
                         </div>
                         <div class="editor-controls">
-                            <button class="btn btn-primary" onclick="runPracticeCode(1)">▶️ 运行代码</button>
-                            <button class="btn btn-secondary" onclick="resetPracticeCode(1)">🔄 重置</button>
+                            <button class="btn btn-primary" onclick="runPracticeCode(1)" aria-label="运行代码">▶️ 运行代码</button>
+                            <button class="btn btn-secondary" onclick="resetPracticeCode(1)" aria-label="重置代码">🔄 重置</button>
                         </div>
                         <div class="output-box" id="practice-output-1" style="display: none;">
                             <div class="output-title">📤 输出结果</div>
@@ -703,8 +979,8 @@ print("左连接结果:")
 print(result)</textarea>
                         </div>
                         <div class="editor-controls">
-                            <button class="btn btn-primary" onclick="runPracticeCode(2)">▶️ 运行代码</button>
-                            <button class="btn btn-secondary" onclick="resetPracticeCode(2)">🔄 重置</button>
+                            <button class="btn btn-primary" onclick="runPracticeCode(2)" aria-label="运行代码">▶️ 运行代码</button>
+                            <button class="btn btn-secondary" onclick="resetPracticeCode(2)" aria-label="重置代码">🔄 重置</button>
                         </div>
                         <div class="output-box" id="practice-output-2" style="display: none;">
                             <div class="output-title">📤 输出结果</div>
@@ -715,4 +991,601 @@ print(result)</textarea>
 
                 <div class="content-card">
                     <h3>练习 3：concat纵向合并</h3>
-                    <p>
+                    <p>使用concat进行纵向合并。</p>
+                    <div class="code-editor-container">
+                        <div class="code-editor">
+                            <textarea id="practice-code-3" class="code-textarea" spellcheck="false">import pandas as pd
+
+# 创建两个DataFrame
+df1 = pd.DataFrame({
+    'A': ['A0', 'A1', 'A2'],
+    'B': ['B0', 'B1', 'B2']
+})
+
+df2 = pd.DataFrame({
+    'A': ['A3', 'A4', 'A5'],
+    'B': ['B3', 'B4', 'B5']
+})
+
+# 纵向合并
+result = pd.concat([df1, df2], ignore_index=True)
+
+print("合并结果:")
+print(result)
+print(f"\n原始df1行数: {len(df1)}")
+print(f"原始df2行数: {len(df2)}")
+print(f"合并后行数: {len(result)}")</textarea>
+                        </div>
+                        <div class="editor-controls">
+                            <button class="btn btn-primary" onclick="runPracticeCode(3)" aria-label="运行代码">▶️ 运行代码</button>
+                            <button class="btn btn-secondary" onclick="resetPracticeCode(3)" aria-label="重置代码">🔄 重置</button>
+                        </div>
+                        <div class="output-box" id="practice-output-3" style="display: none;">
+                            <div class="output-title">📤 输出结果</div>
+                            <pre class="output-content" id="practice-output-content-3"></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h3>练习 4：concat横向合并</h3>
+                    <p>使用concat进行横向合并。</p>
+                    <div class="code-editor-container">
+                        <div class="code-editor">
+                            <textarea id="practice-code-4" class="code-textarea" spellcheck="false">import pandas as pd
+
+df_a = pd.DataFrame({
+    'name': ['张三', '李四', '王五'],
+    'age': [25, 30, 35]
+})
+
+df_b = pd.DataFrame({
+    'city': ['北京', '上海', '广州'],
+    'salary': [8000, 10000, 9000]
+})
+
+# 横向合并
+result = pd.concat([df_a, df_b], axis=1)
+
+print("横向合并结果:")
+print(result)</textarea>
+                        </div>
+                        <div class="editor-controls">
+                            <button class="btn btn-primary" onclick="runPracticeCode(4)" aria-label="运行代码">▶️ 运行代码</button>
+                            <button class="btn btn-secondary" onclick="resetPracticeCode(4)" aria-label="重置代码">🔄 重置</button>
+                        </div>
+                        <div class="output-box" id="practice-output-4" style="display: none;">
+                            <div class="output-title">📤 输出结果</div>
+                            <pre class="output-content" id="practice-output-content-4"></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h3>练习 5：多表合并综合练习</h3>
+                    <p>综合使用merge合并多个表。</p>
+                    <div class="code-editor-container">
+                        <div class="code-editor">
+                            <textarea id="practice-code-5" class="code-textarea" spellcheck="false">import pandas as pd
+
+# 创建三个表
+orders = pd.DataFrame({
+    'order_id': ['O001', 'O002', 'O003'],
+    'customer_id': ['C001', 'C002', 'C001'],
+    'product_id': ['P001', 'P002', 'P003']
+})
+
+customers = pd.DataFrame({
+    'customer_id': ['C001', 'C002', 'C003'],
+    'name': ['张三', '李四', '王五']
+})
+
+products = pd.DataFrame({
+    'product_id': ['P001', 'P002', 'P003'],
+    'product_name': ['手机', '电脑', '平板'],
+    'price': [3999, 5999, 2999]
+})
+
+# 合并订单和客户
+order_customer = pd.merge(orders, customers, on='customer_id')
+
+# 再合并产品信息
+final = pd.merge(order_customer, products, on='product_id')
+
+print("完整订单信息:")
+print(final)
+
+# 计算每个客户的总消费
+total_spent = final.groupby('name')['price'].sum()
+print("\n客户总消费:")
+print(total_spent)</textarea>
+                        </div>
+                        <div class="editor-controls">
+                            <button class="btn btn-primary" onclick="runPracticeCode(5)" aria-label="运行代码">▶️ 运行代码</button>
+                            <button class="btn btn-secondary" onclick="resetPracticeCode(5)" aria-label="重置代码">🔄 重置</button>
+                        </div>
+                        <div class="output-box" id="practice-output-5" style="display: none;">
+                            <div class="output-title">📤 输出结果</div>
+                            <pre class="output-content" id="practice-output-content-5"></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="test-tab" class="tab-content" role="tabpanel" aria-labelledby="tab-test">
+            <div class="content-section">
+                <div class="content-section-title">测试题（共 5 题，满分 100 分）</div>
+                
+                <div class="question-box">
+                    <h4>问题 1 / 5</h4>
+                    <p>以下哪种合并方式会保留左表的所有行？</p>
+                    <div class="options" role="radiogroup" aria-label="测试题1选项">
+                        <button class="option-btn" onclick="selectTestOption(this, 1, 'A', false)">A. 内连接 (inner)</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 1, 'B', true)">B. 左连接 (left)</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 1, 'C', false)">C. 右连接 (right)</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 1, 'D', false)">D. 外连接 (outer)</button>
+                    </div>
+                </div>
+
+                <div class="question-box">
+                    <h4>问题 2 / 5</h4>
+                    <p>concat默认是沿着哪个轴进行合并？</p>
+                    <div class="options" role="radiogroup" aria-label="测试题2选项">
+                        <button class="option-btn" onclick="selectTestOption(this, 2, 'A', true)">A. axis=0（纵向）</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 2, 'B', false)">B. axis=1（横向）</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 2, 'C', false)">C. axis=2（深度）</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 2, 'D', false)">D. 以上都不是</button>
+                    </div>
+                </div>
+
+                <div class="question-box">
+                    <h4>问题 3 / 5</h4>
+                    <p>merge方法中，当两个DataFrame的键名不同时，应该使用哪个参数？</p>
+                    <div class="options" role="radiogroup" aria-label="测试题3选项">
+                        <button class="option-btn" onclick="selectTestOption(this, 3, 'A', false)">A. on</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 3, 'B', true)">B. left_on 和 right_on</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 3, 'C', false)">C. join</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 3, 'D', false)">D. keys</button>
+                    </div>
+                </div>
+
+                <div class="question-box">
+                    <h4>问题 4 / 5</h4>
+                    <p>外连接会保留哪些行？</p>
+                    <div class="options" role="radiogroup" aria-label="测试题4选项">
+                        <button class="option-btn" onclick="selectTestOption(this, 4, 'A', false)">A. 只保留两个表都有的行</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 4, 'B', false)">B. 只保留左表的行</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 4, 'C', false)">C. 只保留右表的行</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 4, 'D', true)">D. 保留两个表的所有行</button>
+                    </div>
+                </div>
+
+                <div class="question-box">
+                    <h4>问题 5 / 5</h4>
+                    <p>以下哪个方法是基于索引进行合并的？</p>
+                    <div class="options" role="radiogroup" aria-label="测试题5选项">
+                        <button class="option-btn" onclick="selectTestOption(this, 5, 'A', false)">A. merge</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 5, 'B', false)">B. concat</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 5, 'C', true)">C. join</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 5, 'D', false)">D. append</button>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="submitTest()" aria-label="提交测试答案">
+                        📤 提交答案
+                    </button>
+                    <button class="btn btn-secondary" onclick="resetTest()" aria-label="重新开始测试">
+                        🔄 重新开始
+                    </button>
+                </div>
+
+                <div class="test-result" id="test-result" role="alert" aria-live="assertive">
+                    <div class="test-result-icon" id="result-icon">🎉</div>
+                    <h3>测试完成！</h3>
+                    <div class="score" id="final-score">0分</div>
+                    <p id="result-message">太棒了！继续努力！</p>
+                    <div class="btn-group" style="justify-content: center;">
+                        <button class="btn btn-secondary" onclick="resetTest()">再来一次</button>
+                        <a href="../../index.html" class="btn btn-primary" aria-label="返回首页">返回首页 →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="homework-tab" class="tab-content" role="tabpanel" aria-labelledby="tab-homework">
+            <div class="content-section">
+                <div class="content-section-title">作业提交</div>
+                
+                <div class="content-card">
+                    <h3>📝 数据合并作业</h3>
+                    <p>请完成以下数据合并任务：</p>
+                    <ul>
+                        <li>1. 创建订单、客户、产品三个DataFrame</li>
+                        <li>2. 使用merge合并订单和客户数据</li>
+                        <li>3. 再合并产品数据</li>
+                        <li>4. 统计每个客户的总消费金额</li>
+                    </ul>
+                </div>
+
+                <div class="homework-section">
+                    <div class="homework-title">
+                        <span>💻</span> 作业代码提交
+                    </div>
+                    <div class="homework-submit-area">
+                        <textarea id="homework-code" class="homework-textarea" placeholder="请在此输入你的代码...">import pandas as pd
+
+# 创建订单数据
+orders = pd.DataFrame({
+    'order_id': ['O001', 'O002', 'O003', 'O004'],
+    'customer_id': ['C001', 'C002', 'C001', 'C003'],
+    'product_id': ['P001', 'P002', 'P002', 'P001']
+})
+
+# 创建客户数据
+customers = pd.DataFrame({
+    'customer_id': ['C001', 'C002', 'C003'],
+    'name': ['张三', '李四', '王五'],
+    'city': ['北京', '上海', '广州']
+})
+
+# 创建产品数据
+products = pd.DataFrame({
+    'product_id': ['P001', 'P002', 'P003'],
+    'product_name': ['手机', '电脑', '平板'],
+    'price': [3999, 5999, 2999]
+})
+
+# 合并订单和客户
+
+
+# 再合并产品数据
+
+
+# 统计每个客户的总消费
+
+
+print("完成分析！")</textarea>
+                        <div class="btn-group" style="margin-top: 16px;">
+                            <button class="btn btn-primary" onclick="submitHomework()" aria-label="提交作业">
+                                📤 提交作业
+                            </button>
+                            <button class="btn btn-secondary" onclick="runHomeworkCode()" aria-label="运行代码">
+                                ▶️ 运行代码
+                            </button>
+                        </div>
+                        <div class="submit-status" id="submit-status"></div>
+                    </div>
+                </div>
+                <div class="output-box" id="homework-output" style="display: none;">
+                    <div class="output-title">📤 代码运行结果</div>
+                    <pre class="output-content" id="homework-output-content"></pre>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2024 TT's Learning Space · Pandas数据分析实战训练营</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+    
+    <script>
+        let pyodide = null;
+        let isLoading = false;
+        let testAnswers = {};
+        let totalQuestions = 5;
+        
+        async function initPyodide() {
+            if (pyodide || isLoading) return;
+            isLoading = true;
+            const btn = document.getElementById('run-btn');
+            if (btn) { btn.disabled = true; btn.innerHTML = '<span class="loading-spinner"></span> 加载中...'; }
+            try {
+                pyodide = await loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.24.1/full/" });
+            } catch (error) { console.error('Pyodide加载失败:', error); } finally {
+                if (btn) { btn.disabled = false; btn.innerHTML = '▶️ 运行代码'; }
+                isLoading = false;
+            }
+        }
+        
+        async function runCode() {
+            const code = document.getElementById('code-input').value;
+            const outputBox = document.getElementById('output-box');
+            const outputContent = document.getElementById('output-content');
+            const btn = document.getElementById('run-btn');
+            if (!code.trim()) { alert('请先输入代码！'); return; }
+            outputBox.style.display = 'block';
+            outputContent.textContent = '正在执行...';
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading-spinner"></span> 运行中...';
+            try {
+                await initPyodide();
+                pyodide.runPython(`import sys; from io import StringIO; sys.stdout = StringIO(); sys.stderr = StringIO()`);
+                await pyodide.runPythonAsync(code);
+                const stdout = pyodide.runPython('sys.stdout.getvalue()');
+                const stderr = pyodide.runPython('sys.stderr.getvalue()');
+                if (stderr?.trim()) {
+                    outputContent.textContent = stderr;
+                    outputContent.className = 'output-content error';
+                } else {
+                    outputContent.textContent = stdout || '(代码执行完成，无输出)';
+                    outputContent.className = 'output-content success';
+                }
+            } catch (error) {
+                outputContent.textContent = '错误: ' + error.message;
+                outputContent.className = 'output-content error';
+            } finally { btn.disabled = false; btn.innerHTML = '▶️ 运行代码'; }
+        }
+        
+        function resetCode() {
+            document.getElementById('code-input').value = `import pandas as pd
+
+# 创建订单数据
+orders = pd.DataFrame({
+    'order_id': ['O001', 'O002', 'O003', 'O004', 'O005'],
+    'customer_id': ['C001', 'C002', 'C001', 'C003', 'C002'],
+    'amount': [100, 200, 150, 300, 250]
+})
+
+# 创建客户数据
+customers = pd.DataFrame({
+    'customer_id': ['C001', 'C002', 'C003', 'C004'],
+    'name': ['张三', '李四', '王五', '赵六'],
+    'city': ['北京', '上海', '广州', '深圳']
+})
+
+# 创建产品数据
+products = pd.DataFrame({
+    'order_id': ['O001', 'O002', 'O003', 'O004', 'O005'],
+    'product': ['手机', '电脑', '平板', '耳机', '键盘'],
+    'quantity': [1, 1, 2, 3, 2]
+})
+
+print("订单数据:")
+print(orders)
+
+print("\n客户数据:")
+print(customers)
+
+print("\n产品数据:")
+print(products)
+
+# 合并订单和客户数据
+order_customer = pd.merge(orders, customers, on='customer_id')
+print("\n订单+客户:")
+print(order_customer)
+
+# 再合并产品数据
+final_data = pd.merge(order_customer, products, on='order_id')
+print("\n完整数据:")
+print(final_data)
+
+# 统计每个客户的总消费
+customer_stats = final_data.groupby('name').agg({
+    'amount': 'sum',
+    'order_id': 'count'
+}).rename(columns={'amount': 'total_amount', 'order_id': 'order_count'})
+
+print("\n客户统计:")
+print(customer_stats)`;
+        }
+        
+        function copyCode() {
+            const code = document.getElementById('code-input').value;
+            navigator.clipboard.writeText(code).then(() => { alert('代码已复制！'); });
+        }
+        
+        async function runPracticeCode(num) {
+            const code = document.getElementById('practice-code-' + num).value;
+            const outputBox = document.getElementById('practice-output-' + num);
+            const outputContent = document.getElementById('practice-output-content-' + num);
+            if (!code.trim()) { alert('请先输入代码！'); return; }
+            outputBox.style.display = 'block';
+            outputContent.textContent = '正在执行...';
+            try {
+                await initPyodide();
+                pyodide.runPython(`import sys; from io import StringIO; sys.stdout = StringIO(); sys.stderr = StringIO()`);
+                await pyodide.runPythonAsync(code);
+                const stdout = pyodide.runPython('sys.stdout.getvalue()');
+                const stderr = pyodide.runPython('sys.stderr.getvalue()');
+                if (stderr?.trim()) {
+                    outputContent.textContent = stderr;
+                    outputContent.className = 'output-content error';
+                } else {
+                    outputContent.textContent = stdout || '(代码执行完成，无输出)';
+                    outputContent.className = 'output-content success';
+                }
+            } catch (error) {
+                outputContent.textContent = '错误: ' + error.message;
+                outputContent.className = 'output-content error';
+            }
+        }
+        
+        function resetPracticeCode(num) {
+            const codes = {
+                1: `import pandas as pd
+
+# 创建两个DataFrame
+students = pd.DataFrame({
+    'id': [1, 2, 3, 4],
+    'name': ['小明', '小红', '小刚', '小丽'],
+    'class': ['一班', '二班', '一班', '二班']
+})
+
+scores = pd.DataFrame({
+    'id': [1, 2, 3, 5],
+    'math': [90, 85, 95, 88],
+    'english': [80, 92, 88, 90]
+})
+
+# 内连接合并
+merged = pd.merge(students, scores, on='id')
+
+print("合并结果:")
+print(merged)`,
+                2: `import pandas as pd
+
+employees = pd.DataFrame({
+    'emp_id': [101, 102, 103, 104],
+    'name': ['张三', '李四', '王五', '赵六'],
+    'department': ['销售', '技术', '销售', '人事']
+})
+
+salaries = pd.DataFrame({
+    'emp_id': [101, 102, 105],
+    'salary': [8000, 10000, 7000]
+})
+
+# 左连接
+result = pd.merge(employees, salaries, on='emp_id', how='left')
+
+print("左连接结果:")
+print(result)`,
+                3: `import pandas as pd
+
+# 创建两个DataFrame
+df1 = pd.DataFrame({
+    'A': ['A0', 'A1', 'A2'],
+    'B': ['B0', 'B1', 'B2']
+})
+
+df2 = pd.DataFrame({
+    'A': ['A3', 'A4', 'A5'],
+    'B': ['B3', 'B4', 'B5']
+})
+
+# 纵向合并
+result = pd.concat([df1, df2], ignore_index=True)
+
+print("合并结果:")
+print(result)
+print(f"\n原始df1行数: {len(df1)}")
+print(f"原始df2行数: {len(df2)}")
+print(f"合并后行数: {len(result)}")`,
+                4: `import pandas as pd
+
+df_a = pd.DataFrame({
+    'name': ['张三', '李四', '王五'],
+    'age': [25, 30, 35]
+})
+
+df_b = pd.DataFrame({
+    'city': ['北京', '上海', '广州'],
+    'salary': [8000, 10000, 9000]
+})
+
+# 横向合并
+result = pd.concat([df_a, df_b], axis=1)
+
+print("横向合并结果:")
+print(result)`,
+                5: `import pandas as pd
+
+# 创建三个表
+orders = pd.DataFrame({
+    'order_id': ['O001', 'O002', 'O003'],
+    'customer_id': ['C001', 'C002', 'C001'],
+    'product_id': ['P001', 'P002', 'P003']
+})
+
+customers = pd.DataFrame({
+    'customer_id': ['C001', 'C002', 'C003'],
+    'name': ['张三', '李四', '王五']
+})
+
+products = pd.DataFrame({
+    'product_id': ['P001', 'P002', 'P003'],
+    'product_name': ['手机', '电脑', '平板'],
+    'price': [3999, 5999, 2999]
+})
+
+# 合并订单和客户
+order_customer = pd.merge(orders, customers, on='customer_id')
+
+# 再合并产品信息
+final = pd.merge(order_customer, products, on='product_id')
+
+print("完整订单信息:")
+print(final)
+
+# 计算每个客户的总消费
+total_spent = final.groupby('name')['price'].sum()
+print("\n客户总消费:")
+print(total_spent)`
+            };
+            document.getElementById('practice-code-' + num).value = codes[num];
+        }
+        
+        async function runHomeworkCode() {
+            const code = document.getElementById('homework-code').value;
+            const outputBox = document.getElementById('homework-output');
+            const outputContent = document.getElementById('homework-output-content');
+            if (!code.trim()) { alert('请先输入代码！'); return; }
+            outputBox.style.display = 'block';
+            outputContent.textContent = '正在执行...';
+            try {
+                await initPyodide();
+                pyodide.runPython(`import sys; from io import StringIO; sys.stdout = StringIO(); sys.stderr = StringIO()`);
+                await pyodide.runPythonAsync(code);
+                const stdout = pyodide.runPython('sys.stdout.getvalue()');
+                const stderr = pyodide.runPython('sys.stderr.getvalue()');
+                if (stderr?.trim()) {
+                    outputContent.textContent = stderr;
+                    outputContent.className = 'output-content error';
+                } else {
+                    outputContent.textContent = stdout || '(代码执行完成，无输出)';
+                    outputContent.className = 'output-content success';
+                }
+            } catch (error) {
+                outputContent.textContent = '错误: ' + error.message;
+                outputContent.className = 'output-content error';
+            }
+        }
+        
+        function submitHomework() {
+            const status = document.getElementById('submit-status');
+            status.className = 'submit-status success';
+            status.innerHTML = '✅ 作业提交成功！';
+            status.style.display = 'block';
+        }
+        
+        function selectTestOption(btn, qNum, option, isCorrect) {
+            testAnswers[qNum] = { option, isCorrect };
+            const options = btn.parentElement.children;
+            for (let i = 0; i < options.length; i++) { options[i].classList.remove('selected'); }
+            btn.classList.add('selected');
+        }
+        
+        function submitTest() {
+            let correct = 0;
+            for (let i = 1; i <= totalQuestions; i++) { if (testAnswers[i]?.isCorrect) correct++; }
+            const score = Math.round((correct / totalQuestions) * 100);
+            document.getElementById('final-score').textContent = score + '分';
+            document.getElementById('result-message').textContent = score >= 80 ? '🎉 太棒了！继续保持！' : score >= 60 ? '👍 不错！继续努力！' : '💪 需要多加练习！';
+            document.getElementById('result-icon').textContent = score >= 80 ? '🏆' : score >= 60 ? '😊' : '📚';
+            document.getElementById('test-result').style.display = 'block';
+        }
+        
+        function resetTest() {
+            testAnswers = {};
+            document.getElementById('test-result').style.display = 'none';
+            const options = document.querySelectorAll('.option-btn');
+            options.forEach(opt => { opt.classList.remove('selected'); });
+        }
+        
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => { tab.classList.remove('active'); });
+            contents.forEach(content => { content.classList.remove('active'); });
+            document.querySelector(`[onclick="showTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(tabName + '-tab').classList.add('active');
+        }
+    </script>
+</body>
+</html>
