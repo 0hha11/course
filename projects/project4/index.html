@@ -19,7 +19,6 @@
         
         .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
         
-        /* Skip link */
         .skip-link {
             position: absolute;
             top: -100px;
@@ -35,7 +34,6 @@
         }
         .skip-link:focus { top: 20px; }
         
-        /* Header */
         header { 
             background: rgba(0, 0, 0, 0.3); 
             border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
@@ -81,7 +79,6 @@
             outline-offset: 2px;
         }
         
-        /* Project Header */
         .project-header { padding: 48px 0 32px; }
         .project-header .container { display: flex; justify-content: space-between; align-items: flex-start; gap: 32px; }
         .project-info { flex: 1; }
@@ -144,7 +141,6 @@
             font-family: 'Monaco', 'Consolas', monospace;
         }
         
-        /* Progress Card */
         .progress-card {
             background: linear-gradient(135deg, rgba(0, 212, 255, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -181,7 +177,6 @@
         .progress-stat-num { font-size: 20px; font-weight: 700; color: #ffffff; }
         .progress-stat-label { font-size: 12px; color: #707090; text-transform: uppercase; }
         
-        /* Tabs */
         .tabs-wrapper {
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -221,7 +216,6 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         
-        /* Search */
         .search-container {
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -267,7 +261,6 @@
             border-color: rgba(0, 212, 255, 0.3);
         }
         
-        /* Content Cards */
         .content-section { margin-bottom: 32px; }
         .content-section-title {
             font-size: 14px;
@@ -325,7 +318,6 @@
         }
         .content-card strong { color: #ffffff; font-weight: 600; }
         
-        /* Info Boxes */
         .info-box {
             background: rgba(0, 212, 255, 0.08);
             border: 1px solid rgba(0, 212, 255, 0.2);
@@ -343,7 +335,6 @@
         }
         .tip-box p { margin: 0; color: #d4c4ff; }
         
-        /* Code Box */
         .code-box { 
             background: #0d0d1a; 
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -360,7 +351,6 @@
             white-space: pre;
         }
         
-        /* Code Editor */
         .code-editor-container {
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -480,7 +470,6 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
         
-        /* Question Boxes */
         .question-box { 
             background: rgba(255, 255, 255, 0.04); 
             border: 1px solid rgba(255, 255, 255, 0.08); 
@@ -547,7 +536,6 @@
         
         .btn-group { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
         
-        /* Test Result */
         .test-result { 
             background: rgba(255, 255, 255, 0.04); 
             border: 1px solid rgba(255, 255, 255, 0.08); 
@@ -575,7 +563,6 @@
         }
         .test-result p { color: #a0a0b8; margin-bottom: 24px; font-size: 15px; }
         
-        /* Homework Section */
         .homework-section {
             background: rgba(139, 92, 246, 0.08);
             border: 1px solid rgba(139, 92, 246, 0.2);
@@ -629,7 +616,6 @@
             border: 1px solid rgba(239, 68, 68, 0.3);
         }
         
-        /* Footer */
         footer { 
             text-align: center; 
             padding: 40px 0; 
@@ -639,7 +625,6 @@
             margin-top: 60px;
         }
         
-        /* Responsive */
         @media (max-width: 968px) {
             .project-header .container { flex-direction: column; }
             .progress-card { width: 100%; }
@@ -651,7 +636,6 @@
             .project-title { font-size: 24px; }
         }
         
-        /* Screen reader only */
         .sr-only {
             position: absolute;
             width: 1px;
@@ -671,7 +655,7 @@
     <header role="navigation" aria-label="主导航">
         <div class="container">
             <div class="header-left">
-                <div class="logo-circle" role="img" aria-label="网站标志">📊</div>
+                <div class="logo-circle" role="img" aria-label="网站标志">👥</div>
                 <div class="logo-text">TT's Learning</div>
             </div>
             <a href="../../index.html" aria-label="返回首页">← 返回首页</a>
@@ -681,11 +665,11 @@
     <div class="project-header">
         <div class="container">
             <div class="project-info">
-                <div class="project-icon-large" role="img" aria-label="数据清洗图标">👥</div>
+                <div class="project-icon-large" role="img" aria-label="分组聚合图标">👥</div>
                 <h1 class="project-title">客户聚类分析</h1>
-                <p class="project-description">掌握Pandas数据清洗的核心技能，包括处理缺失值、重复值、异常值等关键步骤，为后续分析打下坚实基础。</p>
+                <p class="project-description">使用K-Means算法对客户进行分群，理解客户行为。，学习如何按类别分组并计算统计指标。</p>
                 <div class="project-meta" role="group" aria-label="项目标签">
-                    <span class="badge badge-medium" aria-label="难度等级：入门">入门</span>
+                    <span class="badge badge-medium" aria-label="难度等级：进阶">进阶</span>
                     <span class="badge badge-time" aria-label="预计学习时间：30分钟">30分钟</span>
                     <span class="badge badge-dataset" aria-label="数据集：customer_features.csv">📁 customer_features.csv</span>
                 </div>
@@ -743,33 +727,38 @@
 
         <div id="learn-tab" class="tab-content active" role="tabpanel" aria-labelledby="tab-learn">
             <div class="content-section">
-                <div class="content-section-title">第一章 数据清洗基础</div>
+                <div class="content-section-title">第一章 分组与聚合基础</div>
                 
                 <div class="content-card">
-                    <h3>1.1 什么是数据清洗</h3>
-                    <p>数据清洗是数据分析过程中非常重要的一步。在实际工作中，我们获取到的原始数据往往存在各种问题：</p>
+                    <h3>1.1 什么是分组聚合？</h3>
+                    <p>分组聚合是数据分析中的核心操作，它允许我们按特定类别对数据进行分组，然后对每个组进行统计计算。</p>
                     <ul>
-                        <li><strong>缺失值</strong> - 某些字段没有记录数据</li>
-                        <li><strong>重复值</strong> - 相同的数据被记录了多次</li>
-                        <li><strong>异常值</strong> - 明显不符合常理的数据</li>
-                        <li><strong>格式不一致</strong> - 同一类型数据格式不统一</li>
+                        <li><strong>分组（Group）</strong>：按一个或多个列的唯一值将数据分组</li>
+                        <li><strong>聚合（Aggregation）</strong>：对每个分组进行统计计算（求和、平均、计数等）</li>
+                        <li><strong>透视表（Pivot）</strong>：创建交叉表来展示多维聚合结果</li>
                     </ul>
                     <div class="info-box" role="note">
-                        <p>💡 数据清洗通常占数据分析总时间的 60% - 80%，是数据科学工作中不可或缺的环节。</p>
+                        <p>💡 分组聚合是SQL中GROUP BY的Pandas实现，但更强大、更灵活。</p>
                     </div>
                 </div>
 
                 <div class="content-card">
-                    <h3>1.2 Pandas 读取数据</h3>
-                    <p>首先，让我们学习如何用 Pandas 读取 CSV 数据文件：</p>
+                    <h3>1.2 基本分组操作</h3>
+                    <p>让我们学习使用groupby进行分组：</p>
                     <div class="code-box">
 <pre>import pandas as pd
+import numpy as np
 
-# 读取 CSV 文件
-df = pd.read_csv('customer_features.csv')
+data = {
+    'category': ['电子产品', '服装', '电子产品', '服装', '食品'],
+    'price': [1000, 200, 1500, 300, 50],
+    'quantity': [5, 10, 8, 15]
+}
+df = pd.DataFrame(data)
 
-# 查看前 5 行数据
-print(df.head())</pre>
+print('原始数据:')
+print(df)
+</pre>
                     </div>
                     
                     <div class="code-editor-container">
@@ -782,18 +771,27 @@ print(df.head())</pre>
                                     placeholder="在这里输入 Python 代码..." 
                                     spellcheck="false"
                                     aria-describedby="code-help">import pandas as pd
+import numpy as np
 
-# 创建示例数据
-data = {'name': ['Alice', 'Bob', 'Charlie', 'David'],
-        'age': [25, 30, None, 35],
-        'city': ['Beijing', 'Shanghai', 'Guangzhou', None]}
+data = {
+    'category': ['电子产品', '服装', '电子产品', '服装', '食品'],
+    'price': [1000, 200, 1500, 300, 50],
+    'quantity': [5, 10, 8, 15]
+}
 df = pd.DataFrame(data)
 
-# 显示数据
-print("数据预览:")
-print(df.head())
-print("\n数据信息:")
-print(df.info())</textarea>
+print('原始数据:')
+print(df)
+
+# 按类别分组计算总和
+print('\\n按类别分组求和:')
+grouped = df.groupby('category').sum()
+print(grouped)
+
+# 按类别分组计算平均值
+print('\\n按类别分组求平均:')
+grouped_mean = df.groupby('category').mean()
+print(grouped_mean)</textarea>
                         </div>
                         <div class="editor-controls">
                             <button class="btn btn-primary" onclick="runCode()" id="run-btn" aria-describedby="code-help">
@@ -816,101 +814,107 @@ print(df.info())</textarea>
             </div>
 
             <div class="content-section">
-                <div class="content-section-title">第二章 缺失值处理</div>
+                <div class="content-section-title">第二章 聚合函数</div>
                 
                 <div class="content-card">
-                    <h3>2.1 查找缺失值</h3>
-                    <p>我们可以使用 isnull() 或 isna() 方法来检测缺失值：</p>
+                    <h3>2.1 常用聚合函数</h3>
+                    <p>Pandas提供了丰富的聚合函数供我们使用：</p>
                     <div class="code-box">
-<pre># 查看每列缺失值数量
-print(df.isnull().sum())
+<pre># 单个聚合函数
+df.groupby('category').mean()
 
-# 查看包含缺失值的行
-missing_rows = df[df.isnull().any(axis=1)]</pre>
+# 多个聚合函数
+df.groupby('category').agg(['mean', 'sum', 'max', 'min', 'std'])
+
+# 不同列应用不同聚合
+agg_dict = {
+    'price': ['mean', 'sum', 'max'],
+    'quantity': ['sum', 'count']
+}
+df.groupby('category').agg(agg_dict)
+</pre>
                     </div>
                 </div>
 
                 <div class="content-card">
-                    <h3>2.2 处理缺失值</h3>
-                    <p>常见的处理方式有两种：删除和填充：</p>
+                    <h3>2.2 自定义聚合函数</h3>
+                    <p>除了内置函数，我们还可以定义自己的聚合函数：</p>
                     <div class="code-box">
-<pre># 方式 1：删除含有缺失值的行
-df_clean = df.dropna()
+<pre>def range_func(x):
+    return x.max() - x.min()
 
-# 方式 2：用均值填充数值型列
-df['price'] = df['price'].fillna(df['price'].mean())
-
-# 方式 3：用众数填充类别型列
-df['category'] = df['category'].fillna(df['category'].mode()[0])
-
-# 方式 4：用前向填充
-df['sales'] = df['sales'].fillna(method='ffill')</pre>
+df.groupby('category').agg({
+    'price': ['mean', range_func],
+    'quantity': ['sum', 'count']
+})
+</pre>
                     </div>
                 </div>
             </div>
 
             <div class="content-section">
-                <div class="content-section-title">第三章 重复值与异常值</div>
+                <div class="content-section-title">第三章 多维度分组</div>
                 
                 <div class="content-card">
-                    <h3>3.1 处理重复值</h3>
+                    <h3>3.1 多列分组</h3>
+                    <p>可以按多个列进行分组来获得更细粒度的分析：</p>
                     <div class="code-box">
-<pre># 检查重复值
-print("重复行数:", df.duplicated().sum())
+<pre>data = {
+    'category': ['电子产品', '电子产品', '服装', '服装', '服装'],
+    'region': ['华东', '华北', '华东', '华北', '华南'],
+    'price': [1000, 1500, 200, 300, 250],
+    'quantity': [5, 8, 10, 15, 12]
+}
+df = pd.DataFrame(data)
 
-# 删除重复值
-df = df.drop_duplicates()
-
-# 基于特定列检查重复
-df = df.drop_duplicates(subset=['name', 'email'])</pre>
+# 按类别和地区分组
+df.groupby(['category', 'region']).sum()
+</pre>
                     </div>
                 </div>
 
                 <div class="content-card">
-                    <h3>3.2 检测异常值</h3>
-                    <p>常用方法是使用 IQR (四分位距) 来检测异常值：</p>
+                    <h3>3.2 透视表和交叉表</h3>
+                    <p>使用pivot_table创建美观的透视表：</p>
                     <div class="code-box">
-<pre># 计算四分位数
-Q1 = df['amount'].quantile(0.25)
-Q3 = df['amount'].quantile(0.75)
-IQR = Q3 - Q1
+<pre># 透视表
+pd.pivot_table(df, 
+    values='price', 
+    index='category', 
+    columns='region', 
+    aggfunc='mean',
+    fill_value=0)
 
-# 计算边界
-lower_bound = Q1 - 1.5 * IQR
-upper_bound = Q3 + 1.5 * IQR
-
-# 筛选出正常范围的数据
-df_clean = df[(df['amount'] >= lower_bound) & (df['amount'] <= upper_bound)]</pre>
+# 交叉表 - 计数
+pd.crosstab(df['category'], df['region'])
+</pre>
                     </div>
                 </div>
             </div>
 
             <div class="content-section">
-                <div class="content-section-title">第四章 数据类型转换与格式统一</div>
+                <div class="content-section-title">第四章 分组后的操作</div>
                 
                 <div class="content-card">
-                    <h3>4.1 数据类型转换</h3>
+                    <h3>4.1 transform 方法</h3>
+                    <p>transform允许我们保持原始数据的形状：</p>
                     <div class="code-box">
-<pre># 查看数据类型
-print(df.dtypes)
-
-# 转换数据类型
-df['price'] = df['price'].astype(float)
-df['date'] = pd.to_datetime(df['date'])
-df['is_active'] = df['is_active'].astype(bool)</pre>
+<pre># 计算每个类别的占比
+df['category_total'] = df.groupby('category')['price'].transform('sum')
+df['price_ratio'] = df['price'] / df['category_total']
+</pre>
                     </div>
                 </div>
 
                 <div class="content-card">
-                    <h3>4.2 字符串处理</h3>
+                    <h3>4.2 apply 方法</h3>
+                    <p>apply可以对每个分组应用任意函数：</p>
                     <div class="code-box">
-<pre># 字符串操作
-df['name'] = df['name'].str.strip()
-df['name'] = df['name'].str.lower()
-df['name'] = df['name'].str.replace('_', ' ')
+<pre>def top_items(group, n=2):
+    return group.nlargest(n, 'price')
 
-# 提取子字符串
-df['category'] = df['product_code'].str[:2]</pre>
+df.groupby('category').apply(top_items)
+</pre>
                     </div>
                 </div>
             </div>
@@ -921,72 +925,72 @@ df['category'] = df['product_code'].str[:2]</pre>
                 <div class="content-section-title">练习题（共5题）</div>
                 
                 <div class="question-box">
-                    <h4>练习 1：检测缺失值</h4>
-                    <p>如果你想查看 DataFrame 中每列有多少缺失值，应该使用哪个方法？</p>
+                    <h4>练习 1：基本分组</h4>
+                    <p>要按'category'列分组并计算'sales'列的总和，应该使用哪个方法？</p>
                     <div class="options" role="radiogroup" aria-label="练习1选项">
-                        <button class="option-btn" onclick="selectOption(this, 1, 'A', false)">A. df.na()</button>
-                        <button class="option-btn" onclick="selectOption(this, 1, 'B', true)">B. df.isnull().sum()</button>
-                        <button class="option-btn" onclick="selectOption(this, 1, 'C', false)">C. df.count()</button>
-                        <button class="option-btn" onclick="selectOption(this, 1, 'D', false)">D. df.missing()</button>
+                        <button class="option-btn" onclick="selectOption(this, 1, 'A', false)">A. df.group('category').sum('sales')</button>
+                        <button class="option-btn" onclick="selectOption(this, 1, 'B', true)">B. df.groupby('category')['sales'].sum()</button>
+                        <button class="option-btn" onclick="selectOption(this, 1, 'C', false)">C. df.groupby.sum('category', 'sales')</button>
+                        <button class="option-btn" onclick="selectOption(this, 1, 'D', false)">D. df.sum.groupby('category')</button>
                     </div>
                     <div class="explanation" id="explanation-1" role="alert">
-                        <p><strong>正确！</strong> df.isnull() 返回一个布尔矩阵，然后用 sum() 就可以统计每列的缺失值数量。</p>
+                        <p><strong>正确！</strong> groupby后选择特定列，然后调用聚合函数是标准做法。</p>
                     </div>
                 </div>
 
                 <div class="question-box">
-                    <h4>练习 2：删除重复值</h4>
-                    <p>下列哪个方法可以删除 DataFrame 中的重复行？</p>
+                    <h4>练习 2：多个聚合</h4>
+                    <p>如何对同一列同时计算多个聚合指标？</p>
                     <div class="options" role="radiogroup" aria-label="练习2选项">
-                        <button class="option-btn" onclick="selectOption(this, 2, 'A', false)">A. df.remove_duplicates()</button>
-                        <button class="option-btn" onclick="selectOption(this, 2, 'B', true)">B. df.drop_duplicates()</button>
-                        <button class="option-btn" onclick="selectOption(this, 2, 'C', false)">C. df.delete_duplicates()</button>
-                        <button class="option-btn" onclick="selectOption(this, 2, 'D', false)">D. df.clear_duplicates()</button>
+                        <button class="option-btn" onclick="selectOption(this, 2, 'A', false)">A. df.groupby('col').mean().sum()</button>
+                        <button class="option-btn" onclick="selectOption(this, 2, 'B', false)">B. df.groupby('col').agg(mean, sum)</button>
+                        <button class="option-btn" onclick="selectOption(this, 2, 'C', true)">C. df.groupby('col').agg(['mean', 'sum'])</button>
+                        <button class="option-btn" onclick="selectOption(this, 2, 'D', false)">D. df.groupby('col')[mean, sum]</button>
                     </div>
                     <div class="explanation" id="explanation-2" role="alert">
-                        <p><strong>正确！</strong> drop_duplicates() 是 Pandas 专门用来删除重复行的方法。</p>
+                        <p><strong>正确！</strong> agg方法接受列表参数，可以同时计算多个聚合函数。</p>
                     </div>
                 </div>
 
                 <div class="question-box">
-                    <h4>练习 3：填充缺失值</h4>
-                    <p>用均值填充缺失值时，使用哪个方法？</p>
+                    <h4>练习 3：多列分组</h4>
+                    <p>按'category'和'region'两列分组，正确的写法是？</p>
                     <div class="options" role="radiogroup" aria-label="练习3选项">
-                        <button class="option-btn" onclick="selectOption(this, 3, 'A', true)">A. df.fillna(df.mean())</button>
-                        <button class="option-btn" onclick="selectOption(this, 3, 'B', false)">B. df.replace.nan(df.mean())</button>
-                        <button class="option-btn" onclick="selectOption(this, 3, 'C', false)">C. df.fill.mean()</button>
-                        <button class="option-btn" onclick="selectOption(this, 3, 'D', false)">D. df.na.fill(df.mean())</button>
+                        <button class="option-btn" onclick="selectOption(this, 3, 'A', false)">A. df.groupby('category, region')</button>
+                        <button class="option-btn" onclick="selectOption(this, 3, 'B', false)">B. df.groupby('category').groupby('region')</button>
+                        <button class="option-btn" onclick="selectOption(this, 3, 'C', true)">C. df.groupby(['category', 'region'])</button>
+                        <button class="option-btn" onclick="selectOption(this, 3, 'D', false)">D. df.groupby(category, region)</button>
                     </div>
                     <div class="explanation" id="explanation-3" role="alert">
-                        <p><strong>正确！</strong> fillna() 方法用于填充缺失值，可以接受均值、中位数等统计值作为参数。</p>
+                        <p><strong>正确！</strong> groupby接受列表参数，可以实现多维度分组。</p>
                     </div>
                 </div>
 
                 <div class="question-box">
-                    <h4>练习 4：数据类型转换</h4>
-                    <p>将字符串列转换为日期类型应该使用哪个方法？</p>
+                    <h4>练习 4：不同列不同聚合</h4>
+                    <p>对不同列应用不同的聚合函数，使用什么方法？</p>
                     <div class="options" role="radiogroup" aria-label="练习4选项">
-                        <button class="option-btn" onclick="selectOption(this, 4, 'A', false)">A. df.astype('datetime')</button>
-                        <button class="option-btn" onclick="selectOption(this, 4, 'B', true)">B. pd.to_datetime(df['date'])</button>
-                        <button class="option-btn" onclick="selectOption(this, 4, 'C', false)">C. df['date'].to_date()</button>
-                        <button class="option-btn" onclick="selectOption(this, 4, 'D', false)">D. df.convert_date()</button>
+                        <button class="option-btn" onclick="selectOption(this, 4, 'A', false)">A. df.groupby('col').agg(mean, sum)</button>
+                        <button class="option-btn" onclick="selectOption(this, 4, 'B', true)">B. df.groupby('col').agg({'col1': 'mean', 'col2': 'sum'})</button>
+                        <button class="option-btn" onclick="selectOption(this, 4, 'C', false)">C. df.groupby('col').col1.mean().col2.sum()</button>
+                        <button class="option-btn" onclick="selectOption(this, 4, 'D', false)">D. df.groupby('col').mean(col1).sum(col2)</button>
                     </div>
                     <div class="explanation" id="explanation-4" role="alert">
-                        <p><strong>正确！</strong> pd.to_datetime() 是 Pandas 中专门用于日期转换的函数。</p>
+                        <p><strong>正确！</strong> 可以向agg传入字典，键是列名，值是聚合函数。</p>
                     </div>
                 </div>
 
                 <div class="question-box">
-                    <h4>练习 5：异常值检测</h4>
-                    <p>IQR 方法中，异常值的判断标准是什么？</p>
+                    <h4>练习 5：透视表</h4>
+                    <p>创建透视表应该使用哪个函数？</p>
                     <div class="options" role="radiogroup" aria-label="练习5选项">
-                        <button class="option-btn" onclick="selectOption(this, 5, 'A', false)">A. 值 > Q3 或 值 < Q1</button>
-                        <button class="option-btn" onclick="selectOption(this, 5, 'B', false)">B. 值 > Q3+IQR 或 值 < Q1-IQR</button>
-                        <button class="option-btn" onclick="selectOption(this, 5, 'C', true)">C. 值 > Q3+1.5*IQR 或 值 < Q1-1.5*IQR</button>
-                        <button class="option-btn" onclick="selectOption(this, 5, 'D', false)">D. 值 > mean+std 或 值 < mean-std</button>
+                        <button class="option-btn" onclick="selectOption(this, 5, 'A', false)">A. df.pivot()</button>
+                        <button class="option-btn" onclick="selectOption(this, 5, 'B', false)">B. df.table()</button>
+                        <button class="option-btn" onclick="selectOption(this, 5, 'C', true)">C. pd.pivot_table()</button>
+                        <button class="option-btn" onclick="selectOption(this, 5, 'D', false)">D. pd.table()</button>
                     </div>
                     <div class="explanation" id="explanation-5" role="alert">
-                        <p><strong>正确！</strong> IQR方法使用 1.5 倍的四分位距作为异常值判断标准。</p>
+                        <p><strong>正确！</strong> pd.pivot_table是Pandas提供的专门用于创建透视表的函数。</p>
                     </div>
                 </div>
             </div>
@@ -998,56 +1002,56 @@ df['category'] = df['product_code'].str[:2]</pre>
                 
                 <div class="question-box">
                     <h4>问题 1 / 5</h4>
-                    <p>数据清洗通常占数据分析总时间的比例约为？</p>
+                    <p>groupby操作返回的是什么类型的对象？</p>
                     <div class="options" role="radiogroup" aria-label="测试题1选项">
-                        <button class="option-btn" onclick="selectTestOption(this, 1, 'A', false)">A. 10% - 20%</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 1, 'B', false)">B. 30% - 40%</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 1, 'C', true)">C. 60% - 80%</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 1, 'D', false)">D. 90% - 100%</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 1, 'A', false)">A. DataFrame</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 1, 'B', false)">B. Series</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 1, 'C', true)">C. GroupBy对象</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 1, 'D', false)">D. 字典</button>
                     </div>
                 </div>
 
                 <div class="question-box">
                     <h4>问题 2 / 5</h4>
-                    <p>下列哪个方法可以删除含有缺失值的行？</p>
+                    <p>想要保持原始数据形状的分组操作，应该使用？</p>
                     <div class="options" role="radiogroup" aria-label="测试题2选项">
-                        <button class="option-btn" onclick="selectTestOption(this, 2, 'A', true)">A. df.dropna()</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 2, 'B', false)">B. df.delete.na()</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 2, 'C', false)">C. df.remove.na()</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 2, 'D', false)">D. df.na.drop()</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 2, 'A', false)">A. agg()</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 2, 'B', true)">B. transform()</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 2, 'C', false)">C. apply()</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 2, 'D', false)">D. sum()</button>
                     </div>
                 </div>
 
                 <div class="question-box">
                     <h4>问题 3 / 5</h4>
-                    <p>IQR 是什么的缩写？</p>
+                    <p>count和size在groupby中的区别是？</p>
                     <div class="options" role="radiogroup" aria-label="测试题3选项">
-                        <button class="option-btn" onclick="selectTestOption(this, 3, 'A', false)">A. Inner Quantity Range</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 3, 'B', true)">B. Interquartile Range</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 3, 'C', false)">C. Integer Quarter Range</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 3, 'D', false)">D. Internal Quick Range</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 3, 'A', false)">A. 没有区别</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 3, 'B', false)">B. count统计非NA值，size统计所有值</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 3, 'C', true)">C. count按列统计，size统计总行数</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 3, 'D', false)">D. count更快，size更慢</button>
                     </div>
                 </div>
 
                 <div class="question-box">
                     <h4>问题 4 / 5</h4>
-                    <p>计算 IQR 时，Q1 和 Q3 分别代表什么？</p>
+                    <p>关于pivot_table说法正确的是？</p>
                     <div class="options" role="radiogroup" aria-label="测试题4选项">
-                        <button class="option-btn" onclick="selectTestOption(this, 4, 'A', false)">A. 最小值和最大值</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 4, 'B', false)">B. 均值和中位数</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 4, 'C', true)">C. 下四分位数和上四分位数</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 4, 'D', false)">D. 方差和标准差</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 4, 'A', false)">A. 只能按一列分组</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 4, 'B', false)">B. 不支持自定义聚合函数</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 4, 'C', true)">C. 可以设置fill_value处理缺失值</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 4, 'D', false)">D. 不能同时设置多个聚合函数</button>
                     </div>
                 </div>
 
                 <div class="question-box">
                     <h4>问题 5 / 5</h4>
-                    <p>用众数填充缺失值最适合什么类型的数据？</p>
+                    <p>对分组应用复杂操作时，最灵活的方法是？</p>
                     <div class="options" role="radiogroup" aria-label="测试题5选项">
-                        <button class="option-btn" onclick="selectTestOption(this, 5, 'A', false)">A. 数值型数据</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 5, 'B', true)">B. 类别型数据</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 5, 'C', false)">C. 时间序列数据</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 5, 'D', false)">D. 二进制数据</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 5, 'A', false)">A. sum()</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 5, 'B', false)">B. agg()</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 5, 'C', false)">C. transform()</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 5, 'D', true)">D. apply()</button>
                     </div>
                 </div>
 
@@ -1079,12 +1083,12 @@ df['category'] = df['product_code'].str[:2]</pre>
                 
                 <div class="content-card">
                     <h3>📝 客户聚类分析作业</h3>
-                    <p>请完成以下数据清洗任务：</p>
+                    <p>请完成以下分组聚合任务：</p>
                     <ul>
-                        <li>1. 创建一个包含缺失值和重复值的 DataFrame</li>
-                        <li>2. 使用至少两种方法处理缺失值</li>
-                        <li>3. 删除重复行</li>
-                        <li>4. 输出处理后的数据</li>
+                        <li>1. 创建一个包含类别、地区、价格和数量的DataFrame</li>
+                        <li>2. 按类别分组计算价格总和和数量平均值</li>
+                        <li>3. 按类别和地区两列进行分组分析</li>
+                        <li>4. 创建一个透视表展示数据</li>
                     </ul>
                 </div>
 
@@ -1094,24 +1098,34 @@ df['category'] = df['product_code'].str[:2]</pre>
                     </div>
                     <div class="homework-submit-area">
                         <textarea id="homework-code" class="homework-textarea" placeholder="请在此输入你的代码...">import pandas as pd
+import numpy as np
 
-# 创建包含缺失值和重复值的DataFrame
+# 创建数据
 data = {
-    'name': ['Alice', 'Bob', 'Charlie', 'Alice', None, 'David'],
-    'age': [25, None, 30, 25, 35, None],
-    'city': ['Beijing', 'Shanghai', None, 'Beijing', 'Guangzhou', 'Shenzhen']
+    'category': ['电子产品', '电子产品', '服装', '服装', '服装', '食品'],
+    'region': ['华东', '华北', '华东', '华北', '华南', '华东'],
+    'price': [1000, 1500, 200, 300, 250, 50],
+    'quantity': [5, 8, 10, 15, 12, 20]
 }
 df = pd.DataFrame(data)
 
-print("原始数据:")
+print('原始数据:')
 print(df)
 
-# 在此处编写你的数据清洗代码
+# 按类别分组
+print('\\n按类别分组:')
+result1 = df.groupby('category').agg({'price': 'sum', 'quantity': 'mean'})
+print(result1)
 
+# 按类别和地区分组
+print('\\n按类别和地区分组:')
+result2 = df.groupby(['category', 'region']).sum()
+print(result2)
 
-# 输出处理后的数据
-print("\n清洗后的数据:")
-print(df)</textarea>
+# 创建透视表
+print('\\n透视表:')
+pivot = pd.pivot_table(df, values='price', index='category', columns='region', aggfunc='mean', fill_value=0)
+print(pivot)</textarea>
                         <div class="btn-group" style="margin-top: 16px;">
                             <button class="btn btn-primary" onclick="submitHomework()" aria-label="提交作业">
                                 📤 提交作业
@@ -1147,13 +1161,13 @@ print(df)</textarea>
         let totalQuestions = 5;
         
         const searchData = [
-            { title: '数据清洗', section: '1.1 什么是数据清洗', content: '缺失值、重复值、异常值、格式不一致' },
-            { title: 'Pandas 读取数据', section: '1.2 Pandas 读取数据', content: 'pd.read_csv() df.head()' },
-            { title: '缺失值处理', section: '2.1 查找缺失值', content: 'isnull() isna() dropna() fillna()' },
-            { title: '重复值', section: '3.1 处理重复值', content: 'duplicated() drop_duplicates()' },
-            { title: '异常值', section: '3.2 检测异常值', content: 'IQR 四分位距 quantile()' },
-            { title: '数据类型转换', section: '4.1 数据类型转换', content: 'astype() to_datetime()' },
-            { title: '字符串处理', section: '4.2 字符串处理', content: 'str.strip() str.lower() str.replace()' }
+            { title: '分组聚合', section: '1.1 什么是分组聚合', content: 'groupby sum mean count' },
+            { title: '基本分组', section: '1.2 基本分组操作', content: 'groupby sum mean' },
+            { title: '聚合函数', section: '2.1 常用聚合函数', content: 'agg mean sum max min std' },
+            { title: '多维度分组', section: '3.1 多列分组', content: 'groupby multiple columns' },
+            { title: '透视表', section: '3.2 透视表和交叉表', content: 'pivot_table crosstab' },
+            { title: 'transform', section: '4.1 transform 方法', content: 'transform' },
+            { title: 'apply', section: '4.2 apply 方法', content: 'apply custom function' }
         ];
         
         async function initPyodide() {
@@ -1276,18 +1290,27 @@ sys.stderr = StringIO()
         
         function resetCode() {
             document.getElementById('code-input').value = `import pandas as pd
+import numpy as np
 
-# 创建示例数据
-data = {'name': ['Alice', 'Bob', 'Charlie', 'David'],
-        'age': [25, 30, None, 35],
-        'city': ['Beijing', 'Shanghai', 'Guangzhou', None]}
+data = {
+    'category': ['电子产品', '服装', '电子产品', '服装', '食品'],
+    'price': [1000, 200, 1500, 300, 50],
+    'quantity': [5, 10, 8, 15]
+}
 df = pd.DataFrame(data)
 
-# 显示数据
-print("数据预览:")
-print(df.head())
-print("\n数据信息:")
-print(df.info())`;
+print('原始数据:')
+print(df)
+
+# 按类别分组计算总和
+print('\\n按类别分组求和:')
+grouped = df.groupby('category').sum()
+print(grouped)
+
+# 按类别分组计算平均值
+print('\\n按类别分组求平均:')
+grouped_mean = df.groupby('category').mean()
+print(grouped_mean)`;
             document.getElementById('output-box').style.display = 'none';
         }
         
@@ -1366,7 +1389,7 @@ print(df.info())`;
             let message = '';
             let icon = '';
             if (score >= 80) {
-                message = '太棒了！你是数据清洗高手！';
+                message = '太棒了！你掌握了这个项目的技能！';
                 icon = '🎉';
             } else if (score >= 60) {
                 message = '不错！继续加油！';
