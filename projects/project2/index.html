@@ -924,73 +924,178 @@ df.groupby('category').apply(top_items)
             <div class="content-section">
                 <div class="content-section-title">练习题（共5题）</div>
                 
-                <div class="question-box">
-                    <h4>练习 1：基本分组</h4>
-                    <p>要按'category'列分组并计算'sales'列的总和，应该使用哪个方法？</p>
-                    <div class="options" role="radiogroup" aria-label="练习1选项">
-                        <button class="option-btn" onclick="selectOption(this, 1, 'A', false)">A. df.group('category').sum('sales')</button>
-                        <button class="option-btn" onclick="selectOption(this, 1, 'B', true)">B. df.groupby('category')['sales'].sum()</button>
-                        <button class="option-btn" onclick="selectOption(this, 1, 'C', false)">C. df.groupby.sum('category', 'sales')</button>
-                        <button class="option-btn" onclick="selectOption(this, 1, 'D', false)">D. df.sum.groupby('category')</button>
-                    </div>
-                    <div class="explanation" id="explanation-1" role="alert">
-                        <p><strong>正确！</strong> groupby后选择特定列，然后调用聚合函数是标准做法。</p>
+                <div class="content-card">
+                    <h3>练习 1：基本分组</h3>
+                    <p>按类别分组并计算销售额总和。</p>
+                    <div class="code-editor-container">
+                        <div class="code-editor">
+                            <textarea id="practice-code-1" class="code-textarea" spellcheck="false">import pandas as pd
+
+# 创建销售数据
+data = {
+    'category': ['电子产品', '服装', '电子产品', '服装', '食品', '电子产品'],
+    'sales': [1000, 200, 1500, 300, 150, 800],
+    'quantity': [5, 10, 8, 15, 20, 4]
+}
+df = pd.DataFrame(data)
+
+print("原始数据:")
+print(df)
+
+# 按类别分组计算销售额总和
+result = df.groupby('category')['sales'].sum()
+print("\n按类别分组销售额总和:")
+print(result)</textarea>
+                        </div>
+                        <div class="editor-controls">
+                            <button class="btn btn-primary" onclick="runPracticeCode(1)">▶️ 运行代码</button>
+                            <button class="btn btn-secondary" onclick="resetPracticeCode(1)">🔄 重置</button>
+                        </div>
+                        <div class="output-box" id="practice-output-1" style="display: none;">
+                            <div class="output-title">📤 输出结果</div>
+                            <pre class="output-content" id="practice-output-content-1"></pre>
+                        </div>
                     </div>
                 </div>
 
-                <div class="question-box">
-                    <h4>练习 2：多个聚合</h4>
-                    <p>如何对同一列同时计算多个聚合指标？</p>
-                    <div class="options" role="radiogroup" aria-label="练习2选项">
-                        <button class="option-btn" onclick="selectOption(this, 2, 'A', false)">A. df.groupby('col').mean().sum()</button>
-                        <button class="option-btn" onclick="selectOption(this, 2, 'B', false)">B. df.groupby('col').agg(mean, sum)</button>
-                        <button class="option-btn" onclick="selectOption(this, 2, 'C', true)">C. df.groupby('col').agg(['mean', 'sum'])</button>
-                        <button class="option-btn" onclick="selectOption(this, 2, 'D', false)">D. df.groupby('col')[mean, sum]</button>
-                    </div>
-                    <div class="explanation" id="explanation-2" role="alert">
-                        <p><strong>正确！</strong> agg方法接受列表参数，可以同时计算多个聚合函数。</p>
+                <div class="content-card">
+                    <h3>练习 2：多个聚合</h3>
+                    <p>对同一列同时计算多个聚合指标。</p>
+                    <div class="code-editor-container">
+                        <div class="code-editor">
+                            <textarea id="practice-code-2" class="code-textarea" spellcheck="false">import pandas as pd
+
+data = {
+    'category': ['A', 'B', 'A', 'B', 'A', 'B'],
+    'value': [10, 20, 15, 25, 12, 18]
+}
+df = pd.DataFrame(data)
+
+print("原始数据:")
+print(df)
+
+# 同时计算均值和总和
+result = df.groupby('category')['value'].agg(['mean', 'sum', 'count'])
+print("\n多个聚合结果:")
+print(result)</textarea>
+                        </div>
+                        <div class="editor-controls">
+                            <button class="btn btn-primary" onclick="runPracticeCode(2)">▶️ 运行代码</button>
+                            <button class="btn btn-secondary" onclick="resetPracticeCode(2)">🔄 重置</button>
+                        </div>
+                        <div class="output-box" id="practice-output-2" style="display: none;">
+                            <div class="output-title">📤 输出结果</div>
+                            <pre class="output-content" id="practice-output-content-2"></pre>
+                        </div>
                     </div>
                 </div>
 
-                <div class="question-box">
-                    <h4>练习 3：多列分组</h4>
-                    <p>按'category'和'region'两列分组，正确的写法是？</p>
-                    <div class="options" role="radiogroup" aria-label="练习3选项">
-                        <button class="option-btn" onclick="selectOption(this, 3, 'A', false)">A. df.groupby('category, region')</button>
-                        <button class="option-btn" onclick="selectOption(this, 3, 'B', false)">B. df.groupby('category').groupby('region')</button>
-                        <button class="option-btn" onclick="selectOption(this, 3, 'C', true)">C. df.groupby(['category', 'region'])</button>
-                        <button class="option-btn" onclick="selectOption(this, 3, 'D', false)">D. df.groupby(category, region)</button>
-                    </div>
-                    <div class="explanation" id="explanation-3" role="alert">
-                        <p><strong>正确！</strong> groupby接受列表参数，可以实现多维度分组。</p>
+                <div class="content-card">
+                    <h3>练习 3：多列分组</h3>
+                    <p>按类别和地区两列进行分组分析。</p>
+                    <div class="code-editor-container">
+                        <div class="code-editor">
+                            <textarea id="practice-code-3" class="code-textarea" spellcheck="false">import pandas as pd
+
+data = {
+    'category': ['电子产品', '电子产品', '服装', '服装', '食品'],
+    'region': ['华东', '华北', '华东', '华北', '华东'],
+    'sales': [1000, 800, 500, 600, 300]
+}
+df = pd.DataFrame(data)
+
+print("原始数据:")
+print(df)
+
+# 按类别和地区分组
+result = df.groupby(['category', 'region']).sum()
+print("\n多列分组结果:")
+print(result)</textarea>
+                        </div>
+                        <div class="editor-controls">
+                            <button class="btn btn-primary" onclick="runPracticeCode(3)">▶️ 运行代码</button>
+                            <button class="btn btn-secondary" onclick="resetPracticeCode(3)">🔄 重置</button>
+                        </div>
+                        <div class="output-box" id="practice-output-3" style="display: none;">
+                            <div class="output-title">📤 输出结果</div>
+                            <pre class="output-content" id="practice-output-content-3"></pre>
+                        </div>
                     </div>
                 </div>
 
-                <div class="question-box">
-                    <h4>练习 4：不同列不同聚合</h4>
-                    <p>对不同列应用不同的聚合函数，使用什么方法？</p>
-                    <div class="options" role="radiogroup" aria-label="练习4选项">
-                        <button class="option-btn" onclick="selectOption(this, 4, 'A', false)">A. df.groupby('col').agg(mean, sum)</button>
-                        <button class="option-btn" onclick="selectOption(this, 4, 'B', true)">B. df.groupby('col').agg({'col1': 'mean', 'col2': 'sum'})</button>
-                        <button class="option-btn" onclick="selectOption(this, 4, 'C', false)">C. df.groupby('col').col1.mean().col2.sum()</button>
-                        <button class="option-btn" onclick="selectOption(this, 4, 'D', false)">D. df.groupby('col').mean(col1).sum(col2)</button>
-                    </div>
-                    <div class="explanation" id="explanation-4" role="alert">
-                        <p><strong>正确！</strong> 可以向agg传入字典，键是列名，值是聚合函数。</p>
+                <div class="content-card">
+                    <h3>练习 4：不同列不同聚合</h3>
+                    <p>对不同列应用不同的聚合函数。</p>
+                    <div class="code-editor-container">
+                        <div class="code-editor">
+                            <textarea id="practice-code-4" class="code-textarea" spellcheck="false">import pandas as pd
+
+data = {
+    'category': ['A', 'B', 'A', 'B', 'A', 'B'],
+    'price': [100, 200, 150, 250, 120, 180],
+    'quantity': [5, 3, 8, 4, 6, 2]
+}
+df = pd.DataFrame(data)
+
+print("原始数据:")
+print(df)
+
+# 不同列应用不同聚合函数
+result = df.groupby('category').agg({
+    'price': 'mean',
+    'quantity': ['sum', 'max']
+})
+print("\n不同列不同聚合:")
+print(result)</textarea>
+                        </div>
+                        <div class="editor-controls">
+                            <button class="btn btn-primary" onclick="runPracticeCode(4)">▶️ 运行代码</button>
+                            <button class="btn btn-secondary" onclick="resetPracticeCode(4)">🔄 重置</button>
+                        </div>
+                        <div class="output-box" id="practice-output-4" style="display: none;">
+                            <div class="output-title">📤 输出结果</div>
+                            <pre class="output-content" id="practice-output-content-4"></pre>
+                        </div>
                     </div>
                 </div>
 
-                <div class="question-box">
-                    <h4>练习 5：透视表</h4>
-                    <p>创建透视表应该使用哪个函数？</p>
-                    <div class="options" role="radiogroup" aria-label="练习5选项">
-                        <button class="option-btn" onclick="selectOption(this, 5, 'A', false)">A. df.pivot()</button>
-                        <button class="option-btn" onclick="selectOption(this, 5, 'B', false)">B. df.table()</button>
-                        <button class="option-btn" onclick="selectOption(this, 5, 'C', true)">C. pd.pivot_table()</button>
-                        <button class="option-btn" onclick="selectOption(this, 5, 'D', false)">D. pd.table()</button>
-                    </div>
-                    <div class="explanation" id="explanation-5" role="alert">
-                        <p><strong>正确！</strong> pd.pivot_table是Pandas提供的专门用于创建透视表的函数。</p>
+                <div class="content-card">
+                    <h3>练习 5：透视表</h3>
+                    <p>创建透视表展示数据。</p>
+                    <div class="code-editor-container">
+                        <div class="code-editor">
+                            <textarea id="practice-code-5" class="code-textarea" spellcheck="false">import pandas as pd
+
+data = {
+    'category': ['电子产品', '电子产品', '服装', '服装', '食品', '食品'],
+    'region': ['华东', '华北', '华东', '华北', '华东', '华北'],
+    'sales': [1000, 800, 500, 600, 300, 400]
+}
+df = pd.DataFrame(data)
+
+print("原始数据:")
+print(df)
+
+# 创建透视表
+pivot = pd.pivot_table(
+    df,
+    values='sales',
+    index='category',
+    columns='region',
+    aggfunc='sum',
+    fill_value=0
+)
+print("\n透视表:")
+print(pivot)</textarea>
+                        </div>
+                        <div class="editor-controls">
+                            <button class="btn btn-primary" onclick="runPracticeCode(5)">▶️ 运行代码</button>
+                            <button class="btn btn-secondary" onclick="resetPracticeCode(5)">🔄 重置</button>
+                        </div>
+                        <div class="output-box" id="practice-output-5" style="display: none;">
+                            <div class="output-title">📤 输出结果</div>
+                            <pre class="output-content" id="practice-output-content-5"></pre>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1338,6 +1443,128 @@ print(grouped_mean)`;
             }
         }
         
+        async function runPracticeCode(num) {
+            const code = document.getElementById('practice-code-' + num).value;
+            const outputBox = document.getElementById('practice-output-' + num);
+            const outputContent = document.getElementById('practice-output-content-' + num);
+            if (!code.trim()) { alert('请先输入代码！'); return; }
+            outputBox.style.display = 'block';
+            outputContent.textContent = '正在执行...';
+            try {
+                await initPyodide();
+                pyodide.runPython(`import sys; from io import StringIO; sys.stdout = StringIO(); sys.stderr = StringIO()`);
+                await pyodide.runPythonAsync(code);
+                const stdout = pyodide.runPython('sys.stdout.getvalue()');
+                const stderr = pyodide.runPython('sys.stderr.getvalue()');
+                if (stderr?.trim()) {
+                    outputContent.textContent = stderr;
+                    outputContent.className = 'output-content error';
+                } else {
+                    outputContent.textContent = stdout || '(代码执行完成，无输出)';
+                    outputContent.className = 'output-content success';
+                }
+            } catch (error) {
+                outputContent.textContent = '错误: ' + error.message;
+                outputContent.className = 'output-content error';
+            }
+        }
+
+        function resetPracticeCode(num) {
+            const codes = {
+                1: `import pandas as pd
+
+# 创建销售数据
+data = {
+    'category': ['电子产品', '服装', '电子产品', '服装', '食品', '电子产品'],
+    'sales': [1000, 200, 1500, 300, 150, 800],
+    'quantity': [5, 10, 8, 15, 20, 4]
+}
+df = pd.DataFrame(data)
+
+print("原始数据:")
+print(df)
+
+# 按类别分组计算销售额总和
+result = df.groupby('category')['sales'].sum()
+print("\n按类别分组销售额总和:")
+print(result)`,
+                2: `import pandas as pd
+
+data = {
+    'category': ['A', 'B', 'A', 'B', 'A', 'B'],
+    'value': [10, 20, 15, 25, 12, 18]
+}
+df = pd.DataFrame(data)
+
+print("原始数据:")
+print(df)
+
+# 同时计算均值和总和
+result = df.groupby('category')['value'].agg(['mean', 'sum', 'count'])
+print("\n多个聚合结果:")
+print(result)`,
+                3: `import pandas as pd
+
+data = {
+    'category': ['电子产品', '电子产品', '服装', '服装', '食品'],
+    'region': ['华东', '华北', '华东', '华北', '华东'],
+    'sales': [1000, 800, 500, 600, 300]
+}
+df = pd.DataFrame(data)
+
+print("原始数据:")
+print(df)
+
+# 按类别和地区分组
+result = df.groupby(['category', 'region']).sum()
+print("\n多列分组结果:")
+print(result)`,
+                4: `import pandas as pd
+
+data = {
+    'category': ['A', 'B', 'A', 'B', 'A', 'B'],
+    'price': [100, 200, 150, 250, 120, 180],
+    'quantity': [5, 3, 8, 4, 6, 2]
+}
+df = pd.DataFrame(data)
+
+print("原始数据:")
+print(df)
+
+# 不同列应用不同聚合函数
+result = df.groupby('category').agg({
+    'price': 'mean',
+    'quantity': ['sum', 'max']
+})
+print("\n不同列不同聚合:")
+print(result)`,
+                5: `import pandas as pd
+
+data = {
+    'category': ['电子产品', '电子产品', '服装', '服装', '食品', '食品'],
+    'region': ['华东', '华北', '华东', '华北', '华东', '华北'],
+    'sales': [1000, 800, 500, 600, 300, 400]
+}
+df = pd.DataFrame(data)
+
+print("原始数据:")
+print(df)
+
+# 创建透视表
+pivot = pd.pivot_table(
+    df,
+    values='sales',
+    index='category',
+    columns='region',
+    aggfunc='sum',
+    fill_value=0
+)
+print("\n透视表:")
+print(pivot)`
+            };
+            document.getElementById('practice-code-' + num).value = codes[num];
+        }
+
         function selectOption(btn, questionId, option, isCorrect) {
             const questionBox = btn.closest('.question-box');
             const allOptions = questionBox.querySelectorAll('.option-btn');

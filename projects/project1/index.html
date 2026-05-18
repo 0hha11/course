@@ -920,73 +920,188 @@ df['category'] = df['product_code'].str[:2]</pre>
             <div class="content-section">
                 <div class="content-section-title">练习题（共5题）</div>
                 
-                <div class="question-box">
-                    <h4>练习 1：检测缺失值</h4>
-                    <p>如果你想查看 DataFrame 中每列有多少缺失值，应该使用哪个方法？</p>
-                    <div class="options" role="radiogroup" aria-label="练习1选项">
-                        <button class="option-btn" onclick="selectOption(this, 1, 'A', false)">A. df.na()</button>
-                        <button class="option-btn" onclick="selectOption(this, 1, 'B', true)">B. df.isnull().sum()</button>
-                        <button class="option-btn" onclick="selectOption(this, 1, 'C', false)">C. df.count()</button>
-                        <button class="option-btn" onclick="selectOption(this, 1, 'D', false)">D. df.missing()</button>
-                    </div>
-                    <div class="explanation" id="explanation-1" role="alert">
-                        <p><strong>正确！</strong> df.isnull() 返回一个布尔矩阵，然后用 sum() 就可以统计每列的缺失值数量。</p>
+                <div class="content-card">
+                    <h3>练习 1：检测缺失值</h3>
+                    <p>创建一个包含缺失值的DataFrame，并统计每列的缺失值数量。</p>
+                    <div class="code-editor-container">
+                        <div class="code-editor">
+                            <textarea id="practice-code-1" class="code-textarea" spellcheck="false">import pandas as pd
+import numpy as np
+
+# 创建包含缺失值的DataFrame
+data = {
+    'name': ['Alice', 'Bob', None, 'David', 'Eve'],
+    'age': [25, np.nan, 30, 35, np.nan],
+    'city': ['Beijing', 'Shanghai', 'Guangzhou', None, 'Shenzhen']
+}
+df = pd.DataFrame(data)
+
+print("原始数据:")
+print(df)
+
+# 统计每列缺失值数量
+missing_counts = df.isnull().sum()
+print("\n每列缺失值数量:")
+print(missing_counts)</textarea>
+                        </div>
+                        <div class="editor-controls">
+                            <button class="btn btn-primary" onclick="runPracticeCode(1)">▶️ 运行代码</button>
+                            <button class="btn btn-secondary" onclick="resetPracticeCode(1)">🔄 重置</button>
+                        </div>
+                        <div class="output-box" id="practice-output-1" style="display: none;">
+                            <div class="output-title">📤 输出结果</div>
+                            <pre class="output-content" id="practice-output-content-1"></pre>
+                        </div>
                     </div>
                 </div>
 
-                <div class="question-box">
-                    <h4>练习 2：删除重复值</h4>
-                    <p>下列哪个方法可以删除 DataFrame 中的重复行？</p>
-                    <div class="options" role="radiogroup" aria-label="练习2选项">
-                        <button class="option-btn" onclick="selectOption(this, 2, 'A', false)">A. df.remove_duplicates()</button>
-                        <button class="option-btn" onclick="selectOption(this, 2, 'B', true)">B. df.drop_duplicates()</button>
-                        <button class="option-btn" onclick="selectOption(this, 2, 'C', false)">C. df.delete_duplicates()</button>
-                        <button class="option-btn" onclick="selectOption(this, 2, 'D', false)">D. df.clear_duplicates()</button>
-                    </div>
-                    <div class="explanation" id="explanation-2" role="alert">
-                        <p><strong>正确！</strong> drop_duplicates() 是 Pandas 专门用来删除重复行的方法。</p>
+                <div class="content-card">
+                    <h3>练习 2：删除重复值</h3>
+                    <p>创建包含重复行的DataFrame，并删除重复行。</p>
+                    <div class="code-editor-container">
+                        <div class="code-editor">
+                            <textarea id="practice-code-2" class="code-textarea" spellcheck="false">import pandas as pd
+
+# 创建包含重复行的DataFrame
+data = {
+    'product': ['A', 'B', 'A', 'C', 'B', 'A'],
+    'price': [100, 200, 100, 150, 200, 100],
+    'quantity': [5, 3, 5, 8, 3, 5]
+}
+df = pd.DataFrame(data)
+
+print("原始数据:")
+print(df)
+
+# 删除重复行
+df_clean = df.drop_duplicates()
+print("\n删除重复后:")
+print(df_clean)</textarea>
+                        </div>
+                        <div class="editor-controls">
+                            <button class="btn btn-primary" onclick="runPracticeCode(2)">▶️ 运行代码</button>
+                            <button class="btn btn-secondary" onclick="resetPracticeCode(2)">🔄 重置</button>
+                        </div>
+                        <div class="output-box" id="practice-output-2" style="display: none;">
+                            <div class="output-title">📤 输出结果</div>
+                            <pre class="output-content" id="practice-output-content-2"></pre>
+                        </div>
                     </div>
                 </div>
 
-                <div class="question-box">
-                    <h4>练习 3：填充缺失值</h4>
-                    <p>用均值填充缺失值时，使用哪个方法？</p>
-                    <div class="options" role="radiogroup" aria-label="练习3选项">
-                        <button class="option-btn" onclick="selectOption(this, 3, 'A', true)">A. df.fillna(df.mean())</button>
-                        <button class="option-btn" onclick="selectOption(this, 3, 'B', false)">B. df.replace.nan(df.mean())</button>
-                        <button class="option-btn" onclick="selectOption(this, 3, 'C', false)">C. df.fill.mean()</button>
-                        <button class="option-btn" onclick="selectOption(this, 3, 'D', false)">D. df.na.fill(df.mean())</button>
-                    </div>
-                    <div class="explanation" id="explanation-3" role="alert">
-                        <p><strong>正确！</strong> fillna() 方法用于填充缺失值，可以接受均值、中位数等统计值作为参数。</p>
+                <div class="content-card">
+                    <h3>练习 3：填充缺失值</h3>
+                    <p>使用均值和中位数填充数值列的缺失值。</p>
+                    <div class="code-editor-container">
+                        <div class="code-editor">
+                            <textarea id="practice-code-3" class="code-textarea" spellcheck="false">import pandas as pd
+import numpy as np
+
+data = {
+    'score': [85, np.nan, 90, 78, np.nan, 92, 88],
+    'age': [20, 22, np.nan, 19, 21, np.nan, 23]
+}
+df = pd.DataFrame(data)
+
+print("原始数据:")
+print(df)
+
+# 用均值填充
+df_mean = df.fillna(df.mean())
+print("\n用均值填充:")
+print(df_mean)
+
+# 用中位数填充
+df_median = df.fillna(df.median())
+print("\n用中位数填充:")
+print(df_median)</textarea>
+                        </div>
+                        <div class="editor-controls">
+                            <button class="btn btn-primary" onclick="runPracticeCode(3)">▶️ 运行代码</button>
+                            <button class="btn btn-secondary" onclick="resetPracticeCode(3)">🔄 重置</button>
+                        </div>
+                        <div class="output-box" id="practice-output-3" style="display: none;">
+                            <div class="output-title">📤 输出结果</div>
+                            <pre class="output-content" id="practice-output-content-3"></pre>
+                        </div>
                     </div>
                 </div>
 
-                <div class="question-box">
-                    <h4>练习 4：数据类型转换</h4>
-                    <p>将字符串列转换为日期类型应该使用哪个方法？</p>
-                    <div class="options" role="radiogroup" aria-label="练习4选项">
-                        <button class="option-btn" onclick="selectOption(this, 4, 'A', false)">A. df.astype('datetime')</button>
-                        <button class="option-btn" onclick="selectOption(this, 4, 'B', true)">B. pd.to_datetime(df['date'])</button>
-                        <button class="option-btn" onclick="selectOption(this, 4, 'C', false)">C. df['date'].to_date()</button>
-                        <button class="option-btn" onclick="selectOption(this, 4, 'D', false)">D. df.convert_date()</button>
-                    </div>
-                    <div class="explanation" id="explanation-4" role="alert">
-                        <p><strong>正确！</strong> pd.to_datetime() 是 Pandas 中专门用于日期转换的函数。</p>
+                <div class="content-card">
+                    <h3>练习 4：数据类型转换</h3>
+                    <p>将字符串日期转换为日期类型。</p>
+                    <div class="code-editor-container">
+                        <div class="code-editor">
+                            <textarea id="practice-code-4" class="code-textarea" spellcheck="false">import pandas as pd
+
+data = {
+    'date': ['2023-01-01', '2023-01-02', '2023-01-03', '2023-01-04'],
+    'sales': [1000, 1200, 800, 1500]
+}
+df = pd.DataFrame(data)
+
+print("原始数据:")
+print(df)
+print("\n原始数据类型:")
+print(df.dtypes)
+
+# 转换日期类型
+df['date'] = pd.to_datetime(df['date'])
+print("\n转换后数据类型:")
+print(df.dtypes)
+print("\n转换后数据:")
+print(df)</textarea>
+                        </div>
+                        <div class="editor-controls">
+                            <button class="btn btn-primary" onclick="runPracticeCode(4)">▶️ 运行代码</button>
+                            <button class="btn btn-secondary" onclick="resetPracticeCode(4)">🔄 重置</button>
+                        </div>
+                        <div class="output-box" id="practice-output-4" style="display: none;">
+                            <div class="output-title">📤 输出结果</div>
+                            <pre class="output-content" id="practice-output-content-4"></pre>
+                        </div>
                     </div>
                 </div>
 
-                <div class="question-box">
-                    <h4>练习 5：异常值检测</h4>
-                    <p>IQR 方法中，异常值的判断标准是什么？</p>
-                    <div class="options" role="radiogroup" aria-label="练习5选项">
-                        <button class="option-btn" onclick="selectOption(this, 5, 'A', false)">A. 值 > Q3 或 值 < Q1</button>
-                        <button class="option-btn" onclick="selectOption(this, 5, 'B', false)">B. 值 > Q3+IQR 或 值 < Q1-IQR</button>
-                        <button class="option-btn" onclick="selectOption(this, 5, 'C', true)">C. 值 > Q3+1.5*IQR 或 值 < Q1-1.5*IQR</button>
-                        <button class="option-btn" onclick="selectOption(this, 5, 'D', false)">D. 值 > mean+std 或 值 < mean-std</button>
-                    </div>
-                    <div class="explanation" id="explanation-5" role="alert">
-                        <p><strong>正确！</strong> IQR方法使用 1.5 倍的四分位距作为异常值判断标准。</p>
+                <div class="content-card">
+                    <h3>练习 5：IQR异常值检测</h3>
+                    <p>使用IQR方法检测异常值。</p>
+                    <div class="code-editor-container">
+                        <div class="code-editor">
+                            <textarea id="practice-code-5" class="code-textarea" spellcheck="false">import pandas as pd
+import numpy as np
+
+# 创建包含异常值的数据
+data = {'value': [10, 12, 14, 15, 13, 11, 100, 12, 14, 9, 11, 50]}
+df = pd.DataFrame(data)
+
+print("原始数据:")
+print(df)
+
+# 计算IQR
+Q1 = df['value'].quantile(0.25)
+Q3 = df['value'].quantile(0.75)
+IQR = Q3 - Q1
+
+# 定义异常值范围
+lower_bound = Q1 - 1.5 * IQR
+upper_bound = Q3 + 1.5 * IQR
+
+# 检测异常值
+outliers = df[(df['value'] < lower_bound) | (df['value'] > upper_bound)]
+print(f"\nQ1: {Q1}, Q3: {Q3}, IQR: {IQR}")
+print(f"正常范围: [{lower_bound}, {upper_bound}]")
+print("\n异常值:")
+print(outliers)</textarea>
+                        </div>
+                        <div class="editor-controls">
+                            <button class="btn btn-primary" onclick="runPracticeCode(5)">▶️ 运行代码</button>
+                            <button class="btn btn-secondary" onclick="resetPracticeCode(5)">🔄 重置</button>
+                        </div>
+                        <div class="output-box" id="practice-output-5" style="display: none;">
+                            <div class="output-title">📤 输出结果</div>
+                            <pre class="output-content" id="practice-output-content-5"></pre>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1315,6 +1430,138 @@ print(df.info())`;
             }
         }
         
+        async function runPracticeCode(num) {
+            const code = document.getElementById('practice-code-' + num).value;
+            const outputBox = document.getElementById('practice-output-' + num);
+            const outputContent = document.getElementById('practice-output-content-' + num);
+            if (!code.trim()) { alert('请先输入代码！'); return; }
+            outputBox.style.display = 'block';
+            outputContent.textContent = '正在执行...';
+            try {
+                await initPyodide();
+                pyodide.runPython(`import sys; from io import StringIO; sys.stdout = StringIO(); sys.stderr = StringIO()`);
+                await pyodide.runPythonAsync(code);
+                const stdout = pyodide.runPython('sys.stdout.getvalue()');
+                const stderr = pyodide.runPython('sys.stderr.getvalue()');
+                if (stderr?.trim()) {
+                    outputContent.textContent = stderr;
+                    outputContent.className = 'output-content error';
+                } else {
+                    outputContent.textContent = stdout || '(代码执行完成，无输出)';
+                    outputContent.className = 'output-content success';
+                }
+            } catch (error) {
+                outputContent.textContent = '错误: ' + error.message;
+                outputContent.className = 'output-content error';
+            }
+        }
+
+        function resetPracticeCode(num) {
+            const codes = {
+                1: `import pandas as pd
+import numpy as np
+
+# 创建包含缺失值的DataFrame
+data = {
+    'name': ['Alice', 'Bob', None, 'David', 'Eve'],
+    'age': [25, np.nan, 30, 35, np.nan],
+    'city': ['Beijing', 'Shanghai', 'Guangzhou', None, 'Shenzhen']
+}
+df = pd.DataFrame(data)
+
+print("原始数据:")
+print(df)
+
+# 统计每列缺失值数量
+missing_counts = df.isnull().sum()
+print("\n每列缺失值数量:")
+print(missing_counts)`,
+                2: `import pandas as pd
+
+# 创建包含重复行的DataFrame
+data = {
+    'product': ['A', 'B', 'A', 'C', 'B', 'A'],
+    'price': [100, 200, 100, 150, 200, 100],
+    'quantity': [5, 3, 5, 8, 3, 5]
+}
+df = pd.DataFrame(data)
+
+print("原始数据:")
+print(df)
+
+# 删除重复行
+df_clean = df.drop_duplicates()
+print("\n删除重复后:")
+print(df_clean)`,
+                3: `import pandas as pd
+import numpy as np
+
+data = {
+    'score': [85, np.nan, 90, 78, np.nan, 92, 88],
+    'age': [20, 22, np.nan, 19, 21, np.nan, 23]
+}
+df = pd.DataFrame(data)
+
+print("原始数据:")
+print(df)
+
+# 用均值填充
+df_mean = df.fillna(df.mean())
+print("\n用均值填充:")
+print(df_mean)
+
+# 用中位数填充
+df_median = df.fillna(df.median())
+print("\n用中位数填充:")
+print(df_median)`,
+                4: `import pandas as pd
+
+data = {
+    'date': ['2023-01-01', '2023-01-02', '2023-01-03', '2023-01-04'],
+    'sales': [1000, 1200, 800, 1500]
+}
+df = pd.DataFrame(data)
+
+print("原始数据:")
+print(df)
+print("\n原始数据类型:")
+print(df.dtypes)
+
+# 转换日期类型
+df['date'] = pd.to_datetime(df['date'])
+print("\n转换后数据类型:")
+print(df.dtypes)
+print("\n转换后数据:")
+print(df)`,
+                5: `import pandas as pd
+import numpy as np
+
+# 创建包含异常值的数据
+data = {'value': [10, 12, 14, 15, 13, 11, 100, 12, 14, 9, 11, 50]}
+df = pd.DataFrame(data)
+
+print("原始数据:")
+print(df)
+
+# 计算IQR
+Q1 = df['value'].quantile(0.25)
+Q3 = df['value'].quantile(0.75)
+IQR = Q3 - Q1
+
+# 定义异常值范围
+lower_bound = Q1 - 1.5 * IQR
+upper_bound = Q3 + 1.5 * IQR
+
+# 检测异常值
+outliers = df[(df['value'] < lower_bound) | (df['value'] > upper_bound)]
+print(f"\nQ1: {Q1}, Q3: {Q3}, IQR: {IQR}")
+print(f"正常范围: [{lower_bound}, {upper_bound}]")
+print("\n异常值:")
+print(outliers)`
+            };
+            document.getElementById('practice-code-' + num).value = codes[num];
+        }
+
         function selectOption(btn, questionId, option, isCorrect) {
             const questionBox = btn.closest('.question-box');
             const allOptions = questionBox.querySelectorAll('.option-btn');
