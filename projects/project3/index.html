@@ -115,7 +115,7 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        .badge-medium { 
+        .badge-easy { 
             background: rgba(34, 197, 94, 0.15); 
             color: #4ade80; 
             border: 1px solid rgba(34, 197, 94, 0.3); 
@@ -665,9 +665,9 @@
     <div class="project-header">
         <div class="container">
             <div class="project-info">
-                <div class="project-icon-large" role="img" aria-label="分组聚合图标">🛒</div>
+                <div class="project-icon-large" role="img" aria-label="购物篮分析图标">🛒</div>
                 <h1 class="project-title">购物篮分析</h1>
-                <p class="project-description">学习关联规则挖掘，使用Apriori算法分析购物篮数据。，学习如何按类别分组并计算统计指标。</p>
+                <p class="project-description">学习关联规则挖掘，使用Apriori算法分析购物篮数据，发现商品之间的关联关系。</p>
                 <div class="project-meta" role="group" aria-label="项目标签">
                     <span class="badge badge-medium" aria-label="难度等级：进阶">进阶</span>
                     <span class="badge badge-time" aria-label="预计学习时间：30分钟">30分钟</span>
@@ -727,38 +727,77 @@
 
         <div id="learn-tab" class="tab-content active" role="tabpanel" aria-labelledby="tab-learn">
             <div class="content-section">
-                <div class="content-section-title">第一章 分组与聚合基础</div>
+                <div class="content-section-title">第一章 关联规则基础</div>
                 
                 <div class="content-card">
-                    <h3>1.1 什么是分组聚合？</h3>
-                    <p>分组聚合是数据分析中的核心操作，它允许我们按特定类别对数据进行分组，然后对每个组进行统计计算。</p>
+                    <h3>1.1 什么是关联规则</h3>
+                    <p>关联规则是数据挖掘中用于发现数据项之间有趣关系的方法。最经典的应用场景就是购物篮分析，比如发现购买牛奶的顾客也倾向于购买面包。</p>
                     <ul>
-                        <li><strong>分组（Group）</strong>：按一个或多个列的唯一值将数据分组</li>
-                        <li><strong>聚合（Aggregation）</strong>：对每个分组进行统计计算（求和、平均、计数等）</li>
-                        <li><strong>透视表（Pivot）</strong>：创建交叉表来展示多维聚合结果</li>
+                        <li><strong>频繁项集</strong>：在数据集中频繁出现的物品组合</li>
+                        <li><strong>支持度 (Support)</strong>：P(A ∩ B)，同时购买A和B的概率</li>
+                        <li><strong>置信度 (Confidence)</strong>：P(B|A)，购买A的顾客中也购买B的概率</li>
+                        <li><strong>提升度 (Lift)</strong>：衡量A和B的关联强度</li>
                     </ul>
                     <div class="info-box" role="note">
-                        <p>💡 分组聚合是SQL中GROUP BY的Pandas实现，但更强大、更灵活。</p>
+                        <p>💡 关联规则广泛应用于零售行业的商品推荐和货架摆放优化。</p>
                     </div>
                 </div>
 
                 <div class="content-card">
-                    <h3>1.2 基本分组操作</h3>
-                    <p>让我们学习使用groupby进行分组：</p>
+                    <h3>1.2 核心指标计算</h3>
+                    <p>让我们理解关联规则的核心指标：</p>
+                    <div class="code-box">
+<pre># 支持度: P(A ∩ B) - 同时购买A和B的概率
+support = len(A ∩ B) / total_transactions
+
+# 置信度: P(B|A) - 购买A的顾客中也购买B的概率
+confidence = len(A ∩ B) / len(A)
+
+# 提升度: 衡量A和B的关联强度
+lift = confidence / P(B)</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <div class="content-section-title">第二章 Apriori算法</div>
+                
+                <div class="content-card">
+                    <h3>2.1 Apriori原理</h3>
+                    <p>Apriori算法是最经典的关联规则挖掘算法，其核心思想是：如果一个项集是频繁的，那么它的所有子集也是频繁的。</p>
+                    <ul>
+                        <li>扫描数据库生成候选集</li>
+                        <li>计算支持度</li>
+                        <li>剪枝不满足最小支持度的项集</li>
+                        <li>迭代直到没有新的频繁项集</li>
+                    </ul>
+                    <div class="tip-box" role="tip">
+                        <p>📌 Apriori算法的效率很大程度上取决于最小支持度阈值的选择。</p>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h3>2.2 Python实现Apriori</h3>
+                    <p>使用mlxtend库实现Apriori算法：</p>
                     <div class="code-box">
 <pre>import pandas as pd
-import numpy as np
+from mlxtend.frequent_patterns import apriori, association_rules
 
+# 创建购物篮数据
 data = {
-    'category': ['电子产品', '服装', '电子产品', '服装', '食品'],
-    'price': [1000, 200, 1500, 300, 50],
-    'quantity': [5, 10, 8, 15]
+    '牛奶': [1, 1, 0, 1, 0],
+    '面包': [1, 0, 1, 1, 1],
+    '鸡蛋': [0, 1, 1, 0, 1],
+    '黄油': [1, 1, 0, 0, 0]
 }
 df = pd.DataFrame(data)
 
-print('原始数据:')
-print(df)
-</pre>
+# 挖掘频繁项集
+frequent_itemsets = apriori(df, min_support=0.4, use_colnames=True)
+
+# 生成关联规则
+rules = association_rules(frequent_itemsets, metric='confidence', min_threshold=0.7)
+print(rules[['antecedents', 'consequents', 'support', 'confidence', 'lift']])</pre>
                     </div>
                     
                     <div class="code-editor-container">
@@ -771,27 +810,29 @@ print(df)
                                     placeholder="在这里输入 Python 代码..." 
                                     spellcheck="false"
                                     aria-describedby="code-help">import pandas as pd
-import numpy as np
+from mlxtend.frequent_patterns import apriori, association_rules
 
+# 创建购物篮数据
 data = {
-    'category': ['电子产品', '服装', '电子产品', '服装', '食品'],
-    'price': [1000, 200, 1500, 300, 50],
-    'quantity': [5, 10, 8, 15]
+    '牛奶': [1, 1, 0, 1, 0],
+    '面包': [1, 0, 1, 1, 1],
+    '鸡蛋': [0, 1, 1, 0, 1],
+    '黄油': [1, 1, 0, 0, 0]
 }
 df = pd.DataFrame(data)
 
-print('原始数据:')
+print('购物篮数据:')
 print(df)
 
-# 按类别分组计算总和
-print('\\n按类别分组求和:')
-grouped = df.groupby('category').sum()
-print(grouped)
+# 挖掘频繁项集（最小支持度0.4）
+frequent_itemsets = apriori(df, min_support=0.4, use_colnames=True)
+print('\\n频繁项集:')
+print(frequent_itemsets)
 
-# 按类别分组计算平均值
-print('\\n按类别分组求平均:')
-grouped_mean = df.groupby('category').mean()
-print(grouped_mean)</textarea>
+# 生成关联规则（最小置信度0.7）
+rules = association_rules(frequent_itemsets, metric='confidence', min_threshold=0.7)
+print('\\n关联规则:')
+print(rules[['antecedents', 'consequents', 'support', 'confidence', 'lift']])</textarea>
                         </div>
                         <div class="editor-controls">
                             <button class="btn btn-primary" onclick="runCode()" id="run-btn" aria-describedby="code-help">
@@ -814,107 +855,67 @@ print(grouped_mean)</textarea>
             </div>
 
             <div class="content-section">
-                <div class="content-section-title">第二章 聚合函数</div>
+                <div class="content-section-title">第三章 规则评估与筛选</div>
                 
                 <div class="content-card">
-                    <h3>2.1 常用聚合函数</h3>
-                    <p>Pandas提供了丰富的聚合函数供我们使用：</p>
+                    <h3>3.1 规则评价指标</h3>
+                    <p>除了支持度和置信度，还有其他重要指标：</p>
                     <div class="code-box">
-<pre># 单个聚合函数
-df.groupby('category').mean()
+<pre># 提升度 > 1 表示正相关
+# 杠杆率 (Leverage): 衡量实际与期望频率的差异
+leverage = support - P(A) * P(B)
 
-# 多个聚合函数
-df.groupby('category').agg(['mean', 'sum', 'max', 'min', 'std'])
-
-# 不同列应用不同聚合
-agg_dict = {
-    'price': ['mean', 'sum', 'max'],
-    'quantity': ['sum', 'count']
-}
-df.groupby('category').agg(agg_dict)
-</pre>
+# 确信度 (Conviction): 衡量规则的可靠性  
+conviction = (1 - P(B)) / (1 - confidence)</pre>
                     </div>
                 </div>
 
                 <div class="content-card">
-                    <h3>2.2 自定义聚合函数</h3>
-                    <p>除了内置函数，我们还可以定义自己的聚合函数：</p>
-                    <div class="code-box">
-<pre>def range_func(x):
-    return x.max() - x.min()
-
-df.groupby('category').agg({
-    'price': ['mean', range_func],
-    'quantity': ['sum', 'count']
-})
-</pre>
+                    <h3>3.2 规则筛选技巧</h3>
+                    <p>如何从大量规则中筛选有价值的规则：</p>
+                    <ul>
+                        <li>设置合理的最小支持度和置信度</li>
+                        <li>关注提升度大于1的规则</li>
+                        <li>优先选择简洁的规则</li>
+                        <li>结合业务知识筛选</li>
+                    </ul>
+                    <div class="info-box" role="note">
+                        <p>💡 并非所有强规则都有实际业务价值，需要领域专家的参与。</p>
                     </div>
                 </div>
             </div>
 
             <div class="content-section">
-                <div class="content-section-title">第三章 多维度分组</div>
+                <div class="content-section-title">第四章 实战案例</div>
                 
                 <div class="content-card">
-                    <h3>3.1 多列分组</h3>
-                    <p>可以按多个列进行分组来获得更细粒度的分析：</p>
+                    <h3>4.1 购物篮分析实践</h3>
+                    <p>分析超市购物篮数据，发现有趣的商品关联：</p>
                     <div class="code-box">
-<pre>data = {
-    'category': ['电子产品', '电子产品', '服装', '服装', '服装'],
-    'region': ['华东', '华北', '华东', '华北', '华南'],
-    'price': [1000, 1500, 200, 300, 250],
-    'quantity': [5, 8, 10, 15, 12]
-}
-df = pd.DataFrame(data)
+<pre># 创建模拟购物篮数据
+transactions = [
+    ['苹果', '香蕉', '牛奶'],
+    ['香蕉', '面包', '鸡蛋'],
+    ['苹果', '香蕉', '面包'],
+    ['牛奶', '面包', '鸡蛋'],
+    ['苹果', '牛奶', '面包'],
+    ['香蕉', '牛奶'],
+    ['苹果', '香蕉', '牛奶', '面包'],
+    ['面包', '鸡蛋']
+]
 
-# 按类别和地区分组
-df.groupby(['category', 'region']).sum()
-</pre>
-                    </div>
-                </div>
+# 转换为适合Apriori的格式
+unique_items = sorted(set(item for t in transactions for item in t))
+basket_data = []
+for t in transactions:
+    row = [1 if item in t else 0 for item in unique_items]
+    basket_data.append(row)
 
-                <div class="content-card">
-                    <h3>3.2 透视表和交叉表</h3>
-                    <p>使用pivot_table创建美观的透视表：</p>
-                    <div class="code-box">
-<pre># 透视表
-pd.pivot_table(df, 
-    values='price', 
-    index='category', 
-    columns='region', 
-    aggfunc='mean',
-    fill_value=0)
+df = pd.DataFrame(basket_data, columns=unique_items)
 
-# 交叉表 - 计数
-pd.crosstab(df['category'], df['region'])
-</pre>
-                    </div>
-                </div>
-            </div>
-
-            <div class="content-section">
-                <div class="content-section-title">第四章 分组后的操作</div>
-                
-                <div class="content-card">
-                    <h3>4.1 transform 方法</h3>
-                    <p>transform允许我们保持原始数据的形状：</p>
-                    <div class="code-box">
-<pre># 计算每个类别的占比
-df['category_total'] = df.groupby('category')['price'].transform('sum')
-df['price_ratio'] = df['price'] / df['category_total']
-</pre>
-                    </div>
-                </div>
-
-                <div class="content-card">
-                    <h3>4.2 apply 方法</h3>
-                    <p>apply可以对每个分组应用任意函数：</p>
-                    <div class="code-box">
-<pre>def top_items(group, n=2):
-    return group.nlargest(n, 'price')
-
-df.groupby('category').apply(top_items)
-</pre>
+# 挖掘频繁项集
+frequent_itemsets = apriori(df, min_support=0.3, use_colnames=True)
+rules = association_rules(frequent_itemsets, metric='confidence', min_threshold=0.6)</pre>
                     </div>
                 </div>
             </div>
@@ -924,73 +925,195 @@ df.groupby('category').apply(top_items)
             <div class="content-section">
                 <div class="content-section-title">练习题（共5题）</div>
                 
-                <div class="question-box">
-                    <h4>练习 1：基本分组</h4>
-                    <p>要按'category'列分组并计算'sales'列的总和，应该使用哪个方法？</p>
-                    <div class="options" role="radiogroup" aria-label="练习1选项">
-                        <button class="option-btn" onclick="selectOption(this, 1, 'A', false)">A. df.group('category').sum('sales')</button>
-                        <button class="option-btn" onclick="selectOption(this, 1, 'B', true)">B. df.groupby('category')['sales'].sum()</button>
-                        <button class="option-btn" onclick="selectOption(this, 1, 'C', false)">C. df.groupby.sum('category', 'sales')</button>
-                        <button class="option-btn" onclick="selectOption(this, 1, 'D', false)">D. df.sum.groupby('category')</button>
-                    </div>
-                    <div class="explanation" id="explanation-1" role="alert">
-                        <p><strong>正确！</strong> groupby后选择特定列，然后调用聚合函数是标准做法。</p>
+                <div class="content-card">
+                    <h3>练习 1：创建购物篮数据</h3>
+                    <p>创建一个包含5个交易记录的购物篮数据集，每个交易包含3-5个商品。</p>
+                    <div class="code-editor-container">
+                        <div class="code-editor">
+                            <textarea id="practice-code-1" class="code-textarea" spellcheck="false">import pandas as pd
+
+# 创建购物篮数据
+data = {
+    'Transaction': ['T1', 'T2', 'T3', 'T4', 'T5'],
+    'Items': [['牛奶', '面包', '鸡蛋'],
+              ['面包', '黄油'],
+              ['牛奶', '面包', '黄油'],
+              ['鸡蛋', '黄油'],
+              ['牛奶', '鸡蛋']]
+}
+
+# 转换为适合Apriori的格式（0-1矩阵）
+# 提示：先获取所有唯一商品，然后转换每个交易
+
+print("转换后的购物篮数据:")
+print(basket_df)</textarea>
+                        </div>
+                        <div class="editor-controls">
+                            <button class="btn btn-primary" onclick="runPracticeCode(1)" aria-label="运行代码">▶️ 运行代码</button>
+                            <button class="btn btn-secondary" onclick="resetPracticeCode(1)" aria-label="重置代码">🔄 重置</button>
+                        </div>
+                        <div class="output-box" id="practice-output-1" style="display: none;">
+                            <div class="output-title">📤 输出结果</div>
+                            <pre class="output-content" id="practice-output-content-1"></pre>
+                        </div>
                     </div>
                 </div>
 
-                <div class="question-box">
-                    <h4>练习 2：多个聚合</h4>
-                    <p>如何对同一列同时计算多个聚合指标？</p>
-                    <div class="options" role="radiogroup" aria-label="练习2选项">
-                        <button class="option-btn" onclick="selectOption(this, 2, 'A', false)">A. df.groupby('col').mean().sum()</button>
-                        <button class="option-btn" onclick="selectOption(this, 2, 'B', false)">B. df.groupby('col').agg(mean, sum)</button>
-                        <button class="option-btn" onclick="selectOption(this, 2, 'C', true)">C. df.groupby('col').agg(['mean', 'sum'])</button>
-                        <button class="option-btn" onclick="selectOption(this, 2, 'D', false)">D. df.groupby('col')[mean, sum]</button>
-                    </div>
-                    <div class="explanation" id="explanation-2" role="alert">
-                        <p><strong>正确！</strong> agg方法接受列表参数，可以同时计算多个聚合函数。</p>
+                <div class="content-card">
+                    <h3>练习 2：计算支持度</h3>
+                    <p>计算单个商品和商品组合的支持度。</p>
+                    <div class="code-editor-container">
+                        <div class="code-editor">
+                            <textarea id="practice-code-2" class="code-textarea" spellcheck="false">import pandas as pd
+
+data = {
+    '牛奶': [1, 1, 0, 1, 0],
+    '面包': [1, 0, 1, 1, 1],
+    '鸡蛋': [0, 1, 1, 0, 1],
+    '黄油': [1, 1, 0, 0, 0]
+}
+df = pd.DataFrame(data)
+
+# 计算单个商品的支持度
+item_support = df.mean()
+print("单个商品支持度:")
+print(item_support)
+
+# 计算{牛奶,面包}的支持度
+milk_bread_support = (df['牛奶'] & df['面包']).mean()
+print("\\n{牛奶,面包}支持度:", milk_bread_support)</textarea>
+                        </div>
+                        <div class="editor-controls">
+                            <button class="btn btn-primary" onclick="runPracticeCode(2)" aria-label="运行代码">▶️ 运行代码</button>
+                            <button class="btn btn-secondary" onclick="resetPracticeCode(2)" aria-label="重置代码">🔄 重置</button>
+                        </div>
+                        <div class="output-box" id="practice-output-2" style="display: none;">
+                            <div class="output-title">📤 输出结果</div>
+                            <pre class="output-content" id="practice-output-content-2"></pre>
+                        </div>
                     </div>
                 </div>
 
-                <div class="question-box">
-                    <h4>练习 3：多列分组</h4>
-                    <p>按'category'和'region'两列分组，正确的写法是？</p>
-                    <div class="options" role="radiogroup" aria-label="练习3选项">
-                        <button class="option-btn" onclick="selectOption(this, 3, 'A', false)">A. df.groupby('category, region')</button>
-                        <button class="option-btn" onclick="selectOption(this, 3, 'B', false)">B. df.groupby('category').groupby('region')</button>
-                        <button class="option-btn" onclick="selectOption(this, 3, 'C', true)">C. df.groupby(['category', 'region'])</button>
-                        <button class="option-btn" onclick="selectOption(this, 3, 'D', false)">D. df.groupby(category, region)</button>
-                    </div>
-                    <div class="explanation" id="explanation-3" role="alert">
-                        <p><strong>正确！</strong> groupby接受列表参数，可以实现多维度分组。</p>
+                <div class="content-card">
+                    <h3>练习 3：应用Apriori算法</h3>
+                    <p>使用mlxtend库挖掘频繁项集和关联规则。</p>
+                    <div class="code-editor-container">
+                        <div class="code-editor">
+                            <textarea id="practice-code-3" class="code-textarea" spellcheck="false">import pandas as pd
+from mlxtend.frequent_patterns import apriori, association_rules
+
+# 创建购物篮数据
+data = {
+    '牛奶': [1, 1, 0, 1, 0, 1],
+    '面包': [1, 0, 1, 1, 1, 1],
+    '鸡蛋': [0, 1, 1, 0, 1, 0],
+    '黄油': [1, 1, 0, 0, 0, 1]
+}
+df = pd.DataFrame(data)
+
+# 挖掘频繁项集（最小支持度0.4）
+frequent_itemsets = apriori(df, min_support=0.4, use_colnames=True)
+print("频繁项集:")
+print(frequent_itemsets)
+
+# 生成关联规则（最小置信度0.7）
+rules = association_rules(frequent_itemsets, metric='confidence', min_threshold=0.7)
+print("\\n关联规则:")
+print(rules[['antecedents', 'consequents', 'support', 'confidence', 'lift']])</textarea>
+                        </div>
+                        <div class="editor-controls">
+                            <button class="btn btn-primary" onclick="runPracticeCode(3)" aria-label="运行代码">▶️ 运行代码</button>
+                            <button class="btn btn-secondary" onclick="resetPracticeCode(3)" aria-label="重置代码">🔄 重置</button>
+                        </div>
+                        <div class="output-box" id="practice-output-3" style="display: none;">
+                            <div class="output-title">📤 输出结果</div>
+                            <pre class="output-content" id="practice-output-content-3"></pre>
+                        </div>
                     </div>
                 </div>
 
-                <div class="question-box">
-                    <h4>练习 4：不同列不同聚合</h4>
-                    <p>对不同列应用不同的聚合函数，使用什么方法？</p>
-                    <div class="options" role="radiogroup" aria-label="练习4选项">
-                        <button class="option-btn" onclick="selectOption(this, 4, 'A', false)">A. df.groupby('col').agg(mean, sum)</button>
-                        <button class="option-btn" onclick="selectOption(this, 4, 'B', true)">B. df.groupby('col').agg({'col1': 'mean', 'col2': 'sum'})</button>
-                        <button class="option-btn" onclick="selectOption(this, 4, 'C', false)">C. df.groupby('col').col1.mean().col2.sum()</button>
-                        <button class="option-btn" onclick="selectOption(this, 4, 'D', false)">D. df.groupby('col').mean(col1).sum(col2)</button>
-                    </div>
-                    <div class="explanation" id="explanation-4" role="alert">
-                        <p><strong>正确！</strong> 可以向agg传入字典，键是列名，值是聚合函数。</p>
+                <div class="content-card">
+                    <h3>练习 4：规则筛选</h3>
+                    <p>从关联规则中筛选出有价值的规则。</p>
+                    <div class="code-editor-container">
+                        <div class="code-editor">
+                            <textarea id="practice-code-4" class="code-textarea" spellcheck="false">import pandas as pd
+from mlxtend.frequent_patterns import apriori, association_rules
+
+data = {
+    'A': [1, 1, 0, 1, 0, 1, 1, 0],
+    'B': [1, 0, 1, 1, 1, 1, 0, 1],
+    'C': [0, 1, 1, 0, 1, 0, 0, 1],
+    'D': [1, 1, 0, 0, 0, 1, 1, 0]
+}
+df = pd.DataFrame(data)
+
+frequent_itemsets = apriori(df, min_support=0.3, use_colnames=True)
+rules = association_rules(frequent_itemsets, metric='confidence', min_threshold=0.5)
+
+# 筛选提升度大于1的规则
+useful_rules = rules[rules['lift'] > 1]
+print("有用的关联规则（提升度>1）:")
+print(useful_rules[['antecedents', 'consequents', 'lift']])</textarea>
+                        </div>
+                        <div class="editor-controls">
+                            <button class="btn btn-primary" onclick="runPracticeCode(4)" aria-label="运行代码">▶️ 运行代码</button>
+                            <button class="btn btn-secondary" onclick="resetPracticeCode(4)" aria-label="重置代码">🔄 重置</button>
+                        </div>
+                        <div class="output-box" id="practice-output-4" style="display: none;">
+                            <div class="output-title">📤 输出结果</div>
+                            <pre class="output-content" id="practice-output-content-4"></pre>
+                        </div>
                     </div>
                 </div>
 
-                <div class="question-box">
-                    <h4>练习 5：透视表</h4>
-                    <p>创建透视表应该使用哪个函数？</p>
-                    <div class="options" role="radiogroup" aria-label="练习5选项">
-                        <button class="option-btn" onclick="selectOption(this, 5, 'A', false)">A. df.pivot()</button>
-                        <button class="option-btn" onclick="selectOption(this, 5, 'B', false)">B. df.table()</button>
-                        <button class="option-btn" onclick="selectOption(this, 5, 'C', true)">C. pd.pivot_table()</button>
-                        <button class="option-btn" onclick="selectOption(this, 5, 'D', false)">D. pd.table()</button>
-                    </div>
-                    <div class="explanation" id="explanation-5" role="alert">
-                        <p><strong>正确！</strong> pd.pivot_table是Pandas提供的专门用于创建透视表的函数。</p>
+                <div class="content-card">
+                    <h3>练习 5：完整购物篮分析</h3>
+                    <p>综合运用所学知识进行完整的购物篮分析。</p>
+                    <div class="code-editor-container">
+                        <div class="code-editor">
+                            <textarea id="practice-code-5" class="code-textarea" spellcheck="false">import pandas as pd
+from mlxtend.frequent_patterns import apriori, association_rules
+
+# 模拟真实购物篮数据
+transactions = [
+    ['苹果', '香蕉', '牛奶'],
+    ['香蕉', '面包', '鸡蛋'],
+    ['苹果', '香蕉', '面包'],
+    ['牛奶', '面包', '鸡蛋'],
+    ['苹果', '牛奶', '面包'],
+    ['香蕉', '牛奶'],
+    ['苹果', '香蕉', '牛奶', '面包'],
+    ['面包', '鸡蛋']
+]
+
+# 转换为DataFrame格式
+unique_items = sorted(set(item for transaction in transactions for item in transaction))
+basket_data = []
+for transaction in transactions:
+    row = [1 if item in transaction else 0 for item in unique_items]
+    basket_data.append(row)
+
+df = pd.DataFrame(basket_data, columns=unique_items)
+
+# 挖掘频繁项集
+frequent_itemsets = apriori(df, min_support=0.3, use_colnames=True)
+print("频繁项集:")
+print(frequent_itemsets)
+
+# 生成关联规则
+rules = association_rules(frequent_itemsets, metric='confidence', min_threshold=0.6)
+print("\\n关联规则:")
+print(rules[['antecedents', 'consequents', 'support', 'confidence', 'lift']])</textarea>
+                        </div>
+                        <div class="editor-controls">
+                            <button class="btn btn-primary" onclick="runPracticeCode(5)" aria-label="运行代码">▶️ 运行代码</button>
+                            <button class="btn btn-secondary" onclick="resetPracticeCode(5)" aria-label="重置代码">🔄 重置</button>
+                        </div>
+                        <div class="output-box" id="practice-output-5" style="display: none;">
+                            <div class="output-title">📤 输出结果</div>
+                            <pre class="output-content" id="practice-output-content-5"></pre>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1002,56 +1125,56 @@ df.groupby('category').apply(top_items)
                 
                 <div class="question-box">
                     <h4>问题 1 / 5</h4>
-                    <p>groupby操作返回的是什么类型的对象？</p>
+                    <p>关联规则中，支持度的计算公式是什么？</p>
                     <div class="options" role="radiogroup" aria-label="测试题1选项">
-                        <button class="option-btn" onclick="selectTestOption(this, 1, 'A', false)">A. DataFrame</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 1, 'B', false)">B. Series</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 1, 'C', true)">C. GroupBy对象</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 1, 'D', false)">D. 字典</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 1, 'A', false)">A. P(A) * P(B)</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 1, 'B', true)">B. P(A ∩ B)</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 1, 'C', false)">C. P(B|A)</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 1, 'D', false)">D. P(A) + P(B)</button>
                     </div>
                 </div>
 
                 <div class="question-box">
                     <h4>问题 2 / 5</h4>
-                    <p>想要保持原始数据形状的分组操作，应该使用？</p>
+                    <p>Apriori算法的核心思想是什么？</p>
                     <div class="options" role="radiogroup" aria-label="测试题2选项">
-                        <button class="option-btn" onclick="selectTestOption(this, 2, 'A', false)">A. agg()</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 2, 'B', true)">B. transform()</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 2, 'C', false)">C. apply()</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 2, 'D', false)">D. sum()</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 2, 'A', true)">A. 频繁项集的子集也是频繁的</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 2, 'B', false)">B. 使用决策树进行分类</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 2, 'C', false)">C. 基于神经网络的学习</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 2, 'D', false)">D. 随机森林集成</button>
                     </div>
                 </div>
 
                 <div class="question-box">
                     <h4>问题 3 / 5</h4>
-                    <p>count和size在groupby中的区别是？</p>
+                    <p>提升度大于1表示什么？</p>
                     <div class="options" role="radiogroup" aria-label="测试题3选项">
-                        <button class="option-btn" onclick="selectTestOption(this, 3, 'A', false)">A. 没有区别</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 3, 'B', false)">B. count统计非NA值，size统计所有值</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 3, 'C', true)">C. count按列统计，size统计总行数</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 3, 'D', false)">D. count更快，size更慢</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 3, 'A', false)">A. A和B负相关</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 3, 'B', false)">B. A和B无关联</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 3, 'C', true)">C. A和B正相关</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 3, 'D', false)">D. 计算错误</button>
                     </div>
                 </div>
 
                 <div class="question-box">
                     <h4>问题 4 / 5</h4>
-                    <p>关于pivot_table说法正确的是？</p>
+                    <p>以下哪个不是关联规则的评价指标？</p>
                     <div class="options" role="radiogroup" aria-label="测试题4选项">
-                        <button class="option-btn" onclick="selectTestOption(this, 4, 'A', false)">A. 只能按一列分组</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 4, 'B', false)">B. 不支持自定义聚合函数</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 4, 'C', true)">C. 可以设置fill_value处理缺失值</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 4, 'D', false)">D. 不能同时设置多个聚合函数</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 4, 'A', false)">A. 支持度</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 4, 'B', false)">B. 置信度</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 4, 'C', false)">C. 提升度</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 4, 'D', true)">D. 准确率</button>
                     </div>
                 </div>
 
                 <div class="question-box">
                     <h4>问题 5 / 5</h4>
-                    <p>对分组应用复杂操作时，最灵活的方法是？</p>
+                    <p>购物篮分析最典型的应用场景是什么？</p>
                     <div class="options" role="radiogroup" aria-label="测试题5选项">
-                        <button class="option-btn" onclick="selectTestOption(this, 5, 'A', false)">A. sum()</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 5, 'B', false)">B. agg()</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 5, 'C', false)">C. transform()</button>
-                        <button class="option-btn" onclick="selectTestOption(this, 5, 'D', true)">D. apply()</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 5, 'A', false)">A. 图像识别</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 5, 'B', true)">B. 商品推荐</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 5, 'C', false)">C. 语音识别</button>
+                        <button class="option-btn" onclick="selectTestOption(this, 5, 'D', false)">D. 股票预测</button>
                     </div>
                 </div>
 
@@ -1083,12 +1206,12 @@ df.groupby('category').apply(top_items)
                 
                 <div class="content-card">
                     <h3>📝 购物篮分析作业</h3>
-                    <p>请完成以下分组聚合任务：</p>
+                    <p>请完成以下购物篮分析任务：</p>
                     <ul>
-                        <li>1. 创建一个包含类别、地区、价格和数量的DataFrame</li>
-                        <li>2. 按类别分组计算价格总和和数量平均值</li>
-                        <li>3. 按类别和地区两列进行分组分析</li>
-                        <li>4. 创建一个透视表展示数据</li>
+                        <li>1. 创建包含10个交易记录的购物篮数据集</li>
+                        <li>2. 使用Apriori算法挖掘频繁项集</li>
+                        <li>3. 生成关联规则并筛选提升度大于1的规则</li>
+                        <li>4. 分析结果并给出业务建议</li>
                     </ul>
                 </div>
 
@@ -1098,34 +1221,23 @@ df.groupby('category').apply(top_items)
                     </div>
                     <div class="homework-submit-area">
                         <textarea id="homework-code" class="homework-textarea" placeholder="请在此输入你的代码...">import pandas as pd
-import numpy as np
+from mlxtend.frequent_patterns import apriori, association_rules
 
-# 创建数据
-data = {
-    'category': ['电子产品', '电子产品', '服装', '服装', '服装', '食品'],
-    'region': ['华东', '华北', '华东', '华北', '华南', '华东'],
-    'price': [1000, 1500, 200, 300, 250, 50],
-    'quantity': [5, 8, 10, 15, 12, 20]
-}
-df = pd.DataFrame(data)
+# 1. 创建购物篮数据（至少10条交易）
+transactions = [
+    # 在此添加交易数据
+]
 
-print('原始数据:')
-print(df)
+# 2. 转换为DataFrame格式
 
-# 按类别分组
-print('\\n按类别分组:')
-result1 = df.groupby('category').agg({'price': 'sum', 'quantity': 'mean'})
-print(result1)
 
-# 按类别和地区分组
-print('\\n按类别和地区分组:')
-result2 = df.groupby(['category', 'region']).sum()
-print(result2)
+# 3. 挖掘频繁项集
 
-# 创建透视表
-print('\\n透视表:')
-pivot = pd.pivot_table(df, values='price', index='category', columns='region', aggfunc='mean', fill_value=0)
-print(pivot)</textarea>
+
+# 4. 生成关联规则并筛选提升度>1的规则
+
+
+# 5. 输出分析结果和业务建议</textarea>
                         <div class="btn-group" style="margin-top: 16px;">
                             <button class="btn btn-primary" onclick="submitHomework()" aria-label="提交作业">
                                 📤 提交作业
@@ -1161,13 +1273,11 @@ print(pivot)</textarea>
         let totalQuestions = 5;
         
         const searchData = [
-            { title: '分组聚合', section: '1.1 什么是分组聚合', content: 'groupby sum mean count' },
-            { title: '基本分组', section: '1.2 基本分组操作', content: 'groupby sum mean' },
-            { title: '聚合函数', section: '2.1 常用聚合函数', content: 'agg mean sum max min std' },
-            { title: '多维度分组', section: '3.1 多列分组', content: 'groupby multiple columns' },
-            { title: '透视表', section: '3.2 透视表和交叉表', content: 'pivot_table crosstab' },
-            { title: 'transform', section: '4.1 transform 方法', content: 'transform' },
-            { title: 'apply', section: '4.2 apply 方法', content: 'apply custom function' }
+            { title: '关联规则', section: '1.1 什么是关联规则', content: '支持度 置信度 提升度' },
+            { title: 'Apriori算法', section: '2.1 Apriori原理', content: '频繁项集 剪枝' },
+            { title: '规则评估', section: '3.1 规则评价指标', content: '杠杆率 确信度' },
+            { title: '规则筛选', section: '3.2 规则筛选技巧', content: '提升度>1' },
+            { title: '购物篮分析', section: '4.1 购物篮分析实践', content: 'mlxtend apriori' }
         ];
         
         async function initPyodide() {
@@ -1245,6 +1355,196 @@ sys.stderr = StringIO()
             }
         }
         
+        function resetCode() {
+            document.getElementById('code-input').value = `import pandas as pd
+from mlxtend.frequent_patterns import apriori, association_rules
+
+# 创建购物篮数据
+data = {
+    '牛奶': [1, 1, 0, 1, 0],
+    '面包': [1, 0, 1, 1, 1],
+    '鸡蛋': [0, 1, 1, 0, 1],
+    '黄油': [1, 1, 0, 0, 0]
+}
+df = pd.DataFrame(data)
+
+print('购物篮数据:')
+print(df)
+
+# 挖掘频繁项集（最小支持度0.4）
+frequent_itemsets = apriori(df, min_support=0.4, use_colnames=True)
+print('\\n频繁项集:')
+print(frequent_itemsets)
+
+# 生成关联规则（最小置信度0.7）
+rules = association_rules(frequent_itemsets, metric='confidence', min_threshold=0.7)
+print('\\n关联规则:')
+print(rules[['antecedents', 'consequents', 'support', 'confidence', 'lift']])`;
+        }
+        
+        function copyCode() {
+            const code = document.getElementById('code-input').value;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('代码已复制到剪贴板！');
+            });
+        }
+        
+        async function runPracticeCode(num) {
+            const code = document.getElementById('practice-code-' + num).value;
+            const outputBox = document.getElementById('practice-output-' + num);
+            const outputContent = document.getElementById('practice-output-content-' + num);
+            
+            if (!code.trim()) {
+                alert('请先输入代码！');
+                return;
+            }
+            
+            outputBox.style.display = 'block';
+            outputContent.textContent = '正在执行...';
+            outputContent.className = 'output-content';
+            
+            try {
+                await initPyodide();
+                if (!pyodide) throw new Error('Pyodide 未初始化');
+                
+                pyodide.runPython(`
+import sys
+from io import StringIO
+sys.stdout = StringIO()
+sys.stderr = StringIO()
+                `);
+                
+                await pyodide.runPythonAsync(code);
+                
+                const stdout = pyodide.runPython('sys.stdout.getvalue()');
+                const stderr = pyodide.runPython('sys.stderr.getvalue()');
+                
+                if (stderr?.trim()) {
+                    outputContent.textContent = stderr;
+                    outputContent.className = 'output-content error';
+                } else {
+                    outputContent.textContent = stdout || '(代码执行完成，无输出)';
+                    outputContent.className = 'output-content success';
+                }
+            } catch (error) {
+                outputContent.textContent = '错误: ' + error.message;
+                outputContent.className = 'output-content error';
+            }
+        }
+        
+        function resetPracticeCode(num) {
+            const defaultCodes = {
+                1: `import pandas as pd
+
+# 创建购物篮数据
+data = {
+    'Transaction': ['T1', 'T2', 'T3', 'T4', 'T5'],
+    'Items': [['牛奶', '面包', '鸡蛋'],
+              ['面包', '黄油'],
+              ['牛奶', '面包', '黄油'],
+              ['鸡蛋', '黄油'],
+              ['牛奶', '鸡蛋']]
+}
+
+# 转换为适合Apriori的格式（0-1矩阵）
+# 提示：先获取所有唯一商品，然后转换每个交易
+
+print("转换后的购物篮数据:")
+print(basket_df)`,
+                2: `import pandas as pd
+
+data = {
+    '牛奶': [1, 1, 0, 1, 0],
+    '面包': [1, 0, 1, 1, 1],
+    '鸡蛋': [0, 1, 1, 0, 1],
+    '黄油': [1, 1, 0, 0, 0]
+}
+df = pd.DataFrame(data)
+
+# 计算单个商品的支持度
+item_support = df.mean()
+print("单个商品支持度:")
+print(item_support)
+
+# 计算{牛奶,面包}的支持度
+milk_bread_support = (df['牛奶'] & df['面包']).mean()
+print("\\n{牛奶,面包}支持度:", milk_bread_support)`,
+                3: `import pandas as pd
+from mlxtend.frequent_patterns import apriori, association_rules
+
+# 创建购物篮数据
+data = {
+    '牛奶': [1, 1, 0, 1, 0, 1],
+    '面包': [1, 0, 1, 1, 1, 1],
+    '鸡蛋': [0, 1, 1, 0, 1, 0],
+    '黄油': [1, 1, 0, 0, 0, 1]
+}
+df = pd.DataFrame(data)
+
+# 挖掘频繁项集（最小支持度0.4）
+frequent_itemsets = apriori(df, min_support=0.4, use_colnames=True)
+print("频繁项集:")
+print(frequent_itemsets)
+
+# 生成关联规则（最小置信度0.7）
+rules = association_rules(frequent_itemsets, metric='confidence', min_threshold=0.7)
+print("\\n关联规则:")
+print(rules[['antecedents', 'consequents', 'support', 'confidence', 'lift']])`,
+                4: `import pandas as pd
+from mlxtend.frequent_patterns import apriori, association_rules
+
+data = {
+    'A': [1, 1, 0, 1, 0, 1, 1, 0],
+    'B': [1, 0, 1, 1, 1, 1, 0, 1],
+    'C': [0, 1, 1, 0, 1, 0, 0, 1],
+    'D': [1, 1, 0, 0, 0, 1, 1, 0]
+}
+df = pd.DataFrame(data)
+
+frequent_itemsets = apriori(df, min_support=0.3, use_colnames=True)
+rules = association_rules(frequent_itemsets, metric='confidence', min_threshold=0.5)
+
+# 筛选提升度大于1的规则
+useful_rules = rules[rules['lift'] > 1]
+print("有用的关联规则（提升度>1）:")
+print(useful_rules[['antecedents', 'consequents', 'lift']])`,
+                5: `import pandas as pd
+from mlxtend.frequent_patterns import apriori, association_rules
+
+# 模拟真实购物篮数据
+transactions = [
+    ['苹果', '香蕉', '牛奶'],
+    ['香蕉', '面包', '鸡蛋'],
+    ['苹果', '香蕉', '面包'],
+    ['牛奶', '面包', '鸡蛋'],
+    ['苹果', '牛奶', '面包'],
+    ['香蕉', '牛奶'],
+    ['苹果', '香蕉', '牛奶', '面包'],
+    ['面包', '鸡蛋']
+]
+
+# 转换为DataFrame格式
+unique_items = sorted(set(item for transaction in transactions for item in transaction))
+basket_data = []
+for transaction in transactions:
+    row = [1 if item in transaction else 0 for item in unique_items]
+    basket_data.append(row)
+
+df = pd.DataFrame(basket_data, columns=unique_items)
+
+# 挖掘频繁项集
+frequent_itemsets = apriori(df, min_support=0.3, use_colnames=True)
+print("频繁项集:")
+print(frequent_itemsets)
+
+# 生成关联规则
+rules = association_rules(frequent_itemsets, metric='confidence', min_threshold=0.6)
+print("\\n关联规则:")
+print(rules[['antecedents', 'consequents', 'support', 'confidence', 'lift']])`
+            };
+            document.getElementById('practice-code-' + num).value = defaultCodes[num];
+        }
+        
         async function runHomeworkCode() {
             const code = document.getElementById('homework-code').value;
             const outputBox = document.getElementById('homework-output');
@@ -1288,223 +1588,137 @@ sys.stderr = StringIO()
             }
         }
         
-        function resetCode() {
-            document.getElementById('code-input').value = `import pandas as pd
-import numpy as np
-
-data = {
-    'category': ['电子产品', '服装', '电子产品', '服装', '食品'],
-    'price': [1000, 200, 1500, 300, 50],
-    'quantity': [5, 10, 8, 15]
-}
-df = pd.DataFrame(data)
-
-print('原始数据:')
-print(df)
-
-# 按类别分组计算总和
-print('\\n按类别分组求和:')
-grouped = df.groupby('category').sum()
-print(grouped)
-
-# 按类别分组计算平均值
-print('\\n按类别分组求平均:')
-grouped_mean = df.groupby('category').mean()
-print(grouped_mean)`;
-            document.getElementById('output-box').style.display = 'none';
+        function submitHomework() {
+            const status = document.getElementById('submit-status');
+            status.className = 'submit-status success';
+            status.innerHTML = '✅ 作业提交成功！';
+            status.style.display = 'block';
         }
         
-        function copyCode() {
-            const code = document.getElementById('code-input').value;
-            navigator.clipboard.writeText(code).then(() => {
-                alert('代码已复制到剪贴板！');
-            });
-        }
-        
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-                tab.setAttribute('aria-selected', 'false');
-            });
-            
-            const targetTab = document.getElementById(tabName + '-tab');
-            const targetBtn = document.getElementById('tab-' + tabName);
-            
-            if (targetTab) targetTab.classList.add('active');
-            if (targetBtn) {
-                targetBtn.classList.add('active');
-                targetBtn.setAttribute('aria-selected', 'true');
+        function selectOption(btn, qNum, option, isCorrect) {
+            const options = btn.parentElement.children;
+            for (let i = 0; i < options.length; i++) {
+                options[i].classList.remove('selected', 'correct', 'wrong');
             }
-        }
-        
-        function selectOption(btn, questionId, option, isCorrect) {
-            const questionBox = btn.closest('.question-box');
-            const allOptions = questionBox.querySelectorAll('.option-btn');
-            allOptions.forEach(opt => opt.classList.remove('selected', 'correct', 'wrong'));
+            
+            btn.classList.add('selected');
             
             if (isCorrect) {
-                btn.classList.add('selected', 'correct');
-                saveProgress('exercise', questionId);
+                btn.classList.add('correct');
             } else {
-                btn.classList.add('selected', 'wrong');
+                btn.classList.add('wrong');
             }
             
-            const explanation = document.getElementById('explanation-' + questionId);
-            if (explanation) explanation.style.display = 'block';
+            const explanation = document.getElementById('explanation-' + qNum);
+            if (explanation) {
+                explanation.style.display = 'block';
+            }
         }
         
-        function selectTestOption(btn, questionId, option, isCorrect) {
-            const questionBox = btn.closest('.question-box');
-            const allOptions = questionBox.querySelectorAll('.option-btn');
-            allOptions.forEach(opt => opt.classList.remove('selected'));
+        function selectTestOption(btn, qNum, option, isCorrect) {
+            testAnswers[qNum] = { option, isCorrect };
+            
+            const options = btn.parentElement.children;
+            for (let i = 0; i < options.length; i++) {
+                options[i].classList.remove('selected');
+            }
             btn.classList.add('selected');
-            testAnswers[questionId] = isCorrect;
         }
         
         function submitTest() {
-            if (Object.keys(testAnswers).length < totalQuestions) {
-                alert('请先回答所有问题！');
-                return;
+            let correct = 0;
+            for (let i = 1; i <= totalQuestions; i++) {
+                if (testAnswers[i]?.isCorrect) correct++;
             }
             
-            const questionBoxes = document.querySelectorAll('#test-tab .question-box');
-            questionBoxes.forEach((box, i) => {
-                const options = box.querySelectorAll('.option-btn');
-                options.forEach(opt => {
-                    if (opt.classList.contains('selected')) {
-                        const questionNum = i + 1;
-                        const isCorrect = testAnswers[questionNum];
-                        opt.classList.remove('selected');
-                        opt.classList.add(isCorrect ? 'correct' : 'wrong');
-                    }
-                });
-            });
-            
-            let correctCount = Object.values(testAnswers).filter(v => v).length;
-            let score = Math.round((correctCount / totalQuestions) * 100);
-            
+            const score = Math.round((correct / totalQuestions) * 100);
             document.getElementById('final-score').textContent = score + '分';
-            
-            let message = '';
-            let icon = '';
-            if (score >= 80) {
-                message = '太棒了！你掌握了这个项目的技能！';
-                icon = '🎉';
-            } else if (score >= 60) {
-                message = '不错！继续加油！';
-                icon = '💪';
-            } else {
-                message = '再去复习一下吧！';
-                icon = '📚';
-            }
-            
-            document.getElementById('result-message').textContent = message;
-            document.getElementById('result-icon').textContent = icon;
+            document.getElementById('result-message').textContent = score >= 80 ? '🎉 太棒了！继续保持！' : score >= 60 ? '👍 不错！继续努力！' : '💪 需要多加练习！';
+            document.getElementById('result-icon').textContent = score >= 80 ? '🏆' : score >= 60 ? '😊' : '📚';
             document.getElementById('test-result').style.display = 'block';
-            
-            saveProgress('test', score);
         }
         
         function resetTest() {
             testAnswers = {};
-            document.querySelectorAll('#test-tab .option-btn').forEach(opt => {
+            document.getElementById('test-result').style.display = 'none';
+            
+            const options = document.querySelectorAll('.option-btn');
+            options.forEach(opt => {
                 opt.classList.remove('selected', 'correct', 'wrong');
             });
-            document.getElementById('test-result').style.display = 'none';
         }
         
-        function submitHomework() {
-            const code = document.getElementById('homework-code').value;
-            if (!code.trim()) {
-                document.getElementById('submit-status').textContent = '请先输入代码！';
-                document.getElementById('submit-status').className = 'submit-status error';
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+                tab.setAttribute('aria-selected', 'false');
+            });
+            contents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            document.querySelector(`[onclick="showTab('${tabName}')"]`).classList.add('active');
+            document.querySelector(`[onclick="showTab('${tabName}')"]`).setAttribute('aria-selected', 'true');
+            document.getElementById(tabName + '-tab').classList.add('active');
+        }
+        
+        function search() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const results = document.getElementById('search-results');
+            
+            if (!query.trim()) {
+                results.innerHTML = '';
                 return;
             }
             
-            localStorage.setItem('homework_project3', code);
-            document.getElementById('submit-status').textContent = '作业提交成功！代码已保存。';
-            document.getElementById('submit-status').className = 'submit-status success';
-            saveProgress('homework', 1);
-        }
-        
-        function saveProgress(type, value) {
-            const projectId = 'project3';
-            let progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
+            const matches = searchData.filter(item => 
+                item.title.toLowerCase().includes(query) ||
+                item.section.toLowerCase().includes(query) ||
+                item.content.toLowerCase().includes(query)
+            );
             
-            if (!progress[projectId]) {
-                progress[projectId] = { chapters: 0, exercises: 0, score: 0, homework: 0 };
+            if (matches.length === 0) {
+                results.innerHTML = '<p style="color: #8080a0;">未找到匹配内容</p>';
+                return;
             }
             
-            if (type === 'chapter') {
-                progress[projectId].chapters = Math.max(progress[projectId].chapters, value);
-            } else if (type === 'exercise') {
-                progress[projectId].exercises = Math.max(progress[projectId].exercises, value);
-            } else if (type === 'test') {
-                progress[projectId].score = Math.max(progress[projectId].score, value);
-            } else if (type === 'homework') {
-                progress[projectId].homework = 1;
-            }
-            
-            localStorage.setItem('learningProgress', JSON.stringify(progress));
-            updateProgressDisplay();
+            results.innerHTML = matches.map(item => `
+                <div class="search-result-item">
+                    <strong>${item.title}</strong>
+                    <p>${item.section}</p>
+                </div>
+            `).join('');
         }
         
-        function updateProgressDisplay() {
-            const projectId = 'project3';
-            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}')[projectId] || { chapters: 0, exercises: 0, score: 0 };
-            
-            document.getElementById('chapters-learned').textContent = progress.chapters + '/4';
-            document.getElementById('exercises-done').textContent = progress.exercises + '/5';
-            document.getElementById('test-score').textContent = progress.score;
-            
-            const percentage = Math.round(((progress.chapters * 25) + (progress.exercises * 4)) / 1.4);
-            document.getElementById('progress-percentage').textContent = Math.min(percentage, 100) + '%';
-            document.getElementById('progress-circle-inner').style.strokeDashoffset = 283 - (283 * Math.min(percentage, 100) / 100);
-        }
-        
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', () => {
             const searchInput = document.getElementById('search-input');
-            const searchResults = document.getElementById('search-results');
+            searchInput.addEventListener('input', search);
             
-            document.addEventListener('keydown', function(e) {
-                if (e.key === '/' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+            document.addEventListener('keydown', (e) => {
+                if (e.key === '/' && document.activeElement !== searchInput) {
                     e.preventDefault();
-                    if (searchInput) searchInput.focus();
+                    searchInput.focus();
                 }
             });
             
-            if (searchInput) {
-                searchInput.addEventListener('input', function() {
-                    const query = this.value.toLowerCase().trim();
-                    if (query.length < 2) {
-                        if (searchResults) searchResults.innerHTML = '';
-                        return;
-                    }
-                    
-                    const results = searchData.filter(item => 
-                        item.title.toLowerCase().includes(query) ||
-                        item.content.toLowerCase().includes(query)
-                    );
-                    
-                    if (results.length === 0) {
-                        if (searchResults) searchResults.innerHTML = '<p style="color: #a0a0b8;">未找到相关结果</p>';
-                    } else {
-                        if (searchResults) {
-                            searchResults.innerHTML = results.map(r => 
-                                `<div class="search-result-item" tabindex="0">
-                                    <strong>${r.title}</strong><br>
-                                    <small style="color: #8080a0;">${r.section}</small>
-                                </div>`
-                            ).join('');
-                        }
-                    }
-                });
-            }
-            
-            updateProgressDisplay();
-            initPyodide();
+            const progress = JSON.parse(localStorage.getItem('project3_progress') || '{}');
+            updateProgress(progress);
         });
+        
+        function updateProgress(progress) {
+            const total = 4;
+            const completed = progress.chapters || 0;
+            const percentage = Math.round((completed / total) * 100);
+            
+            document.getElementById('progress-percentage').textContent = percentage + '%';
+            document.getElementById('progress-circle-inner').style.strokeDashoffset = 283 - (283 * percentage / 100);
+            document.getElementById('chapters-learned').textContent = completed + '/' + total;
+            document.getElementById('exercises-done').textContent = progress.exercises || '0/5';
+            document.getElementById('test-score').textContent = progress.score || '0';
+        }
     </script>
 </body>
 </html>
