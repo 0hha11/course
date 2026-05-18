@@ -1,15 +1,21 @@
 #!/usr/bin/env python3
 import os
-import re
 
-def copy_js_section(content):
-    # 1. 更新Pyodide版本
-    content = content.replace(
-        '<script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>',
-        '<script src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"></script>'
-    )
+def fix_project_html(file_path, project_num, project_title):
+    with open(file_path, 'r', encoding='utf-8') as f:
+        content = f.read()
     
-    # 2. 替换旧的initPyodide函数
+    # 1. 更新Pyodide版本
+    old_pyodide_script = '<script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>'
+    new_pyodide_script = '<script src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"></script>'
+    content = content.replace(old_pyodide_script, new_pyodide_script)
+    
+    # 2. 更新indexURL
+    old_index_url = 'indexURL: "https://cdn.jsdelivr.net/pyodide/v0.24.1/full/"'
+    new_index_url = 'indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.2/full/"'
+    content = content.replace(old_index_url, new_index_url)
+    
+    # 3. 改进initPyodide函数
     old_init = '''        async function initPyodide() {
             if (pyodide || isLoading) return;
             isLoading = true;
@@ -22,7 +28,7 @@ def copy_js_section(content):
             
             try {
                 pyodide = await loadPyodide({
-                    indexURL: "https://cdn.jsdelivr.net/pyodide/v0.24.1/full/"
+                    indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.2/full/"
                 });
                 console.log('Pyodide 加载成功！');
             } catch (error) {
@@ -63,6 +69,8 @@ def copy_js_section(content):
                     indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.2/full/"
                 });
                 
+                // 预加载常用包
+                await pyodide.loadPackage(['micropip']);
                 console.log('Pyodide 加载成功！');
                 
                 // 恢复所有按钮状态
@@ -90,10 +98,9 @@ def copy_js_section(content):
                 return null;
             }
         }'''
-    
     content = content.replace(old_init, new_init)
     
-    # 3. 替换旧的runCode函数
+    # 4. 改进runCode函数
     old_runcode = '''        async function runCode() {
             const code = document.getElementById('code-input').value;
             const outputBox = document.getElementById('output-box');
@@ -194,10 +201,9 @@ sys.stderr = StringIO()
                 btn.innerHTML = '▶️ 运行代码';
             }
         }'''
-    
     content = content.replace(old_runcode, new_runcode)
     
-    # 4. 替换旧的runPracticeCode函数
+    # 5. 改进runPracticeCode函数
     old_practice = '''        async function runPracticeCode(num) {
             const code = document.getElementById('practice-code-' + num).value;
             const outputBox = document.getElementById('practice-output-' + num);
@@ -271,10 +277,9 @@ sys.stderr = StringIO()
                 btn.innerHTML = originalText;
             }
         }'''
-    
     content = content.replace(old_practice, new_practice)
     
-    # 5. 替换旧的runHomeworkCode函数
+    # 6. 改进runHomeworkCode函数
     old_homework = '''        async function runHomeworkCode() {
             const code = document.getElementById('homework-code').value;
             const outputBox = document.getElementById('homework-output');
@@ -370,32 +375,61 @@ sys.stderr = StringIO()
                 btn.innerHTML = originalText;
             }
         }'''
-    
     content = content.replace(old_homework, new_homework)
     
-    return content
+    # 7. 添加页面加载时的预加载提示
+    footer_end = '''    </script>
+</body>
+</html>'''
+    
+    new_footer = '''        // 页面加载完成后显示提示
+        document.addEventListener('DOMContentLoaded', function() {
+            const originalInit = initPyodide;
+            let hasLoaded = false;
+            
+            // 在第一次点击运行时预加载
+            document.addEventListener('click', function(e) {
+                if (!hasLoaded && e.target.textContent && (e.target.textContent.includes('运行') || e.target.textContent.includes('▶️'))) {
+                    hasLoaded = true;
+                }
+            }, { once: true });
+            
+            updateProgressDisplay();
+        });
+    </script>
+</body>
+</html>'''
+    content = content.replace(footer_end, new_footer)
+    
+    with open(file_path, 'w', encoding='utf-8') as f:
+        f.write(content)
+    
+    print(f'✓ 已更新 {file_path}')
 
 def main():
-    projects = list(range(2, 11))
+    projects = [
+        (1, '数据清洗'),
+        (2, '分组聚合分析'),
+        (3, '购物篮分析'),
+        (4, '客户聚类分析'),
+        (5, '数据可视化'),
+        (6, 'A/B测试分析'),
+        (7, '时间序列分析'),
+        (8, '特征工程'),
+        (9, '异常值检测'),
+        (10, '多数据集合并')
+    ]
     
-    print('开始更新所有项目...\n')
+    print('开始修复所有项目...\n')
     
-    for num in projects:
+    for num, title in projects:
         file_path = f'/workspace/projects/project{num}/index.html'
         if os.path.exists(file_path):
-            with open(file_path, 'r', encoding='utf-8') as f:
-                content = f.read()
-            
-            updated_content = copy_js_section(content)
-            
-            with open(file_path, 'w', encoding='utf-8') as f:
-                f.write(updated_content)
-            
-            print(f'✓ 已更新 project{num}')
+            fix_project_html(file_path, num, title)
         else:
-            print(f'✗ 文件不存在: project{num}')
+            print(f'✗ 文件不存在: {file_path}')
     
-    print('\n所有项目更新完成！')
+    print('\n所有项目修复完成！')
 
 if __name__ == '__main__':
     main()
