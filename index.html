@@ -3,91 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pandas 数据分析实战训练营</title>
-    <link rel="stylesheet" href="css/variables.css?v=20260519">
-    <link rel="stylesheet" href="css/layout.css?v=20260519">
-    <link rel="stylesheet" href="css/components.css?v=20260519">
-    <script src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"></script>
+    <title>Pandas Training Camp</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 20px; }
+        h1 { color: #2c3e50; }
+        .code-editor { border: 1px solid #ddd; padding: 20px; margin: 20px auto; max-width: 600px; }
+        textarea { width: 100%; height: 150px; font-family: monospace; }
+        button { padding: 10px 20px; margin: 10px; cursor: pointer; }
+        #output { background: #f8f9fa; padding: 10px; text-align: left; font-family: monospace; }
+    </style>
 </head>
 <body>
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1>📊 Pandas 数据分析实战训练营</h1>
-                <p>完全在浏览器中运行代码，无需安装任何软件</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="demo-section">
-        <div class="container">
-            <h2>🚀 立即体验</h2>
-            <div class="code-editor">
-                <textarea id="codeInput" placeholder="输入 pandas 代码...">import pandas as pd
-import numpy as np
-
+    <h1>🐼 Pandas Data Analysis Training</h1>
+    <p>Run pandas code directly in your browser</p>
+    
+    <div class="code-editor">
+        <textarea id="code">import pandas as pd
 data = {'Name': ['Alice', 'Bob', 'Charlie'], 'Age': [25, 30, 35]}
 df = pd.DataFrame(data)
 print(df)</textarea>
-                <div class="editor-actions">
-                    <button id="runBtn" onclick="runCode()">运行代码</button>
-                    <button id="resetBtn" onclick="resetCode()">重置</button>
-                </div>
-                <div id="output" class="output-panel"></div>
-                <div id="loading" class="loading">加载中...</div>
-            </div>
-        </div>
-    </section>
+        <br>
+        <button onclick="runCode()">Run Code</button>
+        <button onclick="resetCode()">Reset</button>
+        <div id="output"></div>
+        <div id="loading" style="display:none">Loading...</div>
+    </div>
 
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"></script>
     <script>
         let pyodide;
-        const isLoading = { value: false };
-
-        async function initPyodide() {
-            if (pyodide) return;
-            isLoading.value = true;
+        async function init() {
             document.getElementById('loading').style.display = 'block';
-            pyodide = await loadPyodide({
-                indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.26.2/full/'
-            });
+            pyodide = await loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.26.2/full/' });
             await pyodide.loadPackage(['pandas', 'numpy']);
-            isLoading.value = false;
             document.getElementById('loading').style.display = 'none';
         }
-
         async function runCode() {
-            if (isLoading.value) {
-                alert('正在加载环境，请稍候...');
-                return;
-            }
-            await initPyodide();
-            const code = document.getElementById('codeInput').value;
+            if (!pyodide) await init();
+            const code = document.getElementById('code').value;
             const output = document.getElementById('output');
             try {
-                output.innerHTML = '<pre>运行中...</pre>';
+                output.textContent = 'Running...';
                 const result = await pyodide.runPythonAsync(code);
-                let outputText = '';
-                if (result !== undefined) {
-                    outputText = result.toString();
-                }
                 const stdout = pyodide.runPython("import sys; sys.stdout.getvalue()");
-                if (stdout) {
-                    outputText = stdout + (outputText ? '\n' + outputText : '');
-                }
-                output.innerHTML = '<pre>' + outputText + '</pre>';
-            } catch (error) {
-                output.innerHTML = '<pre style="color: red;">' + error.message + '</pre>';
+                output.textContent = stdout || result;
+            } catch (e) {
+                output.textContent = 'Error: ' + e.message;
             }
         }
-
         function resetCode() {
-            document.getElementById('codeInput').value = `import pandas as pd
-import numpy as np
-
-data = {'Name': ['Alice', 'Bob', 'Charlie'], 'Age': [25, 30, 35]}
-df = pd.DataFrame(data)
-print(df)`;
-            document.getElementById('output').innerHTML = '';
+            document.getElementById('code').value = "import pandas as pd\ndata = {'Name': ['Alice', 'Bob', 'Charlie'], 'Age': [25, 30, 35]}\ndf = pd.DataFrame(data)\nprint(df)";
+            document.getElementById('output').textContent = '';
         }
     </script>
 </body>
