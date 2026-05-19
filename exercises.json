@@ -1,0 +1,70 @@
+{
+  "projects": {
+    "1": {
+      "title": "数据清洗实战",
+      "exercises": [
+        {
+          "id": 1,
+          "question": "请创建一个包含缺失值的DataFrame，并统计每列缺失值的数量。",
+          "code": "import pandas as pd\nimport numpy as np\n\n# 创建带有缺失值的DataFrame\ndata = {'A': [1, np.nan, 3, 4, 5],\n        'B': ['x', 'y', np.nan, 'z', 'z'],\n        'C': [np.nan, np.nan, 3, 4, 5]}\n\ndf = pd.DataFrame(data)\n\n# 统计每列缺失值数量\nprint('每列缺失值数量：')\nprint(df.isnull().sum())",
+          "type": "code",
+          "hint": "使用 df.isnull().sum() 可以快速统计每列的缺失值数量",
+          "answer": "这里的示例代码已经是一个完整的解决方案，你可以直接运行它来查看结果！"
+        },
+        {
+          "id": 2,
+          "question": "请删除DataFrame中的所有重复值。",
+          "code": "import pandas as pd\n\n# 创建带有重复值的DataFrame\ndata = {'A': [1, 2, 2, 3, 3, 3],\n        'B': ['x', 'y', 'y', 'z', 'z', 'z']}\n\ndf = pd.DataFrame(data)\nprint('原始DataFrame：')\nprint(df)\n\n# 删除重复值\nprint('\\n删除重复值后：')\nprint(df.drop_duplicates())",
+          "type": "code",
+          "hint": "使用 df.drop_duplicates() 来删除重复的行",
+          "answer": "示例代码演示了如何使用 drop_duplicates() 方法，它会删除所有完全相同的行。"
+        },
+        {
+          "id": 3,
+          "question": "请使用均值填充DataFrame中的数值型缺失值。",
+          "code": "import pandas as pd\nimport numpy as np\n\n# 创建数据\ndata = {'A': [1, np.nan, 3, 4, np.nan],\n        'B': [10, 20, np.nan, 40, 50]}\n\ndf = pd.DataFrame(data)\nprint('填充前：')\nprint(df)\n\n# 用均值填充\nprint('\\n用均值填充后：')\nprint(df.fillna(df.mean()))",
+          "type": "code",
+          "hint": "df.mean() 会计算每列的平均值，然后用 fillna() 来填充",
+          "answer": "使用 df.fillna(df.mean()) 可以用每列的均值填充该列的缺失值，这是一种常见的处理方法。"
+        }
+      ],
+      "quiz": [
+        {
+          "id": 1,
+          "question": "在Pandas中，用于检测缺失值的方法是？",
+          "options": ["isnull()", "dropna()", "fillna()", "none()"],
+          "correct": 0,
+          "explanation": "isnull() 和它的别名 isna() 都用于检测 DataFrame 中的缺失值，返回一个布尔值的 DataFrame。"
+        },
+        {
+          "id": 2,
+          "question": "删除DataFrame中重复值的方法是？",
+          "options": ["drop_na()", "drop_duplicates()", "remove_dups()", "clean()"],
+          "correct": 1,
+          "explanation": "drop_duplicates() 方法用于删除 DataFrame 中的重复行，可以通过 subset 参数指定检查哪些列。"
+        },
+        {
+          "id": 3,
+          "question": "IQR方法中的1.5倍IQR范围之外的值被认为是？",
+          "options": ["缺失值", "正常值", "异常值", "重复值"],
+          "correct": 2,
+          "explanation": "IQR（四分位距）方法中，通常将 Q1 - 1.5*IQR 以下或 Q3 + 1.5*IQR 以上的值视为异常值（outliers）。"
+        }
+      ]
+    },
+    "2": {
+      "title": "分组聚合分析",
+      "exercises": [
+        {
+          "id": 1,
+          "question": "请按类别分组并计算销售额总和。",
+          "code": "import pandas as pd\n\ndata = {'category': ['电子产品', '服装', '电子产品', '服装', '电子产品'],\n        'sales': [1000, 500, 1500, 800, 2000]}\n\ndf = pd.DataFrame(data)\nprint('分组聚合结果：')\nprint(df.groupby('category')['sales'].sum())",
+          "type": "code",
+          "hint": "使用 groupby() 分组，然后用 sum() 计算总和",
+          "answer": "groupby('category') 按类别分组后，对 sales 列调用 sum() 即可得到每个类别的总销售额。"
+        }
+      ],
+      "quiz": []
+    }
+  }
+}

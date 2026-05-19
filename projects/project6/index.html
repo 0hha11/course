@@ -3,947 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A/B测试分析 - Pandas数据分析实战训练营</title>
-    
+    <title>A/B测试分析 - Pandas数据分析实战</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body { 
-            font-family: 'Noto Sans SC', sans-serif; 
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            color: #e6e6e6; 
-            line-height: 1.7; 
-            min-height: 100vh;
-        }
-        
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-        
-        header { 
-            background: rgba(0, 0, 0, 0.3); 
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
-            padding: 20px 0; 
-            backdrop-filter: blur(10px);
-        }
-        header .container { display: flex; justify-content: space-between; align-items: center; }
-        .header-left { display: flex; align-items: center; gap: 16px; }
-        .logo-circle {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #00d4ff 0%, #8b5cf6 100%);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-        }
-        .logo-text {
-            font-size: 18px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #ffffff 0%, #8b5cf6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        header a { 
-            color: #a0a0b8; 
-            text-decoration: none; 
-            font-size: 14px; 
-            font-weight: 500;
-            padding: 8px 12px;
-            border-radius: 8px;
-            transition: all 0.2s;
-        }
-        header a:hover { color: #00d4ff; background: rgba(0, 212, 255, 0.1); }
-        
-        .project-header { padding: 48px 0 32px; }
-        .project-header .container { display: flex; justify-content: space-between; align-items: flex-start; gap: 32px; }
-        .project-info { flex: 1; }
-        .project-icon-large {
-            width: 64px;
-            height: 64px;
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
-            border: 1px solid rgba(0, 212, 255, 0.3);
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            margin-bottom: 20px;
-        }
-        .project-title { font-size: 36px; font-weight: 900; color: #ffffff; margin-bottom: 12px; }
-        .project-description { color: #a0a0b8; font-size: 16px; margin-bottom: 20px; }
-        .project-meta { display: flex; gap: 12px; flex-wrap: wrap; }
-        .badge { padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; }
-        .badge-hard { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
-        .badge-time { background: rgba(255, 255, 255, 0.08); color: #a0a0b8; font-weight: 500; }
-        .badge-dataset { background: rgba(139, 92, 246, 0.15); color: #a78bfa; font-family: monospace; }
-        
-        .progress-card {
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 24px;
-            min-width: 280px;
-        }
-        .progress-title { font-size: 14px; color: #8080a0; margin-bottom: 12px; }
-        .progress-circle { position: relative; width: 100px; height: 100px; margin: 0 auto 16px; }
-        .progress-circle-svg { transform: rotate(-90deg); }
-        .progress-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 24px;
-            font-weight: 900;
-            background: linear-gradient(135deg, #00d4ff 0%, #8b5cf6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .progress-stats { display: flex; justify-content: space-between; text-align: center; }
-        .progress-stat { flex: 1; }
-        .progress-stat-num { font-size: 20px; font-weight: 700; color: #ffffff; }
-        .progress-stat-label { font-size: 12px; color: #707090; }
-        
-        .tabs-wrapper {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            padding: 6px;
-            display: flex;
-            gap: 6px;
-            margin-bottom: 32px;
-        }
-        .tab { 
-            flex: 1;
-            padding: 14px 24px; 
-            border-radius: 12px; 
-            font-size: 15px; 
-            font-weight: 600; 
-            cursor: pointer; 
-            border: none; 
-            background: transparent; 
-            color: #a0a0b8; 
-            transition: all 0.25s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .tab:hover { color: #ffffff; }
-        .tab.active { 
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%); 
-            color: #ffffff;
-            border: 1px solid rgba(0, 212, 255, 0.2);
-        }
-        
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        
-        .content-section { margin-bottom: 32px; }
-        .content-section-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: #8b5cf6;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .content-section-title::before {
-            content: '';
-            width: 24px;
-            height: 2px;
-            background: linear-gradient(90deg, #00d4ff, #8b5cf6);
-            border-radius: 2px;
-        }
-        
-        .content-card { 
-            background: rgba(255, 255, 255, 0.04); 
-            border: 1px solid rgba(255, 255, 255, 0.08); 
-            border-radius: 16px; 
-            padding: 28px; 
-            margin-bottom: 24px;
-        }
-        .content-card h3 { font-size: 20px; font-weight: 700; color: #ffffff; margin-bottom: 16px; }
-        .content-card p { color: #c8c8d8; line-height: 1.8; margin-bottom: 12px; }
-        .content-card ul { list-style: none; padding-left: 0; }
-        .content-card ul li { 
-            margin-bottom: 12px; 
-            color: #c8c8d8;
-            padding-left: 24px;
-            position: relative;
-        }
-        .content-card ul li::before {
-            content: '▸';
-            position: absolute;
-            left: 0;
-            color: #00d4ff;
-            font-weight: 700;
-        }
-        .content-card strong { color: #ffffff; font-weight: 600; }
-        
-        .info-box {
-            background: rgba(0, 212, 255, 0.08);
-            border: 1px solid rgba(0, 212, 255, 0.2);
-            border-radius: 12px;
-            padding: 16px 20px;
-            margin: 16px 0;
-        }
-        .info-box p { margin: 0; color: #a0d4ff; }
-        
-        .code-box { 
-            background: #0d0d1a; 
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px; 
-            padding: 20px; 
-            overflow-x: auto; 
-            margin: 16px 0;
-        }
-        .code-box pre { 
-            color: #d4d4d4; 
-            font-family: 'Monaco', 'Consolas', monospace; 
-            font-size: 14px; 
-            line-height: 1.7; 
-        }
-        
-        .code-editor-container {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            padding: 24px;
-            margin: 20px 0;
-        }
-        .code-editor-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #ffffff;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .code-editor {
-            background: #0d0d1a;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 16px;
-        }
-        .code-textarea {
-            width: 100%;
-            min-height: 200px;
-            background: transparent;
-            border: none;
-            color: #d4d4d4;
-            font-family: 'Monaco', 'Consolas', monospace;
-            font-size: 14px;
-            line-height: 1.7;
-            resize: vertical;
-            outline: none;
-        }
-        .editor-controls { display: flex; gap: 12px; flex-wrap: wrap; }
-        .btn { 
-            padding: 12px 24px; 
-            border-radius: 12px; 
-            font-weight: 600; 
-            font-size: 14px; 
-            text-decoration: none; 
-            transition: all 0.2s; 
-            border: none;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .btn-primary { 
-            background: linear-gradient(135deg, #00d4ff 0%, #8b5cf6 100%); 
-            color: white; 
-        }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0, 212, 255, 0.3); }
-        .btn-secondary { 
-            background: rgba(255, 255, 255, 0.06); 
-            color: #ffffff; 
-            border: 1px solid rgba(255, 255, 255, 0.12); 
-        }
-        .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); }
-        
-        .output-box {
-            background: #050510;
-            border: 1px solid rgba(0, 212, 255, 0.2);
-            border-radius: 12px;
-            padding: 16px;
-            margin-top: 16px;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-        .output-title {
-            font-size: 12px;
-            font-weight: 600;
-            color: #00d4ff;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 12px;
-        }
-        .output-content {
-            color: #a0a0b8;
-            font-family: 'Monaco', 'Consolas', monospace;
-            font-size: 13px;
-            line-height: 1.6;
-            white-space: pre-wrap;
-        }
-        .output-content.error { color: #f87171; }
-        .output-content.success { color: #4ade80; }
-        
-        .question-box { 
-            background: rgba(255, 255, 255, 0.04); 
-            border: 1px solid rgba(255, 255, 255, 0.08); 
-            border-radius: 16px; 
-            padding: 24px; 
-            margin-bottom: 20px; 
-        }
-        .question-box h4 { font-size: 16px; font-weight: 600; color: #ffffff; margin-bottom: 16px; }
-        
-        .option-btn { 
-            display: block; 
-            width: 100%; 
-            padding: 14px 18px; 
-            margin-bottom: 10px; 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            border-radius: 10px; 
-            background: rgba(255, 255, 255, 0.02); 
-            cursor: pointer; 
-            text-align: left; 
-            font-size: 14px; 
-            color: #c8c8d8; 
-            transition: all 0.2s; 
-        }
-        .option-btn:hover { border-color: rgba(0, 212, 255, 0.4); background: rgba(0, 212, 255, 0.08); }
-        .option-btn.selected { border-color: rgba(0, 212, 255, 0.6); background: rgba(0, 212, 255, 0.12); color: #ffffff; }
-        
-        .btn-group { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
-        
-        .test-result { 
-            background: rgba(255, 255, 255, 0.04); 
-            border: 1px solid rgba(255, 255, 255, 0.08); 
-            border-radius: 20px; 
-            padding: 40px; 
-            text-align: center; 
-            margin-top: 24px; 
-            display: none; 
-        }
-        .test-result-icon { font-size: 64px; margin-bottom: 20px; }
-        .test-result h3 { font-size: 26px; font-weight: 900; color: #ffffff; margin-bottom: 12px; }
-        .test-result .score { 
-            font-size: 64px; 
-            font-weight: 900; 
-            background: linear-gradient(135deg, #00d4ff 0%, #8b5cf6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 20px; 
-        }
-        
-        .homework-section {
-            background: rgba(139, 92, 246, 0.08);
-            border: 1px solid rgba(139, 92, 246, 0.2);
-            border-radius: 16px;
-            padding: 24px;
-            margin-top: 24px;
-        }
-        .homework-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #a78bfa;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .homework-textarea {
-            width: 100%;
-            min-height: 150px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            color: #ffffff;
-            font-family: monospace;
-            font-size: 14px;
-            padding: 16px;
-            resize: vertical;
-            outline: none;
-        }
-        .submit-status {
-            margin-top: 12px;
-            padding: 12px 16px;
-            border-radius: 8px;
-            display: none;
-        }
-        .submit-status.success {
-            display: block;
-            background: rgba(34, 197, 94, 0.15);
-            color: #4ade80;
-            border: 1px solid rgba(34, 197, 94, 0.3);
-        }
-        
-        footer { text-align: center; padding: 40px 0; border-top: 1px solid rgba(255, 255, 255, 0.08); color: #505070; font-size: 13px; margin-top: 60px; }
-        
-        @media (max-width: 968px) {
-            .project-header .container { flex-direction: column; }
-            .progress-card { width: 100%; }
-        }
-    </style>
+    <link rel="stylesheet" href="../../css/variables.css">
+    <link rel="stylesheet" href="../../css/layout.css">
+    <link rel="stylesheet" href="../../css/components.css">
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"></script>
 </head>
 <body>
-    <header>
+    <a href="#main-content" class="skip-link">跳转到主要内容</a>
+    
+    <header class="project-page-header">
         <div class="container">
-            <div class="header-left">
-                <div class="logo-circle">🧪</div>
-                <div class="logo-text">TT's Learning</div>
+            <nav class="breadcrumb">
+                <a href="../../index.html">首页</a>
+                <span>›</span>
+                <span>A/B测试分析</span>
+            </nav>
+            <div class="project-info-card">
+                <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(139, 92, 246, 0.2)); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 28px;">🔬</div>
+                    <div>
+                        <div class="project-badges">
+                            <span class="badge badge-easy">进阶</span>
+                            <span class="badge badge-time">45分钟</span>
+                        </div>
+                    </div>
+                </div>
+                <h1>A/B测试分析</h1>
+                <p>掌握Pandas数据清洗的核心技能，包括处理缺失值、重复值、异常值等关键步骤。</p>
+                <div class="progress-display">
+                    <div class="progress-item">
+                        <span class="value" id="learned-count">0</span>
+                        <span class="label">已学习</span>
+                    </div>
+                    <div class="progress-item">
+                        <span class="value" id="practice-count">0</span>
+                        <span class="label">练习</span>
+                    </div>
+                    <div class="progress-item">
+                        <span class="value" id="score-count">0</span>
+                        <span class="label">得分</span>
+                    </div>
+                </div>
             </div>
-            <a href="../../index.html">← 返回首页</a>
         </div>
     </header>
 
-    <div class="project-header">
+    <main class="learning-content" id="main-content">
         <div class="container">
-            <div class="project-info">
-                <div class="project-icon-large">🧪</div>
-                <h1 class="project-title">A/B测试分析</h1>
-                <p class="project-description">学习A/B测试的基本原理和统计方法，掌握如何进行假设检验和计算统计显著性。</p>
-                <div class="project-meta">
-                    <span class="badge badge-hard">高级</span>
-                    <span class="badge badge-time">30分钟</span>
-                    <span class="badge badge-dataset">📁 ab_test_data.csv</span>
-                </div>
+            <div class="tabs" role="tablist">
+                <button class="tab-btn active" onclick="showTab('learn')" role="tab" aria-selected="true">📚 学习</button>
+                <button class="tab-btn" onclick="showTab('practice')" role="tab" aria-selected="false">✏️ 练习</button>
+                <button class="tab-btn" onclick="showTab('quiz')" role="tab" aria-selected="false">📝 测试</button>
+                <button class="tab-btn" onclick="showTab('homework')" role="tab" aria-selected="false">📤 作业</button>
             </div>
-            <div class="progress-card">
-                <div class="progress-title">学习进度</div>
-                <div class="progress-circle">
-                    <svg class="progress-circle-svg" width="100" height="100">
-                        <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8"/>
-                        <circle cx="50" cy="50" r="45" fill="none" stroke="url(#gradient)" stroke-width="8" 
-                                stroke-dasharray="283" stroke-dashoffset="283" stroke-linecap="round" id="progress-circle-inner"/>
-                        <defs>
-                            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#00d4ff"/>
-                                <stop offset="100%" stop-color="#8b5cf6"/>
-                            </linearGradient>
-                        </defs>
-                    </svg>
-                    <div class="progress-text" id="progress-percentage">0%</div>
-                </div>
-                <div class="progress-stats">
-                    <div class="progress-stat">
-                        <div class="progress-stat-num" id="chapters-learned">0/4</div>
-                        <div class="progress-stat-label">已学习</div>
-                    </div>
-                    <div class="progress-stat">
-                        <div class="progress-stat-num" id="exercises-done">0/5</div>
-                        <div class="progress-stat-label">练习</div>
-                    </div>
-                    <div class="progress-stat">
-                        <div class="progress-stat-num" id="test-score">0</div>
-                        <div class="progress-stat-label">得分</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <main class="container">
-        <div class="tabs-wrapper">
-            <button class="tab active" onclick="showTab('learn')">📚 学习</button>
-            <button class="tab" onclick="showTab('practice')">✏️ 练习</button>
-            <button class="tab" onclick="showTab('test')">📝 测试</button>
-            <button class="tab" onclick="showTab('homework')">📤 作业</button>
-        </div>
-
-        <div id="learn-tab" class="tab-content active">
-            <div class="content-section">
-                <div class="content-section-title">第一章 A/B测试基础</div>
-                
-                <div class="content-card">
-                    <h3>1.1 什么是A/B测试</h3>
-                    <p>A/B测试是一种对照实验方法，用于比较两个或多个版本的产品、页面或功能，以确定哪个版本表现更好。</p>
-                    <ul>
-                        <li><strong>对照组(A组)</strong>：原始版本</li>
-                        <li><strong>实验组(B组)</strong>：改进版本</li>
-                        <li><strong>随机分配</strong>：确保两组具有可比性</li>
-                        <li><strong>统计显著性</strong>：判断差异是否真实</li>
+            <!-- Learn Section -->
+            <div id="learn-section" class="content-section active">
+                <div class="learn-section">
+                    <h2>第一章 数据清洗基础</h2>
+                    
+                    <h3>1.1 为什么需要数据清洗</h3>
+                    <p>数据清洗是数据分析的第一步，真实世界的数据往往存在各种问题：</p>
+                    <ul style="color: var(--text-secondary); margin-left: 20px; margin-bottom: 16px;">
+                        <li style="margin-bottom: 8px;">缺失值（Missing Values）</li>
+                        <li style="margin-bottom: 8px;">重复值（Duplicates）</li>
+                        <li style="margin-bottom: 8px;">异常值（Outliers）</li>
+                        <li style="margin-bottom: 8px;">数据类型错误</li>
                     </ul>
-                    <div class="info-box">
-                        <p>💡 A/B测试广泛应用于网页优化、产品设计、营销策略等领域。</p>
-                    </div>
-                </div>
 
-                <div class="content-card">
-                    <h3>1.2 A/B测试流程</h3>
-                    <p>完整的A/B测试流程包括以下步骤：</p>
-                    <ol>
-                        <li>确定测试目标和假设</li>
-                        <li>设计测试方案</li>
-                        <li>收集数据</li>
-                        <li>进行统计分析</li>
-                        <li>做出决策</li>
-                    </ol>
-                </div>
-            </div>
+                    <h3>1.2 处理缺失值</h3>
+                    <p>使用 Pandas 处理缺失值的基本方法：</p>
+                    <pre><code>import pandas as pd
+import numpy as np
 
-            <div class="content-section">
-                <div class="content-section-title">第二章 假设检验</div>
-                
-                <div class="content-card">
-                    <h3>2.1 零假设与备择假设</h3>
-                    <p>假设检验是A/B测试的核心：</p>
-                    <ul>
-                        <li><strong>零假设(H₀)</strong>：两组之间没有差异</li>
-                        <li><strong>备择假设(H₁)</strong>：两组之间存在差异</li>
-                        <li><strong>显著性水平(α)</strong>：通常设为0.05</li>
-                        <li><strong>P值</strong>：观察到当前数据的概率</li>
-                    </ul>
-                </div>
+# 创建含缺失值的DataFrame
+df = pd.DataFrame({
+    'A': [1, np.nan, 3, 4, 5],
+    'B': ['x', 'y', np.nan, 'z', 'z']
+})
 
-                <div class="content-card">
-                    <h3>2.2 常用检验方法</h3>
-                    <p>根据数据类型选择合适的检验方法：</p>
-                    <div class="code-box">
-<pre># 比例检验（适用于转化率等二分数据）
-from scipy.stats import norm
+# 检测缺失值
+print(df.isnull().sum())
 
-def z_test(p1, n1, p2, n2):
-    p_pooled = (p1 * n1 + p2 * n2) / (n1 + n2)
-    se = (p_pooled * (1 - p_pooled) * (1/n1 + 1/n2)) ** 0.5
-    z = (p1 - p2) / se
-    p_value = 2 * (1 - norm.cdf(abs(z)))
-    return z, p_value
+# 删除缺失值
+df.dropna()
 
-# 示例
-z, p_value = z_test(0.15, 1000, 0.18, 1000)
-print(f"Z值: {z:.2f}, P值: {p_value:.4f}")</pre>
-                    </div>
-                </div>
-            </div>
+# 填充缺失值
+df.fillna(0)
+df.fillna(df.mean())</code></pre>
 
-            <div class="content-section">
-                <div class="content-section-title">第三章 统计显著性计算</div>
-                
-                <div class="content-card">
-                    <h3>3.1 P值与显著性</h3>
-                    <p>P值是判断结果是否显著的关键指标：</p>
-                    <ul>
-                        <li>P值 < 0.05：拒绝零假设，结果显著</li>
-                        <li>P值 >= 0.05：无法拒绝零假设</li>
-                    </ul>
-                </div>
-
-                <div class="content-card">
-                    <h3>3.2 样本量计算</h3>
-                    <p>在测试前需要计算所需样本量：</p>
-                    <div class="code-box">
-<pre>import math
-from scipy.stats import norm
-
-def calculate_sample_size(p_baseline, min_detectable_effect, alpha=0.05, power=0.8):
-    # 计算所需样本量
-    p2 = p_baseline * (1 + min_detectable_effect)
-    p_pooled = (p_baseline + p2) / 2
-    
-    z_alpha = norm.ppf(1 - alpha/2)
-    z_power = norm.ppf(power)
-    
-    n = (z_alpha * math.sqrt(2 * p_pooled * (1 - p_pooled)) + 
-         z_power * math.sqrt(p_baseline * (1 - p_baseline) + p2 * (1 - p2))) ** 2 / \
-         ((p2 - p_baseline) ** 2)
-    
-    return math.ceil(n)
-
-# 示例：基准转化率10%，检测20%的提升
-sample_size = calculate_sample_size(0.10, 0.20)
-print(f"每组所需样本量: {sample_size}")</pre>
-                    </div>
-                </div>
-            </div>
-
-            <div class="content-section">
-                <div class="content-section-title">第四章 A/B测试实战</div>
-                
-                <div class="content-card">
-                    <h3>4.1 完整分析示例</h3>
-                    <p>综合运用所学知识进行A/B测试分析：</p>
-                    <div class="code-editor-container">
-                        <div class="code-editor-title">
-                            <span>💻</span> 在线代码编辑器
+                    <!-- 学习区的代码编辑器 -->
+                    <div class="code-editor-wrapper" style="margin: 24px 0;">
+                        <div style="padding: 12px 16px; background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--editor-border); display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-weight: 600; color: var(--text-secondary); font-size: 13px;">📝 运行示例代码</span>
+                            <span id="pyodide-status" style="font-size: 12px; color: var(--text-tertiary);">正在加载 Pyodide...</span>
                         </div>
-                        <div class="code-editor">
-                            <textarea id="code-input" class="code-textarea" spellcheck="false">import numpy as np
-from scipy.stats import norm
+                        <textarea id="code-input" class="code-editor" style="width: 100%; min-height: 200px; background: var(--bg-tertiary); color: var(--text-primary); font-family: 'Monaco', 'Consolas', monospace; font-size: 14px; line-height: 1.6; padding: 16px; border: none; resize: vertical;">import pandas as pd
+import numpy as np
 
-# A/B测试数据
-group_a = {'visitors': 1000, 'conversions': 150}
-group_b = {'visitors': 1000, 'conversions': 180}
-
-# 计算转化率
-p_a = group_a['conversions'] / group_a['visitors']
-p_b = group_b['conversions'] / group_b['visitors']
-
-print(f"A组转化率: {p_a:.2%}")
-print(f"B组转化率: {p_b:.2%}")
-print(f"转化率差异: {(p_b - p_a):.2%}")
-
-# 计算标准误
-p_pooled = (group_a['conversions'] + group_b['conversions']) / \
-           (group_a['visitors'] + group_b['visitors'])
-se = np.sqrt(p_pooled * (1 - p_pooled) * (1/group_a['visitors'] + 1/group_b['visitors']))
-
-# 计算Z值和P值
-z_score = (p_b - p_a) / se
-p_value = 2 * (1 - norm.cdf(abs(z_score)))
-
-print(f"\n统计分析结果:")
-print(f"Z值: {z_score:.2f}")
-print(f"P值: {p_value:.4f}")
-
-# 判断显著性
-alpha = 0.05
-if p_value < alpha:
-    print(f"\n结论：P值({p_value:.4f}) < 显著性水平({alpha})，拒绝零假设")
-    print("B组转化率显著高于A组！")
-else:
-    print(f"\n结论：P值({p_value:.4f}) >= 显著性水平({alpha})，无法拒绝零假设")
-    print("两组转化率差异不显著")</textarea>
-                        </div>
-                        <div class="editor-controls">
-                            <button class="btn btn-primary" onclick="runCode()" id="run-btn">▶️ 运行代码</button>
+# 创建含有缺失值的DataFrame
+data = {'A': [1, np.nan, 3, 4, 5], 'B': ['x', 'y', np.nan, 'z', 'z']}
+df = pd.DataFrame(data)
+print("原始DataFrame：")
+print(df)
+print("\n每列缺失值数量：")
+print(df.isnull().sum())</textarea>
+                        <div style="padding: 12px 16px; display: flex; gap: 12px; background: rgba(0, 0, 0, 0.2); border-top: 1px solid var(--editor-border);">
+                            <button id="run-btn" class="btn btn-primary" onclick="runCode()" disabled>
+                                <span class="loading-spinner" id="code-loading" style="display: none;"></span>
+                                ▶️ 运行代码
+                            </button>
                             <button class="btn btn-secondary" onclick="resetCode()">🔄 重置</button>
-                            <button class="btn btn-secondary" onclick="copyCode()">📋 复制</button>
-                        </div>
-                        <div class="output-box" id="output-box" style="display: none;">
-                            <div class="output-title">📤 输出结果</div>
-                            <pre class="output-content" id="output-content"></pre>
                         </div>
                     </div>
+                    <div id="output-box" class="output-area">
+                        <div class="output-header">输出</div>
+                        <div id="output-content" class="output-content">点击运行查看结果</div>
+                    </div>
+
+                    <h3>1.3 删除重复值</h3>
+                    <p>使用 <code>drop_duplicates()</code> 方法删除重复数据：</p>
+                    <pre><code>df.drop_duplicates()
+df.drop_duplicates(subset=['B'])</code></pre>
+
+                    <h3>1.4 异常值检测</h3>
+                    <p>使用 IQR（四分位距）方法检测异常值：</p>
+                    <pre><code>Q1 = df['A'].quantile(0.25)
+Q3 = df['A'].quantile(0.75)
+IQR = Q3 - Q1
+lower_bound = Q1 - 1.5 * IQR
+upper_bound = Q3 + 1.5 * IQR
+
+outliers = df[(df['A'] < lower_bound) | (df['A'] > upper_bound)]</code></pre>
                 </div>
             </div>
-        </div>
 
-        <div id="practice-tab" class="tab-content">
-            <div class="content-section">
-                <div class="content-section-title">练习题（共5题）</div>
-                
-                <div class="content-card">
-                    <h3>练习 1：计算转化率</h3>
-                    <p>计算A/B两组的转化率。</p>
-                    <div class="code-editor-container">
-                        <div class="code-editor">
-                            <textarea id="practice-code-1" class="code-textarea" spellcheck="false"># A/B测试数据
-group_a_visitors = 2000
-group_a_conversions = 240
-
-group_b_visitors = 2000
-group_b_conversions = 280
-
-# 计算转化率
-p_a = group_a_conversions / group_a_visitors
-p_b = group_b_conversions / group_b_visitors
-
-print(f"A组转化率: {p_a:.2%}")
-print(f"B组转化率: {p_b:.2%}")
-print(f"差异: {(p_b - p_a):.2%}")</textarea>
-                        </div>
-                        <div class="editor-controls">
-                            <button class="btn btn-primary" onclick="runPracticeCode(1)">▶️ 运行代码</button>
-                            <button class="btn btn-secondary" onclick="resetPracticeCode(1)">🔄 重置</button>
-                        </div>
-                        <div class="output-box" id="practice-output-1" style="display: none;">
-                            <div class="output-title">📤 输出结果</div>
-                            <pre class="output-content" id="practice-output-content-1"></pre>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="content-card">
-                    <h3>练习 2：Z检验计算</h3>
-                    <p>实现Z检验计算统计显著性。</p>
-                    <div class="code-editor-container">
-                        <div class="code-editor">
-                            <textarea id="practice-code-2" class="code-textarea" spellcheck="false">import numpy as np
-from scipy.stats import norm
-
-# 数据
-n1, p1 = 1500, 0.12
-n2, p2 = 1500, 0.15
-
-# 计算合并比例
-p_pooled = (p1 * n1 + p2 * n2) / (n1 + n2)
-
-# 计算标准误
-se = np.sqrt(p_pooled * (1 - p_pooled) * (1/n1 + 1/n2))
-
-# 计算Z值和P值
-z_score = (p2 - p1) / se
-p_value = 2 * (1 - norm.cdf(abs(z_score)))
-
-print(f"Z值: {z_score:.2f}")
-print(f"P值: {p_value:.4f}")
-print(f"结论: {'显著' if p_value < 0.05 else '不显著'}")</textarea>
-                        </div>
-                        <div class="editor-controls">
-                            <button class="btn btn-primary" onclick="runPracticeCode(2)">▶️ 运行代码</button>
-                            <button class="btn btn-secondary" onclick="resetPracticeCode(2)">🔄 重置</button>
-                        </div>
-                        <div class="output-box" id="practice-output-2" style="display: none;">
-                            <div class="output-title">📤 输出结果</div>
-                            <pre class="output-content" id="practice-output-content-2"></pre>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="content-card">
-                    <h3>练习 3：样本量计算</h3>
-                    <p>计算所需样本量。</p>
-                    <div class="code-editor-container">
-                        <div class="code-editor">
-                            <textarea id="practice-code-3" class="code-textarea" spellcheck="false">import math
-from scipy.stats import norm
-
-def required_sample_size(baseline_rate, min_effect, alpha=0.05, power=0.8):
-    """计算A/B测试所需样本量"""
-    p2 = baseline_rate * (1 + min_effect)
-    p_pooled = (baseline_rate + p2) / 2
-    
-    z_alpha = norm.ppf(1 - alpha/2)
-    z_power = norm.ppf(power)
-    
-    numerator = (z_alpha * math.sqrt(2 * p_pooled * (1 - p_pooled)) + 
-                 z_power * math.sqrt(baseline_rate * (1 - baseline_rate) + p2 * (1 - p2))) ** 2
-    denominator = (p2 - baseline_rate) ** 2
-    
-    return math.ceil(numerator / denominator)
-
-# 计算样本量
-sample_size = required_sample_size(baseline_rate=0.10, min_effect=0.15)
-print(f"每组所需样本量: {sample_size}")
-print(f"两组总计: {sample_size * 2}")</textarea>
-                        </div>
-                        <div class="editor-controls">
-                            <button class="btn btn-primary" onclick="runPracticeCode(3)">▶️ 运行代码</button>
-                            <button class="btn btn-secondary" onclick="resetPracticeCode(3)">🔄 重置</button>
-                        </div>
-                        <div class="output-box" id="practice-output-3" style="display: none;">
-                            <div class="output-title">📤 输出结果</div>
-                            <pre class="output-content" id="practice-output-content-3"></pre>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="content-card">
-                    <h3>练习 4：置信区间计算</h3>
-                    <p>计算转化率的置信区间。</p>
-                    <div class="code-editor-container">
-                        <div class="code-editor">
-                            <textarea id="practice-code-4" class="code-textarea" spellcheck="false">import numpy as np
-from scipy.stats import norm
-
-def confidence_interval(conversions, visitors, confidence=0.95):
-    """计算转化率的置信区间"""
-    p = conversions / visitors
-    se = np.sqrt(p * (1 - p) / visitors)
-    z = norm.ppf((1 + confidence) / 2)
-    lower = p - z * se
-    upper = p + z * se
-    return lower, upper
-
-# 计算置信区间
-lower_a, upper_a = confidence_interval(150, 1000)
-lower_b, upper_b = confidence_interval(180, 1000)
-
-print(f"A组转化率 95%置信区间: [{lower_a:.2%}, {upper_a:.2%}]")
-print(f"B组转化率 95%置信区间: [{lower_b:.2%}, {upper_b:.2%}]")</textarea>
-                        </div>
-                        <div class="editor-controls">
-                            <button class="btn btn-primary" onclick="runPracticeCode(4)">▶️ 运行代码</button>
-                            <button class="btn btn-secondary" onclick="resetPracticeCode(4)">🔄 重置</button>
-                        </div>
-                        <div class="output-box" id="practice-output-4" style="display: none;">
-                            <div class="output-title">📤 输出结果</div>
-                            <pre class="output-content" id="practice-output-content-4"></pre>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="content-card">
-                    <h3>练习 5：完整A/B测试分析</h3>
-                    <p>综合分析A/B测试结果。</p>
-                    <div class="code-editor-container">
-                        <div class="code-editor">
-                            <textarea id="practice-code-5" class="code-textarea" spellcheck="false">import numpy as np
-from scipy.stats import norm
-
-def ab_test_analysis(group_a, group_b, alpha=0.05):
-    """完整的A/B测试分析"""
-    n_a, conv_a = group_a['visitors'], group_a['conversions']
-    n_b, conv_b = group_b['visitors'], group_b['conversions']
-    
-    p_a = conv_a / n_a
-    p_b = conv_b / n_b
-    
-    print(f"A组: {conv_a}/{n_a} = {p_a:.2%}")
-    print(f"B组: {conv_b}/{n_b} = {p_b:.2%}")
-    print(f"差异: {(p_b - p_a):.2%}")
-    print(f"提升率: {((p_b - p_a)/p_a):.2%}")
-    
-    p_pooled = (conv_a + conv_b) / (n_a + n_b)
-    se = np.sqrt(p_pooled * (1 - p_pooled) * (1/n_a + 1/n_b))
-    z = (p_b - p_a) / se
-    p_value = 2 * (1 - norm.cdf(abs(z)))
-    
-    print(f"\n统计显著性:")
-    print(f"Z值: {z:.2f}")
-    print(f"P值: {p_value:.4f}")
-    
-    if p_value < alpha:
-        print(f"\n结论: 结果显著(p < {alpha})，拒绝零假设")
-        print("建议采用B版本")
-    else:
-        print(f"\n结论: 结果不显著(p >= {alpha})")
-        print("需要更多数据或无法确定差异")
-
-# 测试数据
-group_a = {'visitors': 2500, 'conversions': 320}
-group_b = {'visitors': 2500, 'conversions': 380}
-
-ab_test_analysis(group_a, group_b)</textarea>
-                        </div>
-                        <div class="editor-controls">
-                            <button class="btn btn-primary" onclick="runPracticeCode(5)">▶️ 运行代码</button>
-                            <button class="btn btn-secondary" onclick="resetPracticeCode(5)">🔄 重置</button>
-                        </div>
-                        <div class="output-box" id="practice-output-5" style="display: none;">
-                            <div class="output-title">📤 输出结果</div>
-                            <pre class="output-content" id="practice-output-content-5"></pre>
-                        </div>
-                    </div>
+            <!-- Practice Section -->
+            <div id="practice-section" class="content-section">
+                <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 24px; color: var(--accent-cyan);">实战练习</h2>
+                <div id="practice-container">
+                    <!-- 动态加载练习 -->
                 </div>
             </div>
-        </div>
 
-        <div id="test-tab" class="tab-content">
-            <div class="content-section">
-                <div class="content-section-title">测试题（共 5 题，满分 100 分）</div>
-                
-                <div class="question-box">
-                    <h4>1. A/B测试中，零假设表示什么？</h4>
-                    <button class="option-btn" onclick="selectTestOption(this, 1, 'A', false)">A) 两组存在显著差异</button>
-                    <button class="option-btn" onclick="selectTestOption(this, 1, 'B', true)">B) 两组没有差异</button>
-                    <button class="option-btn" onclick="selectTestOption(this, 1, 'C', false)">C) B组优于A组</button>
-                    <button class="option-btn" onclick="selectTestOption(this, 1, 'D', false)">D) A组优于B组</button>
+            <!-- Quiz Section -->
+            <div id="quiz-section" class="content-section">
+                <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 24px; color: var(--accent-cyan);">知识测试</h2>
+                <div id="quiz-container">
+                    <!-- 动态加载测试题 -->
                 </div>
-
-                <div class="question-box">
-                    <h4>2. 通常使用的显著性水平α是多少？</h4>
-                    <button class="option-btn" onclick="selectTestOption(this, 2, 'A', false)">A) 0.01</button>
-                    <button class="option-btn" onclick="selectTestOption(this, 2, 'B', true)">B) 0.05</button>
-                    <button class="option-btn" onclick="selectTestOption(this, 2, 'C', false)">C) 0.10</button>
-                    <button class="option-btn" onclick="selectTestOption(this, 2, 'D', false)">D) 0.95</button>
-                </div>
-
-                <div class="question-box">
-                    <h4>3. 当P值小于α时，我们应该？</h4>
-                    <button class="option-btn" onclick="selectTestOption(this, 3, 'A', true)">A) 拒绝零假设</button>
-                    <button class="option-btn" onclick="selectTestOption(this, 3, 'B', false)">B) 接受零假设</button>
-                    <button class="option-btn" onclick="selectTestOption(this, 3, 'C', false)">C) 无法判断</button>
-                    <button class="option-btn" onclick="selectTestOption(this, 3, 'D', false)">D) 需要更多数据</button>
-                </div>
-
-                <div class="question-box">
-                    <h4>4. 计算样本量时不需要考虑哪个因素？</h4>
-                    <button class="option-btn" onclick="selectTestOption(this, 4, 'A', false)">A) 基准转化率</button>
-                    <button class="option-btn" onclick="selectTestOption(this, 4, 'B', false)">B) 最小可检测效果</button>
-                    <button class="option-btn" onclick="selectTestOption(this, 4, 'C', false)">C) 显著性水平</button>
-                    <button class="option-btn" onclick="selectTestOption(this, 4, 'D', true)">D) 测试时长</button>
-                </div>
-
-                <div class="question-box">
-                    <h4>5. Z检验适用于哪种数据？</h4>
-                    <button class="option-btn" onclick="selectTestOption(this, 5, 'A', false)">A) 连续数据</button>
-                    <button class="option-btn" onclick="selectTestOption(this, 5, 'B', true)">B) 比例数据</button>
-                    <button class="option-btn" onclick="selectTestOption(this, 5, 'C', false)">C) 分类数据</button>
-                    <button class="option-btn" onclick="selectTestOption(this, 5, 'D', false)">D) 排名数据</button>
-                </div>
-
-                <div class="btn-group">
-                    <button class="btn btn-primary" onclick="submitTest()">📤 提交答案</button>
-                    <button class="btn btn-secondary" onclick="resetTest()">🔄 重新开始</button>
-                </div>
-
-                <div class="test-result" id="test-result">
-                    <div class="test-result-icon" id="result-icon">🎉</div>
-                    <h3>测试完成！</h3>
-                    <div class="score" id="final-score">0分</div>
-                    <p id="result-message">太棒了！继续努力！</p>
-                    <div class="btn-group" style="justify-content: center;">
-                        <button class="btn btn-secondary" onclick="resetTest()">再来一次</button>
-                        <a href="../../index.html" class="btn btn-primary">返回首页 →</a>
-                    </div>
+                <div style="margin-top: 24px; text-align: center;">
+                    <button class="btn btn-primary" onclick="submitQuiz()">提交答案</button>
+                    <button class="btn btn-secondary" onclick="resetQuiz()">重置</button>
                 </div>
             </div>
-        </div>
 
-        <div id="homework-tab" class="tab-content">
-            <div class="content-section">
-                <div class="content-section-title">作业提交</div>
-                <div class="content-card">
-                    <h3>📝 A/B测试分析作业</h3>
-                    <p>请完成以下任务：</p>
-                    <ul>
-                        <li>模拟A/B测试数据</li>
-                        <li>计算两组转化率</li>
-                        <li>进行统计显著性检验</li>
-                        <li>计算置信区间</li>
-                    </ul>
-                </div>
-                <div class="homework-section">
-                    <div class="homework-title">
-                        <span>💻</span> 作业代码提交
-                    </div>
-                    <div class="homework-submit-area">
-                        <textarea id="homework-code" class="homework-textarea" placeholder="请在此输入你的代码...">import numpy as np
-from scipy.stats import norm
+            <!-- Homework Section -->
+            <div id="homework-section" class="content-section">
+                <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 24px; color: var(--accent-cyan);">课后作业</h2>
+                <div class="exercise-item">
+                    <p style="color: var(--text-secondary); margin-bottom: 16px;">完成以下任务：</p>
+                    <ol style="color: var(--text-secondary); margin-left: 20px; margin-bottom: 20px;">
+                        <li style="margin-bottom: 8px;">创建一个包含 10 行数据的 DataFrame</li>
+                        <li style="margin-bottom: 8px;">在数据中加入 3-5 个缺失值</li>
+                        <li style="margin-bottom: 8px;">统计缺失值数量</li>
+                        <li style="margin-bottom: 8px;">使用适当方法填充缺失值</li>
+                    </ol>
+                    
+                    <div class="code-editor-wrapper">
+                        <textarea id="homework-code" class="code-editor" style="width: 100%; min-height: 200px; background: var(--bg-tertiary); color: var(--text-primary); font-family: 'Monaco', 'Consolas', monospace; font-size: 14px; line-height: 1.6; padding: 16px; border: none; resize: vertical;">import pandas as pd
+import numpy as np
 
-# 模拟A/B测试数据
-np.random.seed(42)
-group_a_visitors = 3000
-group_b_visitors = 3000
-
-# 模拟转化率（A组12%，B组15%）
-group_a_conversions = np.random.binomial(group_a_visitors, 0.12)
-group_b_conversions = np.random.binomial(group_b_visitors, 0.15)
-
-print(f"A组: {group_a_conversions}/{group_a_visitors}")
-print(f"B组: {group_b_conversions}/{group_b_visitors}")
-
-# 计算转化率
-
-
-# 计算Z值和P值
-
-
-# 计算置信区间
-
-
-# 输出结论</textarea>
-                        <div class="btn-group" style="margin-top: 16px;">
-                            <button class="btn btn-primary" onclick="submitHomework()">📤 提交作业</button>
-                            <button class="btn btn-secondary" onclick="runHomeworkCode()">▶️ 运行代码</button>
+# 在这里写你的代码
+# 提示：创建DataFrame，添加缺失值，统计，填充
+</textarea>
+                        <div style="padding: 12px 16px; display: flex; gap: 12px; background: rgba(0, 0, 0, 0.2); border-top: 1px solid var(--editor-border);">
+                            <button id="hw-run-btn" class="btn btn-primary" onclick="runHomeworkCode()">▶️ 运行代码</button>
+                            <button class="btn btn-secondary" onclick="resetHomeworkCode()">🔄 重置</button>
                         </div>
-                        <div class="submit-status" id="submit-status"></div>
                     </div>
-                </div>
-                <div class="output-box" id="homework-output" style="display: none;">
-                    <div class="output-title">📤 代码运行结果</div>
-                    <pre class="output-content" id="homework-output-content"></pre>
+                    <div id="homework-output" class="output-area">
+                        <div class="output-header">输出</div>
+                        <div id="homework-output-content" class="output-content">点击运行查看结果</div>
+                    </div>
+                    
+                    <div style="margin-top: 24px; text-align: center;">
+                        <button id="hw-submit-btn" class="btn btn-submit" onclick="submitHomework()">📤 提交作业</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -951,109 +199,226 @@ print(f"B组: {group_b_conversions}/{group_b_visitors}")
 
     <footer>
         <div class="container">
-            <p>© 2024 TT's Learning Space · Pandas数据分析实战训练营</p>
+            <p>© 2024 TT's Learning Space · Pandas 数据分析实战训练营</p>
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"></script>
-    
     <script>
         let pyodide = null;
-        let isLoading = false;
-        let testAnswers = {};
-        let totalQuestions = 5;
-        
-        async function initPyodide() {
-            if (pyodide || isLoading) return;
-            isLoading = true;
-            const btn = document.getElementById('run-btn');
-            if (btn) { btn.disabled = true; btn.innerHTML = '加载中...'; }
+        let isPyodideLoading = false;
+        let quizAnswers = {};
+        let homeworkSubmitted = false;
+        let currentProjectData = null;
+
+        // 默认练习题数据（如果 fetch 失败）
+            const defaultProjectData = {
+            title: "A/B测试分析",
+            exercises: [
+                {
+                    id: 1,
+                    question: "练习使用基本的 pandas 功能。",
+                    code: "import pandas as pd\nimport numpy as np\n\n# 创建一个简单的 DataFrame\ndata = {'col1': [1, 2, 3, 4, 5], 'col2': ['a', 'b', 'c', 'd', 'e']}\ndf = pd.DataFrame(data)\nprint('DataFrame:')\nprint(df)",
+                    hint: "这是一个基础练习，先熟悉一下环境。",
+                    answer: "你可以自由探索 pandas 的各种功能！"
+                }
+            ],
+            quiz: [
+                {
+                    id: 1,
+                    question: "这是一个示例问题。",
+                    options: ["选项1", "选项2", "选项3", "选项4"],
+                    correct: 0,
+                    explanation: "这是一个示例解释。"
+                }
+            ]
+        };;
+
+        // 加载练习题数据
+        async function loadExerciseData() {
             try {
-                pyodide = await loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.24.1/full/" });
-            } catch (error) { console.error('Pyodide加载失败:', error); } finally {
-                if (btn) { btn.disabled = false; btn.innerHTML = '▶️ 运行代码'; }
-                isLoading = false;
+                const response = await fetch('../../exercises.json');
+                if (response.ok) {
+                    const allData = await response.json();
+                    currentProjectData = allData.projects['6'];
+                } else {
+                    currentProjectData = defaultProjectData;
+                }
+            } catch (e) {
+                console.log('使用默认练习题数据');
+                currentProjectData = defaultProjectData;
+            }
+            renderPracticeExercises();
+            renderQuiz();
+        }
+
+        // 渲染练习
+        function renderPracticeExercises() {
+            const container = document.getElementById('practice-container');
+            const exercises = currentProjectData?.exercises || [];
+            
+            container.innerHTML = exercises.map(ex => `
+                <div class="exercise-item" data-exercise-id="${ex.id}">
+                    <p class="exercise-question">练习 ${ex.id}: ${ex.question}</p>
+                    <div class="code-editor-wrapper">
+                        <textarea id="practice-code-${ex.id}" class="code-editor" style="width: 100%; min-height: 180px; background: var(--bg-tertiary); color: var(--text-primary); font-family: 'Monaco', 'Consolas', monospace; font-size: 14px; line-height: 1.6; padding: 16px; border: none; resize: vertical;">${ex.code}</textarea>
+                        <div style="padding: 12px 16px; display: flex; gap: 12px; background: rgba(0, 0, 0, 0.2); border-top: 1px solid var(--editor-border);">
+                            <button class="btn btn-primary" onclick="runPracticeCode(${ex.id})">▶️ 运行代码</button>
+                            <button class="btn btn-secondary" onclick="resetPracticeCode(${ex.id})">🔄 重置</button>
+                        </div>
+                    </div>
+                    <div id="practice-output-${ex.id}" class="output-area">
+                        <div class="output-header">输出</div>
+                        <div id="practice-output-content-${ex.id}" class="output-content">点击运行查看结果</div>
+                    </div>
+                    <button class="collapse-toggle" onclick="toggleHint(${ex.id})">
+                        💡 提示
+                    </button>
+                    <div id="hint-panel-${ex.id}" class="collapse-panel">
+                        <h4>提示</h4>
+                        <p>${ex.hint}</p>
+                        <button class="collapse-toggle" onclick="toggleAnswer(${ex.id})" style="margin-top: 8px;">
+                            📝 查看答案
+                        </button>
+                        <div id="answer-panel-${ex.id}" class="collapse-panel">
+                            <h4>参考答案</h4>
+                            <p>${ex.answer}</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 渲染测试题
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            const quiz = currentProjectData?.quiz || [];
+            
+            container.innerHTML = quiz.map(q => `
+                <div class="exercise-item" data-quiz-id="${q.id}">
+                    <p class="exercise-question">${q.id}. ${q.question}</p>
+                    <div class="quiz-options">
+                        ${q.options.map((opt, idx) => `
+                            <label class="quiz-option" onclick="selectQuizOption(${q.id}, ${idx})">
+                                <input type="radio" name="quiz-${q.id}" value="${idx}" ${quizAnswers[q.id] === idx ? 'checked' : ''}>
+                                <span class="quiz-option-label">${opt}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 切换面板显示
+        function toggleHint(exId) {
+            const panel = document.getElementById(`hint-panel-${exId}`);
+            panel.classList.toggle('show');
+        }
+
+        function toggleAnswer(exId) {
+            const panel = document.getElementById(`answer-panel-${exId}`);
+            panel.classList.toggle('show');
+        }
+
+        // 选择测试题选项
+        function selectQuizOption(qid, optionIdx) {
+            quizAnswers[qid] = optionIdx;
+            renderQuiz();
+        }
+
+        // 提交测试题
+        function submitQuiz() {
+            const quiz = currentProjectData?.quiz || [];
+            let correct = 0;
+            
+            quiz.forEach(q => {
+                const answer = quizAnswers[q.id];
+                const options = document.querySelectorAll(`[data-quiz-id="${q.id}"] .quiz-option`);
+                
+                options.forEach((opt, idx) => {
+                    opt.classList.remove('selected', 'correct', 'incorrect');
+                    if (idx === q.correct) opt.classList.add('correct');
+                    if (answer === idx && idx !== q.correct) opt.classList.add('incorrect');
+                    if (answer === idx) opt.classList.add('selected');
+                });
+                
+                if (answer === q.correct) correct++;
+            });
+            
+            document.getElementById('score-count').textContent = correct * 10;
+            alert(`测试完成！得分：${correct * 10}/${quiz.length * 10}`);
+        }
+
+        // 重置测试
+        function resetQuiz() {
+            quizAnswers = {};
+            renderQuiz();
+        }
+
+        // Tab 切换
+        function showTab(tabName) {
+            document.querySelectorAll('.content-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('active');
+                el.setAttribute('aria-selected', 'false');
+            });
+            
+            document.getElementById(`${tabName}-section`).classList.add('active');
+            event.target.classList.add('active');
+            event.target.setAttribute('aria-selected', 'true');
+            
+            if (tabName === 'learn') document.getElementById('learned-count').textContent = 1;
+            if (tabName === 'practice') document.getElementById('practice-count').textContent = 1;
+        }
+
+        // 初始化 Pyodide
+        async function initPyodide() {
+            if (pyodide) return pyodide;
+            if (isPyodideLoading) return new Promise(resolve => {
+                const checkInterval = setInterval(() => {
+                    if (pyodide) {
+                        clearInterval(checkInterval);
+                        resolve(pyodide);
+                    }
+                }, 100);
+            });
+            
+            isPyodideLoading = true;
+            const statusEl = document.getElementById('pyodide-status');
+            const runBtn = document.getElementById('run-btn');
+            
+            try {
+                console.log('正在加载 Pyodide...');
+                pyodide = await loadPyodide({
+                    indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.2/full/"
+                });
+                
+                console.log('Pyodide 加载成功！正在加载 pandas 和 numpy...');
+                statusEl.textContent = '正在加载 pandas...';
+                
+                await pyodide.loadPackage(['numpy', 'pandas']);
+                
+                console.log('所有包加载完毕！');
+                statusEl.textContent = '✅ Pyodide 就绪！';
+                statusEl.style.color = 'var(--accent-green)';
+                runBtn.disabled = false;
+                
+                return pyodide;
+            } catch (error) {
+                console.error('Pyodide 加载失败:', error);
+                statusEl.textContent = '❌ 加载失败，请刷新重试';
+                statusEl.style.color = 'var(--accent-red)';
+                isPyodideLoading = false;
+                return null;
             }
         }
-        
+
+        // 运行学习区代码
         async function runCode() {
             const code = document.getElementById('code-input').value;
             const outputBox = document.getElementById('output-box');
             const outputContent = document.getElementById('output-content');
             const btn = document.getElementById('run-btn');
-            if (!code.trim()) { alert('请先输入代码！'); return; }
-            outputBox.style.display = 'block';
-            outputContent.textContent = '正在执行...';
-            btn.disabled = true;
-            btn.innerHTML = '运行中...';
-            try {
-                await initPyodide();
-                pyodide.runPython(`import sys; from io import StringIO; sys.stdout = StringIO(); sys.stderr = StringIO()`);
-                await pyodide.runPythonAsync(code);
-                const stdout = pyodide.runPython('sys.stdout.getvalue()');
-                const stderr = pyodide.runPython('sys.stderr.getvalue()');
-                if (stderr?.trim()) {
-                    outputContent.textContent = stderr;
-                    outputContent.className = 'output-content error';
-                } else {
-                    outputContent.textContent = stdout || '(代码执行完成，无输出)';
-                    outputContent.className = 'output-content success';
-                }
-            } catch (error) {
-                outputContent.textContent = '错误: ' + error.message;
-                outputContent.className = 'output-content error';
-            } finally { btn.disabled = false; btn.innerHTML = '▶️ 运行代码'; }
-        }
-        
-        function resetCode() {
-            document.getElementById('code-input').value = `import numpy as np
-from scipy.stats import norm
-
-# A/B测试数据
-group_a = {'visitors': 1000, 'conversions': 150}
-group_b = {'visitors': 1000, 'conversions': 180}
-
-# 计算转化率
-p_a = group_a['conversions'] / group_a['visitors']
-p_b = group_b['conversions'] / group_b['visitors']
-
-print(f"A组转化率: {p_a:.2%}")
-print(f"B组转化率: {p_b:.2%}")
-print(f"转化率差异: {(p_b - p_a):.2%}")
-
-# 计算标准误
-p_pooled = (group_a['conversions'] + group_b['conversions']) / \\
-           (group_a['visitors'] + group_b['visitors'])
-se = np.sqrt(p_pooled * (1 - p_pooled) * (1/group_a['visitors'] + 1/group_b['visitors']))
-
-# 计算Z值和P值
-z_score = (p_b - p_a) / se
-p_value = 2 * (1 - norm.cdf(abs(z_score)))
-
-print(f"\\n统计分析结果:")
-print(f"Z值: {z_score:.2f}")
-print(f"P值: {p_value:.4f}")
-
-# 判断显著性
-alpha = 0.05
-if p_value < alpha:
-    print(f"\\n结论：P值({p_value:.4f}) < 显著性水平({alpha})，拒绝零假设")
-    print("B组转化率显著高于A组！")
-else:
-    print(f"\\n结论：P值({p_value:.4f}) >= 显著性水平({alpha})，无法拒绝零假设")
-    print("两组转化率差异不显著")`;
-        }
-        
-        function copyCode() {
-            const code = document.getElementById('code-input').value;
-            navigator.clipboard.writeText(code).then(() => { alert('代码已复制！'); });
-        }
-        
-        async function runPracticeCode(num) {
-            const code = document.getElementById('practice-code-' + num).value;
-            const outputBox = document.getElementById('practice-output-' + num);
-            const outputContent = document.getElementById('practice-output-content-' + num);
-            const btn = event.target;
+            const loading = document.getElementById('code-loading');
             
             if (!code.trim()) {
                 alert('请先输入代码！');
@@ -1064,17 +429,19 @@ else:
             outputContent.textContent = '正在执行...';
             outputContent.className = 'output-content';
             btn.disabled = true;
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<span class="loading-spinner"></span> 运行中...';
+            loading.style.display = 'inline-block';
             
             try {
                 const p = await initPyodide();
                 if (!p) throw new Error('Pyodide 未初始化');
                 
-                // 重置输出流
-                p.runPython(`import sys; from io import StringIO; sys.stdout = StringIO(); sys.stderr = StringIO()`);
+                p.runPython(`
+import sys
+from io import StringIO
+sys.stdout = StringIO()
+sys.stderr = StringIO()
+                `);
                 
-                // 执行代码
                 await p.runPythonAsync(code);
                 
                 const stdout = p.runPython('sys.stdout.getvalue()');
@@ -1093,139 +460,50 @@ else:
                 outputContent.className = 'output-content error';
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = originalText;
+                loading.style.display = 'none';
             }
         }
-        
-        function resetPracticeCode(num) {
-            const codes = {
-                1: `# A/B测试数据
-group_a_visitors = 2000
-group_a_conversions = 240
 
-group_b_visitors = 2000
-group_b_conversions = 280
+        // 重置学习区代码
+        function resetCode() {
+            document.getElementById('code-input').value = `import pandas as pd
+import numpy as np
 
-# 计算转化率
-p_a = group_a_conversions / group_a_visitors
-p_b = group_b_conversions / group_b_visitors
-
-print(f"A组转化率: {p_a:.2%}")
-print(f"B组转化率: {p_b:.2%}")
-print(f"差异: {(p_b - p_a):.2%}")`,
-                2: `import numpy as np
-from scipy.stats import norm
-
-# 数据
-n1, p1 = 1500, 0.12
-n2, p2 = 1500, 0.15
-
-# 计算合并比例
-p_pooled = (p1 * n1 + p2 * n2) / (n1 + n2)
-
-# 计算标准误
-se = np.sqrt(p_pooled * (1 - p_pooled) * (1/n1 + 1/n2))
-
-# 计算Z值和P值
-z_score = (p2 - p1) / se
-p_value = 2 * (1 - norm.cdf(abs(z_score)))
-
-print(f"Z值: {z_score:.2f}")
-print(f"P值: {p_value:.4f}")
-print(f"结论: {'显著' if p_value < 0.05 else '不显著'}")`,
-                3: `import math
-from scipy.stats import norm
-
-def required_sample_size(baseline_rate, min_effect, alpha=0.05, power=0.8):
-    """计算A/B测试所需样本量"""
-    p2 = baseline_rate * (1 + min_effect)
-    p_pooled = (baseline_rate + p2) / 2
-    
-    z_alpha = norm.ppf(1 - alpha/2)
-    z_power = norm.ppf(power)
-    
-    numerator = (z_alpha * math.sqrt(2 * p_pooled * (1 - p_pooled)) + 
-                 z_power * math.sqrt(baseline_rate * (1 - baseline_rate) + p2 * (1 - p2))) ** 2
-    denominator = (p2 - baseline_rate) ** 2
-    
-    return math.ceil(numerator / denominator)
-
-# 计算样本量
-sample_size = required_sample_size(baseline_rate=0.10, min_effect=0.15)
-print(f"每组所需样本量: {sample_size}")
-print(f"两组总计: {sample_size * 2}")`,
-                4: `import numpy as np
-from scipy.stats import norm
-
-def confidence_interval(conversions, visitors, confidence=0.95):
-    """计算转化率的置信区间"""
-    p = conversions / visitors
-    se = np.sqrt(p * (1 - p) / visitors)
-    z = norm.ppf((1 + confidence) / 2)
-    lower = p - z * se
-    upper = p + z * se
-    return lower, upper
-
-# 计算置信区间
-lower_a, upper_a = confidence_interval(150, 1000)
-lower_b, upper_b = confidence_interval(180, 1000)
-
-print(f"A组转化率 95%置信区间: [{lower_a:.2%}, {upper_a:.2%}]")
-print(f"B组转化率 95%置信区间: [{lower_b:.2%}, {upper_b:.2%}]")`,
-                5: `import numpy as np
-from scipy.stats import norm
-
-def ab_test_analysis(group_a, group_b, alpha=0.05):
-    """完整的A/B测试分析"""
-    n_a, conv_a = group_a['visitors'], group_a['conversions']
-    n_b, conv_b = group_b['visitors'], group_b['conversions']
-    
-    p_a = conv_a / n_a
-    p_b = conv_b / n_b
-    
-    print(f"A组: {conv_a}/{n_a} = {p_a:.2%}")
-    print(f"B组: {conv_b}/{n_b} = {p_b:.2%}")
-    print(f"差异: {(p_b - p_a):.2%}")
-    print(f"提升率: {((p_b - p_a)/p_a):.2%}")
-    
-    p_pooled = (conv_a + conv_b) / (n_a + n_b)
-    se = np.sqrt(p_pooled * (1 - p_pooled) * (1/n_a + 1/n_b))
-    z = (p_b - p_a) / se
-    p_value = 2 * (1 - norm.cdf(abs(z)))
-    
-    print(f"\\n统计显著性:")
-    print(f"Z值: {z:.2f}")
-    print(f"P值: {p_value:.4f}")
-    
-    if p_value < alpha:
-        print(f"\\n结论: 结果显著(p < {alpha})，拒绝零假设")
-        print("建议采用B版本")
-    else:
-        print(f"\\n结论: 结果不显著(p >= {alpha})")
-        print("需要更多数据或无法确定差异")
-
-# 测试数据
-group_a = {'visitors': 2500, 'conversions': 320}
-group_b = {'visitors': 2500, 'conversions': 380}
-
-ab_test_analysis(group_a, group_b)`
-            };
-            document.getElementById('practice-code-' + num).value = codes[num];
+# 创建含有缺失值的DataFrame
+data = {'A': [1, np.nan, 3, 4, 5], 'B': ['x', 'y', np.nan, 'z', 'z']}
+df = pd.DataFrame(data)
+print("原始DataFrame：")
+print(df)
+print("\n每列缺失值数量：")
+print(df.isnull().sum())`;
+            document.getElementById('output-box').style.display = 'none';
         }
-        
-        async function runHomeworkCode() {
-            const code = document.getElementById('homework-code').value;
-            const outputBox = document.getElementById('homework-output');
-            const outputContent = document.getElementById('homework-output-content');
-            if (!code.trim()) { alert('请先输入代码！'); return; }
+
+        // 运行练习代码
+        async function runPracticeCode(num) {
+            const code = document.getElementById(`practice-code-${num}`).value;
+            const outputBox = document.getElementById(`practice-output-${num}`);
+            const outputContent = document.getElementById(`practice-output-content-${num}`);
+            
+            if (!code.trim()) {
+                alert('请先输入代码！');
+                return;
+            }
+            
             outputBox.style.display = 'block';
             outputContent.textContent = '正在执行...';
+            outputContent.className = 'output-content';
+            
             try {
-                await initPyodide();
-                pyodide.runPython(`import sys; from io import StringIO; sys.stdout = StringIO(); sys.stderr = StringIO()`);
-                await pyodide.runPythonAsync(code);
-                const stdout = pyodide.runPython('sys.stdout.getvalue()');
-                const stderr = pyodide.runPython('sys.stderr.getvalue()');
+                const p = await initPyodide();
+                if (!p) throw new Error('Pyodide 未初始化');
+                
+                p.runPython(`import sys; from io import StringIO; sys.stdout = StringIO(); sys.stderr = StringIO()`);
+                await p.runPythonAsync(code);
+                
+                const stdout = p.runPython('sys.stdout.getvalue()');
+                const stderr = p.runPython('sys.stderr.getvalue()');
+                
                 if (stderr?.trim()) {
                     outputContent.textContent = stderr;
                     outputContent.className = 'output-content error';
@@ -1234,50 +512,92 @@ ab_test_analysis(group_a, group_b)`
                     outputContent.className = 'output-content success';
                 }
             } catch (error) {
+                console.error('代码执行错误:', error);
                 outputContent.textContent = '错误: ' + error.message;
                 outputContent.className = 'output-content error';
             }
         }
-        
+
+        // 重置练习代码
+        function resetPracticeCode(num) {
+            const ex = currentProjectData?.exercises?.find(e => e.id === num);
+            if (ex) {
+                document.getElementById(`practice-code-${num}`).value = ex.code;
+                document.getElementById(`practice-output-${num}`).style.display = 'none';
+            }
+        }
+
+        // 运行作业代码
+        async function runHomeworkCode() {
+            const code = document.getElementById('homework-code').value;
+            const outputBox = document.getElementById('homework-output');
+            const outputContent = document.getElementById('homework-output-content');
+            
+            if (!code.trim()) {
+                alert('请先输入代码！');
+                return;
+            }
+            
+            outputBox.style.display = 'block';
+            outputContent.textContent = '正在执行...';
+            outputContent.className = 'output-content';
+            
+            try {
+                const p = await initPyodide();
+                if (!p) throw new Error('Pyodide 未初始化');
+                
+                p.runPython(`import sys; from io import StringIO; sys.stdout = StringIO(); sys.stderr = StringIO()`);
+                await p.runPythonAsync(code);
+                
+                const stdout = p.runPython('sys.stdout.getvalue()');
+                const stderr = p.runPython('sys.stderr.getvalue()');
+                
+                if (stderr?.trim()) {
+                    outputContent.textContent = stderr;
+                    outputContent.className = 'output-content error';
+                } else {
+                    outputContent.textContent = stdout || '(代码执行完成，无输出)';
+                    outputContent.className = 'output-content success';
+                }
+            } catch (error) {
+                console.error('代码执行错误:', error);
+                outputContent.textContent = '错误: ' + error.message;
+                outputContent.className = 'output-content error';
+            }
+        }
+
+        // 重置作业代码
+        function resetHomeworkCode() {
+            document.getElementById('homework-code').value = `import pandas as pd
+import numpy as np
+
+# 在这里写你的代码
+# 提示：创建DataFrame，添加缺失值，统计，填充
+`;
+            document.getElementById('homework-output').style.display = 'none';
+        }
+
+        // 提交作业
         function submitHomework() {
-            const status = document.getElementById('submit-status');
-            status.className = 'submit-status success';
-            status.innerHTML = '✅ 作业提交成功！';
-            status.style.display = 'block';
+            const btn = document.getElementById('hw-submit-btn');
+            
+            if (homeworkSubmitted) {
+                alert('作业已提交过了！');
+                return;
+            }
+            
+            homeworkSubmitted = true;
+            btn.textContent = '✅ 已提交';
+            btn.disabled = true;
+            btn.classList.add('submitted');
+            alert('作业提交成功！');
         }
-        
-        function selectTestOption(btn, qNum, option, isCorrect) {
-            testAnswers[qNum] = { option, isCorrect };
-            const options = btn.parentElement.children;
-            for (let i = 0; i < options.length; i++) { options[i].classList.remove('selected'); }
-            btn.classList.add('selected');
-        }
-        
-        function submitTest() {
-            let correct = 0;
-            for (let i = 1; i <= totalQuestions; i++) { if (testAnswers[i]?.isCorrect) correct++; }
-            const score = Math.round((correct / totalQuestions) * 100);
-            document.getElementById('final-score').textContent = score + '分';
-            document.getElementById('result-message').textContent = score >= 80 ? '🎉 太棒了！继续保持！' : score >= 60 ? '👍 不错！继续努力！' : '💪 需要多加练习！';
-            document.getElementById('result-icon').textContent = score >= 80 ? '🏆' : score >= 60 ? '😊' : '📚';
-            document.getElementById('test-result').style.display = 'block';
-        }
-        
-        function resetTest() {
-            testAnswers = {};
-            document.getElementById('test-result').style.display = 'none';
-            const options = document.querySelectorAll('.option-btn');
-            options.forEach(opt => { opt.classList.remove('selected'); });
-        }
-        
-        function showTab(tabName) {
-            const tabs = document.querySelectorAll('.tab');
-            const contents = document.querySelectorAll('.tab-content');
-            tabs.forEach(tab => { tab.classList.remove('active'); });
-            contents.forEach(content => { content.classList.remove('active'); });
-            document.querySelector(`[onclick="showTab('${tabName}')"]`).classList.add('active');
-            document.getElementById(tabName + '-tab').classList.add('active');
-        }
+
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', () => {
+            initPyodide();
+            loadExerciseData();
+        });
     </script>
 </body>
 </html>

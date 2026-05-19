@@ -1,401 +1,94 @@
 #!/usr/bin/env python3
 import os
-import re
 
-def copy_js_section(content):
-    # 1. 更新Pyodide版本
-    content = content.replace(
-        '<script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>',
-        '<script src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"></script>'
-    )
-    
-    # 2. 替换旧的initPyodide函数
-    old_init = '''        async function initPyodide() {
-            if (pyodide || isLoading) return;
-            isLoading = true;
-            
-            const btn = document.getElementById('run-btn');
-            if (btn) {
-                btn.disabled = true;
-                btn.innerHTML = '<span class="loading-spinner"></span> 加载中...';
-            }
-            
-            try {
-                pyodide = await loadPyodide({
-                    indexURL: "https://cdn.jsdelivr.net/pyodide/v0.24.1/full/"
-                });
-                console.log('Pyodide 加载成功！');
-            } catch (error) {
-                console.error('Pyodide 加载失败:', error);
-            } finally {
-                if (btn) {
-                    btn.disabled = false;
-                    btn.innerHTML = '▶️ 运行代码';
-                }
-                isLoading = false;
-            }
-        }'''
-    
-    new_init = '''        async function initPyodide() {
-            if (pyodide) return pyodide;
-            if (isLoading) return new Promise(resolve => {
-                const check = setInterval(() => {
-                    if (pyodide) {
-                        clearInterval(check);
-                        resolve(pyodide);
-                    }
-                }, 100);
-            });
-            
-            isLoading = true;
-            
-            // 更新所有运行按钮状态
-            document.querySelectorAll('[onclick*="runCode"], [onclick*="runPracticeCode"], [onclick*="runHomeworkCode"]').forEach(btn => {
-                btn.disabled = true;
-                const originalText = btn.innerHTML;
-                btn.dataset.originalText = originalText;
-                btn.innerHTML = '<span class="loading-spinner"></span> 加载中...';
-            });
-            
-            try {
-                console.log('正在加载 Pyodide...');
-                pyodide = await loadPyodide({
-                    indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.2/full/"
-                });
-                
-                console.log('Pyodide 加载成功！');
-                
-                // 恢复所有按钮状态
-                document.querySelectorAll('[onclick*="runCode"], [onclick*="runPracticeCode"], [onclick*="runHomeworkCode"]').forEach(btn => {
-                    btn.disabled = false;
-                    if (btn.dataset.originalText) {
-                        btn.innerHTML = btn.dataset.originalText;
-                    }
-                });
-                
-                return pyodide;
-            } catch (error) {
-                console.error('Pyodide 加载失败:', error);
-                alert('Pyodide 加载失败，请刷新页面重试！');
-                
-                // 恢复所有按钮状态
-                document.querySelectorAll('[onclick*="runCode"], [onclick*="runPracticeCode"], [onclick*="runHomeworkCode"]').forEach(btn => {
-                    btn.disabled = false;
-                    if (btn.dataset.originalText) {
-                        btn.innerHTML = btn.dataset.originalText;
-                    }
-                });
-                
-                isLoading = false;
-                return null;
-            }
-        }'''
-    
-    content = content.replace(old_init, new_init)
-    
-    # 3. 替换旧的runCode函数
-    old_runcode = '''        async function runCode() {
-            const code = document.getElementById('code-input').value;
-            const outputBox = document.getElementById('output-box');
-            const outputContent = document.getElementById('output-content');
-            const btn = document.getElementById('run-btn');
-            
-            if (!code.trim()) {
-                alert('请先输入代码！');
-                return;
-            }
-            
-            outputBox.style.display = 'block';
-            outputContent.textContent = '正在执行...';
-            outputContent.className = 'output-content';
-            btn.disabled = true;
-            btn.innerHTML = '<span class="loading-spinner"></span> 运行中...';
-            
-            try {
-                await initPyodide();
-                if (!pyodide) throw new Error('Pyodide 未初始化');
-                
-                pyodide.runPython(`
-import sys
-from io import StringIO
-sys.stdout = StringIO()
-sys.stderr = StringIO()
-                `);
-                
-                await pyodide.runPythonAsync(code);
-                
-                const stdout = pyodide.runPython('sys.stdout.getvalue()');
-                const stderr = pyodide.runPython('sys.stderr.getvalue()');
-                
-                if (stderr?.trim()) {
-                    outputContent.textContent = stderr;
-                    outputContent.className = 'output-content error';
-                } else {
-                    outputContent.textContent = stdout || '(代码执行完成，无输出)';
-                    outputContent.className = 'output-content success';
-                }
-            } catch (error) {
-                outputContent.textContent = '错误: ' + error.message;
-                outputContent.className = 'output-content error';
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '▶️ 运行代码';
-            }
-        }'''
-    
-    new_runcode = '''        async function runCode() {
-            const code = document.getElementById('code-input').value;
-            const outputBox = document.getElementById('output-box');
-            const outputContent = document.getElementById('output-content');
-            const btn = document.getElementById('run-btn');
-            
-            if (!code.trim()) {
-                alert('请先输入代码！');
-                return;
-            }
-            
-            outputBox.style.display = 'block';
-            outputContent.textContent = '正在执行...';
-            outputContent.className = 'output-content';
-            btn.disabled = true;
-            btn.innerHTML = '<span class="loading-spinner"></span> 运行中...';
-            
-            try {
-                const p = await initPyodide();
-                if (!p) throw new Error('Pyodide 未初始化');
-                
-                // 重置输出流
-                p.runPython(`
-import sys
-from io import StringIO
-sys.stdout = StringIO()
-sys.stderr = StringIO()
-                `);
-                
-                // 执行代码
-                await p.runPythonAsync(code);
-                
-                const stdout = p.runPython('sys.stdout.getvalue()');
-                const stderr = p.runPython('sys.stderr.getvalue()');
-                
-                if (stderr?.trim()) {
-                    outputContent.textContent = stderr;
-                    outputContent.className = 'output-content error';
-                } else {
-                    outputContent.textContent = stdout || '(代码执行完成，无输出)';
-                    outputContent.className = 'output-content success';
-                }
-            } catch (error) {
-                console.error('代码执行错误:', error);
-                outputContent.textContent = '错误: ' + error.message;
-                outputContent.className = 'output-content error';
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '▶️ 运行代码';
-            }
-        }'''
-    
-    content = content.replace(old_runcode, new_runcode)
-    
-    # 4. 替换旧的runPracticeCode函数
-    old_practice = '''        async function runPracticeCode(num) {
-            const code = document.getElementById('practice-code-' + num).value;
-            const outputBox = document.getElementById('practice-output-' + num);
-            const outputContent = document.getElementById('practice-output-content-' + num);
-            if (!code.trim()) { alert('请先输入代码！'); return; }
-            outputBox.style.display = 'block';
-            outputContent.textContent = '正在执行...';
-            try {
-                await initPyodide();
-                pyodide.runPython(`import sys; from io import StringIO; sys.stdout = StringIO(); sys.stderr = StringIO()`);
-                await pyodide.runPythonAsync(code);
-                const stdout = pyodide.runPython('sys.stdout.getvalue()');
-                const stderr = pyodide.runPython('sys.stderr.getvalue()');
-                if (stderr?.trim()) {
-                    outputContent.textContent = stderr;
-                    outputContent.className = 'output-content error';
-                } else {
-                    outputContent.textContent = stdout || '(代码执行完成，无输出)';
-                    outputContent.className = 'output-content success';
-                }
-            } catch (error) {
-                outputContent.textContent = '错误: ' + error.message;
-                outputContent.className = 'output-content error';
-            }
-        }'''
-    
-    new_practice = '''        async function runPracticeCode(num) {
-            const code = document.getElementById('practice-code-' + num).value;
-            const outputBox = document.getElementById('practice-output-' + num);
-            const outputContent = document.getElementById('practice-output-content-' + num);
-            const btn = event.target;
-            
-            if (!code.trim()) {
-                alert('请先输入代码！');
-                return;
-            }
-            
-            outputBox.style.display = 'block';
-            outputContent.textContent = '正在执行...';
-            outputContent.className = 'output-content';
-            btn.disabled = true;
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<span class="loading-spinner"></span> 运行中...';
-            
-            try {
-                const p = await initPyodide();
-                if (!p) throw new Error('Pyodide 未初始化');
-                
-                // 重置输出流
-                p.runPython(`import sys; from io import StringIO; sys.stdout = StringIO(); sys.stderr = StringIO()`);
-                
-                // 执行代码
-                await p.runPythonAsync(code);
-                
-                const stdout = p.runPython('sys.stdout.getvalue()');
-                const stderr = p.runPython('sys.stderr.getvalue()');
-                
-                if (stderr?.trim()) {
-                    outputContent.textContent = stderr;
-                    outputContent.className = 'output-content error';
-                } else {
-                    outputContent.textContent = stdout || '(代码执行完成，无输出)';
-                    outputContent.className = 'output-content success';
-                }
-            } catch (error) {
-                console.error('代码执行错误:', error);
-                outputContent.textContent = '错误: ' + error.message;
-                outputContent.className = 'output-content error';
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = originalText;
-            }
-        }'''
-    
-    content = content.replace(old_practice, new_practice)
-    
-    # 5. 替换旧的runHomeworkCode函数
-    old_homework = '''        async function runHomeworkCode() {
-            const code = document.getElementById('homework-code').value;
-            const outputBox = document.getElementById('homework-output');
-            const outputContent = document.getElementById('homework-output-content');
-            
-            if (!code.trim()) {
-                alert('请先输入代码！');
-                return;
-            }
-            
-            outputBox.style.display = 'block';
-            outputContent.textContent = '正在执行...';
-            outputContent.className = 'output-content';
-            
-            try {
-                await initPyodide();
-                if (!pyodide) throw new Error('Pyodide 未初始化');
-                
-                pyodide.runPython(`
-import sys
-from io import StringIO
-sys.stdout = StringIO()
-sys.stderr = StringIO()
-                `);
-                
-                await pyodide.runPythonAsync(code);
-                
-                const stdout = pyodide.runPython('sys.stdout.getvalue()');
-                const stderr = pyodide.runPython('sys.stderr.getvalue()');
-                
-                if (stderr?.trim()) {
-                    outputContent.textContent = stderr;
-                    outputContent.className = 'output-content error';
-                } else {
-                    outputContent.textContent = stdout || '(代码执行完成，无输出)';
-                    outputContent.className = 'output-content success';
-                }
-            } catch (error) {
-                outputContent.textContent = '错误: ' + error.message;
-                outputContent.className = 'output-content error';
-            }
-        }'''
-    
-    new_homework = '''        async function runHomeworkCode() {
-            const code = document.getElementById('homework-code').value;
-            const outputBox = document.getElementById('homework-output');
-            const outputContent = document.getElementById('homework-output-content');
-            const btn = event.target;
-            
-            if (!code.trim()) {
-                alert('请先输入代码！');
-                return;
-            }
-            
-            outputBox.style.display = 'block';
-            outputContent.textContent = '正在执行...';
-            outputContent.className = 'output-content';
-            btn.disabled = true;
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<span class="loading-spinner"></span> 运行中...';
-            
-            try {
-                const p = await initPyodide();
-                if (!p) throw new Error('Pyodide 未初始化');
-                
-                // 重置输出流
-                p.runPython(`
-import sys
-from io import StringIO
-sys.stdout = StringIO()
-sys.stderr = StringIO()
-                `);
-                
-                // 执行代码
-                await p.runPythonAsync(code);
-                
-                const stdout = p.runPython('sys.stdout.getvalue()');
-                const stderr = p.runPython('sys.stderr.getvalue()');
-                
-                if (stderr?.trim()) {
-                    outputContent.textContent = stderr;
-                    outputContent.className = 'output-content error';
-                } else {
-                    outputContent.textContent = stdout || '(代码执行完成，无输出)';
-                    outputContent.className = 'output-content success';
-                }
-            } catch (error) {
-                console.error('代码执行错误:', error);
-                outputContent.textContent = '错误: ' + error.message;
-                outputContent.className = 'output-content error';
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = originalText;
-            }
-        }'''
-    
-    content = content.replace(old_homework, new_homework)
-    
-    return content
+# 项目配置
+projects = [
+    {"id": 2, "name": "分组聚合分析", "emoji": "📊", "level": "入门", "time": "30分钟"},
+    {"id": 3, "name": "购物篮分析", "emoji": "🛒", "level": "进阶", "time": "45分钟"},
+    {"id": 4, "name": "客户聚类分析", "emoji": "👥", "level": "进阶", "time": "45分钟"},
+    {"id": 5, "name": "数据可视化", "emoji": "📈", "level": "进阶", "time": "45分钟"},
+    {"id": 6, "name": "A/B测试分析", "emoji": "🔬", "level": "进阶", "time": "45分钟"},
+    {"id": 7, "name": "时间序列分析", "emoji": "⏰", "level": "进阶", "time": "45分钟"},
+    {"id": 8, "name": "特征工程", "emoji": "🔧", "level": "高级", "time": "60分钟"},
+    {"id": 9, "name": "异常值检测", "emoji": "🎯", "level": "高级", "time": "45分钟"},
+    {"id": 10, "name": "多数据集合并", "emoji": "🔗", "level": "进阶", "time": "45分钟"}
+]
 
-def main():
-    projects = list(range(2, 11))
-    
-    print('开始更新所有项目...\n')
-    
-    for num in projects:
-        file_path = f'/workspace/projects/project{num}/index.html'
-        if os.path.exists(file_path):
-            with open(file_path, 'r', encoding='utf-8') as f:
-                content = f.read()
-            
-            updated_content = copy_js_section(content)
-            
-            with open(file_path, 'w', encoding='utf-8') as f:
-                f.write(updated_content)
-            
-            print(f'✓ 已更新 project{num}')
-        else:
-            print(f'✗ 文件不存在: project{num}')
-    
-    print('\n所有项目更新完成！')
+# 读取项目1作为模板
+with open('/workspace/projects/project1/index.html', 'r', encoding='utf-8') as f:
+    template = f.read()
 
-if __name__ == '__main__':
-    main()
+# 为每个项目创建页面
+for project in projects:
+    project_id = project['id']
+    project_name = project['name']
+    project_emoji = project['emoji']
+    project_level = project['level']
+    project_time = project['time']
+    
+    content = template
+    
+    # 替换模板中的内容
+    content = content.replace('数据清洗实战', project_name)
+    content = content.replace('🧹', project_emoji)
+    content = content.replace('入门', project_level)
+    content = content.replace('30分钟', project_time)
+    content = content.replace("projects['1']", f"projects['{project_id}']")
+    
+    # 更新默认数据
+    new_default_data = f'''    const defaultProjectData = {{
+            title: "{project_name}",
+            exercises: [
+                {{
+                    id: 1,
+                    question: "练习使用基本的 pandas 功能。",
+                    code: "import pandas as pd\\nimport numpy as np\\n\\n# 创建一个简单的 DataFrame\\ndata = {{'col1': [1, 2, 3, 4, 5], 'col2': ['a', 'b', 'c', 'd', 'e']}}\\ndf = pd.DataFrame(data)\\nprint('DataFrame:')\\nprint(df)",
+                    hint: "这是一个基础练习，先熟悉一下环境。",
+                    answer: "你可以自由探索 pandas 的各种功能！"
+                }}
+            ],
+            quiz: [
+                {{
+                    id: 1,
+                    question: "这是一个示例问题。",
+                    options: ["选项1", "选项2", "选项3", "选项4"],
+                    correct: 0,
+                    explanation: "这是一个示例解释。"
+                }}
+            ]
+        }};'''
+    
+    # 替换默认数据部分
+    start_marker = 'const defaultProjectData = {'
+    end_marker = '};'
+    start_idx = content.find(start_marker)
+    end_idx = content.find(end_marker, start_idx) + 2
+    
+    # 找到完整的 defaultProjectData 定义
+    brace_count = 1
+    pos = start_idx + len(start_marker)
+    while brace_count > 0 and pos < len(content):
+        if content[pos] == '{':
+            brace_count += 1
+        elif content[pos] == '}':
+            brace_count -= 1
+        pos += 1
+    
+    # 替换内容
+    before = content[:start_idx]
+    after = content[pos:]
+    content = before + new_default_data + after
+    
+    # 确保替换了所有引用
+    content = content.replace('allData.projects[\'1\']', f'allData.projects[\'{project_id}\']')
+    
+    # 写文件
+    output_dir = f'/workspace/projects/project{project_id}'
+    os.makedirs(output_dir, exist_ok=True)
+    output_path = os.path.join(output_dir, 'index.html')
+    with open(output_path, 'w', encoding='utf-8') as f:
+        f.write(content)
+    
+    print(f'✓ 更新: project{project_id} ({project_name})')
+
+print('\n所有项目更新完成！')

@@ -1,0 +1,68 @@
+/* ====================
+   CSS Variables
+   ==================== */
+
+:root {
+  /* Colors - Dark Theme */
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  
+  /* Gradients */
+  --gradient-bg: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  --gradient-primary: linear-gradient(135deg, #00d4ff 0%, #8b5cf6 100%);
+  
+  /* Text Colors - High Contrast */
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+  --text-muted: #64748b;
+  
+  /* Accent Colors */
+  --accent-cyan: #00d4ff;
+  --accent-purple: #8b5cf6;
+  --accent-green: #4ade80;
+  --accent-yellow: #fbbf24;
+  --accent-red: #f87171;
+  
+  /* Badge Colors */
+  --badge-easy-bg: rgba(74, 222, 128, 0.15);
+  --badge-easy-border: rgba(74, 222, 128, 0.3);
+  --badge-medium-bg: rgba(251, 191, 36, 0.15);
+  --badge-medium-border: rgba(251, 191, 36, 0.3);
+  --badge-hard-bg: rgba(248, 113, 113, 0.15);
+  --badge-hard-border: rgba(248, 113, 113, 0.3);
+  --badge-time-bg: rgba(255, 255, 255, 0.08);
+  
+  /* Spacing */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 3rem;
+  
+  /* Border Radius */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.5rem;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
+  
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.3s ease;
+  --transition-smooth: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Container */
+  --container-max: 1300px;
+  
+  /* Code Editor */
+  --editor-bg: #1e293b;
+  --editor-border: rgba(148, 163, 184, 0.3);
+  --output-success: #4ade80;
+  --output-error: #f87171;
+}

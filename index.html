@@ -5,496 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pandas 数据分析实战训练营 - TT's Learning</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            color: #e6e6e6;
-            line-height: 1.7;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1300px;
-            margin: 0 auto;
-            padding: 0 32px;
-        }
-
-        /* Hero Section */
-        .hero {
-            padding: 100px 0 80px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, transparent 70%);
-            border-radius: 50%;
-        }
-
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: -30%;
-            left: -10%;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, transparent 70%);
-            border-radius: 50%;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 48px;
-            flex-wrap: wrap;
-            gap: 24px;
-        }
-
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .logo-circle {
-            width: 56px;
-            height: 56px;
-            background: linear-gradient(135deg, #00d4ff 0%, #8b5cf6 100%);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            box-shadow: 0 8px 32px rgba(0, 212, 255, 0.3);
-        }
-
-        .logo-text {
-            font-size: 24px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #00d4ff 0%, #8b5cf6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(0, 212, 255, 0.1);
-            border: 1px solid rgba(0, 212, 255, 0.25);
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #00d4ff;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .hero-main {
-            display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 60px;
-            align-items: center;
-        }
-
-        .hero-text h1 {
-            font-size: 56px;
-            font-weight: 900;
-            line-height: 1.1;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, #ffffff 0%, #8b5cf6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero-text .subtitle {
-            font-size: 18px;
-            color: #a0a0b8;
-            line-height: 1.8;
-            margin-bottom: 32px;
-        }
-
-        .profile-card {
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 28px;
-            margin-bottom: 32px;
-        }
-
-        .profile-title {
-            font-size: 14px;
-            color: #8b5cf6;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 12px;
-        }
-
-        .profile-content {
-            font-size: 16px;
-            color: #d4d4e8;
-            line-height: 1.8;
-        }
-
-        .profile-content strong {
-            color: #00d4ff;
-        }
-
-        .hero-features {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-        }
-
-        .feature-box {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 16px 20px;
-            border-radius: 14px;
-        }
-
-        .feature-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-        }
-
-        .feature-text {
-            font-size: 14px;
-            color: #c8c8d8;
-            font-weight: 500;
-        }
-
-        .hero-visual {
-            position: relative;
-        }
-
-        .visual-card {
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 32px;
-            position: relative;
-        }
-
-        .visual-card::before {
-            content: '';
-            position: absolute;
-            top: -3px;
-            left: -3px;
-            right: -3px;
-            bottom: -3px;
-            background: linear-gradient(135deg, #00d4ff 0%, #8b5cf6 100%);
-            border-radius: 26px;
-            z-index: -1;
-            opacity: 0.5;
-        }
-
-        .visual-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .visual-item {
-            aspect-ratio: 1;
-            background: rgba(255, 255, 255, 0.06);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-        }
-
-        .visual-stats {
-            display: flex;
-            justify-content: space-between;
-            gap: 16px;
-        }
-
-        .stat {
-            flex: 1;
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 32px;
-            font-weight: 900;
-            background: linear-gradient(135deg, #00d4ff 0%, #8b5cf6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: #8080a0;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* Projects Section */
-        .projects-section {
-            padding: 80px 0 100px;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-
-        .section-title {
-            font-size: 42px;
-            font-weight: 900;
-            margin-bottom: 12px;
-            background: linear-gradient(135deg, #ffffff 0%, #8b5cf6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .section-subtitle {
-            color: #8080a0;
-            font-size: 16px;
-        }
-
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 28px;
-        }
-
-        .project-card {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            padding: 28px;
-            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .project-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #00d4ff 0%, #8b5cf6 100%);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.35s ease;
-        }
-
-        .project-card:hover {
-            transform: translateY(-8px);
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(0, 212, 255, 0.3);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-        }
-
-        .project-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .project-top {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 20px;
-        }
-
-        .project-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            flex-shrink: 0;
-        }
-
-        .project-meta {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .project-badges {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .badge {
-            padding: 5px 14px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .badge-easy {
-            background: rgba(34, 197, 94, 0.15);
-            color: #4ade80;
-            border: 1px solid rgba(34, 197, 94, 0.3);
-        }
-
-        .badge-medium {
-            background: rgba(251, 191, 36, 0.15);
-            color: #fbbf24;
-            border: 1px solid rgba(251, 191, 36, 0.3);
-        }
-
-        .badge-hard {
-            background: rgba(239, 68, 68, 0.15);
-            color: #f87171;
-            border: 1px solid rgba(239, 68, 68, 0.3);
-        }
-
-        .badge-time {
-            background: rgba(255, 255, 255, 0.08);
-            color: #a0a0b8;
-            font-weight: 500;
-        }
-
-        .project-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #ffffff;
-            line-height: 1.3;
-        }
-
-        .project-description {
-            color: #a0a0b8;
-            font-size: 14px;
-            line-height: 1.7;
-            margin-bottom: 24px;
-        }
-
-        .project-bottom {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .dataset {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #707090;
-            font-size: 12px;
-            font-family: 'Monaco', 'Consolas', monospace;
-        }
-
-        .start-btn {
-            color: #00d4ff;
-            font-size: 14px;
-            font-weight: 700;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.25s;
-        }
-
-        .start-btn:hover {
-            gap: 12px;
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 50px 0;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        footer p {
-            color: #505070;
-            font-size: 13px;
-        }
-
-        /* Responsive */
-        @media (max-width: 1200px) {
-            .projects-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .hero-main {
-                grid-template-columns: 1fr;
-            }
-            
-            .hero-visual {
-                display: none;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .hero {
-                padding: 60px 0 50px;
-            }
-
-            .hero-text h1 {
-                font-size: 36px;
-            }
-
-            .hero-features {
-                grid-template-columns: 1fr;
-            }
-
-            .projects-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .container {
-                padding: 0 20px;
-            }
-
-            .section-title {
-                font-size: 32px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"></script>
 </head>
 <body>
-    <section class="hero">
+    <a href="#main-content" class="skip-link">跳转到主要内容</a>
+    
+    <section class="hero" role="banner">
         <div class="container">
             <div class="hero-content">
                 <div class="hero-top">
@@ -564,7 +83,7 @@
                                     <div class="stat-label">模块</div>
                                 </div>
                                 <div class="stat">
-                                    <div class="stat-number">∞</div>
+                                    <div class="stat-number">50</div>
                                     <div class="stat-label">练习</div>
                                 </div>
                             </div>
@@ -575,15 +94,70 @@
         </div>
     </section>
 
-    <section class="projects-section">
+    <!-- Interactive Code Demo Section -->
+    <section class="demo-section" style="padding: 60px 0; background: var(--bg-secondary);">
+        <div class="container">
+            <div class="section-header" style="text-align: center; margin-bottom: 40px;">
+                <h2 class="section-title" style="background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">⚡ 试一试！在浏览器中运行 Pandas</h2>
+                <p class="section-subtitle" style="color: var(--text-secondary);">点击运行按钮，立即体验无需安装的数据分析</p>
+            </div>
+            
+            <div class="demo-container" style="max-width: 800px; margin: 0 auto;">
+                <div class="code-editor-wrapper" style="background: var(--bg-tertiary); border: 1px solid var(--editor-border); border-radius: var(--radius-md); overflow: hidden;">
+                    <div style="padding: 12px 16px; background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--editor-border); display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: 600; color: var(--text-secondary); font-size: 13px;">📝 example.py</span>
+                        <span id="pyodide-status" style="font-size: 12px; color: var(--text-tertiary);">正在加载 Pyodide...</span>
+                    </div>
+                    <textarea id="demo-code" class="code-editor" style="width: 100%; min-height: 200px; background: var(--bg-tertiary); color: var(--text-primary); font-family: 'Monaco', 'Consolas', monospace; font-size: 14px; line-height: 1.6; padding: 16px; border: none; resize: vertical;">import pandas as pd
+import numpy as np
+
+# 创建一个示例 DataFrame
+data = {
+    '产品': ['手机', '电脑', '平板', '耳机', '手表'],
+    '销量': [120, 85, 60, 200, 110],
+    '价格': [2999, 5999, 1999, 399, 1299],
+    '评分': [4.8, 4.9, 4.5, 4.7, 4.6]
+}
+
+df = pd.DataFrame(data)
+print('📊 原始数据：')
+print(df)
+print()
+print('📈 基本统计信息：')
+print(df.describe())
+print()
+print('💰 计算总销售额：')
+df['销售额'] = df['销量'] * df['价格']
+print(df)
+print()
+print('🏆 销售额最高的产品：')
+print(df.loc[df['销售额'].idxmax()])</textarea>
+                    <div style="padding: 12px 16px; display: flex; gap: 12px; background: rgba(0, 0, 0, 0.2); border-top: 1px solid var(--editor-border);">
+                        <button id="demo-run-btn" class="btn btn-primary" onclick="runDemoCode()" disabled>
+                            <span class="loading-spinner" id="demo-spinner" style="display: none;"></span>
+                            ▶️ 运行代码
+                        </button>
+                        <button class="btn btn-secondary" onclick="resetDemoCode()">🔄 重置</button>
+                    </div>
+                </div>
+                <div id="demo-output" class="output-area" style="display: none; margin-top: 12px;">
+                    <div class="output-header">输出</div>
+                    <div id="demo-output-content" class="output-content">点击运行查看结果</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="projects-section" id="main-content" role="main">
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">精选项目</h2>
                 <p class="section-subtitle">选择一个项目开始你的学习之旅 · 共 10 个项目</p>
             </div>
 
-            <div class="projects-grid">
-                <div class="project-card" onclick="location.href='projects/project1/index.html'">
+            <div class="projects-grid" role="list">
+                <!-- Project 1 -->
+                <a href="projects/project1/index.html" class="project-card" role="listitem" aria-label="数据清洗实战项目，入门难度，预计学习时长30分钟">
                     <div class="project-top">
                         <div class="project-icon">🧹</div>
                         <div class="project-meta">
@@ -597,11 +171,12 @@
                     <p class="project-description">掌握Pandas数据清洗的核心技能，包括处理缺失值、重复值、异常值等关键步骤。</p>
                     <div class="project-bottom">
                         <div class="dataset">📁 retail_orders.csv</div>
-                        <a href="projects/project1/index.html" class="start-btn">开始学习 →</a>
+                        <span class="start-btn">开始学习 →</span>
                     </div>
-                </div>
+                </a>
 
-                <div class="project-card" onclick="location.href='projects/project2/index.html'">
+                <!-- Project 2 -->
+                <a href="projects/project2/index.html" class="project-card" role="listitem" aria-label="分组聚合分析项目，入门难度，预计学习时长30分钟">
                     <div class="project-top">
                         <div class="project-icon">📊</div>
                         <div class="project-meta">
@@ -615,11 +190,12 @@
                     <p class="project-description">学习使用Pandas进行数据分组和聚合操作，从多个维度分析数据。</p>
                     <div class="project-bottom">
                         <div class="dataset">📁 retail_orders.csv</div>
-                        <a href="projects/project2/index.html" class="start-btn">开始学习 →</a>
+                        <span class="start-btn">开始学习 →</span>
                     </div>
-                </div>
+                </a>
 
-                <div class="project-card" onclick="location.href='projects/project3/index.html'">
+                <!-- Project 3 -->
+                <a href="projects/project3/index.html" class="project-card" role="listitem" aria-label="购物篮分析项目，进阶难度，预计学习时长45分钟">
                     <div class="project-top">
                         <div class="project-icon">🛒</div>
                         <div class="project-meta">
@@ -633,11 +209,12 @@
                     <p class="project-description">通过分析顾客的购买行为，发现商品之间的关联关系。</p>
                     <div class="project-bottom">
                         <div class="dataset">📁 market_basket.csv</div>
-                        <a href="projects/project3/index.html" class="start-btn">开始学习 →</a>
+                        <span class="start-btn">开始学习 →</span>
                     </div>
-                </div>
+                </a>
 
-                <div class="project-card" onclick="location.href='projects/project4/index.html'">
+                <!-- Project 4 -->
+                <a href="projects/project4/index.html" class="project-card" role="listitem" aria-label="客户聚类分析项目，进阶难度，预计学习时长45分钟">
                     <div class="project-top">
                         <div class="project-icon">👥</div>
                         <div class="project-meta">
@@ -651,11 +228,12 @@
                     <p class="project-description">使用聚类分析将客户分成不同的群体，制定差异化营销策略。</p>
                     <div class="project-bottom">
                         <div class="dataset">📁 customer_features.csv</div>
-                        <a href="projects/project4/index.html" class="start-btn">开始学习 →</a>
+                        <span class="start-btn">开始学习 →</span>
                     </div>
-                </div>
+                </a>
 
-                <div class="project-card" onclick="location.href='projects/project5/index.html'">
+                <!-- Project 5 -->
+                <a href="projects/project5/index.html" class="project-card" role="listitem" aria-label="数据可视化项目，进阶难度，预计学习时长45分钟">
                     <div class="project-top">
                         <div class="project-icon">📈</div>
                         <div class="project-meta">
@@ -669,11 +247,12 @@
                     <p class="project-description">学习使用Matplotlib进行数据可视化。</p>
                     <div class="project-bottom">
                         <div class="dataset">📁 retail_orders.csv</div>
-                        <a href="projects/project5/index.html" class="start-btn">开始学习 →</a>
+                        <span class="start-btn">开始学习 →</span>
                     </div>
-                </div>
+                </a>
 
-                <div class="project-card" onclick="location.href='projects/project6/index.html'">
+                <!-- Project 6 -->
+                <a href="projects/project6/index.html" class="project-card" role="listitem" aria-label="A/B测试分析项目，进阶难度，预计学习时长45分钟">
                     <div class="project-top">
                         <div class="project-icon">🔬</div>
                         <div class="project-meta">
@@ -687,11 +266,12 @@
                     <p class="project-description">学习如何进行A/B测试分析，评估不同方案的效果差异。</p>
                     <div class="project-bottom">
                         <div class="dataset">📁 ab_test.csv</div>
-                        <a href="projects/project6/index.html" class="start-btn">开始学习 →</a>
+                        <span class="start-btn">开始学习 →</span>
                     </div>
-                </div>
+                </a>
 
-                <div class="project-card" onclick="location.href='projects/project7/index.html'">
+                <!-- Project 7 -->
+                <a href="projects/project7/index.html" class="project-card" role="listitem" aria-label="时间序列分析项目，进阶难度，预计学习时长45分钟">
                     <div class="project-top">
                         <div class="project-icon">⏰</div>
                         <div class="project-meta">
@@ -705,11 +285,12 @@
                     <p class="project-description">学习时间序列分析的基本方法，发现数据的趋势和季节性模式。</p>
                     <div class="project-bottom">
                         <div class="dataset">📁 time_series_sales.csv</div>
-                        <a href="projects/project7/index.html" class="start-btn">开始学习 →</a>
+                        <span class="start-btn">开始学习 →</span>
                     </div>
-                </div>
+                </a>
 
-                <div class="project-card" onclick="location.href='projects/project8/index.html'">
+                <!-- Project 8 -->
+                <a href="projects/project8/index.html" class="project-card" role="listitem" aria-label="特征工程项目，高级难度，预计学习时长60分钟">
                     <div class="project-top">
                         <div class="project-icon">🔧</div>
                         <div class="project-meta">
@@ -723,11 +304,12 @@
                     <p class="project-description">学习特征工程的核心技术，提高机器学习模型的性能。</p>
                     <div class="project-bottom">
                         <div class="dataset">📁 customer_features.csv</div>
-                        <a href="projects/project8/index.html" class="start-btn">开始学习 →</a>
+                        <span class="start-btn">开始学习 →</span>
                     </div>
-                </div>
+                </a>
 
-                <div class="project-card" onclick="location.href='projects/project9/index.html'">
+                <!-- Project 9 -->
+                <a href="projects/project9/index.html" class="project-card" role="listitem" aria-label="异常值检测项目，高级难度，预计学习时长45分钟">
                     <div class="project-top">
                         <div class="project-icon">🎯</div>
                         <div class="project-meta">
@@ -741,11 +323,12 @@
                     <p class="project-description">学习异常值检测的方法，保证数据质量。</p>
                     <div class="project-bottom">
                         <div class="dataset">📁 customer_features.csv</div>
-                        <a href="projects/project9/index.html" class="start-btn">开始学习 →</a>
+                        <span class="start-btn">开始学习 →</span>
                     </div>
-                </div>
+                </a>
 
-                <div class="project-card" onclick="location.href='projects/project10/index.html'">
+                <!-- Project 10 -->
+                <a href="projects/project10/index.html" class="project-card" role="listitem" aria-label="多数据集合并项目，进阶难度，预计学习时长45分钟">
                     <div class="project-top">
                         <div class="project-icon">🔗</div>
                         <div class="project-meta">
@@ -759,9 +342,9 @@
                     <p class="project-description">学习如何合并多个数据集，整合不同来源的信息。</p>
                     <div class="project-bottom">
                         <div class="dataset">📁 retail_orders.csv</div>
-                        <a href="projects/project10/index.html" class="start-btn">开始学习 →</a>
+                        <span class="start-btn">开始学习 →</span>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
     </section>
@@ -771,5 +354,139 @@
             <p>© 2024 TT's Learning Space · Pandas 数据分析实战训练营</p>
         </div>
     </footer>
+
+    <script>
+        let pyodide = null;
+        let isPyodideLoading = false;
+
+        async function initPyodide() {
+            if (pyodide) return pyodide;
+            if (isPyodideLoading) return new Promise(resolve => {
+                const checkInterval = setInterval(() => {
+                    if (pyodide) {
+                        clearInterval(checkInterval);
+                        resolve(pyodide);
+                    }
+                }, 100);
+            });
+            
+            isPyodideLoading = true;
+            const statusEl = document.getElementById('pyodide-status');
+            const btnEl = document.getElementById('demo-run-btn');
+            
+            try {
+                statusEl.textContent = '正在加载 Pyodide...';
+                console.log('Loading Pyodide...');
+                
+                pyodide = await loadPyodide({
+                    indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.2/full/"
+                });
+                
+                console.log('Pyodide loaded! Now loading pandas and numpy...');
+                statusEl.textContent = '正在加载 Pandas...';
+                
+                await pyodide.loadPackage(['numpy', 'pandas']);
+                
+                console.log('All packages loaded!');
+                statusEl.textContent = '✅ Pyodide 就绪！';
+                statusEl.style.color = 'var(--accent-green)';
+                btnEl.disabled = false;
+                
+                return pyodide;
+            } catch (error) {
+                console.error('Error loading Pyodide:', error);
+                statusEl.textContent = '❌ 加载失败，请刷新重试';
+                statusEl.style.color = 'var(--accent-red)';
+                isPyodideLoading = false;
+                return null;
+            }
+        }
+
+        async function runDemoCode() {
+            const code = document.getElementById('demo-code').value;
+            const outputBox = document.getElementById('demo-output');
+            const outputContent = document.getElementById('demo-output-content');
+            const btn = document.getElementById('demo-run-btn');
+            const spinner = document.getElementById('demo-spinner');
+            
+            if (!code.trim()) {
+                alert('请先输入代码！');
+                return;
+            }
+            
+            outputBox.style.display = 'block';
+            outputContent.textContent = '正在执行...';
+            outputContent.className = 'output-content';
+            btn.disabled = true;
+            btn.querySelector('span:not(.loading-spinner)').style.display = 'none';
+            spinner.style.display = 'inline-block';
+            
+            try {
+                const p = await initPyodide();
+                if (!p) throw new Error('Pyodide 未初始化');
+                
+                p.runPython(`
+import sys
+from io import StringIO
+sys.stdout = StringIO()
+sys.stderr = StringIO()
+                `);
+                
+                await p.runPythonAsync(code);
+                
+                const stdout = p.runPython('sys.stdout.getvalue()');
+                const stderr = p.runPython('sys.stderr.getvalue()');
+                
+                if (stderr?.trim()) {
+                    outputContent.textContent = stderr;
+                    outputContent.className = 'output-content error';
+                } else {
+                    outputContent.textContent = stdout || '(代码执行完成，无输出)';
+                    outputContent.className = 'output-content success';
+                }
+            } catch (error) {
+                console.error('Code execution error:', error);
+                outputContent.textContent = '错误: ' + error.message;
+                outputContent.className = 'output-content error';
+            } finally {
+                btn.disabled = false;
+                btn.querySelector('span:not(.loading-spinner)').style.display = 'inline';
+                spinner.style.display = 'none';
+            }
+        }
+
+        function resetDemoCode() {
+            document.getElementById('demo-code').value = `import pandas as pd
+import numpy as np
+
+# 创建一个示例 DataFrame
+data = {
+    '产品': ['手机', '电脑', '平板', '耳机', '手表'],
+    '销量': [120, 85, 60, 200, 110],
+    '价格': [2999, 5999, 1999, 399, 1299],
+    '评分': [4.8, 4.9, 4.5, 4.7, 4.6]
+}
+
+df = pd.DataFrame(data)
+print('📊 原始数据：')
+print(df)
+print()
+print('📈 基本统计信息：')
+print(df.describe())
+print()
+print('💰 计算总销售额：')
+df['销售额'] = df['销量'] * df['价格']
+print(df)
+print()
+print('🏆 销售额最高的产品：')
+print(df.loc[df['销售额'].idxmax()])`;
+            document.getElementById('demo-output').style.display = 'none';
+        }
+
+        // Initialize Pyodide when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            initPyodide();
+        });
+    </script>
 </body>
 </html>
