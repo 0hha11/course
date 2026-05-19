@@ -1,33 +1,4 @@
-# Allow CORS for Pyodide
 /*
   Access-Control-Allow-Origin: *
   Access-Control-Allow-Methods: GET, HEAD, OPTIONS
   Access-Control-Allow-Headers: Content-Type
-  Cache-Control: public, max-age=3600
-
-# Serve CSS with correct Content-Type
-*.css
-  Content-Type: text/css; charset=utf-8
-
-# Serve JS with correct Content-Type
-*.js
-  Content-Type: application/javascript; charset=utf-8
-
-# Serve JSON with correct Content-Type
-*.json
-  Content-Type: application/json; charset=utf-8
-
-# Serve images
-*.png
-  Content-Type: image/png
-*.jpg
-  Content-Type: image/jpeg
-*.jpeg
-  Content-Type: image/jpeg
-*.svg
-  Content-Type: image/svg+xml
-
-# Security headers
-X-Content-Type-Options: nosniff
-X-Frame-Options: DENY
-X-XSS-Protection: 1; mode=block
