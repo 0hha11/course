@@ -4,9 +4,91 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pandas 数据分析实战训练营</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"></script>
 </head>
 <body>
-    <h1>欢迎来到 Pandas 数据分析实战训练营</h1>
-    <p>这是一个可以在浏览器中运行 pandas 代码的在线学习平台。</p>
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>📊 Pandas 数据分析实战训练营</h1>
+                <p>完全在浏览器中运行代码，无需安装任何软件</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="demo-section">
+        <div class="container">
+            <h2>🚀 立即体验</h2>
+            <div class="code-editor">
+                <textarea id="codeInput" placeholder="输入 pandas 代码...">import pandas as pd
+import numpy as np
+
+data = {'Name': ['Alice', 'Bob', 'Charlie'], 'Age': [25, 30, 35]}
+df = pd.DataFrame(data)
+print(df)</textarea>
+                <div class="editor-actions">
+                    <button id="runBtn" onclick="runCode()">运行代码</button>
+                    <button id="resetBtn" onclick="resetCode()">重置</button>
+                </div>
+                <div id="output" class="output-panel"></div>
+                <div id="loading" class="loading">加载中...</div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        let pyodide;
+        const isLoading = { value: false };
+
+        async function initPyodide() {
+            if (pyodide) return;
+            isLoading.value = true;
+            document.getElementById('loading').style.display = 'block';
+            pyodide = await loadPyodide({
+                indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.26.2/full/'
+            });
+            await pyodide.loadPackage(['pandas', 'numpy']);
+            isLoading.value = false;
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        async function runCode() {
+            if (isLoading.value) {
+                alert('正在加载环境，请稍候...');
+                return;
+            }
+            await initPyodide();
+            const code = document.getElementById('codeInput').value;
+            const output = document.getElementById('output');
+            try {
+                output.innerHTML = '<pre>运行中...</pre>';
+                const result = await pyodide.runPythonAsync(code);
+                let outputText = '';
+                if (result !== undefined) {
+                    outputText = result.toString();
+                }
+                const stdout = pyodide.runPython("import sys; sys.stdout.getvalue()");
+                if (stdout) {
+                    outputText = stdout + (outputText ? '\n' + outputText : '');
+                }
+                output.innerHTML = '<pre>' + outputText + '</pre>';
+            } catch (error) {
+                output.innerHTML = '<pre style="color: red;">' + error.message + '</pre>';
+            }
+        }
+
+        function resetCode() {
+            document.getElementById('codeInput').value = `import pandas as pd
+import numpy as np
+
+data = {'Name': ['Alice', 'Bob', 'Charlie'], 'Age': [25, 30, 35]}
+df = pd.DataFrame(data)
+print(df)`;
+            document.getElementById('output').innerHTML = '';
+        }
+    </script>
 </body>
 </html>
